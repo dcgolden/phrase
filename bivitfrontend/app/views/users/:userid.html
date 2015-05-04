@@ -1,0 +1,12 @@
+<p>This is the users/:userId view.</p>
+
+<div class="jumbotron">
+	<h1>{{user.name}}</h1>
+</div>
+
+<h3>{{user.email}}</h3>
+<h3>{{user.password}}</h3>
+<p>{{user.bio}}</p>
+<p ng-repeat='class in classroomIds'> {{fetchClass(class)}}  {{classs.classroomName}}</p>
+<br>
+
