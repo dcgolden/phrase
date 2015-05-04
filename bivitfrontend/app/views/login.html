@@ -1,12 +1,25 @@
-<div class="container text-center">
-  <div class="jumbotron">
-    <h1>Login</h1>
-    <div class="text">
-	  <form class="form" action="http://localhost:8080/api/login" method="post">
-	    Email: <input class="form" type="text" label="email"/>
-	    Password: <input class="form" type="text" label="password"/>
-	    <input class="form btn btn-default" id="submitButton" type="submit" value="submit"/>
-	  </form>
-	<div class="g-signin2" data-onsuccess="onSignIn"></div>
-  </div>
+<!doctype html>
+<html>
+<head>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <style>
+        body        { padding-top:80px; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="jumbotron text-center">
+        <h1><img src="https://i.imgur.com/gluxEbo.png" height="80px"></h1>
+
+        <p>Login or Register with:</p>
+
+        <a href="/auth/google" class="btn btn-danger"><span class="fa fa-google-plus"></span> Google</a>
+
+    </div>
+
 </div>
+</body>
+</html>   
