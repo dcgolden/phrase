@@ -92,6 +92,6 @@ angular
         controller: 'LoginCtrl'
       })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/404.html'
       });
   });
