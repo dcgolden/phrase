@@ -1,9 +1,16 @@
 <div>
-  <div class="card btn" id="articleCard" ng-repeat="article in articles">
-    <div>
-   	  <a ng-href="http://localhost:9000/#/articles/{{article._id}}">
-   	    {{article.title}}
-   	  </a>
-  	</div>
+  <div id="inline-block" ng-repeat="article in articles">
+  	<a ng-href="http://localhost:9000/#/articles/{{article._id}}">
+      <div  class="card" id="articleCard">
+   	  	<p id="articleCardTile">
+   	    	{{article.title}}
+   	  	</p>
+   	  	<div id="articleCardContent">
+   	  		<p>
+   	      	{{article.content}}
+   	    	</p>
+   	  	</div>
+  		</div>
+  	</a>
   </div>
 </div>
