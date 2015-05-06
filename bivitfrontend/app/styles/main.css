@@ -4,6 +4,11 @@ body {
   padding-bottom: 20px;
 }
 
+/* Modifies the classroom cards */
+.classroomCard{
+  
+}
+
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,
@@ -42,9 +47,9 @@ body {
 /* Sets the size for the header logo */
 #bivitLogo
 {
-  max-width: 3.5em;
+  max-width: 5em;
   padding-bottom: .1em;
-  margin-left: 1.5em;
+  margin-left: 5em;
 }
 
 /* Custom page footer */
@@ -58,7 +63,7 @@ body {
 /* Customize container */
 @media (min-width: 768px) {
   .container {
-    max-width: 730px;
+    /*max-width: 730px;*/
   }
 }
 .container-narrow > hr {
