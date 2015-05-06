@@ -75,10 +75,8 @@ body {
 
 /* Main marketing message and sign up button */
 .jumbotron {
-  text-align: center;
   border-bottom: 1px solid #e5e5e5;
-  max-height: 40%;
-  min-height: 40%;
+  height: 90%;
 }
 .jumbotron .btn {
   font-size: 21px;

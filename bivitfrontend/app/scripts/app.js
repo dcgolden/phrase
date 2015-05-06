@@ -45,6 +45,10 @@ angular
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
+      .when('/contact', {
+        templateUrl: 'views/contact.html',
+        controller: 'ContactCtrl'
+      })
       .when('/users', {
         templateUrl: 'views/users.html',
         controller: 'UsersCtrl',
@@ -92,6 +96,6 @@ angular
         controller: 'LoginCtrl'
       })
       .otherwise({
-        redirectTo: '/404.html'
+        redirectTo: 'views/404.html'
       });
   });
