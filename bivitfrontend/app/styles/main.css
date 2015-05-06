@@ -5,8 +5,11 @@ body {
 }
 
 /* Modifies the classroom cards */
-.classroomCard{
-  
+#classroomCard{
+  display: inline-block;
+  margin: 1em;
+  width: 12.75em;
+  background-color: #FFF;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
