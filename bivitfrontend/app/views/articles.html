@@ -1,5 +1,9 @@
-<p>This is the articles view.</p>
-
-<ul>
-	<li ng-repeat="article in articles"><a ng-href="http://localhost:9000/#/articles/{{article._id}}">{{article.title}}</a></li>
-</ul>
+<div>
+  <div class="card btn" id="articleCard" ng-repeat="article in articles">
+    <div>
+   	  <a ng-href="http://localhost:9000/#/articles/{{article._id}}">
+   	    {{article.title}}
+   	  </a>
+  	</div>
+  </div>
+</div>

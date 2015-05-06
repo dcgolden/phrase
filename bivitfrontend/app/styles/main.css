@@ -1,6 +1,6 @@
 /* Space out content a bit */
 body {
-  padding-top: 60px;
+  padding-top: 30px;
   padding-bottom: 20px;
 }
 
@@ -10,6 +10,17 @@ body {
   margin: 1em;
   width: 12.75em;
   background-color: #FFF;
+}
+
+/* Modifies the article cards */
+#articleCard{
+  display: inline-block;
+  margin: 1em;
+  width: 12.75em;
+  height: 16.5em;
+  background-color: #FFF;
+  padding: 10px;
+  text-transform: none;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
