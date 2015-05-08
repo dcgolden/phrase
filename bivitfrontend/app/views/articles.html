@@ -6,7 +6,9 @@
    <div>
    <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="6" md-row-height-gt-md="1:1" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="4px">
     
-    <md-grid-tile ng-href="/help" md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z2 testColor">
+    <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z2 testColor"  ng-class="{red: hover}" 
+    ng-mouseenter="hover = true"
+    ng-mouseleave="hover = false">
       
       <div class="feature">
       <a href="http://localhost:9000/#/articles/{{article._id}}"></a>
