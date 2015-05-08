@@ -1,22 +1,33 @@
-<md-toolbar md-scroll-shrink> 
-	<div class="md-toolbar-tools">
-	<h3>
-		<span>My App Title</span>
-	</h3>
-	</div>
-</md-toolbar>
-
 <div>
-  <div id="inline-block" ng-repeat="article in articles">
+  <md-input-container> 
+  <label>Article</label>
+  <input type ="text" ng-model="articleQuery">
+  </md-input-container>
+   <div>
+   <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="6" md-row-height-gt-md="1:1" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="4px">
+    <md-grid-tile ng-repeat="article in articles | filter:articleQuery" ng-class="tile.background">
+      <div>
+      <a ng-href="http://localhost:9000/#/articles/{{article._id}}">
+      <div display:"inline-block">
+        {{article.content | limitTo: 40}}
+      </div>
+      <md-grid-tile-footer><h3>{{article.title}}</h3></md-grid-tile-footer>
+       </a>
+       </div>
+    </md-grid-tile>
+  </md-grid-list>
+  </div>
+
+  <!--<div id="inline-block" ng-repeat="article in articles | filter:articleQuery">
   	<a ng-href="http://localhost:9000/#/articles/{{article._id}}">
-      <div  class="card" id="articleCard">
-   	  	<p id="articleCardTile">
+      <div>
+   	  	<p>
    	    	{{article.title}}
    	  	</p>
-   	  	<div id="articleCardContent">
+   	  	<div>
    	      {{article.content}}
    	  	</div>
   		</div>
   	</a>
-  </div>
+  </div>-->
 </div>
