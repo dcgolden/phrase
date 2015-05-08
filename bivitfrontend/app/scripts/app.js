@@ -93,7 +93,8 @@ angular
         }
       })
       .when('/articles', {
-        templateUrl: 'views/articles.html',
+	      title: "Articles",        
+	      templateUrl: 'views/articles.html',
         controller: 'ArticlesCtrl',
         resolve: {
           loggedin: checkLoggedin
