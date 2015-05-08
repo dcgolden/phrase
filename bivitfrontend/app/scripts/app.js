@@ -15,9 +15,11 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'ngMaterial'
   ])
-  .config(function ($routeProvider) {
+
+  .config(function ($routeProvider, $mdThemingProvider) {
     var checkLoggedin = function($q, $timeout, $http, $location, $rootScope){
       // Initialize a new promise
       var deferred = $q.defer();
@@ -35,6 +37,19 @@ angular
       });
     };
 
+    $mdThemingProvider.theme('default')
+    .primaryPalette('cyan', {
+      'default': '500', // by default use shade 400 from the pink palette for primary intentions
+      'hue-1': '300', // use shade 100 for the <code>md-hue-1</code> class
+      'hue-2': '800', // use shade 500 for the <code>md-hue-2</code> class
+      'hue-3': 'A100' // use shade 700 for the <code>md-hue-3</code> class
+    })
+    // If you specify less than all of the keys, it will inherit from the
+    // default shades
+    .accentPalette('deep-orange', {
+      'default': '400' // use shade A200 for default, and keep all other shades the same
+    });
+
 
     $routeProvider
       .when('/', {
@@ -44,6 +59,10 @@ angular
       .when('/about', {
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
+      })
+      .when('/contact', {
+        templateUrl: 'views/contact.html',
+        controller: 'ContactCtrl'
       })
       .when('/users', {
         templateUrl: 'views/users.html',
@@ -92,6 +111,6 @@ angular
         controller: 'LoginCtrl'
       })
       .otherwise({
-        redirectTo: '/404.html'
+        redirectTo: 'views/404.html'
       });
   });

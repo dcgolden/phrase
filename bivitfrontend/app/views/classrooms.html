@@ -1,5 +1,9 @@
-<p>This is the classrooms view.</p>
-
-<ul>
-	<li ng-repeat="classroom in classrooms"><a ng-href="http://localhost:9000/#/classrooms/{{classroom._id}}">{{classroom.classroomName}}</a></li>
-</ul>
+<div>
+  <div class="card btn" id="classroomCard" ng-repeat="classroom in classrooms">
+    <div>
+   	  <a ng-href="http://localhost:9000/#/classrooms/{{classroom._id}}">
+        {{classroom.classroomName}}
+      </a>
+  	</div>
+  </div>
+</div>

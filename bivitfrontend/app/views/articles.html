@@ -1,5 +1,22 @@
-<p>This is the articles view.</p>
+<md-toolbar md-scroll-shrink> 
+	<div class="md-toolbar-tools">
+	<h3>
+		<span>My App Title</span>
+	</h3>
+	</div>
+</md-toolbar>
 
-<ul>
-	<li ng-repeat="article in articles"><a ng-href="http://localhost:9000/#/articles/{{article._id}}">{{article.title}}</a></li>
-</ul>
+<div>
+  <div id="inline-block" ng-repeat="article in articles">
+  	<a ng-href="http://localhost:9000/#/articles/{{article._id}}">
+      <div  class="card" id="articleCard">
+   	  	<p id="articleCardTile">
+   	    	{{article.title}}
+   	  	</p>
+   	  	<div id="articleCardContent">
+   	      {{article.content}}
+   	  	</div>
+  		</div>
+  	</a>
+  </div>
+</div>

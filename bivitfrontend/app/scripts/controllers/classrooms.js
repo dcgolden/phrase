@@ -10,10 +10,7 @@
 angular.module('bivitfrontSampleApp')
   .controller('ClassroomsCtrl', function ($scope, $http) {
     $scope.classrooms = [
-      'English',
-      'Math',
-      'Science',
-      'Spanish'
+      
     ];
 
     $http.get('http://localhost:8080/api/classrooms')
