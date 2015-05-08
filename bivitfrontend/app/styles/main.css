@@ -5,3 +5,10 @@ background-color: #C5CAE9;
 {
 background-color: #ff4081:
 }
+
+.clicky
+{
+	display:block;
+	text-decoration: none;
+	color:#ffffff;
+}
