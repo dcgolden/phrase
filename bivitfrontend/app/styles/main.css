@@ -15,7 +15,8 @@ body {
 /* changes content of the article cards*/
 #articleCardContent{
   font-size: 60%;
-  height: 1em;
+  height: 20em;
+  text-overflow: ellipsis;
 }
 
 #inline-block{
