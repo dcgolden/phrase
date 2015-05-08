@@ -10,6 +10,7 @@
     <!--importing style sheets-->
     <link rel="stylesheet" href="/bower_components/angular-material/angular-material.css">
     <link rel="stylesheet" href="styles/main.css">
+    <link href="bower_components/material-design-icons/sprites/svg-sprite/svg-sprite-navigation.css" rel="stylesheet">
   </head>
 
   <body ng-app="bivitfrontSampleApp">
@@ -24,11 +25,9 @@
     <div layout="column" layout-fill>
     <md-toolbar class="md-primary">
       <div class="md-toolbar-tools">
-        <md-button class="md-icon-button" aria-label="Settings">
-          <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
-        </md-button>
+        <md-icon md-svg-src="bivitSVG.svg" class="ng-isolate-scope md-default-theme"></md-icon>
         <h2>
-          <span>Toolbar with Icon Buttons</span>
+          <span><!--put words in toolbar here--></span>
         </h2>
         <span flex></span>
         <md-button class="md-icon-button" aria-label="Favorite">
