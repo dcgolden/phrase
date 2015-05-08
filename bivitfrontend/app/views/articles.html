@@ -8,7 +8,7 @@
     <md-grid-tile ng-repeat="article in articles | filter:articleQuery" ng-class="tile.background">
       <div>
       <a ng-href="http://localhost:9000/#/articles/{{article._id}}">
-      <div display:"inline-block">
+      <div display:"inline-block" >
         {{article.content | limitTo: 40}}
       </div>
       <md-grid-tile-footer><h3>{{article.title}}</h3></md-grid-tile-footer>
