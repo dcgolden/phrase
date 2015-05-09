@@ -1,12 +1,12 @@
 <div>
-  <md-input-container> 
+  <md-input-container class="md-accent"> 
   <label>Article</label>
   <input type ="text" ng-model="articleQuery">
   </md-input-container>
    <div>
    <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="6" md-row-height-gt-md="1:1" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="4px">
     
-    <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z2 testColor"  ng-class="{red: hover}" 
+    <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 testColor"  ng-class="{zRaise2: hover}" 
     ng-mouseenter="hover = true"
     ng-mouseleave="hover = false">
       
@@ -15,7 +15,7 @@
       <div>
       {{article.content | limitTo: 100}}
       </div>
-      <md-grid-tile-footer md-primary text-align:center><h3>{{article.title}}</h3>
+      <md-grid-tile-footer text-align:center><h3>{{article.title}}</h3>
       </md-grid-tile-footer>
       </div>
       </a>

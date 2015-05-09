@@ -1,7 +1,24 @@
 .testColor{
-background-color: #C5CAE9;
+background-color: #ffffff;
 }
-.titleColor
+.div.feature {
+    position: relative;
+}
+ 
+div.feature a {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    text-decoration: none; /* No underlines on the link */
+    z-index: 10; /* Places the link above everything else in the div */
+    background-color: #FFF; /* Fix to make div clickable in IE */
+    opacity: 0; /* Fix to make div clickable in IE */
+    filter: alpha(opacity=1); /* Fix to make div clickable in IE */
+}
+
+.red
 {
-background-color: #ff4081:
+	box-shadow:0 8px 17px rgba(0,0,0,.2)
 }

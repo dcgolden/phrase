@@ -18,7 +18,7 @@ div.feature a {
     filter: alpha(opacity=1); /* Fix to make div clickable in IE */
 }
 
-.red
+.zRaise2
 {
-	box-shadow:0 17px 50px rgba(0,0,0,.19)}
+	box-shadow:0 8px 17px rgba(0,0,0,.2)
 }
