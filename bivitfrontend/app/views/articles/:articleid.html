@@ -1,12 +1,10 @@
 
-<div class="jumbotron">
-	<h1>{{article.title | uppercase}}</h1>
-</div>
 <md-content>
 <md-card class="articleCard">
+<h1 ng-bind="article.title | uppercase">
 <h3>Author: <span ng-bind="article.author"></span></h3>
 <h3>Source: <span ng-bind="article.source"></span></h3>
 <p ng-bind="article.content"></p>
 </md-card>
-<md-button class="md-raised md-warn" href ng-click="deleteArticlePressed = true">Delete</md-button>
+<md-button class="md-raised md-warn">Delete</md-button>
 </md-content>
