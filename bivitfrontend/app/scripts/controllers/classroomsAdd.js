@@ -8,7 +8,7 @@
  * Controller of the bivitfrontSampleApp
  */
 angular.module('bivitfrontSampleApp')
-  .controller('ClassroomsCtrl', function ($scope, $http) {
+  .controller('ClassroomsAddCtrl', function ($scope, $http) {
     $scope.classrooms = [
       
     ];
