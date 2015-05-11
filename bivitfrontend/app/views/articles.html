@@ -12,10 +12,9 @@
       
         <div class="feature">
           <a href="http://localhost:9000/#/articles/{{article._id}}"  ></a>
-          <div id="articleContentCard">
-            {{article.content}}
+          <div id="articleContentCard" ng-bind="article.content">
           </div>
-          <md-grid-tile-footer text-align:center><h3>{{article.title}}</h3>
+          <md-grid-tile-footer text-align:center><h3 ng-bind="article.title"></h3>
           </md-grid-tile-footer>
         </div>
       </md-grid-tile>
