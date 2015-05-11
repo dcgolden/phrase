@@ -16,10 +16,15 @@ angular.module('bivitfrontSampleApp')
     		$scope.article = data;
     		console.log(data);
     	})
+})
+	.controller('articlesArticelIdCtrlDelete', function ($scope, $http, $route, $routeParams) {
+		var url = 'http://localhost:8080/api/articles/' + $routeParams.articleId;
+		
+		$scope.DeleteArticlePressed = false;
+   		
+   		$scope.toggle = function (data) {
+    		$http.delete(url);
+    		console.log(data);
+    	}
+});
 
-    /*DeleteArticlePressed = false;
-    DeleteArticle = function (DeleteArticlePressed){
-    	http.delete(url);
-    	console.log(data);
-    })*/
-  });

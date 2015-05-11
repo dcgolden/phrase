@@ -20,4 +20,9 @@ angular.module('bivitfrontSampleApp')
     		$scope.articles = data;
     		console.log(data);
     	});
+
+     $scope.toggle = function() 
+     {
+      $http.delete(url);
+     }; 
   });

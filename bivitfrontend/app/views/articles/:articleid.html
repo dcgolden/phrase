@@ -6,5 +6,5 @@
 <h3>Source: <span ng-bind="article.source"></span></h3>
 <p ng-bind="article.content"></p>
 </md-card>
-<md-button class="md-raised md-warn">Delete</md-button>
+<md-button ng-controller="articlesArticelIdCtrlDelete" class="md-raised md-warn" ng-click="toggle()">Delete</md-button>
 </md-content>
