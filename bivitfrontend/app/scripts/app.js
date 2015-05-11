@@ -19,6 +19,36 @@ angular
     'ngMaterial'
   ])
 
+  .controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log) {
+    $scope.toggleLeft = buildToggler('left');
+
+    /**
+     * Build handler to open/close a SideNav; when animation finishes
+     * report completion in console
+     */
+    function buildToggler(navID) {
+      var debounceFn =  $mdUtil.debounce(function(){
+            $mdSidenav(navID)
+              .toggle()
+              .then(function () {
+                $log.debug("toggle " + navID + " is done");
+              });
+          },300);
+
+      return debounceFn;
+    }
+
+  })
+  .controller('LeftNavCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+    $scope.close = function () {
+      $mdSidenav('left').close()
+        .then(function () {
+          $log.debug("close LEFT is done");
+        });
+
+    };
+  })
+
   .config(function ($routeProvider, $mdThemingProvider) {
     var checkLoggedin = function($q, $timeout, $http, $location, $rootScope){
       // Initialize a new promise
@@ -49,7 +79,6 @@ angular
     .accentPalette('pink', {
       'default': 'A200' // use shade A200 for default, and keep all other shades the same
     });
-
 
     $routeProvider
       .when('/', {
@@ -88,6 +117,13 @@ angular
       .when('/classrooms/:classroomId', {
         templateUrl: 'views/classrooms/:classroomid.html',
         controller: 'ClassroomsClassroomidCtrl',
+        resolve: {
+          loggedin: checkLoggedin
+        }
+      })
+      .when('/classroomsadd', {
+        templateUrl: 'views/classroomsAdd.html',
+        controller: 'ClassroomsAddCtrl',
         resolve: {
           loggedin: checkLoggedin
         }
