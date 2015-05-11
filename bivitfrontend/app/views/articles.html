@@ -4,23 +4,22 @@
   <input type ="text" ng-model="articleQuery">
   </md-input-container>
    <div>
-   <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="6" md-row-height-gt-md="1:1" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="4px">
+    <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="10px">
     
-    <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 testColor"  ng-class="{zRaise2: hover}" 
-    ng-mouseenter="hover = true"
-    ng-mouseleave="hover = false">
+      <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 testColor" ng-class="{zRaise2: hover}" md-rowspan="2"
+      ng-mouseenter="hover = true"
+      ng-mouseleave="hover = false" id="articleContentCard">
       
-      <div class="feature">
-      <a href="http://localhost:9000/#/articles/{{article._id}}"></a>
-      <div>
-      {{article.content | limitTo: 100}}
-      </div>
-      <md-grid-tile-footer text-align:center><h3>{{article.title}}</h3>
-      </md-grid-tile-footer>
-      </div>
-      </a>
-    </md-grid-tile>
-  </md-grid-list>
+        <div class="feature">
+          <a href="http://localhost:9000/#/articles/{{article._id}}"  ></a>
+          <div id="articleContentCard">
+            {{article.content}}
+          </div>
+          <md-grid-tile-footer text-align:center><h3>{{article.title}}</h3>
+          </md-grid-tile-footer>
+        </div>
+      </md-grid-tile>
+    </md-grid-list>
   </div>
 
   <!--<div id="inline-block" ng-repeat="article in articles | filter:articleQuery">
