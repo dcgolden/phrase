@@ -107,6 +107,13 @@ angular
           loggedin: checkLoggedin
         }
       })
+      .when('/articlesadd', {
+        templateUrl: 'views/articlesAdd.html',
+        controller: 'AtriclesAddCtrl',
+        resolve: {
+          loggedin: checkLoggedin
+        }
+      })
       .when('/login', {
         templateUrl: 'views/login.html',
         controller: 'LoginCtrl'
