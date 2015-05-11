@@ -145,7 +145,7 @@ angular
       })
       .when('/articlesadd', {
         templateUrl: 'views/articlesAdd.html',
-        controller: 'AtriclesAddCtrl',
+        controller: 'ArticlesAddCtrl',
         resolve: {
           loggedin: checkLoggedin
         }
