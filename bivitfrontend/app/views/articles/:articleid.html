@@ -4,9 +4,9 @@
 </div>
 <md-content>
 <md-card class="articleCard">
-<h3>Author: {{article.author}}</h3>
-<h3>Source: {{article.source}}</h3>
-<p>{{article.content}}</p>
+<h3>Author: <span ng-bind="article.author"></span></h3>
+<h3>Source: <span ng-bind="article.source"></span></h3>
+<p ng-bind="article.content"></p>
 </md-card>
-<md-button class="md-raised md-warn">Delete</md-button>
+<md-button class="md-raised md-warn" href ng-click="deleteArticlePressed = true">Delete</md-button>
 </md-content>
