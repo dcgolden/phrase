@@ -20,7 +20,7 @@
 
     <!--TOOLBAR!!-->
     <md-toolbar class="md-primary md-whiteframe-z1">
-      <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
+      <md-button class="md-icon-button hamburgerMenuButton" aria-label="Settings" ng-click="toggleLeft()">
         <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
       </md-button>
       <span ng-bind="$routeParams"flex></span>
@@ -34,7 +34,7 @@
         </md-toolbar>
         <md-content layout-padding="" ng-controller="LeftNavCtrl">
           <md-list hide-md="" show-gt-md="">
-            <md-list-item>
+            <md-list-item ng-href="#">
               <p>Home</p>
             </md-list-item>
           </md-list>
