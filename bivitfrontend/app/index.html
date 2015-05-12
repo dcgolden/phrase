@@ -21,7 +21,8 @@
     <!--TOOLBAR!!-->
     <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1">
       <md-button class="md-icon-button hamburgerMenuButton" aria-label="Settings" ng-click="toggleLeft()">
-        <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+        <md-icon md-svg-icon="">
+        </md-icon>
       </md-button>
       <span ng-bind="$routeParams"flex></span>
     </md-toolbar>
@@ -89,6 +90,9 @@
     <script src="bower_components/angular-material/angular-material.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
+
+    <!--ICONS!-->
+    <script src="//cdn.jsdelivr.net/angular-material-icons/0.4.0/angular-material-icons.min.js"></script> 
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>

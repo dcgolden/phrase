@@ -16,7 +16,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ngMaterial'
+    'ngMaterial',
+    'ngMdIcons'
   ])
 
   .controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log) {
