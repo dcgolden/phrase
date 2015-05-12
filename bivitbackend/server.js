@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 var passport = require('passport');
 var flash 	 = require('connect-flash');
+var http     = require('http');
 
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
