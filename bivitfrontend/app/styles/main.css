@@ -1,11 +1,24 @@
-/* svg styling*/
-.svg-ic_menu_24px-dims { 
-  width: 24px;
-  height: 24px; 
+.searchBar{
+  margin-left: 50em;
+}
+
+.Views{
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+.floatingActionButton { 
+  float: right;
+  margin-top: -2em;
+  margin-right: 5em;
 }
 
 .hamburgerMenuButton{
   margin-top: .5em !important;
+}
+
+.hamburgerMenuButton2{
+  padding-top: .4em !important;
 }
 
 .testColor{

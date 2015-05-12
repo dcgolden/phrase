@@ -1,24 +1,26 @@
-<md-button class="md-fab" aria-label="Add Article" ng-href="#/articlesadd">
-  <md-icon md-svg-src="img/icons/cake.svg"></md-icon>
+<md-button class="md-fab floatingActionButton" md-ink-ripple aria-label="Add Article" ng-href="#/articlesadd">
+  <div class="hamburgerMenuButton2">
+    <ng-md-icon icon="add" size="24" style="fill: white"></ng-md-icon>
+  </div>
 </md-button>
 
 <div>
-  <md-input-container class="md-accent"> 
-  <label>Article</label>
-  <input type ="text" ng-model="articleQuery">
+  <md-input-container class="md-accent searchBar"> 
+    <label>
+      <ng-md-icon icon="search" size="15" style="fill: grey"></ng-md-icon>
+      search
+      </label>
+    <input type ="text" ng-model="articleQuery">
   </md-input-container>
-   <div>
+
+  <div>
     <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="10px">
-    
-      <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 testColor" ng-class="{zRaise2: hover}" md-rowspan="2"
-      ng-mouseenter="hover = true"
-      ng-mouseleave="hover = false" id="articleContentCard">
-      
+      <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 testColor" ng-class="{zRaise2: hover}" md-rowspan="2"ng-mouseenter="hover = true" ng-mouseleave="hover = false" id="articleContentCard">
         <div class="feature">
           <a href="http://localhost:9000/#/articles/{{article._id}}"  ></a>
-          <div id="articleContentCard" ng-bind="article.content">
-          </div>
-          <md-grid-tile-footer text-align:center><h3 ng-bind="article.title"></h3>
+          <div id="articleContentCard" ng-bind="article.content"></div>
+          <md-grid-tile-footer text-align:center>
+            <h3 ng-bind="article.title"></h3>
           </md-grid-tile-footer>
         </div>
       </md-grid-tile>

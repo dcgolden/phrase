@@ -21,8 +21,10 @@
     <!--TOOLBAR!!-->
     <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1">
       <md-button class="md-icon-button hamburgerMenuButton" aria-label="Settings" ng-click="toggleLeft()">
-        <md-icon md-svg-icon="">
-        </md-icon>
+      <div class="hamburgerMenuButton2">
+        <ng-md-icon icon="menu" style="fill: white" size="36">
+        </ng-md-icon>
+      </div>
       </md-button>
       <span ng-bind="$routeParams"flex></span>
     </md-toolbar>
@@ -31,7 +33,7 @@
     <div layout="row" flex="" ng-click="toggleLeft()">
       <md-sidenav style="height:500px;" md-component-id="left" class="md-sidenav-left md-whiteframe-z2">
         <md-toolbar class="" ng-click="toggleLeft()">
-          <h1 class="md-toolbar-tools">Side Nav!</h1>
+          <h1 class="md-toolbar-tools">current page here</h1>
         </md-toolbar>
         <md-content layout-padding="" ng-controller="LeftNavCtrl">
           <md-list hide-md="" show-gt-md="">
@@ -63,7 +65,7 @@
 
 </body>
 </html>   
-      <div ng-view=""></div>
+      <div class="Views" ng-view=""></div>
 
 
     <!--[if lt IE 9]>
@@ -88,6 +90,8 @@
     <script src="bower_components/angular-aria/angular-aria.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-material/angular-material.js"></script>
+    <script src="bower_components/svg-morpheus/compile/unminified/svg-morpheus.js"></script>
+    <script src="bower_components/angular-material-icons/angular-material-icons.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
