@@ -1,6 +1,29 @@
 <h1>ADD VIEW</h1>
+  <div>
+ <md-input-container> 
+  <label>Title</label>
+  <input type ="text" ng-model="submissionTitle">
+  </md-input-container>
+  </div>
+  
+  <div>
+  <md-input-container> 
+  <label>Author</label>
+  <input type ="text" ng-model="submissionAuthor">
+  </md-input-container>
+  </div>
 
-<p>Author
-Source
-Title
-Classroom</p>
+  <div>
+  <md-input-container> 
+  <label>Source</label>
+  <input type ="text" ng-model="submissionSource">
+  </md-input-container>
+  </div>
+
+  <div>
+  <md-input-container flex="">
+        <label>Content</label>
+        <textarea ng-model="submissionContent" columns="1"></textarea>
+  </md-input-container>
+  </div>
+  <md-button class="md-raised md-accent" ng-click="addArticle()">Add Article</md-button>

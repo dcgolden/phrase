@@ -21,7 +21,7 @@ angular.module('bivitfrontSampleApp')
     		console.log(data);
     	});
 
-     $scope.toggle = function() 
+     $scope.deleteArticle = function() 
      {
       $http.delete(url);
      }; 
