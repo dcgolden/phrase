@@ -1,10 +1,20 @@
+<!--Changing the style of the toolbar-->
+
+<style>
+	.mainToolbar{
+		height: 20em !important;
+		z-index: 0;
+	}
+</style>
 
 <md-content>
-<md-card class="articleCard">
-<h1 ng-bind="article.title | uppercase">
-<h3>Author: <span ng-bind="article.author"></span></h3>
-<h3>Source: <span ng-bind="article.source"></span></h3>
-<p ng-bind="article.content"></p>
-</md-card>
-<md-button class="md-raised md-warn" ng-click="deleteArticle()" >Delete</md-button>
+  <md-card class="articleCard">
+	<h1 ng-bind="article.title | uppercase"></h1>
+	<h3>Author: <span ng-bind="article.author"></span></h3>
+	<h3>Source: <span ng-bind="article.source"></span></h3>
+	<p ng-bind="article.content"></p>
+  </md-card>
+  <md-button class="md-raised md-warn" ng-click="deleteArticle()" >
+    Delete
+  </md-button>
 </md-content>
