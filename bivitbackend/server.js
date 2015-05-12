@@ -24,6 +24,8 @@ mongoose.connect('mongodb://test:test@novus.modulusmongo.net:27017/a3pemoGa')
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 
 
 var port = process.env.PORT || 8080; 		// set our port

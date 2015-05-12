@@ -2,30 +2,30 @@
   <div>
  <md-input-container> 
   <label>Title</label>
-  <input type ="text" ng-model="article.title">
+  <input type ="text" ng-model="title">
   </md-input-container>
   </div>
   
   <div>
   <md-input-container> 
   <label>Author</label>
-  <input type ="text" ng-model="article.author">
+  <input type ="text" ng-model="author">
   </md-input-container>
   </div>
 
   <div>
   <md-input-container> 
   <label>Source</label>
-  <input type ="text" ng-model="article.source">
+  <input type ="text" ng-model="source">
   </md-input-container>
   </div>
 
   <div>
   <md-input-container flex="">
         <label>Content</label>
-        <textarea ng-model="article.content" columns="1"></textarea>
+        <textarea ng-model="content" columns="1"></textarea>
   </md-input-container>
   </div>
   <md-button class="md-raised md-accent" ng-click="addArticle()">Add Article</md-button>
 
-  <pre id="default-spacing">{{article | json}}</pre>
+  <pre id="default-spacing">{{article}}</pre>

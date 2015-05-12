@@ -10,13 +10,12 @@
 angular.module('bivitfrontSampleApp')
   .controller('ArticlesAddCtrl', function ($scope, $http, $route, $routeParams) {
   	var article = {
-  		content : "",
-  		source  : "",
-  		author  : "",
-  		title   : ""
+  		content : $scope.content,
+  		source  : $scope.source,
+  		author  : $scope.author,
+  		title   : $scope.title
   	};
 
-    var articleJSON = angular.toJson(article);
 
   	$scope.addArticle = function (data)
   	{
@@ -25,9 +24,15 @@ angular.module('bivitfrontSampleApp')
         url: 'http://localhost:8080/api/articles',
         headers: 
         {
-          'Content-Type': "application/x-www-form-urlencoded;charset=UTF8"
+          'Content-Type': "application/x-www-form-urlencoded"
         },
-        data: articleJSON
+        transformRequest: function(obj) {
+        var str = [];
+        for(var p in obj)
+        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+        return str.join("&");
+        },
+        data: {content: $scope.content, source: $scope.source, author: $scope.author, title: $scope.title}
     })
       console.log(data);
   	}
