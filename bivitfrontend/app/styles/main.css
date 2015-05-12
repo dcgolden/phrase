@@ -68,6 +68,10 @@ div.feature a {
     filter: alpha(opacity=1); /* Fix to make div clickable in IE */
 }
 
+.articleCardContainer{
+  background-color: transparent !important;
+}
+
 .zRaise2
 {
 	box-shadow:0 8px 17px rgba(0,0,0,.2)
@@ -76,7 +80,9 @@ div.feature a {
 .articleCard 
 {
   z-index: 7;
-  margin-top: -3em;
+  margin-top: 5em;
 	width: 70%;
+  margin-right: auto;
+  margin-left: auto;
 }
 
