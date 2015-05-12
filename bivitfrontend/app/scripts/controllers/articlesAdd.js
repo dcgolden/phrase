@@ -15,6 +15,9 @@ angular.module('bivitfrontSampleApp')
   		author  : "",
   		title   : ""
   	};
+
+    var articleJSON = angular.toJson(article);
+
   	$scope.addArticle = function (data)
   	{
   		$http({
@@ -24,13 +27,7 @@ angular.module('bivitfrontSampleApp')
         {
           'Content-Type': "application/x-www-form-urlencoded;charset=UTF8"
         },
-        data: 
-        {
-          content : article.content,
-          source  : article.source, 
-          author  : article.author,
-          title   : article.title, 
-        }
+        data: articleJSON
     })
       console.log(data);
   	}
