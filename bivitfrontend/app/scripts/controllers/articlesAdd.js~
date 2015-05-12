@@ -8,6 +8,10 @@
  * Controller of the bivitfrontSampleApp
  */
 angular.module('bivitfrontSampleApp')
-  .controller('ArticlesAddCtrl', function ($scope, $http, $route, $routeParams) {
+  .controller('ArticlesAddCtrl', function ($scope, $http. $route, $routeParams) {
+    var article = {};
+    $scope.addArticle = function(){
+    	$http.post();
+    }
 });
 
