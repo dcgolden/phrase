@@ -6,7 +6,13 @@
 }
 
 .searchIcon{
-  margin-top: 1em;
+  margin-top: .1em;
+  margin-right: .2em;
+  float: left;
+}
+
+.articlesContainer{
+  padding-top: 3em;
 }
 
 .Views{
