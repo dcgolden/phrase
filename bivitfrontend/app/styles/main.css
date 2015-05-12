@@ -1,5 +1,12 @@
 .searchBar{
-  margin-left: 50em;
+  width: 15em;
+  float: right;
+  margin-top: -4em;
+  z-index: 7;
+}
+
+.searchIcon{
+  margin-top: 1em;
 }
 
 .Views{
