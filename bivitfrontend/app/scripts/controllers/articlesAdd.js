@@ -7,6 +7,7 @@
  * Controller of the bivitfrontSampleApp
  */
 angular.module('bivitfrontSampleApp')
+<<<<<<< HEAD
   .controller('ArticlesAddCtrl', function ($scope, $http, $route, $routeParams) {
   	var headers = {
   		'Content-Type': 'application/x-www-form-urlencoded'
@@ -19,6 +20,14 @@ angular.module('bivitfrontSampleApp')
 		method: 'POST',
 		headers: headers
 	};
+=======
+  .controller('ArticlesAddCtrl', function ($scope, $http. $route, $routeParams) {
+    var article = {};
+    $scope.addArticle = function(){
+    	$http.post(http://localhost:8080/api/articlces, );
+    }
+});
+>>>>>>> parent of 696f4c9... articleAddFix
 
 	var article = {
 		content: "$scope.submissionContent", 
