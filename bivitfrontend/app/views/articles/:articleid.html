@@ -2,12 +2,13 @@
 
 <style>
 	.mainToolbar{
-		height: 20em !important;
+		height: 18em !important;
 		z-index: 0;
+		position:absolute;
 	}
 </style>
 
-<md-content>
+<md-content class="articleCardContainer">
   <md-card class="articleCard">
 	<h1 ng-bind="article.title | uppercase"></h1>
 	<h3>Author: <span ng-bind="article.author"></span></h3>
