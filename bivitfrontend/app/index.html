@@ -19,7 +19,7 @@
     <![endif]-->
 
     <!--TOOLBAR!!-->
-    <md-toolbar class="md-primary md-whiteframe-z1">
+    <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1">
       <md-button class="md-icon-button hamburgerMenuButton" aria-label="Settings" ng-click="toggleLeft()">
         <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
       </md-button>
@@ -28,14 +28,31 @@
 
     <!--SideNav!!-->
     <div layout="row" flex="">
-      <md-sidenav md-component-id="left" class="md-sidenav-left md-whiteframe-z2">
-        <md-toolbar class="md-primary" ng-click="toggleLeft()">
+      <md-sidenav style="height:500px;" md-component-id="left" class="md-sidenav-left md-whiteframe-z2">
+        <md-toolbar class="" ng-click="toggleLeft()">
           <h1 class="md-toolbar-tools">Side Nav!</h1>
         </md-toolbar>
         <md-content layout-padding="" ng-controller="LeftNavCtrl">
           <md-list hide-md="" show-gt-md="">
-            <md-list-item ng-href="#">
+            <md-list-item ng-click="navigateTo( '/' )">
               <p>Home</p>
+            </md-list-item>
+            <md-divider ng-if="!$last"></md-divider>
+            <md-list-item ng-click="navigateTo( '/users' )">
+              <p>Users</p>
+            </md-list-item>
+            <md-list-item ng-click="navigateTo( '/classrooms' )">
+              <p>Classrooms</p>
+            </md-list-item>
+            <md-list-item ng-click="navigateTo( '/articles' )">
+              <p>Articles</p>
+            </md-list-item>
+            <md-divider ng-if="!$last"></md-divider>
+            <md-list-item ng-click="navigateTo( '/about' )">
+              <p>About</p>
+            </md-list-item>
+            <md-list-item ng-click="navigateTo( '/contact' )">
+              <p>Contact</p>
             </md-list-item>
           </md-list>
         </md-content>

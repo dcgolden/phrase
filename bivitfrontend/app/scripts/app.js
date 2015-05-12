@@ -31,7 +31,7 @@ angular
             $mdSidenav(navID)
               .toggle()
               .then(function () {
-                $log.debug("toggle " + navID + " is done");
+                $log.debug('toggle ' + navID + ' is done');
               });
           },300);
 
@@ -39,13 +39,16 @@ angular
     }
 
   })
-  .controller('LeftNavCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+  .controller('LeftNavCtrl', function ($scope, $timeout, $mdSidenav, $log, $location) {
     $scope.close = function () {
       $mdSidenav('left').close()
         .then(function () {
-          $log.debug("close LEFT is done");
+          $log.debug('close LEFT is done');
         });
+    };
 
+    $scope.navigateTo = function ( path ) {
+      $location.path( path );
     };
   })
 
@@ -129,7 +132,7 @@ angular
         }
       })
       .when('/articles', {
-	      title: "Articles",        
+	      title: 'Articles',        
 	      templateUrl: 'views/articles.html',
         controller: 'ArticlesCtrl',
         resolve: {
