@@ -4,7 +4,6 @@
 // call the packages we need
 var express    = require('express'); 		// call express
 var app        = express(); 				// define our app using express
-var unirest = require('unirest');
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 var passport = require('passport');
