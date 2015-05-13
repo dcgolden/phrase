@@ -29,8 +29,7 @@
             </ng-md-icon>
           </div>
         </md-button>
-        <div class="toolbarCurrentPage">
-          {{$route.current.title}}
+        <div class="toolbarCurrentPage" ng-bind="$route.current.title">
         </div>
       </div>
     </md-toolbar>
@@ -44,8 +43,7 @@
               <ng-md-icon icon="menu" style="fill: white" size="36">
               </ng-md-icon>
             </div>
-            <div class="navbarCurrentPage navbarHover">
-              {{$route.current.title}}
+            <div class="navbarCurrentPage navbarHover" ng-bind="$route.current.title">
             </div>
           </div>
         </md-toolbar>
