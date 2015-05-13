@@ -17,7 +17,7 @@ angular.module('bivitfrontSampleApp')
                 $scope.article = data;
                 console.log(data);
             });
-
+        $scope.icon = "navigate_before";    
         $scope.showConfirm = function(ev) {
             // Appending dialog to document.body to cover sidenav in docs app
             var confirm = $mdDialog.confirm()

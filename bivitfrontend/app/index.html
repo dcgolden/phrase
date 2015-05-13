@@ -6,26 +6,18 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-
     <!--importing style sheets-->
     <link rel="stylesheet" href="/bower_components/angular-material/angular-material.css">
     <link rel="stylesheet" href="styles/main.css">
   </head>
-
   <body ng-app="bivitfrontSampleApp" ng-controller="NavCtrl">
-
-  
-
-    <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
 
     <!--TOOLBAR!!-->
     <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1 mainToolbar">
       <div class="md-toolbar-tools">
         <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
           <div class="hamburgerMenuButton2" flex>
-            <ng-md-icon icon="menu" style="fill: white" size="36">
+            <ng-md-icon icon={{$route.current.icon}} style="fill: white" size="36">
             </ng-md-icon>
           </div>
         </md-button>
@@ -102,14 +94,6 @@
 </html>   
       <div class="Views" ng-view=""></div>
 
-
-    <!--[if lt IE 9]>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/json3/lib/json3.min.js"></script>
-    <![endif]-->
-
- 
-
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -129,10 +113,9 @@
     <script src="bower_components/angular-material-icons/angular-material-icons.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
-
+    
     <!--ICONS!-->
     <script src="//cdn.jsdelivr.net/angular-material-icons/0.4.0/angular-material-icons.min.js"></script> 
-
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>

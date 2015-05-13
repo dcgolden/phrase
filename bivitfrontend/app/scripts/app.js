@@ -25,11 +25,10 @@ angular
 
     /** grabs the current loaction
       */
-
+ 
      $scope.$route = $route;
      $scope.$location = $location;
      $scope.$routeParams = $routeParams;
-
     /**
      * Build handler to open/close a SideNav; when animation finishes
      * report completion in console
@@ -104,6 +103,7 @@ angular
     $routeProvider
       .when('/', {
         title: 'Home',
+        icon: 'menu',
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
@@ -119,6 +119,7 @@ angular
       })
       .when('/users', {
         title: 'Users',
+        icon: 'menu',
         templateUrl: 'views/users.html',
         controller: 'UsersCtrl',
         resolve: {
@@ -127,6 +128,7 @@ angular
       })
       .when('/classrooms', {
         title: 'Classrooms',
+        icon: 'menu',
         templateUrl: 'views/classrooms.html',
         controller: 'ClassroomsCtrl',
         resolve: {
@@ -135,6 +137,7 @@ angular
       })
       .when('/users/:userId', {
         title: 'user.name',
+        icon: 'navigate_before',
         templateUrl: 'views/users/:userid.html',
         controller: 'UsersUseridCtrl',
         resolve: {
@@ -143,6 +146,7 @@ angular
       })
       .when('/classrooms/:classroomId', {
         title: 'classroom.title',
+        icon: 'navigate_before',
         templateUrl: 'views/classrooms/:classroomid.html',
         controller: 'ClassroomsClassroomidCtrl',
         resolve: {
@@ -151,6 +155,7 @@ angular
       })
       .when('/classroomsadd', {
         title: 'Add a Classroom',
+        icon: 'navigate_before',
         templateUrl: 'views/classroomsAdd.html',
         controller: 'ClassroomsAddCtrl',
         resolve: {
@@ -158,7 +163,8 @@ angular
         }
       })
       .when('/articles', {
-	      title: 'Articles',        
+	      title: 'Articles',   
+        icon: 'menu',     
 	      templateUrl: 'views/articles.html',
         controller: 'ArticlesCtrl',
         resolve: {
@@ -167,6 +173,7 @@ angular
       })
       .when('/articles/:articleId', {
         title: 'articles.title',
+        icon: 'navigate_before',
         templateUrl: 'views/articles/:articleid.html',
         controller: 'ArticlesArticleidCtrl',
         resolve: {
@@ -175,6 +182,7 @@ angular
       })
       .when('/articlesadd', {
         title: 'Add an Article',
+        icon: 'navigate_before',
         templateUrl: 'views/articlesAdd.html',
         controller: 'ArticlesAddCtrl',
         resolve: {
