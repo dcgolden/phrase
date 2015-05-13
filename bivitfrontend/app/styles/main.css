@@ -33,7 +33,7 @@
 }
 
 .mouseHoverGrey{
-  
+  background-color: gray;
 }
 
 .Views{
@@ -54,6 +54,10 @@
 
 .hamburgerMenuButton2{
   padding-top: .4em !important;
+}
+
+.hamburgerMenuButton3{
+  margin-right: .5em !important;
 }
 
 .div.feature {
