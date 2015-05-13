@@ -1,5 +1,9 @@
+body{
+  background-color: #eee !important;
+}
+
 .searchBar{
-  width: 15em;
+  width: 20%;
   float: right;
   margin-top: -4em;
   z-index: 7;
@@ -55,6 +59,10 @@
 .div.feature {
     position: relative;
 }
+
+.whiteBack{
+  background-color: #FFF !important;
+}
  
 div.feature a {
     position: absolute;
@@ -84,6 +92,14 @@ div.feature a {
 
 .articleCardContainer{
   background-color: transparent !important;
+}
+
+.articleContentCardFooter{
+  height: 1.2em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-right: 1em;
 }
 
 .zRaise2
