@@ -32,10 +32,6 @@
   font-weight: bold;
 }
 
-.mouseHoverGrey{
-  background-color: gray;
-}
-
 .Views{
   padding-left: 60px;
   padding-right: 60px;
@@ -48,16 +44,12 @@
   z-index: 100 !important;
 }
 
-.hamburgerMenuButton{
-  margin-top: .5em !important;
-}
-
 .hamburgerMenuButton2{
   padding-top: .4em !important;
 }
 
 .hamburgerMenuButton3{
-  margin-right: .5em !important;
+  padding-right: .5em !important;
 }
 
 .div.feature {

@@ -23,7 +23,7 @@
     <!--TOOLBAR!!-->
     <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1 mainToolbar">
       <div class="md-toolbar-tools">
-        <md-button class="md-icon-button hamburgerMenuButton" aria-label="Settings" ng-click="toggleLeft()">
+        <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
           <div class="hamburgerMenuButton2" flex>
             <ng-md-icon icon="menu" style="fill: white" size="36">
             </ng-md-icon>
@@ -40,11 +40,11 @@
       <md-sidenav style="height:500px;" md-component-id="left" class="md-sidenav-left md-whiteframe-z2">
         <md-toolbar class="" ng-click="toggleLeft()">
           <div class="md-toolbar-tools">
-            <div class="hamburgerMenuButton">
+            <div class="hamburgerMenuButton2 hamburgerMenuButton3">
               <ng-md-icon icon="menu" style="fill: white" size="36">
               </ng-md-icon>
             </div>
-            <div class="navbarCurrentPage">
+            <div class="navbarCurrentPage navbarHover">
               {{$route.current.title}}
             </div>
           </div>
