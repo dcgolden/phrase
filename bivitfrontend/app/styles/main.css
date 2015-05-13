@@ -16,13 +16,20 @@
   float: left;
 }
 
-.toolbarCurrentLocation{
-  position: block;
-}
-
 .articlesContainer{
   padding-top: 3em;
   padding-bottom: 3em;
+}
+
+.toolbarCurrentPage{
+  margin-top: .2em !important;
+  margin-left: .6em;
+}
+
+.navbarCurrentPage{
+  margin-top: .2em !important;
+  margin-left: .6em;
+  font-weight: bold;
 }
 
 .Views{
