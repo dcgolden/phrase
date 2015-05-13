@@ -1,31 +1,102 @@
-<h1>ADD VIEW</h1>
-  <div>
- <md-input-container> 
-  <label>Title</label>
-  <input type ="text" ng-model="title">
-  </md-input-container>
-  </div>
+<div>
+  <md-content class="md-padding">
+    <md-tabs md-dynamic-height md-border-bottom>
+      <md-tab label="Copy and Paste">
+        <md-content class="md-padding">
+          <h1 class="md-display-2"></h1>
+
+          <div>
+            <md-input-container> 
+              <label>Title</label>
+              <input type ="text" ng-model="title">
+            </md-input-container>
+          </div>
+            
+          <div>
+            <md-input-container> 
+              <label>Author</label>
+              <input type ="text" ng-model="author">
+            </md-input-container>
+          </div>
+
+          <div>
+            <md-input-container> 
+              <label>Source</label>
+              <input type ="text" ng-model="source">
+            </md-input-container>
+          </div>
+
+          <div>
+            <md-input-container flex="">
+              <label>Content</label>
+             <textarea ng-model="content" columns="1"></textarea>
+            </md-input-container>
+          </div>
+            
+          <md-button class="md-raised md-accent" ng-click="addArticleCP()">Add Article</md-button>
+          <pre id="default-spacing">{{article}}</pre>
+
+        </md-content>
+      </md-tab>
+      <md-tab label="URL">
+        <md-content class="md-padding">
+          <h1 class="md-display-2"></h1>
+          
+          <div>
+            <md-input-container> 
+              <label>Title</label>
+              <input type ="text" ng-model="title">
+            </md-input-container>
+          </div>
+            
+          <div>
+            <md-input-container> 
+              <label>Author</label>
+              <input type ="text" ng-model="author">
+            </md-input-container>
+          </div>
+
+          <div>
+            <md-input-container> 
+              <label>URL</label>
+              <input type ="text" ng-model="URL">
+            </md-input-container>
+          </div>
+
+          <md-button class="md-raised md-accent" ng-click="addArticleURL()">Add Article</md-button>
+
+        </md-content>
+      </md-tab>
+      <md-tab label="PDF">
+        <md-content class="md-padding">
+          <h1 class="md-display-2"></h1>
+          
+          <div>
+            <md-input-container> 
+              <label>Title</label>
+              <input type ="text" ng-model="title">
+            </md-input-container>
+          </div>
+            
+          <div>
+            <md-input-container> 
+              <label>Author</label>
+              <input type ="text" ng-model="author">
+            </md-input-container>
+          </div>
+
+          <div>
+            <md-input-container> 
+              <input type ="file" ng-model="PDF">
+            </md-input-container>
+          </div>
+
+          <md-button class="md-raised md-accent" ng-click="addArticlePDF()">Add Article</md-button>
+
+        </md-content>
+      </md-tab>
+    </md-tabs>
+  </md-content>
+</div>
+
   
-  <div>
-  <md-input-container> 
-  <label>Author</label>
-  <input type ="text" ng-model="author">
-  </md-input-container>
-  </div>
-
-  <div>
-  <md-input-container> 
-  <label>Source</label>
-  <input type ="text" ng-model="source">
-  </md-input-container>
-  </div>
-
-  <div>
-  <md-input-container flex="">
-        <label>Content</label>
-        <textarea ng-model="content" columns="1"></textarea>
-  </md-input-container>
-  </div>
-  <md-button class="md-raised md-accent" ng-click="addArticle()">Add Article</md-button>
-
-  <pre id="default-spacing">{{article}}</pre>

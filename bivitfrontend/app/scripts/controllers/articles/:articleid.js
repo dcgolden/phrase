@@ -17,13 +17,6 @@ angular.module('bivitfrontSampleApp')
                 $scope.article = data;
                 console.log(data);
             });
-        $scope.deleteArticle = function(path,data) {
-            $http.delete(url);
-            console.log(data);
-            $location.path( '/articles' );
-        };
-
-        $scope.alert = '';
 
         $scope.showConfirm = function(ev) {
             // Appending dialog to document.body to cover sidenav in docs app
@@ -40,7 +33,6 @@ angular.module('bivitfrontSampleApp')
                 console.log('deleted!');
                 $location.path( '/articles' );
             }, function() {
-              $scope.alert = '';
             });
         };
     });

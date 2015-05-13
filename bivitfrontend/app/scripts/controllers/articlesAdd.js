@@ -17,7 +17,7 @@ angular.module('bivitfrontSampleApp')
   	};
 
 
-  	$scope.addArticle = function (data)
+  	$scope.addArticleCP = function (data)
   	{
   		$http({
         method: 'POST',
