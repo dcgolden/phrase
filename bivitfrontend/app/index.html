@@ -38,23 +38,47 @@
         <md-content layout-padding="" ng-controller="LeftNavCtrl">
           <md-list hide-md="" show-gt-md="">
             <md-list-item ng-click="navigateTo( '/' )">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="home" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
               <p>Home</p>
             </md-list-item>
             <md-divider class="navDivider" ng-if="!$last"></md-divider>
             <md-list-item ng-click="navigateTo( '/users' )">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="people" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
               <p>Users</p>
             </md-list-item>
             <md-list-item ng-click="navigateTo( '/classrooms' )">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="school" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
               <p>Classrooms</p>
             </md-list-item>
             <md-list-item ng-click="navigateTo( '/articles' )">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="my_library_books" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
               <p>Articles</p>
             </md-list-item>
             <md-divider class="navDivider" ng-if="!$last"></md-divider>
             <md-list-item ng-click="navigateTo( '/about' )">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="info" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
               <p>About</p>
             </md-list-item>
             <md-list-item ng-click="navigateTo( '/contact' )">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="help" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
               <p>Contact</p>
             </md-list-item>
           </md-list>
