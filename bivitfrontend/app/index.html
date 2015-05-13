@@ -51,7 +51,7 @@
         </md-toolbar>
         <md-content layout-padding="" ng-controller="LeftNavCtrl">
           <md-list hide-md="" show-gt-md="">
-            <md-list-item ng-click="navigateTo( '/' )">
+            <md-list-item ng-click="navigateTo( '/' )" ng-class="{mouseHoverGrey: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
               <div class="sideNavIcons">
                 <ng-md-icon icon="home" style="fill: black" size="30">
                 </ng-md-icon>
@@ -59,21 +59,21 @@
               <p>Home</p>
             </md-list-item>
             <md-divider class="navDivider" ng-if="!$last"></md-divider>
-            <md-list-item ng-click="navigateTo( '/users' )">
+            <md-list-item ng-click="navigateTo( '/users' )" ng-class="{mouseHoverGrey: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
               <div class="sideNavIcons">
                 <ng-md-icon icon="people" style="fill: black" size="30">
                 </ng-md-icon>
               </div>
               <p>Users</p>
             </md-list-item>
-            <md-list-item ng-click="navigateTo( '/classrooms' )">
+            <md-list-item ng-click="navigateTo( '/classrooms' )" ng-class="{mouseHoverGrey: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
               <div class="sideNavIcons">
                 <ng-md-icon icon="school" style="fill: black" size="30">
                 </ng-md-icon>
               </div>
               <p>Classrooms</p>
             </md-list-item>
-            <md-list-item ng-click="navigateTo( '/articles' )">
+            <md-list-item ng-click="navigateTo( '/articles' )" ng-class="{mouseHoverGrey: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
               <div class="sideNavIcons">
                 <ng-md-icon icon="my_library_books" style="fill: black" size="30">
                 </ng-md-icon>
