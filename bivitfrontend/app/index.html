@@ -79,7 +79,7 @@
                 </ng-md-icon>
               </div>
               <p>Articles</p>
-            </md-list-item>
+            </md-list-item ng-class="{mouseHoverGrey: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
             <md-divider class="navDivider" ng-if="!$last"></md-divider>
             <md-list-item ng-click="navigateTo( '/about' )">
               <div class="sideNavIcons">
@@ -87,7 +87,7 @@
                 </ng-md-icon>
               </div>
               <p>About</p>
-            </md-list-item>
+            </md-list-item ng-class="{mouseHoverGrey: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
             <md-list-item ng-click="navigateTo( '/contact' )">
               <div class="sideNavIcons">
                 <ng-md-icon icon="help" style="fill: black" size="30">
