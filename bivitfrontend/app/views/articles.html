@@ -16,12 +16,12 @@
   </md-input-container>
 
   <div class="articlesContainer">
-    <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="10px">
-      <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 testColor" ng-class="{zRaise2: hover}" md-rowspan="2"ng-mouseenter="hover = true" ng-mouseleave="hover = false" id="articleContentCard">
-        <div class="feature">
+    <md-grid-list md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="15px">
+      <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1" ng-class="{zRaise2: hover}" md-rowspan="2"ng-mouseenter="hover = true" ng-mouseleave="hover = false">
+        <div class="feature articleContentCardDiv">
           <a href="http://localhost:9000/#/articles/{{article._id}}"  ></a>
-          <div id="articleContentCard" ng-bind="article.content"></div>
-          <md-grid-tile-footer text-align:center>
+          <div class="articleContentCard" ng-bind="article.content"></div>
+          <md-grid-tile-footer class="articleContentCardFooter" text-align:center>
             <h3 ng-bind="article.title"></h3>
           </md-grid-tile-footer>
         </div>

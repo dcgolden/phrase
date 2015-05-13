@@ -16,6 +16,10 @@
   float: left;
 }
 
+.toolbarCurrentLocation{
+  position: block;
+}
+
 .articlesContainer{
   padding-top: 3em;
   padding-bottom: 3em;
@@ -30,6 +34,7 @@
   float: right;
   margin-top: -2em;
   margin-right: 5em;
+  z-index: 100 !important;
 }
 
 .hamburgerMenuButton{
@@ -40,19 +45,8 @@
   padding-top: .4em !important;
 }
 
-.testColor{
-background-color: #ffffff;
-}
 .div.feature {
     position: relative;
-}
-
-#articleContentCard{
-  overflow:hidden;
-  text-overflow:ellipsis;
-  padding-left: 1em;
-  padding-right: 1em;
-  vertical-align: top;
 }
  
 div.feature a {
@@ -66,6 +60,19 @@ div.feature a {
     background-color: #FFF; /* Fix to make div clickable in IE */
     opacity: 0; /* Fix to make div clickable in IE */
     filter: alpha(opacity=1); /* Fix to make div clickable in IE */
+}
+
+.articleContentCardDiv{
+  height: inherit;
+  padding: 10px;
+  overflow: hidden;
+  border-bottom: 58px solid white;
+}
+
+.articleContentCard{
+  text-align: left;
+  font-size: 6px;
+
 }
 
 .articleCardContainer{

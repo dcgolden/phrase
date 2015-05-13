@@ -20,13 +20,21 @@ angular
     'ngMdIcons'
   ])
 
-  .controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log) {
+  .controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $route, $routeParams, $location) {
     $scope.toggleLeft = buildToggler('left');
+
+    /** grabs the current loaction
+      */
+
+     $scope.$route = $route;
+     $scope.$location = $location;
+     $scope.$routeParams = $routeParams;
 
     /**
      * Build handler to open/close a SideNav; when animation finishes
      * report completion in console
      */
+
     function buildToggler(navID) {
       var debounceFn =  $mdUtil.debounce(function(){
             $mdSidenav(navID)
@@ -40,7 +48,16 @@ angular
     }
 
   })
-  .controller('LeftNavCtrl', function ($scope, $timeout, $mdSidenav, $log, $location) {
+  .controller('LeftNavCtrl', function ($scope, $timeout, $mdSidenav, $log, $location, $route, $routeParams) {
+    
+    /** grabs the current loaction
+      */
+
+     $scope.$route = $route;
+     $scope.$location = $location;
+     $scope.$routeParams = $routeParams;
+     
+
     $scope.close = function () {
       $mdSidenav('left').close()
         .then(function () {
@@ -86,18 +103,22 @@ angular
 
     $routeProvider
       .when('/', {
+        title: 'Home',
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
       .when('/about', {
+        title: 'About',
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
       .when('/contact', {
+        title: 'Contact',
         templateUrl: 'views/contact.html',
         controller: 'ContactCtrl'
       })
       .when('/users', {
+        title: 'Users',
         templateUrl: 'views/users.html',
         controller: 'UsersCtrl',
         resolve: {
@@ -105,6 +126,7 @@ angular
         }
       })
       .when('/classrooms', {
+        title: 'Classrooms',
         templateUrl: 'views/classrooms.html',
         controller: 'ClassroomsCtrl',
         resolve: {
@@ -112,6 +134,7 @@ angular
         }
       })
       .when('/users/:userId', {
+        title: 'user.name',
         templateUrl: 'views/users/:userid.html',
         controller: 'UsersUseridCtrl',
         resolve: {
@@ -119,6 +142,7 @@ angular
         }
       })
       .when('/classrooms/:classroomId', {
+        title: 'classroom.title',
         templateUrl: 'views/classrooms/:classroomid.html',
         controller: 'ClassroomsClassroomidCtrl',
         resolve: {
@@ -126,6 +150,7 @@ angular
         }
       })
       .when('/classroomsadd', {
+        title: 'Add a Classroom',
         templateUrl: 'views/classroomsAdd.html',
         controller: 'ClassroomsAddCtrl',
         resolve: {
@@ -141,6 +166,7 @@ angular
         }
       })
       .when('/articles/:articleId', {
+        title: 'articles.title',
         templateUrl: 'views/articles/:articleid.html',
         controller: 'ArticlesArticleidCtrl',
         resolve: {
@@ -148,6 +174,7 @@ angular
         }
       })
       .when('/articlesadd', {
+        title: 'Add an Article',
         templateUrl: 'views/articlesAdd.html',
         controller: 'ArticlesAddCtrl',
         resolve: {
