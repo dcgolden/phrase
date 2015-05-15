@@ -21,7 +21,7 @@ angular
   ])
 
   .controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $route, $routeParams, $location) {
-    $scope.toggleLeft = buildToggler('left');
+
 
     /** grabs the current loaction
       */
@@ -45,6 +45,8 @@ angular
 
       return debounceFn;
     }
+
+        $scope.toggleLeft = buildToggler('left');
 
   })
   .controller('LeftNavCtrl', function ($scope, $timeout, $mdSidenav, $log, $location, $route, $routeParams) {
@@ -109,11 +111,13 @@ angular
       })
       .when('/about', {
         title: 'About',
+        icon: 'menu',
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
       .when('/contact', {
         title: 'Contact',
+        icon: 'menu',
         templateUrl: 'views/contact.html',
         controller: 'ContactCtrl'
       })
