@@ -137,7 +137,7 @@ angular
       })
       .when('/users/:userId', {
         title: 'user.name',
-        icon: 'navigate_before',
+        icon: 'arrow_back',
         templateUrl: 'views/users/:userid.html',
         controller: 'UsersUseridCtrl',
         resolve: {
@@ -146,7 +146,7 @@ angular
       })
       .when('/classrooms/:classroomId', {
         title: 'classroom.title',
-        icon: 'navigate_before',
+        icon: 'arrow_back',
         templateUrl: 'views/classrooms/:classroomid.html',
         controller: 'ClassroomsClassroomidCtrl',
         resolve: {
@@ -155,7 +155,7 @@ angular
       })
       .when('/classroomsadd', {
         title: 'Add a Classroom',
-        icon: 'navigate_before',
+        icon: 'arrow_back',
         templateUrl: 'views/classroomsAdd.html',
         controller: 'ClassroomsAddCtrl',
         resolve: {
@@ -173,7 +173,7 @@ angular
       })
       .when('/articles/:articleId', {
         title: 'articles.title',
-        icon: 'navigate_before',
+        icon: 'arrow_back',
         templateUrl: 'views/articles/:articleid.html',
         controller: 'ArticlesArticleidCtrl',
         resolve: {
@@ -182,7 +182,7 @@ angular
       })
       .when('/articlesadd', {
         title: 'Add an Article',
-        icon: 'navigate_before',
+        icon: 'arrow_back',
         templateUrl: 'views/articlesAdd.html',
         controller: 'ArticlesAddCtrl',
         resolve: {
