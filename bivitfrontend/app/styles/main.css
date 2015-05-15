@@ -128,3 +128,15 @@ div.feature a {
   padding-right: 1.3em;
   margin-bottom: -.6em;
 }
+
+.thumbnail {
+    float: left;
+    width: 110px;
+    height: 90px;
+    margin: 5px;
+}
+
+.text_line {
+    clear: both;
+    margin-bottom: 2px;
+}

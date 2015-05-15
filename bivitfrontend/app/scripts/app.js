@@ -89,14 +89,14 @@ angular
 
     $mdThemingProvider.theme('default')
     .primaryPalette('indigo', {
-      'default': '400', // by default use shade 400 from the pink palette for primary intentions
+      'default': '500', // by default use shade 400 from the pink palette for primary intentions
       'hue-1': '100', // use shade 100 for the <code>md-hue-1</code> class
       'hue-2': '500', // use shade 500 for the <code>md-hue-2</code> class
       'hue-3': '700' // use shade 700 for the <code>md-hue-3</code> class
     })
     // If you specify less than all of the keys, it will inherit from the
     // default shades
-    .accentPalette('pink', {
+    .accentPalette('light-blue', {
       'default': 'A200' // use shade A200 for default, and keep all other shades the same
     });
 
