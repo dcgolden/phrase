@@ -157,26 +157,6 @@ angular
 
 .controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $route, $routeParams, $location, $http) {
 
-  function navBack(pageID) {
-      $location.path( '/' + pageID );
-    }
-    
-    function buildToggler(navID) {
-      var debounceFn =  $mdUtil.debounce(function(){
-            $mdSidenav(navID)
-              .toggle()
-              .then(function () {
-                $log.debug('toggle ' + navID + ' is done');
-              });
-          },300);
-      return debounceFn;
-    }
-
-    $scope.toggleLeft = buildToggler('left');
-    $scope.navBackUsers = navBack('users');
-    $scope.navBackArticles = navBack('articles');
-    $scope.navBackClassrooms = navBack('classrooms');
-
   $scope.NavBarTitle = function() {
     if($route.current.isIDPage) {
       if($routeParams.articleId) {
