@@ -9,13 +9,8 @@
  */
 angular.module('bivitfrontSampleApp')
   .controller('ArticlesAddCtrl', function ($scope, $http, $route, $routeParams) {
-  	var article = {
-  		content : $scope.content,
-  		source  : $scope.source,
-  		author  : $scope.author,
-  		title   : $scope.title
-  	};
 
+    //var theID = $scope.classroom._id;
 
   	$scope.addArticleCP = function (data)
   	{
