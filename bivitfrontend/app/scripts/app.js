@@ -21,61 +21,6 @@ angular
     'ngMdIcons'
   ])
 
-  .controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $route, $routeParams, $location) {
-
-
-    $scope.isActive = function(route) {
-        return route === $location.path();
-    };
-
-    /** grabs the current loaction
-      */
- 
-     $scope.$route = $route;
-     $scope.$location = $location;
-     $scope.$routeParams = $routeParams;
-    /**
-     * Build handler to open/close a SideNav; when animation finishes
-     * report completion in console
-     */
-
-    function buildToggler(navID) {
-      var debounceFn =  $mdUtil.debounce(function(){
-            $mdSidenav(navID)
-              .toggle()
-              .then(function () {
-                $log.debug('toggle ' + navID + ' is done');
-              });
-          },300);
-
-      return debounceFn;
-    }
-
-        $scope.toggleLeft = buildToggler('left');
-
-  })
-  .controller('LeftNavCtrl', function ($scope, $timeout, $mdSidenav, $log, $location, $route, $routeParams) {
-    
-    /** grabs the current loaction
-      */
-
-     $scope.$route = $route;
-     $scope.$location = $location;
-     $scope.$routeParams = $routeParams;
-     
-
-    $scope.close = function () {
-      $mdSidenav('left').close()
-        .then(function () {
-          $log.debug('close LEFT is done');
-        });
-    };
-
-    $scope.navigateTo = function ( path ) {
-      $location.path( path );
-    };
-  })
-
   .config(function ($routeProvider, $mdThemingProvider) {
     var checkLoggedin = function($q, $timeout, $http, $location, $rootScope){
       // Initialize a new promise
@@ -147,6 +92,7 @@ angular
       .when('/users/:userId', {
         title: 'user.name',
         icon: 'arrow_back',
+        isIDPage: 'true',
         templateUrl: 'views/users/:userid.html',
         controller: 'UsersUseridCtrl',
         resolve: {
@@ -156,6 +102,7 @@ angular
       .when('/classrooms/:classroomId', {
         title: 'classroom.title',
         icon: 'arrow_back',
+        isIDPage: 'true',
         templateUrl: 'views/classrooms/:classroomid.html',
         controller: 'ClassroomsClassroomidCtrl',
         resolve: {
@@ -183,6 +130,7 @@ angular
       .when('/articles/:articleId', {
         title: 'articles.title',
         icon: 'arrow_back',
+        isIDPage: 'true',
         templateUrl: 'views/articles/:articleid.html',
         controller: 'ArticlesArticleidCtrl',
         resolve: {
@@ -205,4 +153,84 @@ angular
       .otherwise({
         redirectTo: 'views/404.html'
       });
+  })
+
+.controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $route, $routeParams, $location, $http) {
+
+  $scope.NavBarTitle = function() {
+    if($route.current.isIDPage) {
+      if($routeParams.articleId) {
+        /*var url = 'http://localhost:8080/api/articles/' + $routeParams.articleId;
+        var articleData;
+
+        $http.get(url)
+            .success(function(data) {
+                articleData = data;
+                console.log(data);
+            });
+
+        return articleData.title;*/
+      }
+      else if($routeParams.userId) {
+        return 'hi!';
+      }
+      else if($routeParams.classroomId) {
+        return 'no!';
+      }
+    }
+     else {
+      return $route.current.title;
+     }
+  }; 
+
+    $scope.isActive = function(route) {
+        return route === $location.path();
+    };
+
+    /** grabs the current loaction
+      */
+ 
+     $scope.$route = $route;
+     $scope.$location = $location;
+     $scope.$routeParams = $routeParams;
+    /**
+     * Build handler to open/close a SideNav; when animation finishes
+     * report completion in console
+     */
+
+    function buildToggler(navID) {
+      var debounceFn =  $mdUtil.debounce(function(){
+            $mdSidenav(navID)
+              .toggle()
+              .then(function () {
+                $log.debug('toggle ' + navID + ' is done');
+              });
+          },300);
+
+      return debounceFn;
+    }
+
+        $scope.toggleLeft = buildToggler('left');
+
+  })
+  .controller('LeftNavCtrl', function ($scope, $timeout, $mdSidenav, $log, $location, $route, $routeParams) {
+    
+    /** grabs the current loaction
+      */
+
+     $scope.$route = $route;
+     $scope.$location = $location;
+     $scope.$routeParams = $routeParams;
+     
+
+    $scope.close = function () {
+      $mdSidenav('left').close()
+        .then(function () {
+          $log.debug('close LEFT is done');
+        });
+    };
+
+    $scope.navigateTo = function ( path ) {
+      $location.path( path );
+    };
   });
