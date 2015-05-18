@@ -9,6 +9,12 @@ html, body{
   z-index: 7;
 }
 
+.active{
+  font-weight: bold !important;
+  color: #3F51B5;                 /* change this color to match theme */
+  fill: #3F51B5 !important;       /* change this color to match theme */
+}
+
 .navDivider{
   margin-top: .3em;
   margin-bottom: .3em;
