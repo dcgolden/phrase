@@ -15,6 +15,7 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
+    'ngLodash',
     'ngTouch',
     'ngMaterial',
     'ngMdIcons'
