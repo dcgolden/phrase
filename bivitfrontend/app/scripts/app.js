@@ -155,33 +155,7 @@ angular
       });
   })
 
-.controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $route, $routeParams, $location, $http) {
-
-  $scope.NavBarTitle = function() {
-    if($route.current.isIDPage) {
-      if($routeParams.articleId) {
-        /*var url = 'http://localhost:8080/api/articles/' + $routeParams.articleId;
-        var articleData;
-
-        $http.get(url)
-            .success(function(data) {
-                articleData = data;
-                console.log(data);
-            });
-
-        return articleData.title;*/
-      }
-      else if($routeParams.userId) {
-        return 'hi!';
-      }
-      else if($routeParams.classroomId) {
-        return 'no!';
-      }
-    }
-     else {
-      return $route.current.title;
-     }
-  }; 
+.controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $route, $routeParams, $location) {
 
     $scope.isActive = function(route) {
         return route === $location.path();

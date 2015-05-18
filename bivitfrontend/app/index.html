@@ -12,9 +12,6 @@
   </head>
   <body ng-app="bivitfrontSampleApp" ng-controller="NavCtrl">
 
-  "{{$routeParams}}"
-  "{{$route.current.isIDPage}}"
-
     <!--TOOLBAR!!-->
     <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1 mainToolbar">
       <div class="md-toolbar-tools">
@@ -24,7 +21,7 @@
             </ng-md-icon>
           </div>
         </md-button>
-        <div class="toolbarCurrentPage" ng-bind="NavBarTitle()">
+        <div class="toolbarCurrentPage" ng-bind="navBarTitle">
         </div>
       </div>
     </md-toolbar>
