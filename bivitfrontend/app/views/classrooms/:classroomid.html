@@ -7,7 +7,8 @@
 <div class="jumbotron">
 <h1>{{classroom.classroomName | uppercase}}</h1>
 </div>
-<div ng-repeat="article in classroom.articles">{{article}}</div>
+{{classroom.articles[0]}}
+<div ng-repeat="article in articleObjects">{{article.title}}</div>
 <style>
 
 </style>

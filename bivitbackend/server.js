@@ -190,7 +190,6 @@ router.route('/classrooms/:classroom_id')
 			res.json(classroom);
 		})
 	})
-
 	// update the classrooms with this id (accessed at PUT http://localhost:8080/api/clasroomss/:classroom_id)
 	.put(function(req, res) {
 		// use our classroom model to find the classrooms we want
@@ -200,6 +199,7 @@ router.route('/classrooms/:classroom_id')
 				res.send(err);
 
 			classroom.classroomName = req.body.classroomName;
+                        classroom.articles      = req.body.articles;
 			
 			// save the classroom
 			classroom.save(function(err) {
@@ -279,7 +279,7 @@ router.route('/articles/:article_id')
 			article.title = req.body.title;
 			article.author = req.body.author;
 			article.source = req.body.source;
-			article.content = req.body.source;
+			article.content = req.body.content;
 			
 			// save the classroom
 			article.save(function(err) {
@@ -313,4 +313,4 @@ app.use('/api', router);
 // START THE SERVER
 // =============================================================================
 app.listen(port);
-console.log('PORT ' + port + " IS CORRUPT. DATA LOSS DETECTED. ATTEMPTING TO REPAIR...");
+console.log("WE'RE WATCHING YOU ON PORT " + port + ", KATIE");
