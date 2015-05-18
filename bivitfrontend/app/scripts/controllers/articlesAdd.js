@@ -23,10 +23,10 @@ angular.module('bivitfrontSampleApp')
         },
         transformRequest: function(obj) {
         var str = [];
-        for(var p in obj)
+        for(var p in obj){
         str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
-        return str.join("&");
-        },
+        return str.join('&');
+        }},
         data: {content: $scope.content, source: $scope.source, author: $scope.author, title: $scope.title, classroomID: $scope.classroom._id}
     });
       console.log(data);
