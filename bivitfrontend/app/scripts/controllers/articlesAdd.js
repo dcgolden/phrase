@@ -36,4 +36,14 @@ angular.module('bivitfrontSampleApp')
     })
       console.log(data);
   	}
+    $scope.classrooms = [];
+    
+    $scope.loadClassrooms = function()
+    {  
+      $http.get('http://localhost:8080/api/classrooms')
+      .success( function (data) {
+        $scope.classrooms = (data);
+        console.log(data);
+      });
+    }
 });
