@@ -5,49 +5,6 @@
         <md-content class="md-padding">
           <h1 class="md-display-2"></h1>
 
-<<<<<<< HEAD
-          <div>
-            <md-input-container> 
-              <label>Title</label>
-              <input type ="text" ng-model="title">
-            </md-input-container>
-            {{title}}
-          </div>
-          
-          <div layout="column" layout-align="center center" style="height: 100px;">
-            <md-select ng-model="classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
-            <md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
-            <md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
-            </md-select>
-            {{"The ID is: " + classroom._id}}
-          </div>
-            
-          <div>
-            <md-input-container> 
-              <label>Author</label>
-              <input type ="text" ng-model="author">
-              {{$scope.author}}
-            </md-input-container>
-          </div>
-
-          <div>
-            <md-input-container> 
-              <label>Source</label>
-              <input type ="text" ng-model="source">
-              {{$scope.source}}
-            </md-input-container>
-          </div>
-
-          <div>
-            <md-input-container flex="">
-              <label>Content</label>
-             <textarea ng-model="content" columns="1"></textarea>
-            </md-input-container>
-          </div>
-            
-          <md-button class="md-raised md-accent" ng-click="addArticleCP()">Add Article</md-button>
-          <pre id="default-spacing">{{article}}</pre>
-=======
           <form name="CnP">
 
             <div>
@@ -98,7 +55,6 @@
             </div>
 
           </form>
->>>>>>> af2ed2aac75ca7bc3a50a1871f1831cf5fe3df42
 
         </md-content>
       </md-tab>
@@ -158,29 +114,6 @@
 
           <form name="PDF">
           
-<<<<<<< HEAD
-          <div>
-            <md-input-container> 
-              <label>Title</label>
-              <input type ="text" ng-model="title">
-            </md-input-container>
-          </div>
-            
-          <div>
-            <md-input-container> 
-              <label>Author</label>
-              <input type ="text" ng-model="author">
-            </md-input-container>
-          </div>
-
-          <div>
-            <md-input-container> 
-              <input type ="file" ng-model="PDF" aria-label="lucky">
-            </md-input-container>
-          </div>
-
-          <md-button class="md-raised md-accent" ng-click="addArticlePDF()">Add Article</md-button>
-=======
             <div>
               <md-input-container> 
                 <label>Title</label>
@@ -221,7 +154,6 @@
             </div>
 
           </form>
->>>>>>> af2ed2aac75ca7bc3a50a1871f1831cf5fe3df42
 
         </md-content>
       </md-tab>
