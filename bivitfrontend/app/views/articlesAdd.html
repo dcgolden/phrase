@@ -5,101 +5,147 @@
         <md-content class="md-padding">
           <h1 class="md-display-2"></h1>
 
-          <div>
-            <md-input-container> 
-              <label>Title</label>
-              <input type ="text" ng-model="title">
-            </md-input-container>
-          </div>
-          
-          <div layout="column" layout-align="center center" style="height: 100px;">
-            <md-select ng-model="classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
-            <md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
-            <md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
-            </md-select>
-            {{"The ID is: " + classroom._id}}
-          </div>
-            
-          <div>
-            <md-input-container> 
-              <label>Author</label>
-              <input type ="text" ng-model="author">
-            </md-input-container>
-          </div>
+          <form name="CnP">
 
-          <div>
-            <md-input-container> 
-              <label>Source</label>
-              <input type ="text" ng-model="source">
-            </md-input-container>
-          </div>
+            <div>
+              <md-input-container> 
+                <label>Title</label>
+                <input required type ="text" name="title" ng-model="title">
+                <div ng-messages="CnP.title.$error">
+                  <div ng-message="required">This is required.</div>
+                </div>
+              </md-input-container>
+            </div>
+              
+            <div>
+              <md-input-container> 
+                <label>Author</label>
+                <input type ="text" ng-model="author">
+              </md-input-container>
+            </div>
 
-          <div>
-            <md-input-container flex="">
-              <label>Content</label>
-             <textarea ng-model="content" columns="1"></textarea>
-            </md-input-container>
-          </div>
-            
-          <md-button class="md-raised md-accent" ng-click="addArticleCP()">Add Article</md-button>
-          <pre id="default-spacing">{{article}}</pre>
+            <div>
+              <md-input-container> 
+                <label>Source</label>
+                <input type ="text" ng-model="source">
+              </md-input-container>
+            </div>
+
+            <div>
+              <md-input-container flex="">
+                <label>Content</label>
+                <textarea require ng-model="content" name="content" columns="1"></textarea>
+                <div ng-messages="CnP.content.$error">
+                  <div ng-message="required">This is required.</div>
+                </div>
+              </md-input-container>
+            </div>
+              
+            <md-button class="md-raised md-accent" ng-click="addArticleCP()">Add Article</md-button>
+            <pre id="default-spacing">{{article}}</pre>
+
+            <div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
+              <md-select ng-model="classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
+              <md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
+              <md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
+              </md-select>
+              {{"The ID is: " + classroom._id}}
+            </div>
+
+          </form>
 
         </md-content>
       </md-tab>
       <md-tab label="URL">
         <md-content class="md-padding">
           <h1 class="md-display-2"></h1>
+
+          <form name="url">
           
-          <div>
-            <md-input-container> 
-              <label>Title</label>
-              <input type ="text" ng-model="title">
-            </md-input-container>
-          </div>
-            
-          <div>
-            <md-input-container> 
-              <label>Author</label>
-              <input type ="text" ng-model="author">
-            </md-input-container>
-          </div>
+            <div>
+              <md-input-container> 
+                <label>Title</label>
+                <input required type ="text" name="title" ng-model="title">
+                <div ng-messages="url.title.$error">
+                  <div ng-message="required">This is required.</div>
+                </div>
+              </md-input-container>
+            </div>
+              
+            <div>
+              <md-input-container> 
+                <label>Author</label>
+                <input type ="text" ng-model="author">
+              </md-input-container>
+            </div>
 
-          <div>
-            <md-input-container> 
-              <label>URL</label>
-              <input type ="text" ng-model="URL">
-            </md-input-container>
-          </div>
+            <div>
+              <md-input-container> 
+                <label>URL</label>
+                <input required type ="text" name="url" ng-model="URL">
+                <div ng-messages="url.url.$error">
+                  <div ng-message="required">This is required.</div>
+                </div>
+              </md-input-container>
+            </div>
 
-          <md-button class="md-raised md-accent" ng-click="addArticleURL()">Add Article</md-button>
+            <md-button class="md-raised md-accent" ng-click="addArticleURL()">Add Article</md-button>
+
+            <div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
+              <md-select ng-model="classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
+              <md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
+              <md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
+              </md-select>
+              {{"The ID is: " + classroom._id}}
+            </div>
+
+          </form>
 
         </md-content>
       </md-tab>
       <md-tab label="PDF">
         <md-content class="md-padding">
           <h1 class="md-display-2"></h1>
+
+          <form name="PDF">
           
-          <div>
-            <md-input-container> 
-              <label>Title</label>
-              <input type ="text" ng-model="title">
-            </md-input-container>
-          </div>
-            
-          <div>
-            <md-input-container> 
-              <label>Author</label>
-              <input type ="text" ng-model="author">
-            </md-input-container>
-          </div>
+            <div>
+              <md-input-container> 
+                <label>Title</label>
+                <input required type ="text" name="title" ng-model="title">
+                <div ng-messages="PDF.title.$error">
+                  <div ng-message="required">This is required.</div>
+                </div>
+              </md-input-container>
+            </div>
+              
+            <div>
+              <md-input-container> 
+                <label>Author</label>
+                <input type ="text" ng-model="author">
+              </md-input-container>
+            </div>
 
-          <div>
-            <md-input-container> 
-              <input type ="file" ng-model="PDF">
-            </md-input-container>
-          </div>
+            <div>
+              <md-input-container> 
+                <input required type ="file" name="pdf" ng-model="PDF" aria-lable="pdf">
+                <div ng-messages="PDF.pdf.$error">
+                  <div ng-message="required">This is required.</div>
+                </div>
+              </md-input-container>
+            </div>
 
-          <md-button class="md-raised md-accent" ng-click="addArticlePDF()">Add Article</md-button>
+            <md-button class="md-raised md-accent" ng-click="addArticlePDF()">Add Article</md-button>
+
+            <div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
+              <md-select ng-model="classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
+              <md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
+              <md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
+              </md-select>
+              {{"The ID is: " + classroom._id}}
+            </div>
+
+          </form>
 
         </md-content>
       </md-tab>

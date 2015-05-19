@@ -18,7 +18,8 @@ angular
     'ngLodash',
     'ngTouch',
     'ngMaterial',
-    'ngMdIcons'
+    'ngMdIcons',
+    'ngMessages'
   ])
 
   .config(function ($routeProvider, $mdThemingProvider) {
@@ -48,7 +49,7 @@ angular
     })
     // If you specify less than all of the keys, it will inherit from the
     // default shades
-    .accentPalette('pink', {
+    .accentPalette('light-blue', {
       'default': 'A200' // use shade A200 for default, and keep all other shades the same
     });
 
