@@ -28,6 +28,7 @@ angular.module('bivitfrontSampleApp')
         data: {content: $scope.content, source: $scope.source, author: $scope.author, title: $scope.title, classroomID: $scope.classroom._id}
     });
       console.log(data);
+      window.history.back();
   	};
     $scope.classrooms = [];
     

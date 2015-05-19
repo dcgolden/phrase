@@ -9,13 +9,11 @@
 </style>
 
 <md-content class="articleCardContainer">
-
   <md-card class="articleCard">
-
+  	<span class="articleCardClassroom" ng-bind="classroom.classroomName"></span>
 	<h2 ng-bind="article.title" class="articleCardTitle"></h2>
 	<p ng-bind="article.author" class="articleCardAuthor"></p>
 	<md-divider class="navDivider" ng-if="!$last"></md-divider>
-	<p ng-bind="classroom.classroomName"></p>
 	<p ng-bind="article.content" class="articleCardContent"></p>
 	<p ng-bind="article.source" class="articleCardSource"></p>
   </md-card>
