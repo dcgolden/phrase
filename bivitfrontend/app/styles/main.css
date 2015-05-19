@@ -9,6 +9,12 @@ html, body{
   z-index: 7;
 }
 
+.active{
+  font-weight: bold !important;
+  color: #3F51B5;                 /* change this color to match theme */
+  fill: #3F51B5 !important;       /* change this color to match theme */
+}
+
 .navDivider{
   margin-top: .3em;
   margin-bottom: .3em;
@@ -102,10 +108,6 @@ div.feature a {
   padding-right: 1em;
 }
 
-.articleContent{
-  white-space: pre-wrap;
-}
-
 .zRaise2
 {
 	box-shadow:0 8px 17px rgba(0,0,0,.2)
@@ -113,11 +115,41 @@ div.feature a {
 
 .articleCard 
 {
+  padding: 10px;
   z-index: 7;
   margin-top: 5em;
 	width: 70%;
   margin-right: auto;
   margin-left: auto;
+}
+
+.articleCardTitle{
+  margin-top: .25em;
+  margin-bottom: 0em;
+  font-size: 3em;
+  font-weight: bold;
+  color: #333;
+}
+
+.articleCardAuthor{
+  margin-top: .1em;
+  margin-bottom: .5em;
+  margin-right: 4em;
+  color: #777;
+  font-weight: bold;
+  text-align: right;
+}
+
+.articleCardContent{
+  white-space: pre-wrap;
+  font-size: 1.2em;
+  line-height: 150%;
+}
+
+.articleCardSource{
+  margin-right: .25em;
+  color: #777;
+  text-align: right;
 }
 
 .deleteBtn{

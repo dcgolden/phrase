@@ -15,59 +15,11 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
+    'ngLodash',
     'ngTouch',
     'ngMaterial',
     'ngMdIcons'
   ])
-
-  .controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $route, $routeParams, $location) {
-    $scope.toggleLeft = buildToggler('left');
-
-    /** grabs the current loaction
-      */
- 
-     $scope.$route = $route;
-     $scope.$location = $location;
-     $scope.$routeParams = $routeParams;
-    /**
-     * Build handler to open/close a SideNav; when animation finishes
-     * report completion in console
-     */
-
-    function buildToggler(navID) {
-      var debounceFn =  $mdUtil.debounce(function(){
-            $mdSidenav(navID)
-              .toggle()
-              .then(function () {
-                $log.debug('toggle ' + navID + ' is done');
-              });
-          },300);
-
-      return debounceFn;
-    }
-
-  })
-  .controller('LeftNavCtrl', function ($scope, $timeout, $mdSidenav, $log, $location, $route, $routeParams) {
-    
-    /** grabs the current loaction
-      */
-
-     $scope.$route = $route;
-     $scope.$location = $location;
-     $scope.$routeParams = $routeParams;
-     
-
-    $scope.close = function () {
-      $mdSidenav('left').close()
-        .then(function () {
-          $log.debug('close LEFT is done');
-        });
-    };
-
-    $scope.navigateTo = function ( path ) {
-      $location.path( path );
-    };
-  })
 
   .config(function ($routeProvider, $mdThemingProvider) {
     var checkLoggedin = function($q, $timeout, $http, $location, $rootScope){
@@ -89,14 +41,14 @@ angular
 
     $mdThemingProvider.theme('default')
     .primaryPalette('indigo', {
-      'default': '500', // by default use shade 400 from the pink palette for primary intentions
+      'default': '500', // by default use shade 500 from the palette for primary intentions
       'hue-1': '100', // use shade 100 for the <code>md-hue-1</code> class
       'hue-2': '500', // use shade 500 for the <code>md-hue-2</code> class
       'hue-3': '700' // use shade 700 for the <code>md-hue-3</code> class
     })
     // If you specify less than all of the keys, it will inherit from the
     // default shades
-    .accentPalette('light-blue', {
+    .accentPalette('pink', {
       'default': 'A200' // use shade A200 for default, and keep all other shades the same
     });
 
@@ -109,11 +61,13 @@ angular
       })
       .when('/about', {
         title: 'About',
+        icon: 'menu',
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
       })
       .when('/contact', {
         title: 'Contact',
+        icon: 'menu',
         templateUrl: 'views/contact.html',
         controller: 'ContactCtrl'
       })
@@ -138,6 +92,7 @@ angular
       .when('/users/:userId', {
         title: 'user.name',
         icon: 'arrow_back',
+        isIDPage: 'true',
         templateUrl: 'views/users/:userid.html',
         controller: 'UsersUseridCtrl',
         resolve: {
@@ -147,6 +102,7 @@ angular
       .when('/classrooms/:classroomId', {
         title: 'classroom.title',
         icon: 'arrow_back',
+        isIDPage: 'true',
         templateUrl: 'views/classrooms/:classroomid.html',
         controller: 'ClassroomsClassroomidCtrl',
         resolve: {
@@ -174,6 +130,7 @@ angular
       .when('/articles/:articleId', {
         title: 'articles.title',
         icon: 'arrow_back',
+        isIDPage: 'true',
         templateUrl: 'views/articles/:articleid.html',
         controller: 'ArticlesArticleidCtrl',
         resolve: {
@@ -196,4 +153,58 @@ angular
       .otherwise({
         redirectTo: 'views/404.html'
       });
+  })
+
+.controller('NavCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log, $route, $routeParams, $location) {
+
+    $scope.isActive = function(route) {
+        return route === $location.path();
+    };
+
+    /** grabs the current loaction
+      */
+ 
+     $scope.$route = $route;
+     $scope.$location = $location;
+     $scope.$routeParams = $routeParams;
+    /**
+     * Build handler to open/close a SideNav; when animation finishes
+     * report completion in console
+     */
+
+    function buildToggler(navID) {
+      var debounceFn =  $mdUtil.debounce(function(){
+            $mdSidenav(navID)
+              .toggle()
+              .then(function () {
+                $log.debug('toggle ' + navID + ' is done');
+              });
+          },300);
+
+      return debounceFn;
+    }
+
+        $scope.toggleLeft = buildToggler('left');
+
+  })
+  .controller('LeftNavCtrl', function ($scope, $timeout, $mdSidenav, $log, $location, $route, $routeParams) {
+    
+    /** grabs the current loaction
+      */
+
+     $scope.$route = $route;
+     $scope.$location = $location;
+     $scope.$routeParams = $routeParams;
+     
+
+    $scope.close = function () {
+      $mdSidenav('left').close()
+        .then(function () {
+          $log.debug('close LEFT is done');
+        });
+    };
+
+    $scope.navigateTo = function ( path ) {
+      $location.path( path );
+    };
   });

@@ -11,10 +11,12 @@
 <md-content class="articleCardContainer">
 
   <md-card class="articleCard">
-	<h1 ng-bind="article.title | uppercase"></h1>
-	<h3>Author: <span ng-bind="article.author"></span></h3>
-	<h3>Source: <span ng-bind="article.source"></span></h3>
-	<p ng-bind="article.content" class="articleContent"></p>
+	<p ng-bind="article.title" class="articleCardTitle"></p>
+	<p ng-bind="article.author" class="articleCardAuthor"></p>
+	<md-divider class="navDivider" ng-if="!$last"></md-divider>
+	<p ng-bind="article.content" class="articleCardContent"></p>
+	<md-divider class="navDivider" ng-if="!$last"></md-divider>
+	<p ng-bind="article.source" class="articleCardSource"></p>
   </md-card>
 
   <md-button class="md-raised md-warn deleteBtn" ng-click="showConfirm()" >

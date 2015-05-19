@@ -1,0 +1,85 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/nodejs', '/usr/bin/npm', 'install', 'ng-lodash' ]
+2 info using npm@1.4.21
+3 info using node@v0.10.25
+4 warn package.json bivitfrontsample@0.0.0 No description
+5 warn package.json bivitfrontsample@0.0.0 No repository field.
+6 warn package.json bivitfrontsample@0.0.0 No README data
+7 verbose readDependencies using package.json deps
+8 verbose cache add [ 'ng-lodash', null ]
+9 verbose cache add name=undefined spec="ng-lodash" args=["ng-lodash",null]
+10 verbose parsed url { protocol: null,
+10 verbose parsed url   slashes: null,
+10 verbose parsed url   auth: null,
+10 verbose parsed url   host: null,
+10 verbose parsed url   port: null,
+10 verbose parsed url   hostname: null,
+10 verbose parsed url   hash: null,
+10 verbose parsed url   search: null,
+10 verbose parsed url   query: null,
+10 verbose parsed url   pathname: 'ng-lodash',
+10 verbose parsed url   path: 'ng-lodash',
+10 verbose parsed url   href: 'ng-lodash' }
+11 silly lockFile b778e02b-ng-lodash ng-lodash
+12 verbose lock ng-lodash /home/david/.npm/b778e02b-ng-lodash.lock
+13 silly lockFile b778e02b-ng-lodash ng-lodash
+14 silly lockFile b778e02b-ng-lodash ng-lodash
+15 verbose addNamed [ 'ng-lodash', '' ]
+16 verbose addNamed [ null, '*' ]
+17 silly lockFile e8506165-ng-lodash ng-lodash@
+18 verbose lock ng-lodash@ /home/david/.npm/e8506165-ng-lodash.lock
+19 silly addNameRange { name: 'ng-lodash', range: '*', hasData: false }
+20 verbose request where is /ng-lodash
+21 verbose request registry https://registry.npmjs.org/
+22 verbose request id db44ab3c38eb37bb
+23 verbose url raw /ng-lodash
+24 verbose url resolving [ 'https://registry.npmjs.org/', './ng-lodash' ]
+25 verbose url resolved https://registry.npmjs.org/ng-lodash
+26 verbose request where is https://registry.npmjs.org/ng-lodash
+27 info trying registry request attempt 1 at 10:13:34
+28 http GET https://registry.npmjs.org/ng-lodash
+29 http 404 https://registry.npmjs.org/ng-lodash
+30 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+30 verbose headers   'content-type': 'application/json',
+30 verbose headers   'cache-control': 'max-age=0',
+30 verbose headers   'content-length': '51',
+30 verbose headers   'accept-ranges': 'bytes',
+30 verbose headers   date: 'Mon, 18 May 2015 14:13:34 GMT',
+30 verbose headers   via: '1.1 varnish',
+30 verbose headers   age: '0',
+30 verbose headers   connection: 'keep-alive',
+30 verbose headers   'x-served-by': 'cache-dfw1824-DFW',
+30 verbose headers   'x-cache': 'MISS',
+30 verbose headers   'x-cache-hits': '0',
+30 verbose headers   'x-timer': 'S1431958414.735054,VS0,VE49' }
+31 silly registry.get cb [ 404,
+31 silly registry.get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+31 silly registry.get     'content-type': 'application/json',
+31 silly registry.get     'cache-control': 'max-age=0',
+31 silly registry.get     'content-length': '51',
+31 silly registry.get     'accept-ranges': 'bytes',
+31 silly registry.get     date: 'Mon, 18 May 2015 14:13:34 GMT',
+31 silly registry.get     via: '1.1 varnish',
+31 silly registry.get     age: '0',
+31 silly registry.get     connection: 'keep-alive',
+31 silly registry.get     'x-served-by': 'cache-dfw1824-DFW',
+31 silly registry.get     'x-cache': 'MISS',
+31 silly registry.get     'x-cache-hits': '0',
+31 silly registry.get     'x-timer': 'S1431958414.735054,VS0,VE49' } ]
+32 silly lockFile e8506165-ng-lodash ng-lodash@
+33 silly lockFile e8506165-ng-lodash ng-lodash@
+34 error 404 404 Not Found: ng-lodash
+34 error 404
+34 error 404 'ng-lodash' is not in the npm registry.
+34 error 404 You should bug the author to publish it
+34 error 404 It was specified as a dependency of 'bivitfrontsample'
+34 error 404
+34 error 404 Note that you can also install from a
+34 error 404 tarball, folder, or http url, or git url.
+35 error System Linux 3.19.0-16-generic
+36 error command "/usr/bin/nodejs" "/usr/bin/npm" "install" "ng-lodash"
+37 error cwd /home/david/Desktop/bivit/bivitfrontend
+38 error node -v v0.10.25
+39 error npm -v 1.4.21
+40 error code E404
+41 verbose exit [ 1, true ]
