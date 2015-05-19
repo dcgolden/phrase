@@ -30,6 +30,7 @@ angular.module('bivitfrontSampleApp')
       console.log(data);
       window.history.back();
   	};
+    
     $scope.classrooms = [];
     
     $scope.loadClassrooms = function()
