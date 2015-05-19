@@ -11,6 +11,14 @@
               <input type ="text" ng-model="title">
             </md-input-container>
           </div>
+          
+          <div layout="column" layout-align="center center" style="height: 100px;">
+            <md-select ng-model="classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
+            <md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
+            <md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
+            </md-select>
+            {{"The ID is: " + classroom._id}}
+          </div>
             
           <div>
             <md-input-container> 
@@ -24,13 +32,6 @@
               <label>Source</label>
               <input type ="text" ng-model="source">
             </md-input-container>
-          </div>
-          <div layout="column" layout-align="center center" style="height: 100px;">
-            <md-select ng-model="classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
-            <md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
-            <md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
-            </md-select>
-            {{"The ID is: " + classroom._id}}
           </div>
 
           <div>
