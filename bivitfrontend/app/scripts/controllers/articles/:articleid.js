@@ -31,7 +31,7 @@ angular.module('bivitfrontSampleApp')
             $mdDialog.show(confirm).then(function() {
                 $http.delete(url);
                 console.log('deleted!');
-                $location.path( '/articles' );
+                window.history.back();
             }, function() {
             });
         };
