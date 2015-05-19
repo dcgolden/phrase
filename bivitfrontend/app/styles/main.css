@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,700,300);
+
 html, body{
   background-color: #eee !important;
 }
@@ -129,7 +131,7 @@ div.feature a {
 
 .articleCard 
 {
-  padding: 10px;
+  padding: 2rem;
   z-index: 7;
   margin-top: 5em;
 	width: 70%;
@@ -155,15 +157,17 @@ div.feature a {
 }
 
 .articleCardContent{
-  white-space: pre-wrap;
-  font-size: 1.2em;
-  line-height: 150%;
+  text-decoration: none;
+  line-height: 1.7;
+  color: #8A9199;
+  margin-top: 0;
 }
 
 .articleCardSource{
   margin-right: .25em;
   color: #777;
   text-align: right;
+  font-family: 'Roboto', sans-serif;;
 }
 
 .deleteBtn{
