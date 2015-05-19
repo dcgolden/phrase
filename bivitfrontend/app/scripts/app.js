@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @ngdoc overview
  * @name bivitfrontSampleApp
@@ -207,5 +205,16 @@ angular
 
     $scope.navigateTo = function ( path ) {
       $location.path( path );
-    };
+    }
+  })
+  
+  .factory('getArticle', function (articleIDPass)
+    {
+      var url ='http://localhost:8080/api/articles/' + articleIDPass;
+      var httpData;
+      $http.get(url)
+        .success(function (data) {
+        httpData = data;
+      });
+    })  
   });
