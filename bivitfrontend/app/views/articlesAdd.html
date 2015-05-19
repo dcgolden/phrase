@@ -10,6 +10,7 @@
               <label>Title</label>
               <input type ="text" ng-model="title">
             </md-input-container>
+            {{title}}
           </div>
           
           <div layout="column" layout-align="center center" style="height: 100px;">
@@ -24,6 +25,7 @@
             <md-input-container> 
               <label>Author</label>
               <input type ="text" ng-model="author">
+              {{$scope.author}}
             </md-input-container>
           </div>
 
@@ -31,6 +33,7 @@
             <md-input-container> 
               <label>Source</label>
               <input type ="text" ng-model="source">
+              {{$scope.source}}
             </md-input-container>
           </div>
 
@@ -95,7 +98,7 @@
 
           <div>
             <md-input-container> 
-              <input type ="file" ng-model="PDF">
+              <input type ="file" ng-model="PDF" aria-label="lucky">
             </md-input-container>
           </div>
 

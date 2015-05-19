@@ -12,7 +12,7 @@ angular.module('bivitfrontSampleApp')
 
   	$scope.addArticleCP = function (data)
   	{
-  		$http({
+      $http({
         method: 'POST',
         url: 'http://localhost:8080/api/articles',
         headers: 
@@ -21,11 +21,11 @@ angular.module('bivitfrontSampleApp')
         },
         transformRequest: function(obj) {
         var str = [];
-        for(var p in obj){
+        for(var p in obj)
         str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
         return str.join('&');
-        }},
-        data: {content: $scope.content, source: $scope.source, author: $scope.author, title: $scope.title/*, classroomID: $scope.classroom._id*/}
+        },
+        data: {content: $scope.content, source: $scope.source, author: $scope.author, title: $scope.title, classroomID: $scope.classroom._id}
     });
       console.log(data);
   	};

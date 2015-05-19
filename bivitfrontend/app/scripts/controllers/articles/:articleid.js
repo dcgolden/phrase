@@ -8,15 +8,27 @@
  * Controller of the bivitfrontSampleApp
  */
 angular.module('bivitfrontSampleApp')
-    .controller('ArticlesArticleidCtrl', function($scope, $http, $route, $routeParams, $mdDialog, $location) {
+    .controller('ArticlesArticleidCtrl', function($scope, $http, $routeParams, $mdDialog) {
 
         var url = 'http://localhost:8080/api/articles/' + $routeParams.articleId;
+        var classroomURl = 'http://localhost:8080/api/classrooms/';
 
         $http.get(url)
             .success(function(data) {
                 $scope.article = data;
+                getClasroom();
                 console.log(data);
             });
+
+        var getClasroom = function () {
+          $http.get(classroomURl + $scope.article.classroomID)
+              .success(function (data) 
+              {
+                $scope.classroom = data;
+                console.log(data);
+              })
+        };
+        
 
         $scope.showConfirm = function(ev) {
             // Appending dialog to document.body to cover sidenav in docs app
