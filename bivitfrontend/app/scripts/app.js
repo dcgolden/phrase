@@ -1,3 +1,4 @@
+'use strict';
 /**
  * @ngdoc overview
  * @name bivitfrontSampleApp
@@ -205,10 +206,10 @@ angular
 
     $scope.navigateTo = function ( path ) {
       $location.path( path );
-    }
+    };
   })
   
-  .factory('getArticle', function (articleIDPass)
+  .factory('getArticle', function (articleIDPass, $http)
     {
       var url ='http://localhost:8080/api/articles/' + articleIDPass;
       var httpData;
@@ -216,5 +217,4 @@ angular
         .success(function (data) {
         httpData = data;
       });
-    })  
-  });
+    });  
