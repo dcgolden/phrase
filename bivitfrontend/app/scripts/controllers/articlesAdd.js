@@ -10,8 +10,6 @@
 angular.module('bivitfrontSampleApp')
   .controller('ArticlesAddCtrl', function ($scope, $http) {
 
-    //var theID = $scope.classroom._id;
-
   	$scope.addArticleCP = function (data)
   	{
   		$http({
@@ -27,7 +25,7 @@ angular.module('bivitfrontSampleApp')
         str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
         return str.join('&');
         }},
-        data: {content: $scope.content, source: $scope.source, author: $scope.author, title: $scope.title, classroomID: $scope.classroom._id}
+        data: {content: $scope.content, source: $scope.source, author: $scope.author, title: $scope.title/*, classroomID: $scope.classroom._id*/}
     });
       console.log(data);
   	};

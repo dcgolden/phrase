@@ -244,8 +244,8 @@ router.route('/articles')
 
 			res.json({ message: 'Article created!' });
 		});
+		res.json(article.id)
 		var newArticleId = article._id;
-                res.json(article.id)
 	})
 
 	.get(function(req, res) {
