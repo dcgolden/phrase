@@ -9,6 +9,12 @@ html, body{
   z-index: 7;
 }
 
+.classroomPicker{
+  float: right;
+  margin-top: -5.5em;
+  margin-right: 2em;
+}
+
 .active{
   font-weight: bold !important;
   color: #3F51B5;                 /* change this color to match theme */

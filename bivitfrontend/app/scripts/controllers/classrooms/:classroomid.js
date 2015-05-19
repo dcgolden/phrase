@@ -19,6 +19,7 @@ angular.module('bivitfrontSampleApp')
         var articleUrl = 'http://localhost:8080/api/articles/';
         var i;
         $scope.articleObjects = [];
+        
         $http.get(url)
             .success(function(data) {
                 $scope.classroom = data;
