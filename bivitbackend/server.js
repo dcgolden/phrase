@@ -199,7 +199,6 @@ router.route('/classrooms/:classroom_id')
 				res.send(err);
 
 			classroom.classroomName = req.body.classroomName;
-                        classroom.articles      = req.body.articles;
 			
 			// save the classroom
 			classroom.save(function(err) {
@@ -240,8 +239,11 @@ router.route('/classrooms/:classroom_id/articles')
 
 			if (err)
 				res.send(err);
-						
-					classroom.articles = req.body.articles
+					
+					classroom.update({_id: classroom._id},
+						{$push: {'articles': req.body.articles}}, {upsert:true}, function(err,data) {
+							callback(err);
+						})
 			
 			// save the new articles
 			classroom.save(function(err) {
