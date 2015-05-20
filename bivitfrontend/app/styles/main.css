@@ -43,6 +43,19 @@ body {
   padding-bottom: 3em;
 }
 
+.articlesContainerMainPg{
+  padding-top: .75em;
+  padding-bottom: 1em;
+}
+
+.classroomMainPg{
+  margin-bottom: 0em;
+  margin-left: 1em;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+}
+
 .toolbarCurrentPage{
   margin-top: .2em !important;
   margin-left: .6em;
