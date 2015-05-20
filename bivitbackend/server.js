@@ -223,6 +223,36 @@ router.route('/classrooms/:classroom_id')
 		});
 	});
 
+router.route('/classrooms/:classroom_id/articles')
+	//get the articles in the classroom with this id (accessed at GET http://localhost:8080/api/classrooms/:classroom_id/articles)
+	.get(function(req, res) {
+		Classroom.findById(req.params.classroom_id, function(err, classroom) {
+			if(err)
+				res.send(err);
+			res.json(classroom.articles);
+		})
+	})
+
+	//update the articles in the classroom with this id (accessed at PUT http://localhost:8080/api/classrooms/:classroom_id/articles)
+	.put(function(req, res) {
+		// use our classroom model to find the classrooms we want
+		Classroom.findById(req.params.classroom_id, function(err, classroom) {
+
+			if (err)
+				res.send(err);
+						
+					classroom.articles = req.body.articles
+			
+			// save the new articles
+			classroom.save(function(err) {
+				if (err)
+					res.send(err);
+
+				res.json({ message: 'Classroom articles updated!' });
+			});
+
+		});
+	});
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ARTICLES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 router.route('/articles')
 

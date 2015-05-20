@@ -4,7 +4,7 @@
 
   <div class="articlesContainerMainPg">
     <md-grid-list md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="15px">
-	    <md-grid-tile md-ink-ripple ng-repeat="article in articleObjects | filter:articleQuery" class="md-whiteframe-z1 whiteBack" ng-class="{zRaise2: hover}" md-rowspan="2"ng-mouseenter="hover = true" ng-mouseleave="hover = false">
+	    <md-grid-tile md-ink-ripple ng-repeat="article in articleObjects | filter: {classroomID: classroom._id}" class="md-whiteframe-z1 whiteBack" ng-class="{zRaise2: hover}" md-rowspan="2"ng-mouseenter="hover = true" ng-mouseleave="hover = false">
 	      <div class="feature articleContentCardDiv">
 	        <a href="http://localhost:9000/#/articles/{{article._id}}"  ></a>
 	        <div class="articleContentCard" ng-bind="article.content"></div>
