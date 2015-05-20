@@ -1,19 +1,17 @@
-<nav ng-if="activeUser">
-  <span>Welcome {{activeUser}}</span>
-  |
-  <a ui-sref="home">Home</a>
-  <a ui-sref="classrooms.list">Classrooms</a>
-  <a ui-sref="articles.list">Articles</a>
-  <a ui-sref="about">About</a>
-  <a ui-sref="contact">Contact</a>
+<md-list ng-if="activeUser">
+  <md-subheader class="md-no-sticky">Menu</md-subheader>
+  <md-list-item><a ui-sref="home">Home</a></md-list-item>
+  <md-list-item><a ui-sref="classrooms.list">Classrooms</a></md-list-item>
+  <md-list-item><a ui-sref="articles.list">Articles</a></md-list-item>
+  <md-list-item><a ui-sref="about">About</a></md-list-item>
+  <md-list-item><a ui-sref="contact">Contact</a></md-list-item>
 
-  <a href="#" ng-click="logout()">Logout</a>
-</nav>
-<nav ng-if="!activeUser">
-  <a ui-sref="home">Home</a>
-  <a ui-sref="about">About</a>
-  <a ui-sref="contact">Contact</a>
-
-  <a ui-sref="users.login">Login</a>
-  <a ui-sref="users.signup">Signup</a>
-</nav>
+  <md-list-item><a href="#" ng-click="logout()">Logout</a></md-list-item>
+</md-list>
+<md-list ng-if="!activeUser">
+  <md-list-item><a ui-sref="home">Home</a></md-list-item>
+  <md-list-item><a ui-sref="about">About</a></md-list-item>
+  <md-list-item><a ui-sref="contact">Contact</a></md-list-item>
+  <md-list-item><a ui-sref="users.login">Login</a></md-list-item>
+  <md-list-item><a ui-sref="users.signup">Signup</a></md-list-item>
+</md-list>

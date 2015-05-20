@@ -6,21 +6,28 @@
   "scripts": {
     "lint": "standard",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "wzrd app/index.js -- -t brfs"
+    "dev": "wzrd app/index.js -- -t brfs",
+    "start": "w3 ${PORT} --directory public"
   },
   "keywords": [],
   "author": "Tom",
   "license": "ISC",
   "dependencies": {
     "angular": "^1.3.15",
+    "angular-animate": "^1.3.15",
+    "angular-aria": "^1.3.15",
+    "angular-material": "^0.9.4",
+    "angular-material-icons": "^0.4.0",
     "angular-ui-router": "^0.2.15",
     "pouchdb": "^3.5.0",
-    "pouchdb-authentication": "^0.4.0"
+    "pouchdb-authentication": "^0.4.0",
+    "w3": "^0.6.1"
   },
   "devDependencies": {
     "brfs": "^1.4.0",
     "browserify": "^10.2.0",
     "standard": "^3.11.0",
+    "w3": "^0.6.1",
     "wzrd": "^1.3.0"
   }
 }
