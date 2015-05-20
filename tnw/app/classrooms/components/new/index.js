@@ -3,7 +3,7 @@
 var fs = require('fs')
 
 module.exports = {
-  url: '/about',
+  url: '/new',
   controller: ['$scope', controller],
   template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 }
