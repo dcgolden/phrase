@@ -4,12 +4,12 @@
  * @ngdoc function
  * @name bivitfrontSampleApp.controller:UsersCtrl
  * @description
- * # UsersCtrl
+ * # ContactCtrl
  * Controller of the bivitfrontSampleApp
  */
 angular.module('bivitfrontSampleApp')
   .controller('ContactCtrl', function ($scope) {
-  	$scope.awesomeThings = [
+    $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
       'Karma'
