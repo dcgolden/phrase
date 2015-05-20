@@ -1,6 +1,7 @@
 'use strict'
 
 window.PouchDB = require('pouchdb')
+window.PouchDB.plugin(require('pouchdb-authentication'))
 
 require('angular').module('app', [
   require('angular-ui-router'),
@@ -15,11 +16,12 @@ require('angular').module('app', [
     .state('about', require('./components/about'))
     .state('contact', require('./components/contact'))
 }])
-.directive('appNav', require('./components/app-nav'))
-.controller('AppController', ['$scope', AppController])
+.directive('appNav', ['users', require('./components/app-nav')])
+.controller('AppController', ['$scope', 'users', AppController])
 .constant('dbName', 'bivit')
+.constant('remoteUserDbName', 'http://localhost:5984/_users')
 //.factory('classrooms', ['pouchDb', require('./services/classrooms')])
 
-function AppController ($scope) {
-  $scope.foo = 'Bar'
+function AppController ($scope, users) {
+
 }

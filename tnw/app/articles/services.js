@@ -1,10 +1,10 @@
 module.exports = {
-  classrooms: function (pouchDB, dbName) {
+  articles: function (pouchDB, dbName) {
     var db = pouchDB(dbName)
 
     function list () {
       return db.query(function (doc) { 
-        if (doc.type === 'classroom') { 
+        if (doc.type === 'article') { 
           return emit(doc._id) 
         }
       }, {include_docs: true})
@@ -13,18 +13,18 @@ module.exports = {
         })
     }
 
-    function create (classroom) {
-      classroom.type = 'classroom'
-      classroom._id = 'classroom-' + (new Date()).toISOString()
-      return db.put(classroom)
+    function create (article) {
+      article.type = 'article'
+      article._id = 'article-' + (new Date()).toISOString()
+      return db.put(article)
     }
 
     function get (id) {
       return db.get(id)
     }
 
-    function update (classroom) {
-      return db.put(classroom)
+    function update (article) {
+      return db.put(article)
     }
 
     function remove (id) {

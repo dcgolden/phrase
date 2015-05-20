@@ -4,7 +4,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
 }
 
 (function (window, angular, undefined) {
-  angular.module('app.articles', [])
+  angular.module('app.articles', [require('./pouchdb')])
     .config(['$stateProvider', function ($stateProvider) {
        $stateProvider
           .state('articles', {
@@ -13,9 +13,10 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
             template: '<div ui-view></div>'
           })
           .state('articles.list', require('./components/list'))
-  //       // .state('articles.new', require(__dirname + '/components/new'))
-  //       // .state('articles.show', require(__dirname + '/components/show'))
-  //       // .state('articles.edit', require(__dirname + '/components/edit'))
+          .state('articles.new', require('./components/new'))
+          .state('articles.show', require('./components/show'))
+          .state('articles.edit', require('./components/edit'))
 
      }])
+    .factory('articles', ['pouchDB', 'dbName', require('./services').articles])
 })( window, window.angular)

@@ -7,6 +7,7 @@ This folder contains a version that uses CouchDb/PouchDb and angular-ui-router, 
 ## Usage
 
 ```
+cd tnw
 npm install
 npm start
 ```

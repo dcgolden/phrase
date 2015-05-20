@@ -3,18 +3,19 @@
 var fs = require('fs')
 
 module.exports = {
-  url: '/show',
+  url: '/change-password',
   controller: ['$scope', 'users', '$state', controller],
   template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 }
 
 function controller ($scope, users, $state) {
+  $scope.user = {}
   users.getSession()
     .then(function (ctx) {
-      return ctx.username
+      $scope.user.username = ctx.username
     })
-    .then(users.getUser)
-    .then(function (user) {
-      $scope.user = user
-    })
+  
+  $scope.changePassword = function (user) {
+    return users.changePassword(user.username, user.password)
+  }
 }

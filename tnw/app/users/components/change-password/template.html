@@ -1,0 +1,11 @@
+<h3>Change Password</h3>
+<form ng-submit="changePassword(user)">
+  <div>
+    <input type="hidden" ng-model="user.username">
+  </div>
+  <div>
+    <label>Password</label>
+    <input type="password" ng-model="user.password">
+  </div>
+  <button class="btn">Change Password</button>
+</form>

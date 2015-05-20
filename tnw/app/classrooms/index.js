@@ -4,7 +4,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
 }
 
 (function (window, angular, undefined) {
-  angular.module('app.classrooms', [require('angular-pouchdb')])
+  angular.module('app.classrooms', [require('./pouchdb')])
     .config(['$stateProvider', function ($stateProvider) {
        $stateProvider
           .state('classrooms', {

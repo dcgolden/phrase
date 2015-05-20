@@ -3,18 +3,16 @@
 var fs = require('fs')
 
 module.exports = {
-  url: '/show',
+  url: '/signup',
   controller: ['$scope', 'users', '$state', controller],
   template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 }
 
 function controller ($scope, users, $state) {
-  users.getSession()
-    .then(function (ctx) {
-      return ctx.username
-    })
-    .then(users.getUser)
-    .then(function (user) {
-      $scope.user = user
-    })
+  $scope.signup = function (user) {
+    users.signup(user.username, user.password, user.email)
+      .then(function (res) {
+        $state.go('home')
+      })
+  }
 }

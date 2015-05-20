@@ -4,7 +4,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
 }
 
 (function (window, angular, undefined) {
-  angular.module('app.users', [])
+  angular.module('app.users', [require('./pouchdb')])
     .config(['$stateProvider', function ($stateProvider) {
        $stateProvider
           .state('users', {
@@ -12,10 +12,11 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
             abstract: true,
             template: '<div ui-view></div>'
           })
-          .state('users.list', require('./components/list'))
-  //       // .state('classrooms.new', require(__dirname + '/components/new'))
-  //       // .state('classrooms.show', require(__dirname + '/components/show'))
-  //       // .state('classrooms.edit', require(__dirname + '/components/edit'))
+          .state('users.signup', require('./components/signup'))
+          .state('users.login', require('./components/login'))
+          .state('users.changePassword', require('./components/change-password'))
+          .state('users.show', require('./components/show'))
 
      }])
+    .factory('users', ['pouchDB', 'remoteUserDbName', require('./services').users])
 })( window, window.angular)

@@ -4,10 +4,12 @@ var fs = require('fs')
 
 module.exports = {
   url: '/list',
-  controller: ['$scope', controller],
+  controller: ['$scope', 'articles', controller],
   template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 }
 
-function controller ($scope) {
-
+function controller ($scope, articles) {
+  articles.list().then(function (docs) {
+    $scope.articles = docs
+  })
 }
