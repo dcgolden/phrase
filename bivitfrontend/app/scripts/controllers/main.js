@@ -15,6 +15,10 @@ angular.module('bivitfrontSampleApp')
       'Karma'
     ];
 
+    $scope.articlesPresent = function() {
+    	
+    };
+
     $http.get('http://localhost:8080/api/classrooms')
       .success( function (data) {
         $scope.classrooms = data;
