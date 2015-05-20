@@ -3,14 +3,11 @@ module.exports = {
     var db = pouchDB(dbName)
 
     function list () {
-      return db.query(function (doc) { 
-        if (doc.type === 'article') { 
-          return emit(doc._id) 
-        }
-      }, {include_docs: true})
+      return db.allDocs({startkey: 'article', endkey: 'article{}', inclusive_end: true, include_docs: true})
         .then(function (res) {
+          console.log(res.rows)
           return res.rows.map(function (r) { return r.doc })
-        })
+      })
     }
 
     function create (article) {

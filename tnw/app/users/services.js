@@ -3,7 +3,7 @@ module.exports = {
     var db = pouchDB(remoteUserDbName)
 
     function signup (username, password, email) {
-      return db.signup(username, password, { metadata: { email: email }})
+      return db.signup(username, password, { metadata: { email: email, roles: ['user'] }})
     }
 
     function login (username, password) {

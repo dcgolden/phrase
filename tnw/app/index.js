@@ -18,8 +18,8 @@ require('angular').module('app', [
 }])
 .directive('appNav', ['users', require('./components/app-nav')])
 .controller('AppController', ['$scope', 'users', AppController])
-.constant('dbName', 'bivit')
-.constant('remoteUserDbName', 'http://localhost:5984/_users')
+.constant('dbName', 'https://bivit-dev.iriscouch.com/bivit')
+.constant('remoteUserDbName', 'https://bivit-dev.iriscouch.com/_users')
 //.factory('classrooms', ['pouchDb', require('./services/classrooms')])
 
 function AppController ($scope, users) {
