@@ -43,17 +43,35 @@ body {
   padding-bottom: 3em;
 }
 
+.yourClasses{
+  font-size: 2em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: .1em;
+  margin-top: .4em;
+}
+
+.navDividerMainPg{
+  margin-bottom: .5em;
+}
+
 .articlesContainerMainPg{
-  padding-top: .75em;
+  padding-top: 0em;
   padding-bottom: 1em;
 }
 
 .classroomMainPg{
-  margin-bottom: 0em;
-  margin-left: 1em;
-  font-size: 1.5em;
+  margin-bottom: .4em;
+  margin-left: .25em;
+  font-size: 1.25em;
   font-weight: bold;
   color: #333;
+  text-decoration: none;
+  width: auto;
+}
+
+a.classroomMainPg:hover{
+  color: #777;
 }
 
 .toolbarCurrentPage{
