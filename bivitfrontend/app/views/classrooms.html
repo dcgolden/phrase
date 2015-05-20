@@ -14,6 +14,9 @@
     <input type ="text" ng-model="query">
   </md-input-container>
 
+  <h2 class="pageTitle">Your Classrooms</h2>
+  <md-divider class="navDivider navDividerMainPg" ng-if="!$last"></md-divider>
+
 <div>
   <div class="card btn" id="classroomCard" ng-repeat="classroom in classrooms | filter:query">
     <div>
