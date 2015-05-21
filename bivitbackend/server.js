@@ -239,19 +239,20 @@ router.route('/classrooms/:classroom_id/articles')
 
 			if (err)
 				res.send(err);
-					
-					classroom.update({_id: classroom._id},
-						{$push: {'articles': req.body.articles}}, {upsert:true}, function(err,data) {
-							callback(err);
-						})
-			
+				
+		Classroom.update({_id: req.params.classroom_id },
+         {$push: { 'articles' : req.body.articles }},{upsert:true}, function(err, data) {
+         	if(err)
+         		res.send(err); 
+});		
+		
 			// save the new articles
-			classroom.save(function(err) {
-				if (err)
-					res.send(err);
+			//classroom.save(function(err) {
+			//	if (err)
+			//		res.send(err);
 
-				res.json({ message: 'Classroom articles updated!' });
-			});
+				//res.json({ message: 'Classroom articles updated!' });
+			//});
 
 		});
 	});
@@ -334,6 +335,11 @@ router.route('/articles/:article_id')
 				res.send(err);
 			res.json({ message: 'Successfully deleted' });
 		});
+		Classroom.update({_id: req.params.article.classroomID },
+         {$pull: { 'articles' : req.params.article_id }}, function(err, data) {
+         	if(err)
+         		res.send(err); 
+});		
 	});
 
 
