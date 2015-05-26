@@ -232,3 +232,7 @@ div.feature a {
     clear: both;
     margin-bottom: 2px;
 }
+
+.listdemoBasicUsage md-divider {
+  margin-top: 10px;
+  margin-bottom: 10px; }
