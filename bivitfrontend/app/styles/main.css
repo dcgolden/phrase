@@ -144,11 +144,12 @@ div.feature a {
 .articleContentCard{
   text-align: left;
   font-size: 6px;
-  white-space: normal;
+  white-space: pre-wrap;
 }
 
 .articleCardContainer{
   background-color: transparent !important;
+  white-space: pre-wrap;
 }
 
 .articleContentCardFooter{
