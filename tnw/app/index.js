@@ -5,6 +5,7 @@ window.PouchDB.plugin(require('pouchdb-authentication'))
 
 require('angular').module('app', [
   require('angular-ui-router'),
+  require('angular-material'),
   require('./classrooms'),
   require('./articles'),
   require('./users')

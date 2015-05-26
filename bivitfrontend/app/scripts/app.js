@@ -18,8 +18,7 @@ angular
     'ngTouch',
     'ngMaterial',
     'ngMdIcons',
-    'ngMessages',
-    'ui.utils'
+    'ngMessages'
   ])
 
   .config(function ($routeProvider, $mdThemingProvider) {
