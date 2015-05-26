@@ -1,0 +1,7 @@
+<h1>ClassRooms</h1>
+<a ui-sref="classrooms.new">New Classroom</a>
+<ul>
+  <li ng-repeat="classroom in classrooms">
+    <a ui-sref="classrooms.show({ id: classroom._id})">{{classroom.name}}</a>
+  </li>
+</ul>

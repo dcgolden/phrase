@@ -1,0 +1,19 @@
+<nav ng-if="activeUser">
+  <span>Welcome {{activeUser}}</span>
+  |
+  <a ui-sref="home">Home</a>
+  <a ui-sref="classrooms.list">Classrooms</a>
+  <a ui-sref="articles.list">Articles</a>
+  <a ui-sref="about">About</a>
+  <a ui-sref="contact">Contact</a>
+
+  <a href="#" ng-click="logout()">Logout</a>
+</nav>
+<nav ng-if="!activeUser">
+  <a ui-sref="home">Home</a>
+  <a ui-sref="about">About</a>
+  <a ui-sref="contact">Contact</a>
+
+  <a ui-sref="users.login">Login</a>
+  <a ui-sref="users.signup">Signup</a>
+</nav>

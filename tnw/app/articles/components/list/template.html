@@ -1,0 +1,7 @@
+<h1>Articles</h1>
+<a ui-sref="articles.new">New Article</a>
+<ul>
+  <li ng-repeat="article in articles">
+    <a ui-sref="articles.show({ id: article._id})">{{article.name}}</a>
+  </li>
+</ul>
