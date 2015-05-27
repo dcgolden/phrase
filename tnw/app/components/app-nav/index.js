@@ -10,7 +10,7 @@ module.exports = function (users) {
   }
 }
 
-function controller ($scope, users, $state) {
+function controller ($scope, users, $state, $mdSidenav, $log, $route, $stateParams) {
   function getSession () {
     users.getSession()
     .then(function (o) {
@@ -38,4 +38,29 @@ function controller ($scope, users, $state) {
       })
     })
   }
+
+   $scope.$state = $state;
+   $scope.$stateParams = $stateParams;
+
+
+  function buildToggler(navID) {
+    var debounceFn =  function(){
+          $mdSidenav(navID).toggle()
+            .then(function () {
+              $log.debug('toggle ' + navID + ' is done');
+            });
+        }
+    return debounceFn;
+  }
+
+      $scope.toggleLeft = buildToggler('left');
+
+      $scope.close = function () {
+    $mdSidenav('left').close()
+      .then(function () {
+        $log.debug('close LEFT is done');
+      });
+  };
 }
+
+    

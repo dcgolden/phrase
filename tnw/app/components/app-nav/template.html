@@ -1,4 +1,5 @@
 <nav ng-if="activeUser">
+
   <span>Welcome {{activeUser}}</span>
   |
   <a ui-sref="home">Home</a>
@@ -8,21 +9,67 @@
   <a ui-sref="contact">Contact</a>
 
   <a href="#" ng-click="logout()">Logout</a>
+
 </nav>
+
+
+
 <nav ng-if="!activeUser">
 
+  <!--ToolBar!!-->
   <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1 mainToolbar">
       <div class="md-toolbar-tools">
         <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
           <div class="hamburgerMenuButton2" flex>
             <ng-md-icon icon={{$route.current.icon}} style="fill: white" size="36">
-            </ng-md-icon>
+            </ng-md-icon> 
           </div>
         </md-button>
-        <div class="toolbarCurrentPage" ng-bind="$route.current.title">
+        <div class="toolbarCurrentPage" ng-bind="$state.stateParams">
         </div>
       </div>
     </md-toolbar>
+
+    <!--SideNav!!-->
+    <div layout="row" flex="" ng-click="toggleLeft()">
+      <md-sidenav style="height:500px;" md-component-id="left" class="md-sidenav-left md-whiteframe-z2">
+        <md-toolbar class="" ng-click="toggleLeft()">
+          <div class="md-toolbar-tools">
+            <div class="hamburgerMenuButton2 hamburgerMenuButton3">
+              <ng-md-icon icon="menu" style="fill: white" size="36">
+              </ng-md-icon>
+            </div>
+            <div class="navbarCurrentPage navbarHover" ng-bind="$route.current.title">
+            </div>
+          </div>
+        </md-toolbar>
+        <md-content layout-padding="">
+          <md-list hide-md="" show-gt-md="">
+            <md-list-item ui-sref="home">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="home" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
+              <p>Home</p>
+            </md-list-item>
+            <md-list-item ui-sref="about">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="people" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
+              <p>About</p>
+            </md-list-item>
+            <md-list-item ui-sref="contact">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="help" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
+              <p>Contact</p>
+            </md-list-item>
+          </md-list>
+        </md-content>
+      </md-sidenav>
+    </div>
 
   <a ui-sref="home">Home</a>
   <a ui-sref="about">About</a>
@@ -30,4 +77,5 @@
 
   <a ui-sref="users.login">Login</a>
   <a ui-sref="users.signup">Signup</a>
+
 </nav>
