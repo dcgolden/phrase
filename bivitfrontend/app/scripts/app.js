@@ -13,6 +13,7 @@ angular
     'ngCookies',
     'ngResource',
     'ngRoute',
+    'ui.utils',
     'ngSanitize',
     'ngLodash',
     'ngTouch',
