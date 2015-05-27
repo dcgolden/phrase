@@ -19,6 +19,7 @@
     "angular-material": "^0.9.4",
     "angular-material-icons": "^0.4.0",
     "angular-ui-router": "^0.2.15",
+    "marked": "^0.3.3",
     "pouchdb": "^3.5.0",
     "pouchdb-authentication": "^0.4.0",
     "w3": "^0.6.1"
