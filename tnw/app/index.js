@@ -4,8 +4,11 @@ window.PouchDB = require('pouchdb')
 window.PouchDB.plugin(require('pouchdb-authentication'))
 
 require('angular').module('app', [
-  require('angular-ui-router'),
+  require('angular-animate'),
+  require('angular-aria'),
   require('angular-material'),
+  require('./ng-icons'),
+  require('angular-ui-router'),
   require('./classrooms'),
   require('./articles'),
   require('./users')
@@ -24,5 +27,8 @@ require('angular').module('app', [
 //.factory('classrooms', ['pouchDb', require('./services/classrooms')])
 
 function AppController ($scope, users) {
-
+  $scope.showMenu = true
+  $scope.toggle = function () {
+    $scope.showMenu = !$scope.showMenu
+  }
 }
