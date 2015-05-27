@@ -1,293 +1,74 @@
-<head></head>
-<body>
-<br></br><br></br><br></br>
-
-<h1 style="position:absolute; top: 100px;left: 75px">Your Students</h1>
-
-<br></br><br></br><!--Normal break before side nav--><br></br><br></br>
-<style>
-*{
-	margin: 0;
-	padding: 0;
-	outline: none;
-	
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
-body {
-    background: #eee;
-    color: #444;
-    -webkit-font-smoothing: antialiased;
-    font-size: 20px;
-    font-weight: 400;
-    height: auto !important;
-    height: 100%;
-    min-height: 100%;
-    text-rendering: optimizeLegibility;
-}
-
-div.wrapper {
-  margin: px auto;
-  width: 350px;
-}
-
-p {
-  
-  font-size: 1rem;
-  line-height: 25px;
-  margin: 20px 0;
-  text-align: center;
-}
-
-nav.vertical {
-  border-radius: 4px;
-  overflow: hidden;
-  text-align: center;
-}
-
-  nav.vertical > ul {
-    list-style-type: none;
-  }
-
-    nav.vertical > ul > li {
-      display: block;
-    }
-
-      nav.vertical > ul > li > a {
-        background-color: #3F51B5;
-        border-bottom: 1px solid rgba(255,255,255,.1);
-        box-shadow: inset 0 1px 1px rgba(0,0,0,.1), 0 1px 1px rgba(0,0,0,.1);
-        color: rgb(255,255,255);
-        display: block;
-        font-size: .85rem;
-        font-weight: 500;
-        height: 50px;
-        letter-spacing: .5rem;
-        line-height: 50px;
-        text-shadow: 0 1px 1px rgba(0,0,0,.1);
-        text-transform: uppercase;
-        transition: all .1s ease;
-        text-decoration: none;
-      }
-        
-          nav.vertical > ul > li > div {
-            background-color: rgb(255,255,255);
-          }
- 
-          nav.vertical > ul > li > div > ul {
-            list-style-type: none;
-          }
-
-            nav.vertical > ul > li > div > ul > li > a {
-             background-color: rgb(255,255,255);
-             border-bottom: 1px solid rgba(0,0,0,.05);
-             color: #000000;
-             display: block;
-             font-size: 1.1rem;
-             padding: 10px 0;
-             text-decoration: none;
-             transition: all 0.15s linear;
-            }
-
-              nav.vertical > ul > li > div > ul > li:hover > a {
-                background-color: #40C4FF;
-                color: rgb(255,255,255);
-                padding: 10px 0 10px 50px;
-              }
-</style>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Untitled Document</title>
 </head>
+<style> <!--CSS for tabs--> 
+.tabsdemoDynamicHeight md-content {
+  background-color: transparent !important; }
+  .tabsdemoDynamicHeight md-content md-tabs {
+    background: #f6f6f6;
+    border: 1px solid #e1e1e1; }
+    .tabsdemoDynamicHeight md-content md-tabs md-tabs-canvas {
+      background: white; }
+  .tabsdemoDynamicHeight md-content h1:first-child {
+    margin-top: 0; }
+	.alignleft {
+	float: left;
+}
+.alignright {
+	float: right;}
+    </style>
+    
 <body>
-<div class="wrapper" style="position:absolute; top:200px; left:75px">
-  <nav class="vertical">
-    <ul>
-      <li>
-        <a href="#Classes">Classes</a>
-        <div>
-          <ul>
-            <li><a href="#History10">History 10</a></li>
-            <li><a href="#APEnglish">AP English</a></li>
-            <li><a href="#Bio9Evol">Science: Biology 9 Evolution</a></li>
-            <li><a href="#CompGov">Comparative Government</a></li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-  </nav>
-  </div>
-  <!--sets up tabs-->
-<div class="tabsdemoDynamicHeight">
+
+<h1 style="position:absolute; top: 100px;left: 75px">Your Classes</h1>
+
+<div>
   <md-content class="md-padding">
-    <md-tabs md-dynamic-height="" border-bottom="">
-       <!--start tab 1-->
-      <md-tab label="Colors">
+    <md-tabs md-dynamic-height md-border-bottom>
+      <md-tab label="History">
         <md-content class="md-padding">
-          <h1 class="md-display-2">Colors</h1>
-          <p>Phrase's website has a variety of colors, but one main color scheme is implemented.  Phrase's design team used Google Material Design's color palettes as a reference for the team's color choices. Phrase's color scheme includes a primary/base palette and a secondary/accent palette.  Indigo (500 or #3F51B5) is used for the primary/base color and light blue (A200 or #40C4FF) is the secondary/accent color.</p>
-          <!--indigo color palette-->
-          <img src="/images/indigo color palette copy.png" alt="Indigo color palette." style="position: absolute; top:200px; left:20px; width:600px;height:700px">
           
-          <!--light blue color palette-->
-          <img src="/images/light blue color palette copy.png" alt="light blue color palette." style="position:absolute; top: 190px; left: 320px; width:602px;height:701px">
+          <div id="textbox">
+  			<h2 class="alignleft"><i>The Strange Death of Silas Deane</i></p>
+  			<h3 class="alignright">A</h3>
+		  </div>
+		  <div style="clear: both;"></div>
         
-          <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+				<p>Submitted 5/24/2015</p>
+         
+			<hr></hr>
 
-          <p> The colors used to display text include black (#000000), white (#FFFFFF), grey (400 or #BDBDBD), and grey (600 or #757575).</p>
-          <!--black and white color palette-->
-          <img src="/images/black and white color palette copy.png" alt="Black and white color palette." border="1" style="position: absolute; top:950px; left:140px; width:300px;height:100px;">
-
-          <!--grey color palette-->
-          <img src="/images/grey color palette copy.png" alt="Black and white color palette." style="position: absolute; top:950px; left:500px; width:245px;height:400px">
-
-          <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
-
-          <p> The site's background colors include white (#FFFFFF) and grey (200 or #EEEEEE).</p>
-          <!--black and white color palette-->
-          <img src="/images/black and white color palette copy.png" alt="Black and white color palette." border="1" style="position: absolute; top:1451px; left:140px; width:300px;height:100px">
-
-          <!--grey color palette-->
-          <img src="/images/grey color palette copy.png" alt="Black and white color palette." style="position: absolute; top:1451px; left:500px; width:245px;height:400px">
-
+			<h1>CSS</h1>
+				<p>CSS defines how to display HTML elements.</p>
         </md-content>
       </md-tab>
-       <!--end tab 1-->
-       
-       
-        <!--Start tab 2-->
-      <md-tab label="Logo One">
+      <md-tab label="two">
         <md-content class="md-padding">
-          <h1 class="md-display-2">Logo Icon </h1>
-          <p>This is the Phrase single icon.  The icon's original size is 696px by 1302px with a resolution of 300 px/in.</p>
-          <img src="/images/phrase logo2 w layers and pencil colors.png" alt="Black and white color palette." style="position: absolute; top:185px; left:200px; width:143px;height:250px">
-          <br></br><br></br><br></br><br></br><br></br><br></br><br></br>
-          <p>The icon has very specific colors.  The outmost part of the pencil's tip is black (#000000) and the inmost part of the pencil's tip is Amber (100 or #FFECB3). The body of the pencil is divided into three sections. We used three colors from the Amber color palette that transition from dark to light.  From left to right, the colors are: Amber (800 or #FF8F00), Amber (600 or #FFB300), and Amber (300 or #FFD54F).  The metal section of the pencil has a large rectangle that is grey (#B7B7B7) and two smaller horizontal rectangles that are grey (#555555).  The pencil's eraser is red (300 or #E57373). </p>
+          <h1 class="md-display-2">Tab Two</h1>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi. Aliquam erat volutpat. Nam placerat, tortor in ultrices porttitor, orci enim rutrum enim, vel tempor sapien arcu a tellus. Vivamus convallis sodales ante varius gravida. Curabitur a purus vel augue ultrices ultricies id a nisl. Nullam malesuada consequat diam, a facilisis tortor volutpat et. Sed urna dolor, aliquet vitae posuere vulputate, euismod ac lorem. Sed felis risus, pulvinar at interdum quis, vehicula sed odio. Phasellus in enim venenatis, iaculis tortor eu, bibendum ante. Donec ac tellus dictum neque volutpat blandit. Praesent efficitur faucibus risus, ac auctor purus porttitor vitae. Phasellus ornare dui nec orci posuere, nec luctus mauris semper.</p>
+          <p>Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim, at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus. Nunc urna libero, viverra sit amet nisl at, hendrerit tempor turpis. Maecenas facilisis convallis mi vel tempor. Nullam vitae nunc leo. Cras sed nisl consectetur, rhoncus sapien sit amet, tempus sapien.</p>
+          <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
         </md-content>
       </md-tab>
-       <!--end tab 2-->
-       
-        <!--start tab 3-->
-      <md-tab label="Logo Two">
+      <md-tab label="three">
         <md-content class="md-padding">
-          <h1 class="md-display-2">Full Logo</h1>
-          <p>This is the full Phrase logo.  Its size is 1978px by 1308px with a resolution of 300 px/in.</p>
-          <img src="/images/Phrase logo2 copy grey bg copy.png" alt="Full Phrase logo." style="position: absolute; top:184px; left:115px; width:400px;height:250px">
-          <br></br><br></br><br></br><br></br><br></br><br></br><br></br>
-          <p>Text is also used in addition to the Phrase icon.  The font used is "Apple SD Gothic Neo Thin."</p>
-          <img src="/images/Apple SD Gothic Neo Thin copy.png" alt="Phrase logo text." style="position: absolute; top:495px; left:115px; width:350px;height:100px">
-          <br></br><br></br><br></br>
-          <p>After the whole logo is constructed, shadowing must be used.  A Drop Shadow with opacity at 75%, Angle at 120&deg, Distance at 7px, Spread at 8px, Size at 6px, and Noise at 0% is applied.</p>
-          <img src="/images/hrase w effects copy.png" alt="Phrase logo text." style="position: absolute; top:690px; left:115px; width:350px;height:100px">
+          <h1 class="md-display-2">Tab Three</h1>
+          <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
         </md-content>
       </md-tab>
-       <!--end tab 3-->
     </md-tabs>
   </md-content>
 </div>
- <!--end all tabs-->
-  
-  
-  
-  
-  
-  
-  
-  
-  <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
-<h3>Assignment</h3> <!--style="position:absolute;top: 245px;left:60px"-->
-<h3 >Grade</h3> <!--style="position:absolute;top:245px; left: 1100px"-->
-<div ng-controller="AppCtrl">
-  <md-content>
-    <md-list>
-    
-     <!--idk what this is but everything works so im keeping it here-->
-      <md-subheader class="md-no-sticky">3 line item</md-subheader>
-      <md-list-item class="md-3-line" ng-repeat="item in todos">
-        <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />
-        <div class="md-list-item-text">
-          <h3>{{ item.who }}</h3>
-          <h4>{{ item.what }}</h4>
-          <p>{{ item.notes }}</p>
-        </div>
-      </md-list-item>
-      <md-divider ></md-divider>
-      
-       <!--1st div-->
-      <md-subheader class="md-no-sticky">2 line item</md-subheader>
-      <md-list-item class="md-2-line">
-      <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" />
-        <div class="md-list-item-text">
-          <h3 style="position:absolute;top:0px; left:110px"><b>English</b></h3>
-          <p style="position:absolute;top:18px;left:110px"><i>Deconstruction</i> Article</p>
-          <div style="margin-top: -40px; position:absolute;left:1109px"> <h1>A</h1></div>
-        </div>
-      </md-list-item>
-      <md-divider ></md-divider>
-      
-       <!--2nd div-->
-      <md-subheader class="md-no-sticky">3 line item, long paragraph (see on mobile)</md-subheader>
-      <md-list-item class="md-3-line">
-        <img ng-src="{{todos[0].face}}?25" class="md-avatar" alt="{{todos[0].who}}" />
-        <div class="md-list-item-text">
-          <h3 style="position:absolute;top:0px; left:110px"><b>History</b></h3>
-          <p style="position:absolute;top:18px; left:110px"><i>The Strange Death of Silas Deane </i>: Chapter 1</p>
-          <div style="margin-top: -40px; position:absolute;left:1107px"> <h1>N/C</h1></div>
-        </div>
-      </md-list-item>
-      <md-divider ></md-divider>
-      
-      <!--3rd div-->
-     <md-subheader class="md-no-sticky">3 line item, long paragraph (see on mobile)</md-subheader>
-      <md-list-item class="md-3-line">
-        <img ng-src="{{todos[0].face}}?25" class="md-avatar" alt="{{todos[0].who}}" />
-        <div class="md-list-item-text">
-          <h3 style="position:absolute;top:0px; left:110px"><b>Foreign Language</b></h3>
-          <p style="position:absolute;top:18px; left:110px"><i>Spring Festival: The Chinese New Year</i> Article</p>
-          <div style="margin-top: -40px; position:absolute;left:1109px"> <h1>B</h1></div>
-        </div>
-      </md-list-item>
-      <md-divider ></md-divider>
-      
-       <!--4th div-->
-     <md-subheader class="md-no-sticky">3 line item, long paragraph (see on mobile)</md-subheader>
-      <md-list-item class="md-3-line">
-        <img ng-src="{{todos[0].face}}?25" class="md-avatar" alt="{{todos[0].who}}" />
-        <div class="md-list-item-text">
-          <h3 style="position:absolute;top:0px; left:110px"><b>Science</b></h3>
-          <p style="position:absolute;top:18px; left:110px"><i>The New York Times: Next to Fairyflies, Ants Are Giants</i></p>
-          <div style="margin-top: -40px; position:absolute;left:1109px"> <h1>N/C</h1></div>
-        </div>
-      </md-list-item>
-      <md-divider ></md-divider>
-      
-      
-      <!--5th div-->
-     <md-subheader class="md-no-sticky">3 line item, long paragraph (see on mobile)</md-subheader>
-      <md-list-item class="md-3-line">
-        <img ng-src="{{todos[0].face}}?25" class="md-avatar" alt="{{todos[0].who}}" />
-        <div class="md-list-item-text">
-          <h3 style="position:absolute;top:0px; left:110px"><b>Computers and Technology</b></h3>
-          <p style="position:absolute;top:18px; left:110px"><i>The New York Times: Next to Fairyflies, Ants Are Giants</i></p>
-          <div style="margin-top: -40px; position:absolute;left:1109px"> <h1>D</h1></div>
-        </div>
-      </md-list-item>
-      <md-divider ></md-divider>
-      
-       <!--ends divs-->
-       
-    </md-list>
-  </md-content>
-</div>
+
 </body>
-
-
-
-
-
-
-
-
-
-
-<br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+</html>
+  
+  
+  
+  
+  
+  
 
