@@ -1,0 +1,17 @@
+<md-list ng-if="activeUser">
+  <md-subheader class="md-no-sticky">Menu</md-subheader>
+  <md-list-item><a ui-sref="hume">hume</a></md-list-item>
+  <md-list-item><a ui-sref="classrooms.list">Classrooms</a></md-list-item>
+  <md-list-item><a ui-sref="articles.list">Articles</a></md-list-item>
+  <md-list-item><a ui-sref="about">About</a></md-list-item>
+  <md-list-item><a ui-sref="contact">Contact</a></md-list-item>
+
+  <md-list-item><a href="#" ng-click="logout()">Logout</a></md-list-item>
+</md-list>
+<md-list ng-if="!activeUser">
+  <md-list-item><a ui-sref="hume">hume</a></md-list-item>
+  <md-list-item><a ui-sref="about">About</a></md-list-item>
+  <md-list-item><a ui-sref="contact">Contact</a></md-list-item>
+  <md-list-item><a ui-sref="users.login">Login</a></md-list-item>
+  <md-list-item><a ui-sref="users.signup">Signup</a></md-list-item>
+</md-list>

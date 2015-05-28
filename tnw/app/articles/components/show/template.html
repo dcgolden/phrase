@@ -1,4 +1,7 @@
 <h3>Show Article</h3>
-<h3>{{article.name}}</h3>
+<h3 ng-bind="article.title"></h3>
+<p ng-bind="article.author"></p>
+<p ng-bind ="article.source"></p>
+<p ng-bind="article.content"></p>
 <a ui-sref="articles.edit({id: article._id})">Edit Article</a>
 <a ui-sref="articles.list">Back to Articles</a>
