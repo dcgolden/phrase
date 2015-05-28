@@ -40,6 +40,7 @@ angular
       });
     };
 
+
     $mdThemingProvider.theme('default')
     .primaryPalette('indigo', {
       'default': '500', // by default use shade 500 from the palette for primary intentions
