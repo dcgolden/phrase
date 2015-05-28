@@ -1,7 +1,7 @@
 <!doctype html>
 <html ng-app="app">
   <head>
-  <meta charset="utf-8" />
+    <meta charset="utf-8" />
     <title>Bivit</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
@@ -9,37 +9,19 @@
 
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
     <link rel="stylesheet" href="//cdn.rawgit.com/angular/bower-material/master/angular-material.css" >
+    <link rel='stylesheet' href="app/main.css">
   </head>
   <body>
-    <div ng-controller="AppController">
-    <md-content>
-      <md-toolbar>
-        <div class="md-toolbar-tools">
-          <md-button class="md-icon-button" aria-label="Settings" ng-click="toggle()">
-            <ng-md-icon icon="menu" style="fill: white" size="52"></ng-md-icon>
-          </md-button>
-          <h2>
-            <span>Bivit</span>
-          </h2>
-          <span flex></span>
-          <md-button class="md-icon-button" aria-label="Favorite">
-            <ng-md-icon  icon="favorite" style="fill: greenyellow;" size="52"></ng-md-icon>
-          </md-button>
-          <md-button class="md-icon-button" aria-label="More">
-            <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
-          </md-button>
-        </div>
-      </md-toolbar>
-      <div layout="row" layout-sm="column">
-        <!-- hide or show nav menu by a toggle click on app -->
-        <div flex ng-show="showMenu">
-          <app-nav></app-nav>
-        </div>
 
-        <div flex ui-view></div>
-      </div>
-    </md-content>
+  <div ng-controller='AppController'>
+
+    <div flex ng-show="showMenu">
+      <app-nav></app-nav>
     </div>
-    <script src="/bundle.js"></script>
+
+    <div flex ui-view></div>
+  </div>
+
+    <script src="/app/index.js"></script>
   </body>
 </html>

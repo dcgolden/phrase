@@ -8,6 +8,11 @@ body {
   height: 100vh;
 }
 
+.navbarText{
+  text-decoration: none;
+  color: black;
+}
+
 .searchBar{
   width: 20%;
   float: right;
