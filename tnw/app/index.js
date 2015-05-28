@@ -13,14 +13,13 @@ require('angular').module('app', [
   require('./articles'),
   require('./users')
 ])
-.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider, $mdThemingProvider) {
+.config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', function ($stateProvider, $urlRouterProvider, $mdThemingProvider) {
   $urlRouterProvider.otherwise('/')
   $stateProvider
     .state('home', require('./components/home'))
     .state('about', require('./components/about'))
     .state('contact', require('./components/contact'))
 
-  /* THEMEING NOT WORKING 'Cannot read property 'theme' of undefined'
   $mdThemingProvider.theme('default')
   .primaryPalette('indigo', {
     'default': '500', // by default use shade 500 from the palette for primary intentions
@@ -33,25 +32,17 @@ require('angular').module('app', [
   .accentPalette('light-blue', {
     'default': 'A200' // use shade A200 for default, and keep all other shades the same
   });
-  */
 
 }])
 .directive('appNav', ['users', require('./components/app-nav')])
-.controller('AppController', ['$scope', 'users', '$mdSidenav', AppController])
+.controller('AppController', ['$scope', 'users', AppController])
 .constant('dbName', 'https://bivit-dev.iriscouch.com/bivit')
 .constant('remoteUserDbName', 'https://bivit-dev.iriscouch.com/_users')
 //.factory('classrooms', ['pouchDb', require('./services/classrooms')])
 
-function AppController ($scope, users, $mdSidenav) {
-
-  $scope.toggleLeft = function() {
-        $mdSidenav('left').toggle();
-    };
-
-  $scope.close = function () {
-    $mdSidenav('left').close()
-      .then(function () {
-        $log.debug('close LEFT is done');
-      });
-  };
+function AppController ($scope, users) {
+  $scope.showMenu = true;
+  $scope.toggle = function () {
+    $scope.showMenu = !$scope.showMenu;
+  }
 }

@@ -5,12 +5,27 @@ var fs = require('fs')
 module.exports = function (users) {
   return {
     restrict: 'E',
-    controller: ['$scope', 'users', '$state', controller],
+    controller: ['$scope', 'users', '$state', '$mdSidenav', '$mdUtil', '$log', controller],
     template: fs.readFileSync(__dirname + '/template.html')
   }
 }
 
-function controller ($scope, users, $state) {
+function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log) {
+
+  function buildToggler(navID) {
+    var debounceFn =  $mdUtil.debounce(function(){
+          $mdSidenav(navID)
+            .toggle()
+            .then(function () {
+              $log.debug('toggle ' + navID + ' is done');
+            });
+        },300);
+
+    return debounceFn;
+  }
+
+  $scope.toggleLeft = buildToggler('left');
+
   function getSession () {
     users.getSession()
     .then(function (o) {
