@@ -29,43 +29,53 @@
       </md-toolbar>
       <md-content layout-padding="">
         <md-list hide-md="" show-gt-md="">
-          <md-list-item ng-click="toggleLeft()" ui-sref="home">
-            <div class="sideNavIcons">
-              <ng-md-icon icon="home" ng-class="" style="fill: black" size="30">
-              </ng-md-icon>
-            </div>
-            <p ng-class="">Home</p>
-          </md-list-item>
+          <a ui-sref="home" class="navbarText">
+            <md-list-item ng-click="toggleLeft()">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="home" ng-class="" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
+              <p ng-class="">Home</p>
+            </md-list-item>
+          </a>
           <md-divider class="navDivider" ng-if="!$last"></md-divider>
-          <md-list-item ng-click="toggleLeft()">
-            <div class="sideNavIcons">
-              <ng-md-icon icon="people" ng-class="" style="fill: black" size="30">
-              </ng-md-icon>
-            </div>
-            <p ng-class="">Login</p>
-          </md-list-item>
-          <md-list-item ng-click="toggleLeft()">
-            <div class="sideNavIcons">
-              <ng-md-icon icon="school" ng-class="" style="fill: black" size="30">
-              </ng-md-icon>
-            </div>
-            <p ng-class="">Sign Up</p>
-          </md-list-item>
+          <a ui-sref="users.login" class="navbarText">
+            <md-list-item ng-click="toggleLeft()">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="people" ng-class="" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
+              <p ng-class="">Login</p>
+            </md-list-item>
+          </a>
+          <a ui-sref="users.signup" class="navbarText">
+            <md-list-item ng-click="toggleLeft()">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="school" ng-class="" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
+              <p ng-class="">Sign Up</p>
+            </md-list-item>
+          </a>
           <md-divider class="navDivider" ng-if="!$last"></md-divider>
-          <md-list-item ng-click="toggleLeft()">
-            <div class="sideNavIcons">
-              <ng-md-icon icon="info" ng-class="" style="fill: black" size="30">
-              </ng-md-icon>
-            </div>
-            <p ng-class="">About</p>
-          </md-list-item>
-          <md-list-item ng-click="toggleLeft()">
-            <div class="sideNavIcons">
-              <ng-md-icon icon="help" ng-class="" style="fill: black" size="30">
-              </ng-md-icon>
-            </div>
-            <p ng-class="">Contact</p>
-          </md-list-item>
+          <a ui-sref="about" class="navbarText">
+            <md-list-item ng-click="toggleLeft()" ui-sref="about">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="info" ng-class="" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
+              <p ng-class="">About</p>
+            </md-list-item>
+          </a>
+          <a ui-sref="contact" class="navbarText">
+            <md-list-item ng-click="toggleLeft()" ui-sref="contact">
+              <div class="sideNavIcons">
+                <ng-md-icon icon="help" ng-class="" style="fill: black" size="30">
+                </ng-md-icon>
+              </div>
+              <p ng-class="">Contact</p>
+            </md-list-item>
+          </a>
         </md-list>
       </md-content>
     </md-sidenav>

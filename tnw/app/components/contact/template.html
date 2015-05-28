@@ -1,1 +1,35 @@
-<h1>contact</h1>
+<h1>Contact Us</h1>
+<p>Please fill out the form below to ask questions or give us your feedback.</p>
+
+<form name="contactUs" action="mailto:bivitapp@gmail.com" enctype="text/plain" method="post">
+	<div>
+     	<md-input-container> 
+        	<label>Name</label>
+        	<input type ="text" ng-model="name">
+      	</md-input-container>
+    </div>
+
+    <div>
+     	<md-input-container> 
+        	<label>Email</label>
+        	<input type ="text" ng-model="email">
+      	</md-input-container>
+    </div>
+
+	<div>
+     	<md-input-container flex=""> 
+        	<label>Message</label>
+        	<textarea ng-model="message" name="message" columns="1"></textarea>
+      	</md-input-container>
+    </div>
+
+    <md-button class="md-raised md-accent" ng-click="submit">Send</md-button>
+</form>
+
+<br></br><br></br><br></br><br></br>
+
+<img src="/images/Phrase logo2 copy.png" alt="Phrase logo" style="position:absolute; top: 570px; left: 43px; width:160px;height:100px">
+<p>Address: 1 Executive Suite</p>
+<p>Moorestown, New Jersey 08057</p>
+<p>Phone: (856) 123-5467</p>
+<p>Phone Hours: Monday - Friday 9am - 5pm(EST)
