@@ -44,29 +44,29 @@
         </md-toolbar>
         <md-content layout-padding="">
           <md-list hide-md="" show-gt-md="">
-            <md-list-item ng-click="">
+            <md-list-item ui-sref="home">
               <div class="sideNavIcons">
-                <ng-md-icon icon="menu" ng-class="" style="fill: black" size="30">
+                <ng-md-icon icon="home" ng-class="" style="fill: black" size="30">
                 </ng-md-icon>
               </div>
               <p ng-class="">Home</p>
             </md-list-item>
             <md-divider class="navDivider" ng-if="!$last"></md-divider>
-            <md-list-item ng-click="">
+            <md-list-item ui-sref="users.login">
               <div class="sideNavIcons">
                 <ng-md-icon icon="people" ng-class="" style="fill: black" size="30">
                 </ng-md-icon>
               </div>
               <p ng-class="">Users</p>
             </md-list-item>
-            <md-list-item ng-click="">
+            <md-list-item ui-sref="classrooms.list">
               <div class="sideNavIcons">
                 <ng-md-icon icon="school" ng-class="" style="fill: black" size="30">
                 </ng-md-icon>
               </div>
               <p ng-class="">Classrooms</p>
             </md-list-item>
-            <md-list-item ng-click="">
+            <md-list-item ui-sref="articles.list">
               <div class="sideNavIcons">
                 <ng-md-icon icon="my_library_books" ng-class="" style="fill: black" size="30">
                 </ng-md-icon>
@@ -74,14 +74,14 @@
               <p ng-class="">Articles</p>
             </md-list-item>
             <md-divider class="navDivider" ng-if="!$last"></md-divider>
-            <md-list-item ng-click="navigateTo( '/about' )">
+            <md-list-item ui-sref="about">
               <div class="sideNavIcons">
                 <ng-md-icon icon="info" ng-class="" style="fill: black" size="30">
                 </ng-md-icon>
               </div>
               <p ng-class="">About</p>
             </md-list-item>
-            <md-list-item ng-click="">
+            <md-list-item ui-sref="contact">
               <div class="sideNavIcons">
                 <ng-md-icon icon="help" ng-class="" style="fill: black" size="30">
                 </ng-md-icon>
