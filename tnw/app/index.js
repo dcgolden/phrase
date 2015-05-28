@@ -13,7 +13,7 @@ require('angular').module('app', [
   require('./articles'),
   require('./users')
 ])
-.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider, $mdThemingProvider) {
   $urlRouterProvider.otherwise('/')
   $stateProvider
     .state('home', require('./components/home'))
@@ -37,26 +37,16 @@ require('angular').module('app', [
 
 }])
 .directive('appNav', ['users', require('./components/app-nav')])
-.controller('AppController', ['$scope', 'users', AppController])
+.controller('AppController', ['$scope', 'users', '$mdSidenav', AppController])
 .constant('dbName', 'https://bivit-dev.iriscouch.com/bivit')
 .constant('remoteUserDbName', 'https://bivit-dev.iriscouch.com/_users')
 //.factory('classrooms', ['pouchDb', require('./services/classrooms')])
 
-function AppController ($scope, users, $mdSidenav, $mdUtil, $log) {
+function AppController ($scope, users, $mdSidenav) {
 
-  function buildToggler(navID) {
-    var debounceFn =  $mdUtil.debounce(function(){
-          $mdSidenav(navID)
-            .toggle()
-            .then(function () {
-              $log.debug('toggle ' + navID + ' is done');
-            });
-        },300);
-
-    return debounceFn;
-  }
-
-  $scope.toggleLeft = buildToggler('left');
+  $scope.toggleLeft = function() {
+        $mdSidenav('left').toggle();
+    };
 
   $scope.close = function () {
     $mdSidenav('left').close()
