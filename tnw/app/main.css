@@ -1,11 +1,15 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,700,300);
 
 html, body{
-  background-color: #eee !important;
+  background-color: #eee !important;  /*TNW*/
 }
 
 body {
   height: 100vh;
+}
+
+.mainView{
+  padding: 0% 10% 0% 10%;
 }
 
 .navbarText{

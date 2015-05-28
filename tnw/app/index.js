@@ -29,7 +29,7 @@ require('angular').module('app', [
   })
   // If you specify less than all of the keys, it will inherit from the
   // default shades
-  .accentPalette('light-blue', {
+  .accentPalette('pink', {
     'default': 'A200' // use shade A200 for default, and keep all other shades the same
   });
 
