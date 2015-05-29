@@ -4,7 +4,7 @@ var fs = require('fs');
 
 module.exports = {
   url: '/:id',
-  controller: ['$scope', 'articles', '$stateParams', controller],
+  controller: ['$scope', 'articles', '$stateParams', '$state', controller],
   template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 };
 
@@ -14,14 +14,14 @@ $('a').on('click', function() {
   return false;
 });
 
-function controller ($scope, articles, $stateParams) {
+function controller ($scope, articles, $stateParams, $state) {
   articles.get($stateParams.id).then(function(doc) {
     $scope.article = doc;
   });
 
   $scope.remove = function (id) {
-    console.log($stateParams.id);
-    articles.remove($stateParams.id).then(function (res) {
+    
+    articles.remove(id).then(function (res) {
       $state.go('articles.list');
     });
   };

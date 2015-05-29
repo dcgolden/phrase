@@ -6,8 +6,9 @@
   "scripts": {
     "lint": "standard",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "wzrd app/index.js -- -t brfs",
-    "start": "w3 ${PORT} --directory public"
+    "dev": "wzrd app/index.js -- -t brfs -t cssify",
+    "start": "w3 ${PORT} --directory public",
+    "build": "cp main.css public && browserify app/index.js -t brfs -t cssify -o public/bundle.js"
   },
   "keywords": [],
   "author": "Tom",
@@ -22,6 +23,7 @@
     "angular-pouchdb": "^2.1.0",
     "angular-ui-router": "^0.2.15",
     "browserify": "^10.2.3",
+    "cssify": "^0.7.0",
     "jquery": "^2.1.4",
     "marked": "^0.3.3",
     "pouchdb": "^3.5.0",
