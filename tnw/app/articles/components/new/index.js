@@ -4,22 +4,20 @@ var fs = require('fs')
 
 module.exports = {
     url: '/new',
-    controller: ['$scope', 'articles', '$state', controller],
+    controller: ['$scope', 'articles', 'classrooms', '$state', controller],
     template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 }
 
-function controller($scope, articles, $state) {
+function controller($scope, articles, $state, classrooms) {
+
+    classrooms.list().then(function (res) {
+            $scope.classrooms = res
+        })
 
     $scope.create = function(article) {
         articles.create(article)
-            .then(function(res) {
-                $state.go('articles.list')
-            })
-    }
-    $scope.loadClassrooms = function() {
-        classrooms.list()
-            .then(function(res) {
-                $scope.classrooms = res;
-            })
+        .then(function(res) {
+            $state.go('articles.list')
+        })
     }
 }
