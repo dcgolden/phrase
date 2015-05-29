@@ -1,13 +1,24 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,700,300);
 
 html, body{
-  background-color: #eee !important;
+  background-color: #eee !important; 
+}
+
+html::-webkit-scrollbar{
+  display: none;
 }
 
 body {
   height: 100vh;
-  padding-right: 10%;
-  padding-left: 10%;
+}
+
+.mdProgressCircular{
+  float: center;
+}
+}
+
+.mainView{
+  padding: 0% 3% 0% 3%;
 }
 
 .navbarText{
