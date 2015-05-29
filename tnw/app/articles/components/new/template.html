@@ -8,47 +8,45 @@
 
       			<div>
       				<md-input-container> 
-      				<label>Title</label>
-      				<input type ="text" name="title" ng-model="article.title">
-      				<div ng-messages="CnP.title.$error">
-                      	<div ng-message="required">This is required.</div>
-                      </div>
-      				</md-input-container>
-      				<!--
+                  <label>Title</label>
+                  <input required type ="text" name="title" ng-model="article.title">
+                  <div ng-messages="CnP.title.$error">
+                    <div ng-message="required">This is required.</div>
+                  </div>
+                </md-input-container>
       				<div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
-                    		<md-select required name="classroompicker" ng-model="article.classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
-                      		<md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
-                      		<md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
-                    		</md-select>
-                    		<div ng-messages="CnP.classroompicker.$error">
-                      		<div class="requiredPickerError" ng-message="required">This is required.</div>
-                    		</div>
-                  	</div>
-                  	-->
+            		<md-select required name="classroompicker" ng-model="article.classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
+              		<md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
+              		<md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
+            		</md-select>
+            		<div ng-messages="CnP.classroompicker.$error">
+              		<div class="requiredPickerError" ng-message="required">This is required.</div>
+            		</div>
+          	 </div>
       			</div>
 
       			<div>
       				<md-input-container> 
-      				<label>Source</label>
-      				<input type ="text" name="source" ng-model="article.source">
+        				<label>Source</label>
+        				<input type ="text" name="source" ng-model="article.source">
       				</md-input-container>
       			</div>
 
       			<div>
       				<md-input-container> 
-      				<label>Author</label>
-      				<input type ="text" name="author" ng-model="article.author">
+        				<label>Author</label>
+        				<input type ="text" name="author" ng-model="article.author">
       				</md-input-container>
       			</div>
 
       			<div>
-      				<md-input-container>
-      				<label>Content</label>
-      				<input type="text" name="content" ng-model="article.content">
-      				<div ng-messages="CnP.content.$error">
-                        <div ng-message="required">This is required.</div>
-                      </div>
-      				</md-input-container>
+      				<md-input-container> 
+                  <label>Content</label>
+                  <input required type ="text" name="Content" ng-model="article.content">
+                  <div ng-messages="CnP.content.$error">
+                    <div ng-message="required">This is required.</div>
+                  </div>
+                </md-input-container>
       			</div>
 
       			<button class="btn">Create Article</button>
@@ -59,89 +57,86 @@
           <md-content class="md-padding">
           	<form ng-submit="create(article)" name="url">
           		<div>
-                    <md-input-container> 
-                      <label>Title</label>
-                      <input required type ="text" name="title" ng-model="article.title">
-                      <div ng-messages="url.title.$error">
-                        <div ng-message="required">This is required.</div>
-                      </div>
-                    </md-input-container>
-
-                    <!--
-      				<div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
-                    		<md-select required name="classroompicker" ng-model="article.classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
-                      		<md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
-                      		<md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
-                    		</md-select>
-                    		<div ng-messages="CnP.classroompicker.$error">
-                      		<div class="requiredPickerError" ng-message="required">This is required.</div>
-                    		</div>
-                  	</div>
-                  	-->
+                <md-input-container> 
+                  <label>Title</label>
+                  <input required type ="text" name="title" ng-model="article.title">
+                  <div ng-messages="url.title.$error">
+                    <div ng-message="required">This is required.</div>
                   </div>
+                </md-input-container>
+
+  				      <div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
+                		<md-select required name="classroompicker" ng-model="article.classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
+                  		<md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
+                  		<md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
+                		</md-select>
+                		<div ng-messages="CnP.classroompicker.$error">
+                  		<div class="requiredPickerError" ng-message="required">This is required.</div>
+                		</div>
+              	</div>
+              </div>
                     
-                  <div>
-                    <md-input-container> 
-                      <label>Author</label>
-                      <input type ="text" ng-model="article.author">
-                    </md-input-container>
-                  </div>
+              <div>
+                <md-input-container> 
+                  <label>Author</label>
+                  <input type ="text" ng-model="article.author">
+                </md-input-container>
+              </div>
 
-                  <div>
-                    <md-input-container> 
-                      <label>URL</label>
-                      <input required type ="text" name="url" ng-model="article.URL">
-                      <div ng-messages="url.url.$error">
-                        <div ng-message="required">This is required.</div>
-                      </div>
-                    </md-input-container>
+              <div>
+                <md-input-container> 
+                  <label>URL</label>
+                  <input required type ="text" name="url" ng-model="article.URL">
+                  <div ng-messages="url.url.$error">
+                    <div ng-message="required">This is required.</div>
                   </div>
+                </md-input-container>
+              </div>
 
-                  <button class="btn">Create Article</button>
-              </form>
-      	</md-content>
-      </md-tab>
-      <md-tab label="PDF">
-          <md-content class="md-padding">
-          	<form ng-submit="create(article)" name="PDF">
-          		<div>
-                    <md-input-container> 
-                      <label>Title</label>
-                      <input required type ="text" name="title" ng-model="article.title">
-                      <div ng-messages="url.title.$error">
-                        <div ng-message="required">This is required.</div>
-                      </div>
-                    </md-input-container>
-
-                    <!--
-      				<div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
-                    		<md-select required name="classroompicker" ng-model="article.classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
-                      		<md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
-                      		<md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
-                    		</md-select>
-                    		<div ng-messages="CnP.classroompicker.$error">
-                      		<div class="requiredPickerError" ng-message="required">This is required.</div>
-                    		</div>
-                  	</div>
-                  	-->
-                  </div>
-                    
-                  <div>
-                    <md-input-container> 
-                      <label>Author</label>
-                      <input type ="text" ng-model="article.author">
-                    </md-input-container>
-                  </div>
-
-                  <div>
-                    <md-input-container> 
-                      <input required type ="file" name="pdf" ng-model="article.PDF" aria-label="pdf">
-                      <div ng-messages="PDF.pdf.$error">
-                        <div ng-message="required">This is required.</div>
-                      </div>
-                    </md-input-container>
-                  </div>
               <button class="btn">Create Article</button>
+            </form>
+        	</md-content>
+        </md-tab>
+        <md-tab label="PDF">
+            <md-content class="md-padding">
+            	<form ng-submit="create(article)" name="PDF">
+            		<div>
+                  <md-input-container> 
+                    <label>Title</label>
+                    <input required type ="text" name="title" ng-model="article.title">
+                    <div ng-messages="url.title.$error">
+                      <div ng-message="required">This is required.</div>
+                    </div>
+                  </md-input-container>
+
+        				  <div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
+                  		<md-select required name="classroompicker" ng-model="article.classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
+                    		<md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
+                    		<md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>
+                  		</md-select>
+                  		<div ng-messages="CnP.classroompicker.$error">
+                    		<div class="requiredPickerError" ng-message="required">This is required.</div>
+                  		</div>
+                	</div>
+                </div>
+                      
+                <div>
+                  <md-input-container> 
+                    <label>Author</label>
+                    <input type ="text" ng-model="article.author">
+                  </md-input-container>
+                </div>
+
+                <div>
+                  <md-input-container> 
+                    <input required type ="file" name="pdf" ng-model="article.PDF" aria-label="pdf">
+                    <div ng-messages="PDF.pdf.$error">
+                      <div ng-message="required">This is required.</div>
+                    </div>
+                  </md-input-container>
+                </div>
+
+                <button class="btn">Create Article</button>
               </form>
       	</md-content>
       </md-tab>
