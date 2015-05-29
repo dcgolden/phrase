@@ -4,6 +4,10 @@ html, body{
   background-color: #eee !important;  /*TNW*/
 }
 
+html::-webkit-scrollbar{
+  display: none;
+}
+
 body {
   height: 100vh;
 }
