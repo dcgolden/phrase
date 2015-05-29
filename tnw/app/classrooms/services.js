@@ -4,9 +4,9 @@ module.exports = {
 
     function list () {
       return db.allDocs({startkey: 'classroom', endkey: 'classroom{}', inclusive_end: true, include_docs: true})
-        .then(function (res) {
-          console.log(res.rows)
-          return res.rows.map(function (r) { return r.doc })
+      .then(function (res) {
+        console.log(res.rows)
+        return res.rows.map(function (r) { return r.doc })
       })
     }
 
@@ -26,7 +26,6 @@ module.exports = {
     }
 
     function remove (id) {
-      console.log("hi");
       return db.get(id).then(db.remove)
     }
 
