@@ -8,6 +8,12 @@ module.exports = {
   template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 };
 
+$('a').on('click', function() {
+  $('.wrap, a').toggleClass('active');
+
+  return false;
+});
+
 function controller ($scope, articles, $stateParams) {
   articles.get($stateParams.id).then(function(doc) {
     $scope.article = doc;

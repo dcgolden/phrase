@@ -21,6 +21,7 @@
     "angular-messages": "^1.4.0",
     "angular-pouchdb": "^2.1.0",
     "angular-ui-router": "^0.2.15",
+    "jquery": "^2.1.4",
     "marked": "^0.3.3",
     "pouchdb": "^3.5.0",
     "pouchdb-authentication": "^0.4.0",

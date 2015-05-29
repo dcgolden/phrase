@@ -26,6 +26,8 @@
   <h2 class="pageTitle">Your Articles</h2>
   <md-divider class="navDivider navDividerMainPg" ng-if="!$last"></md-divider>
 
+  <md-progress-circular class="md-accent mdProgressCircular" md-mode="indeterminate"></md-progress-circular>
+
   <div class="articlesContainer">
     <md-grid-list md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="15px">
       <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 whiteBack" ng-class="{zRaise2: hover}" md-rowspan="2"ng-mouseenter="hover = true" ng-mouseleave="hover = false">

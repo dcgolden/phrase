@@ -12,6 +12,11 @@ body {
   height: 100vh;
 }
 
+.mdProgressCircular{
+  float: center;
+}
+}
+
 .mainView{
   padding: 0% 3% 0% 3%;
 }
