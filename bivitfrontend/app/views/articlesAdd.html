@@ -3,7 +3,7 @@
     <md-tabs md-dynamic-height md-border-bottom>
       <md-tab label="Copy and Paste">
         <md-content class="md-padding">
-          <h1 class="md-display-2"></h1>
+          <h1 class="md-display-2"></h1> 
 
           <form name="CnP">
 
@@ -15,6 +15,7 @@
                   <div ng-message="required">This is required.</div>
                 </div>
               </md-input-container>
+
               <div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
               <md-select required name="classroompicker" ng-model="classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
                 <md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>
@@ -24,6 +25,7 @@
                 <div class="requiredPickerError" ng-message="required">This is required.</div>
               </div>
             </div>
+            
             </div>
               
             <div>
