@@ -27,8 +27,9 @@ module.exports = {
     }
 
     function remove (id) {
-      return db.get(id).then(db.remove);
-
+      return db.get(id).then(function (doc) {
+        return db.remove(doc);
+      });
     }
 
     return Object.freeze({
