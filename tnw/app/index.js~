@@ -3,10 +3,9 @@
 window.PouchDB = require('pouchdb')
 window.PouchDB.plugin(require('pouchdb-authentication'))
 
-require('angular').module('app', [
+require('angular-material').module('app', [
   require('angular-animate'),
   require('angular-aria'),
-  require('angular-material'),
   require('./ng-icons'),
   require('angular-ui-router'),
   require('angular-messages'),
