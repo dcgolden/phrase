@@ -1,7 +1,42 @@
-<h1>Articles</h1>
+<!--<h1>Articles</h1>
 <a ui-sref="articles.new">New Article</a>
 <ul>
   <li ng-repeat="article in articles">
     <a ui-sref="articles.show({ id: article._id})">{{article.title}}</a>
   </li>
-</ul>
+</ul>-->
+
+<md-button class="md-fab floatingActionButton" md-ink-ripple aria-label="Add Article" ui-sref="articles.new">
+  <div class="hamburgerMenuButton2">
+    <ng-md-icon icon="add" size="24" style="fill: white"></ng-md-icon>
+  </div>
+</md-button>
+
+<div>
+  <md-input-container class="searchBar"> 
+    <label>
+      <div class="searchIcon">
+        <ng-md-icon icon="search" size="15" style="fill: grey"></ng-md-icon>
+      </div>
+      search
+      </label>
+    <input type ="text" ng-model="articleQuery">
+  </md-input-container>
+
+  <h2 class="pageTitle">Your Articles</h2>
+  <md-divider class="navDivider navDividerMainPg" ng-if="!$last"></md-divider>
+
+  <div class="articlesContainer">
+    <md-grid-list md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="15px">
+      <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 whiteBack" ng-class="{zRaise2: hover}" md-rowspan="2"ng-mouseenter="hover = true" ng-mouseleave="hover = false">
+        <div class="feature articleContentCardDiv">
+          <a ui-sref="articles.show({ id: article._id})"></a>
+          <div class="articleContentCard" ng-bind="article.content"></div>
+          <md-grid-tile-footer>
+            <h3 ng-bind="article.title" class="articleContentCardFooter"></h3>
+          </md-grid-tile-footer>
+        </div>
+      </md-grid-tile>
+    </md-grid-list>
+  </div>
+</div>

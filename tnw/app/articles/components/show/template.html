@@ -1,7 +1,29 @@
-<h3>Show Article</h3>
-<h3 ng-bind="article.title"></h3>
-<p ng-bind="article.author"></p>
-<p ng-bind ="article.source"></p>
-<p ng-bind="article.content"></p>
-<a ui-sref="articles.edit({id: article._id})">Edit Article</a>
-<a ui-sref="articles.list">Back to Articles</a>
+<!--Changing the style of the toolbar-->
+<style>
+	.mainToolbar{
+		height: 18em !important;
+		z-index: 0;
+		position:absolute;
+	}
+</style>
+
+<md-content class="articleCardContainer">
+  <md-card class="articleCard">
+  	<span class="articleCardClassroom" ng-bind="classroom.classroomName"></span>
+	<h2 ng-bind="article.title" class="articleCardTitle"></h2>
+	<p ng-bind="article.author" class="articleCardAuthor"></p>
+	<md-divider class="navDivider" ng-if="!$last"></md-divider>
+	<p ng-bind="article.content" class="articleCardContent"></p>
+	<p ng-bind="article.source" class="articleCardSource"></p>
+  </md-card>
+
+  <div>
+  <md-button ng-click="remove(article._id)"flex class="md-raised md-warn btn deleteBtn">
+    Delete
+  </md-button>
+  </form>
+  <md-button flex class="md-raised md-primary" ui-sref="articles.edit({id: article._id})">Edit Article</a></md-button>
+  </div>
+
+</md-content>
+
