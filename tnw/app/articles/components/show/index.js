@@ -14,8 +14,8 @@ function controller ($scope, articles, $stateParams) {
   });
 
   $scope.remove = function (id) {
-    var passID = $stateParams.id;
-    articles.remove(passID).then(function (res) {
+    console.log($stateParams.id);
+    articles.remove($stateParams.id).then(function (res) {
       $state.go('articles.list');
     });
   };

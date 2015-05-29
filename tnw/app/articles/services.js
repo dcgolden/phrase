@@ -14,7 +14,7 @@ module.exports = {
 
     function create (article) {
       article.type = 'article';
-      article._id = 'article-' + (new Date()).toISOString();
+      article._id = 'article-' + (new Date()).toISOString()
       return db.put(article);
     }
 
