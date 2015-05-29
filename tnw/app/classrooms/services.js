@@ -17,6 +17,7 @@ module.exports = {
     }
 
     function get (id) {
+      console.log(id);
       return db.get(id)
     }
 
@@ -25,6 +26,7 @@ module.exports = {
     }
 
     function remove (id) {
+      console.log("hi");
       return db.get(id).then(db.remove)
     }
 
