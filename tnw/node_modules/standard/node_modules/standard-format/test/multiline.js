@@ -1,6 +1,9 @@
 var test = require('tape')
 var fmt = require('../').transform
 
+var cr = new RegExp(/\n/g)
+var crlf = '\r\n'
+
 var collapse = [
   {
     program:
@@ -42,12 +45,32 @@ var collapse = [
     '  bar()\n' +
     '}\n',
     msg: 'Remove padding newlines after curly braces'
+  },
+  {
+    program:
+    'var x = 123; /* Useful comment \n' +
+    'that spans two lines */\n',
+
+    expected:
+    'var x = 123 /* Useful comment \n' +
+    'that spans two lines */\n',
+
+    msg: 'Remove semicolon from multiline comment'
   }
 ]
 
 test('multiline collapse', function (t) {
   t.plan(collapse.length)
   collapse.forEach(function (obj) {
+    t.equal(fmt(obj.program), obj.expected, obj.msg)
+  })
+})
+
+test('multiline collapse CRLF', function (t) {
+  t.plan(collapse.length)
+  collapse.forEach(function (obj) {
+    obj.program = obj.program.replace(cr, crlf)
+    obj.expected = obj.expected.replace(cr, crlf)
     t.equal(fmt(obj.program), obj.expected, obj.msg)
   })
 })
@@ -73,7 +96,7 @@ var noops = [
     '  })\n' +
     '}\n',
 
-    msg: 'Dont mess with function tabbing'
+    msg: 'Don\'t mess with function tabbing'
 
   },
   {
@@ -91,6 +114,14 @@ var noops = [
 test('multiline noop', function (t) {
   t.plan(noops.length)
   noops.forEach(function (obj) {
+    t.equal(fmt(obj.program), obj.program, obj.msg)
+  })
+})
+
+test('multiline noop CRLF', function (t) {
+  t.plan(noops.length)
+  noops.forEach(function (obj) {
+    obj.program = obj.program.replace(cr, crlf)
     t.equal(fmt(obj.program), obj.program, obj.msg)
   })
 })
