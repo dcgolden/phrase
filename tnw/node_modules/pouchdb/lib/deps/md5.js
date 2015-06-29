@@ -1,5 +1,6 @@
 'use strict';
 
+var base64 = require('./binary/base64');
 var crypto = require('crypto');
 var Md5 = require('spark-md5');
 var setImmediateShim = global.setImmediate || global.setTimeout;
@@ -7,25 +8,20 @@ var MD5_CHUNK_SIZE = 32768;
 
 // convert a 64-bit int to a binary string
 function intToString(int) {
-  var bytes = [
-    (int & 0xff),
-    ((int >>> 8) & 0xff),
-    ((int >>> 16) & 0xff),
-    ((int >>> 24) & 0xff)
-  ];
-  return bytes.map(function (byte) {
-    return String.fromCharCode(byte);
-  }).join('');
+  return String.fromCharCode(int & 0xff) +
+    String.fromCharCode((int >>> 8) & 0xff) +
+    String.fromCharCode((int >>> 16) & 0xff) +
+    String.fromCharCode((int >>> 24) & 0xff);
 }
 
 // convert an array of 64-bit ints into
 // a base64-encoded string
 function rawToBase64(raw) {
   var res = '';
-  for (var i = 0; i < raw.length; i++) {
+  for (var i = 0, len = raw.length; i < len; i++) {
     res += intToString(raw[i]);
   }
-  return btoa(res);
+  return base64.btoa(res);
 }
 
 function appendBuffer(buffer, data, start, end) {
