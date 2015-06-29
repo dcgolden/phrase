@@ -9,7 +9,7 @@
 -->
 
 
-  <md-toolbar md-scroll-shrink="true" md-shrink-speed-factor=".3" class="blueBar">
+  <md-toolbar md-scroll-shrink class="blueBar">
   </md-toolbar>
 
 <md-content class="articleCardContainer">
@@ -23,6 +23,31 @@
 	<p ng-bind="article.content" class="articleCardContent"></p>
 	<p ng-bind="article.source" class="articleCardSource"></p>
   </md-card>
+
+  <div class="fabSpeedDiald">
+    <div class="lock-size" layout="row" layout-align="center center">
+      <md-fab-speed-dial md-open="false" md-direction="down" ng-class="md-scale">
+        <md-fab-trigger>
+          <md-button aria-label="articleMenuSettings" class="md-fab md-accent">
+            <ng-md-icon class="articleMenuSettings" icon="settings" style="fill: white" size="36">
+            </ng-md-icon>
+          </md-button>
+        </md-fab-trigger>
+
+        <md-fab-actions>
+          <md-button aria-label="articleMenuEdit" class="md-fab md-raised md-mini">
+            <ng-md-icon class="articleMenuEdit" icon="mode_edit" style="fill: grey" size="16"></ng-md-icon>
+          </md-button>
+        </md-fab-actions>
+
+        <md-fab-actions>
+          <md-button aria-label="articleMenuDelete" class="md-fab md-raised md-mini">
+            <ng-md-icon class="articleMenuDelete" icon="delete" style="fill: grey" size="16"></ng-md-icon>
+          </md-button>
+        </md-fab-actions>
+      </md-fab-speed-dial>
+    </div>
+  </div>
 
   <md-button ng-click="remove(article._id)" flex class="md-raised md-warn btn deleteBtn">
     Delete
