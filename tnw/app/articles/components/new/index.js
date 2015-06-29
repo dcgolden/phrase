@@ -10,9 +10,9 @@ module.exports = {
 
 function controller($scope, articles, $state, classrooms) {
 
-    classrooms.list().then(function (res) {
+    /*(classrooms.list().then(function (res) {
             $scope.classrooms = res
-        })
+        })*/
 
     $scope.create = function(article) {
         articles.create(article)
