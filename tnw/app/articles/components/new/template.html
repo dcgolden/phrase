@@ -40,16 +40,16 @@
             </div>
 
             <div>
-              <md-input-container> 
+              <md-input-container flex> 
                   <label>Content</label>
-                  <input required type ="text" name="Content" ng-model="article.content">
+                  <input required type ="text" name="content" ng-model="article.content" columns="1">
                   <div ng-messages="CnP.content.$error">
                     <div ng-message="required">This is required.</div>
                   </div>
                 </md-input-container>
             </div>
 
-            <button class="btn">Create Article</button>
+            <md-button class="md-primary md-raised btn">Create Article</button>
           </form>
         </md-content>
       </md-tab>
@@ -93,7 +93,7 @@
                 </md-input-container>
               </div>
 
-              <button class="btn">Create Article</button>
+              <md-button class="md-primary md-raised btn">Create Article</button>
             </form>
           </md-content>
         </md-tab>
@@ -136,7 +136,7 @@
                   </md-input-container>
                 </div>
 
-                <button class="btn">Create Article</button>
+                <md-button class="md-primary md-raised btn">Create Article</button>
               </form>
         </md-content>
       </md-tab>
