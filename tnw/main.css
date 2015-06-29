@@ -86,6 +86,10 @@ body {
   width: auto;
 }
 
+a.navbarText{
+  text-decoration: none;
+}
+
 a.classroomMainPg:hover{
   color: #777;
 }
@@ -166,11 +170,12 @@ div.feature a {
 .articleCardContainer{
   background-color: transparent !important;
   white-space: pre-wrap;
-  margin-top: -6em;
+  margin-top: -28em !important;
+  z-index: 2;
 }
 
 .blueBar{
-  height: 16em !important;
+  height: 16em;
 }
 
 .articleContentCardFooter{
