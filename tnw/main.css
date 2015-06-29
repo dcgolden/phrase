@@ -169,7 +169,7 @@ div.feature a {
 
 .articleCardContainer{
   background-color: transparent !important;
-  height: 100vh;
+  height: 130vh;
   margin-top: -38em !important;
   margin-bottom: 0em !important;
   z-index: 2;
@@ -179,8 +179,13 @@ div.feature a {
   height: 12em;
 }
 
-.articleMenuSettings{
-  margin-top: 1em;
+.articleMenuEdit{
+  margin-top: .5em;
+}
+
+.fabSpeedDial{
+  float: right;
+  display: inline;
 }
 
 .fabSpeedDial .text-capitalize {
@@ -214,7 +219,7 @@ div.feature a {
 
 .zRaise2
 {
-	box-shadow:0 8px 17px rgba(0,0,0,.2)
+  box-shadow:0 8px 17px rgba(0,0,0,.2)
 }
 
 .articleCard 
@@ -222,7 +227,7 @@ div.feature a {
   padding: 2rem;
   z-index: 7;
   margin-top: 5em;
-	width: 70%;
+  width: 70%;
   margin-right: auto;
   margin-left: auto;
 }
