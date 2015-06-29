@@ -1,8 +1,11 @@
 <h1>ClassRooms</h1>
-
+<md-button class="md-fab floatingActionButton" md-ink-ripple aria-label="Add Article" ui-sref="classrooms.new">
+  <div class="hamburgerMenuButton2">
+    <ng-md-icon icon="add" size="24" style="fill: white"></ng-md-icon>
+  </div>
+</md-button>
 <ul>
   <li ng-repeat="classroom in classrooms">
     <a ui-sref="classrooms.show({ id: classroom._id})" ng-bind="classroom.name"></a>
   </li>
 </ul>
-<md-button class="md-raised md-primary" ui-sref="classrooms.new">New Classroom</button>

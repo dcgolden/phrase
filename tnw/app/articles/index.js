@@ -18,5 +18,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
           .state('articles.edit', require('./components/edit'))
 
      }])
+    .factory('classrooms', ['pouchDB', 'dbName', require('../classrooms/services').classrooms])
     .factory('articles', ['pouchDB', 'dbName', require('./services').articles])
+
 })( window, window.angular)
