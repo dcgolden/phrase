@@ -13,10 +13,10 @@ body {
 .mdProgressCircular{
   float: center;
 }
-}
 
-.mainView{
-  padding: 0% 3% 0% 3%;
+.mainToolbar{
+  z-index: 4;
+  position: fixed;
 }
 
 .navbarText{
@@ -169,14 +169,14 @@ div.feature a {
 
 .articleCardContainer{
   background-color: transparent !important;
-  white-space: pre-wrap;
   height: 100vh;
-  margin-top: -35em !important;
+  margin-top: -38em !important;
+  margin-bottom: 0em !important;
   z-index: 2;
 }
 
 .blueBar{
-  height: 16em;
+  height: 12em;
 }
 
 .articleMenuSettings{
