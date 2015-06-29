@@ -1,13 +1,18 @@
-<!--Changing the style of the toolbar-->
+<!--Changing the style of the toolbar
 <style>
-	.mainToolbar{
-		height: 18em !important;
-		z-index: 0;
-		position:absolute;
-	}
+  .mainToolbar{
+    height: 18em !important;
+    z-index: 0;
+    position:absolute;
+  }
 </style>
+-->
 
 <md-content class="articleCardContainer">
+
+  <md-toolbar md-scroll-shrink="true" md-shrink-speed-factor=".3" class="blueBar">
+  </md-toolbar>
+
   <md-card class="articleCard">
   	<span class="articleCardClassroom" ng-bind="classroom.classroomName"></span>
 	<h2 ng-bind="article.title" class="articleCardTitle"></h2>
@@ -17,31 +22,14 @@
 	<p ng-bind="article.source" class="articleCardSource"></p>
   </md-card>
 
-  <div>
-  	<div class='wrap'>
-  		<div class='content'>
-
-  		<md-list>
-  			<a ui-sref="articles.edit({id: article._id})" class="navbarText">
-	  			<md-list-item ng-click="" >
-	  				<p>Edit</p>
-	  			</md-list-item>
-  			</a>
-
-  			<md-divider></md-divider>
-
-  			<md-list-item ng-click="remove(article._id)" >
-  				<p>Delete</p>
-  			</md-list-item>
-  		</md-list>
-  		</div>
-  	</div>
-
-  <md-button ng-click="remove(article._id)"flex class="md-raised md-warn btn deleteBtn">
+  <md-button ng-click="remove(article._id)" flex class="md-raised md-warn btn deleteBtn">
     Delete
   </md-button>
 
-  <md-button flex class="md-raised md-primary" ui-sref="articles.edit({id: article._id})">Edit Article</md-button>
+  <md-button flex class="md-raised md-primary" ui-sref="articles.edit({id: article._id})">
+  Edit Article
+  </md-button>
+
   </div>
 
 </md-content>
