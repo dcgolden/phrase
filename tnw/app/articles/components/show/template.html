@@ -9,9 +9,9 @@
 <md-toolbar md-scroll-shrink md-shrink-speed-factor="1.5" class="blueBar">
 </md-toolbar>
 
-<md-content class="articleCardContainer">
-
-<div class="fabSpeedDial">
+<div class="inflow">
+<div class="positioner">
+<div class="fabSpeedDial" layout="column">
     <div class="lock-size" layout="row" layout-align="center center">
       <md-fab-speed-dial md-direction="down" ng-class="md-scale">
         <md-fab-trigger>
@@ -22,6 +22,12 @@
         </md-fab-trigger>
 
         <md-fab-actions>
+          <md-button aria-label="class" ng-click="" class="md-fab md-raised md-mini md-hue2">
+            <ng-md-icon class="articleMenuClass" icon="assignment_ind" style="fill: white" size="16"></ng-md-icon>
+          </md-button>
+        </md-fab-actions>
+
+        <md-fab-actions>
           <md-button aria-label="articleMenuDelete" ng-click="showConfirm(article._id)" class="md-fab md-raised md-mini md-warn">
             <ng-md-icon class="articleMenuDelete" icon="delete" style="fill: white" size="16"></ng-md-icon>
           </md-button>
@@ -29,27 +35,21 @@
       </md-fab-speed-dial>
     </div>
   </div>
+  </div>
+  </div>
 
-  <md-card class="articleCard">
-  	<span class="articleCardClassroom" ng-bind="classroom.classroomName"></span>
-	<h2 ng-bind="article.title" class="articleCardTitle"></h2>
-	<p ng-bind="article.author" class="articleCardAuthor"></p>
-	<md-divider class="navDivider" ng-if="!$last"></md-divider>
-  <p ng-bind="article.content" class="articleCardContent"></p>
-	<p ng-bind="article.source" class="articleCardSource"></p>
-  </md-card>
+<md-content class="articleCardContainer">
 
   
 
-  <md-button ng-click="remove(article._id)" flex class="md-raised md-warn btn deleteBtn">
-    Delete
-  </md-button>
-
-  <md-button flex class="md-raised md-primary" ui-sref="articles.edit({id: article._id})">
-  Edit Article
-  </md-button>
-
-  </div>
+  <md-card class="articleCard">
+  	<span class="articleCardClassroom" ng-bind="classroom.classroomName"></span>
+	  <h2 ng-bind="article.title" class="articleCardTitle"></h2>
+	  <p ng-bind="article.author" class="articleCardAuthor"></p>
+	  <md-divider class="navDivider" ng-if="!$last"></md-divider>
+    <p ng-bind="article.content" class="articleCardContent"></p>
+	  <p ng-bind="article.source" class="articleCardSource"></p>
+  </md-card>
 
 </md-content>
 

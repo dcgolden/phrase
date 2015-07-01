@@ -184,7 +184,9 @@ div.feature a {
 
 .fabSpeedDial{
   float: right;
-  display: inline;
+  position:absolute;
+  margin-top: 1.5em;
+  margin-left:88%;
 }
 
 .fabSpeedDial .text-capitalize {
@@ -200,10 +202,10 @@ div.feature a {
 }
 
 .fabSpeedDial .lock-size {
-  min-width: 300px;
-  min-height: 300px;
-  width: 300px;
-  height: 300px;
+  min-width: 50px;
+  min-height: 50px;
+  width: 50px;
+  height: 50px;
   margin-left: auto;
   margin-right: auto; 
 }
