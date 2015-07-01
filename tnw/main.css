@@ -16,7 +16,6 @@ body {
 
 .mainToolbar{
   z-index: 4;
-  position: fixed;
 }
 
 .navbarText{
@@ -294,6 +293,15 @@ div.feature a {
 .listdemoBasicUsage md-divider {
   margin-top: 10px;
   margin-bottom: 10px; 
+}
+
+textarea {
+   -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 61%;
+    resize: none;
+    margin-right: auto;
 }
 
 

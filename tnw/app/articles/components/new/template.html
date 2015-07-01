@@ -42,7 +42,8 @@
             <div>
               <md-input-container flex> 
                   <label>Content</label>
-                  <input required type ="text" name="content" ng-model="article.content" columns="1">
+                  <textarea required type ="text" name="content" ng-model="article.content" columns="1">
+                  </textarea>
                   <div ng-messages="CnP.content.$error">
                     <div ng-message="required">This is required.</div>
                   </div>
