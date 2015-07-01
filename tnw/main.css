@@ -179,7 +179,15 @@ div.feature a {
 }
 
 .articleMenuEdit{
-  margin-top: .5em;
+  margin-top: .6em;
+}
+
+.articleMenuDelete{
+  margin-top: .1em;
+}
+
+.articleMenuClass{
+  margin-top: .1em;
 }
 
 .fabSpeedDial{
