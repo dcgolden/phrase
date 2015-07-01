@@ -260,6 +260,9 @@ div.feature a {
   line-height: 1.7;
   color: #777;
   margin-top: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: keep-all;
 }
 
 .articleCardSource{
