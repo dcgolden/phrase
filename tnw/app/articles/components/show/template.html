@@ -2,6 +2,7 @@
 <style>
   .topToolbar {
   box-shadow: none !important;
+  position: fixed;
 }
 </style>
 
@@ -21,7 +22,7 @@
         </md-fab-trigger>
 
         <md-fab-actions>
-          <md-button aria-label="articleMenuDelete" class="md-fab md-raised md-mini md-warn">
+          <md-button aria-label="articleMenuDelete" ng-click="showConfirm(article._id)" class="md-fab md-raised md-mini md-warn">
             <ng-md-icon class="articleMenuDelete" icon="delete" style="fill: white" size="16"></ng-md-icon>
           </md-button>
         </md-fab-actions>
