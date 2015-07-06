@@ -16,6 +16,7 @@ require('angular').module('app', [
   require('./ng-icons'),
   require('angular-ui-router'),
   require('angular-messages'),
+  require('./ng-annotator'),
   require('./classrooms'),
   require('./articles'),
   require('./users')

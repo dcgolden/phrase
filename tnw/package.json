@@ -22,6 +22,7 @@
     "angular-messages": "^1.4.0",
     "angular-pouchdb": "^2.1.0",
     "angular-ui-router": "^0.2.15",
+    "annotator": "^2.0.0-alpha.2",
     "browserify": "^10.2.3",
     "cssify": "^0.7.0",
     "jquery": "^2.1.4",
