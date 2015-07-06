@@ -168,10 +168,6 @@ div.feature a {
 
 .articleCardContainer{
   background-color: transparent !important;
-  height: 130vh;
-  margin-top: -38em !important;
-  margin-bottom: 0em !important;
-  z-index: 2;
 }
 
 .blueBar{
@@ -190,23 +186,21 @@ div.feature a {
   margin-top: .1em;
 }
 
-.fabSpeedDial{
+.positioner{
   float: right;
-  position:absolute;
-  margin-top: 1.5em;
-  margin-left:88%;
+  margin-right: 10%;
 }
 
-.fabSpeedDial .text-capitalize {
-  text-transform: capitalize; 
+.fabSpeedDial{
+  float: right;
+  position:fixed;
+  margin-top: 10em;
+  z-index: 8;
 }
+
 
 .fabSpeedDial.md-fab:hover, .fabSpeedDial .md-fab.md-focused {
   background-color: #000 !important; 
-}
-
-.fabSpeedDial p.note {
-  font-size: 1.2rem; 
 }
 
 .fabSpeedDial .lock-size {
