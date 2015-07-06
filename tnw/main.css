@@ -117,11 +117,16 @@ a.classroomMainPg:hover{
 }
 
 .hamburgerMenuButton2{
-  padding-top: .4em !important;
+  padding-top: .6em !important;
 }
 
 .hamburgerMenuButton3{
   padding-right: .5em !important;
+}
+
+.toolbarCurrentUser{
+  font-size: 13px;
+  padding-right: 1em;
 }
 
 .requiredPickerError{
