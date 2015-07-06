@@ -126,7 +126,7 @@ a.classroomMainPg:hover{
 
 .toolbarCurrentUser{
   font-size: 13px;
-  padding-right: 1em;
+  padding-right: .5em;
 }
 
 .requiredPickerError{
@@ -179,6 +179,10 @@ div.feature a {
   height: 12em;
 }
 
+.articleEditSubmit{
+  margin-top: .6em;
+}
+
 .articleMenuEdit{
   margin-top: .6em;
 }
@@ -194,6 +198,23 @@ div.feature a {
 .positioner{
   float: right;
   margin-right: 10%;
+}
+
+.positioner2{
+  float: right;
+  margin-right: 10%;
+}
+
+.md-color-donfirm{
+
+}
+
+.fabSpeedDial2{
+  float: right;
+  position:fixed;
+  margin-top: 6.22em;
+  z-index: 8;
+  margin-left: -.68em;
 }
 
 .fabSpeedDial{

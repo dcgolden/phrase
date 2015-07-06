@@ -11,6 +11,9 @@
       </md-button>
       <div class="toolbarCurrentPage"> Phrase
       </div>
+      <span flex></span>
+      <md-button ui-sref="users.login">Login</md-button>
+      <md-button ui-sref="users.signup">Sign Up</md-button>
     </div>
   </md-toolbar>
 
@@ -95,7 +98,7 @@
       </md-button>
       <div class="toolbarCurrentPage"> Phrase</div>
       <span flex></span>
-      <div class="toolbarCurrentUser">{{activeUser}}</div>
+      <md-button ui-sref="users.show" class="toolbarCurrentUser">{{activeUser}}</md-button>
       <md-button class="md-icon-button hamburgerMenuButton2" aria-label="notifications">
         <div ng-if="notification">
           <ng-md-icon icon='notifications' style="fill: white" size="24"></ng-md-icon>

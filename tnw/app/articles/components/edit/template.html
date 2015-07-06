@@ -1,33 +1,64 @@
-<h3>Edit Article</h3>
-<form ng-submit="update(article)">
-  <div>
-		<md-input-container> 
-		<label>Title</label>
-		<input type ="text" name="title" ng-model="article.title">
-		</md-input-container>
-	</div>
+<style>
+  .topToolbar {
+  position: fixed;
+}
+</style>
 
-	<div>
-		<md-input-container> 
-		<label>Source</label>
-		<input type ="text" name="source" ng-model="article.source">
-		</md-input-container>
-	</div>
 
-	<div>
-		<md-input-container> 
-		<label>Author</label>
-		<input type ="text" name="author" ng-model="article.author">
-		</md-input-container>
-	</div>
+<div class="inflow">
+  <div class="positioner2">
+    <div class="fabSpeedDial2" layout="column">
+      <div class="lock-size" layout="row" layout-align="center center">
+        <md-fab-speed-dial md-direction="down" ng-class="md-scale">
+          <md-fab-trigger>
+            <md-button aria-label="articleEditSubmit" ng-click="update(article)" class="md-fab md-color-confirm">
+              <ng-md-icon class="articleEditSubmit" icon="check" style="fill: white" size="24">
+              </ng-md-icon>
+            </md-button>
+          </md-fab-trigger>
+        </md-fab-speed-dial>
+      </div>
+    </div>     
+  </div>
+</div>
 
-	<div>
-		<md-input-container>
-		<label>Content</label>
-		<textarea columns="1" rows="15" type="text" name="content" ng-model="article.content">
-		</textarea>
-		</md-input-container>
-	</div>
+<md-content class="articleCardContainer">  
 
-  <md-button class="md-primary md-raised btn">Update Article</button>
-</form>
+  	<md-card class="articleCard">
+
+		<form ng-submit="update(article)">
+		  <div>
+				<md-input-container> 
+				<label>Title</label>
+				<input type ="text" name="title" ng-model="article.title">
+				</md-input-container>
+			</div>
+
+			<div>
+				<md-input-container> 
+				<label>Source</label>
+				<input type ="text" name="source" ng-model="article.source">
+				</md-input-container>
+			</div>
+
+			<div>
+				<md-input-container> 
+				<label>Author</label>
+				<input type ="text" name="author" ng-model="article.author">
+				</md-input-container>
+			</div>
+
+			<div>
+				<md-input-container>
+				<label>Content</label>
+				<textarea columns="1" rows="15" type="text" name="content" ng-model="article.content">
+				</textarea>
+				</md-input-container>
+			</div>
+
+		  
+		</form>
+
+	</md-card>
+
+</md-content>
