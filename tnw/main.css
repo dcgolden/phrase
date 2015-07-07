@@ -233,14 +233,14 @@ div.feature a {
 }
 
 .pageSubTitle{
-  color: grey; 
+  color: gray; 
 }
 
 .fabSpeedDial4{
   float: right;
   position:fixed;
   margin-top: 2.22em;
-  z-index: 8;
+  z-index: 100 !important;
   margin-left: -.68em;
 }
 
@@ -248,7 +248,7 @@ div.feature a {
   float: right;
   position:fixed;
   margin-top: .35em;
-  z-index: 8;
+  z-index: 100 !important;
   margin-left: -.68em;
 }
 
@@ -256,7 +256,7 @@ div.feature a {
   float: right;
   position:fixed;
   margin-top: 6.22em;
-  z-index: 8;
+  z-index: 100 !important;
   margin-left: -.68em;
 }
 
@@ -264,7 +264,7 @@ div.feature a {
   float: right;
   position:fixed;
   margin-top: 10em;
-  z-index: 8;
+  z-index: 100 !important;
 }
 
 
