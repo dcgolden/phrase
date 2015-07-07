@@ -24,10 +24,17 @@ body {
 }
 
 .searchBar{
-  width: 20%;
-  float: right;
-  margin-top: -5.5em;
-  z-index: 7;
+  float: left;
+  margin-left: 14em;
+  position: absolute;
+  margin-top: -1.2em;
+}
+
+.searchBarClassrooms{
+  float: left;
+  margin-left: 14em;
+  position: absolute;
+  margin-top: -3.41em;
 }
 
 .classroomPicker{
@@ -207,6 +214,24 @@ div.feature a {
 
 .md-color-donfirm{
 
+}
+
+.articlesPage{
+  padding-left: 2em;
+  padding-right: 2em;
+}
+
+.pageTitle{
+  font-size: 30px;
+  margin-bottom: 0px;
+}
+
+.fabSpeedDial3{
+  float: right;
+  position:fixed;
+  margin-top: .35em;
+  z-index: 8;
+  margin-left: -.68em;
 }
 
 .fabSpeedDial2{

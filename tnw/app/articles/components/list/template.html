@@ -1,18 +1,21 @@
-<!--<h1>Articles</h1>
-<a ui-sref="articles.new">New Article</a>
-<ul>
-  <li ng-repeat="article in articles">
-    <a ui-sref="articles.show({ id: article._id})">{{article.title}}</a>
-  </li>
-</ul>-->
-
-<md-button class="md-fab floatingActionButton" md-ink-ripple aria-label="Add Article" ui-sref="articles.new">
-  <div class="hamburgerMenuButton2">
-    <ng-md-icon icon="add" size="24" style="fill: white"></ng-md-icon>
+<div class="inflow">
+  <div class="positioner2">
+    <div class="fabSpeedDial3" layout="column">
+      <div class="lock-size" layout="row" layout-align="center center">
+        <md-fab-speed-dial md-direction="down" ng-class="md-scale">
+          <md-fab-trigger>
+            <md-button aria-label="addArticle" ui-sref="articles.new" class="md-fab">
+              <ng-md-icon class="articleEditSubmit" icon="add" style="fill: white" size="24">
+              </ng-md-icon>
+            </md-button>
+          </md-fab-trigger>
+        </md-fab-speed-dial>
+      </div>
+    </div>     
   </div>
-</md-button>
+</div>
 
-<div>
+<div class="articlesPage">
   <md-input-container class="searchBar"> 
     <label>
       <div class="searchIcon">
@@ -23,10 +26,7 @@
     <input type ="text" ng-model="articleQuery">
   </md-input-container>
 
-  <h2 class="pageTitle">Your Articles</h2>
-  <md-divider class="navDivider navDividerMainPg" ng-if="!$last"></md-divider>
-
-  <!--<md-progress-circular class="md-accent mdProgressCircular" md-mode="indeterminate"></md-progress-circular>-->
+  <p class="pageTitle">Your Articles</p>
 
   <div class="articlesContainer">
     <md-grid-list md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="15px">
