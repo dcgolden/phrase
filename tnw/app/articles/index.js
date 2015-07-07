@@ -14,8 +14,8 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
           })
           .state('articles.list', require('./components/list'))
           .state('articles.new', require('./components/new'))
-          .state('articles.newURL', require('./components/newURL'))
-          .state('articles.newPDF', require('./components/newPDF'))
+          .state('articles.URL', require('./components/newURL'))
+          .state('articles.PDF', require('./components/newPDF'))
           .state('articles.show', require('./components/show'))
           .state('articles.edit', require('./components/edit'))
 
