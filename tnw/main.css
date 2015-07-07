@@ -236,6 +236,14 @@ div.feature a {
   color: gray; 
 }
 
+.fabSpeedDial5{
+  float: right;
+  position:fixed;
+  margin-top: .34em;
+  z-index: 100 !important;
+  margin-left: -.68em;
+}
+
 .fabSpeedDial4{
   float: right;
   position:fixed;
