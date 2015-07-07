@@ -29,8 +29,8 @@
     </div>     
   </div>
 </div>
-
-<div class="articlesPage">
+<md-progress-circular ng-if="loadingArticles" class="md-hue-2" md-mode="indeterminate"></md-progress-circular>
+<div ng-if="loadingArticles != 'true'" class="articlesPage">
   <md-input-container class="searchBar"> 
     <label>
       <div class="searchIcon">
