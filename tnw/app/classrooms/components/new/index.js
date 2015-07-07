@@ -9,6 +9,9 @@ module.exports = {
 }
 
 function controller ($scope, classrooms, $state) {
+	var self = this;
+    self.tags = [];
+
   $scope.create = function (classroom) {
     classrooms.create(classroom)
       .then(function (res) {

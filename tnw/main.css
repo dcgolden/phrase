@@ -221,9 +221,27 @@ div.feature a {
   padding-right: 2em;
 }
 
+.classroomsAddPage{
+  padding-left: 2em;
+  padding-right: 2em;
+  padding-top: 2em;
+}
+
 .pageTitle{
   font-size: 30px;
   margin-bottom: 0px;
+}
+
+.pageSubTitle{
+  color: grey; 
+}
+
+.fabSpeedDial4{
+  float: right;
+  position:fixed;
+  margin-top: 2.22em;
+  z-index: 8;
+  margin-left: -.68em;
 }
 
 .fabSpeedDial3{
