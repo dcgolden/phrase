@@ -1,24 +1,33 @@
-<div class="inflow">
+<div ng-if="!loadingArticles" class="inflow">
   <div class="positioner2">
     <div class="fabSpeedDial3" layout="column">
       <div class="lock-size" layout="row" layout-align="center center">
         <md-fab-speed-dial md-direction="down" ng-class="md-scale">
           <md-fab-trigger>
             <md-button aria-label="addArticleCnP" ui-sref="articles.new" class="md-fab">
+              <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
+                Copy & Paste
+              </md-tooltip>
               <ng-md-icon class="articleEditSubmit" icon="add" style="fill: white" size="24">
               </ng-md-icon>
             </md-button>
           </md-fab-trigger>
 
           <md-fab-actions>
-            <md-button aria-label="addArticleURL" ui-sref="articles.url" class="md-fab md-raised md-mini md-primary">
+            <md-button aria-label="addArticleURL" ui-sref="articles.url" class="md-fab md-raised md-mini md-primary md-hue-2">
+              <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
+                URL
+              </md-tooltip>
               <ng-md-icon class="articleMenuClass" icon="public" style="fill: white" size="16">
               </ng-md-icon>
             </md-button>
           </md-fab-actions>
 
           <md-fab-actions>
-            <md-button aria-label="addArticlePDF" ui-sref="articles.pdf" class="md-fab md-raised md-mini md-primary">
+            <md-button aria-label="addArticlePDF" ui-sref="articles.pdf" class="md-fab md-raised md-mini md-primary md-hue-2">
+              <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
+                PDF
+              </md-tooltip>
               <ng-md-icon class="articleMenuClass" icon="insert_drive_file" style="fill: white" size="16">
               </ng-md-icon>
             </md-button>
@@ -29,8 +38,10 @@
     </div>     
   </div>
 </div>
-<md-progress-circular ng-if="loadingArticles" class="md-hue-2" md-mode="indeterminate"></md-progress-circular>
-<div ng-if="loadingArticles != 'true'" class="articlesPage">
+
+<md-progress-circular ng-if="loadingArticles" class="progressCircular md-accent" md-mode="indeterminate"></md-progress-circular>
+
+<div ng-if="!loadingArticles" class="articlesPage">
   <md-input-container class="searchBar"> 
     <label>
       <div class="searchIcon">

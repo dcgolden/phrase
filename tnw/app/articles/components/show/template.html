@@ -12,6 +12,9 @@
         <md-fab-speed-dial md-direction="down" ng-class="md-scale">
           <md-fab-trigger>
             <md-button aria-label="articleMenuEdit" ui-sref="articles.edit({id: article._id})" class="md-fab md-accent">
+              <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
+                Edit Article
+              </md-tooltip>
               <ng-md-icon class="articleMenuEdit" icon="mode_edit" style="fill: white" size="24">
               </ng-md-icon>
             </md-button>
@@ -19,12 +22,18 @@
 
           <md-fab-actions>
             <md-button aria-label="articleMenuClass" ng-click="" class="md-fab md-raised md-mini md-primary md-hue-2">
+              <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
+                Show Students
+              </md-tooltip>
               <ng-md-icon class="articleMenuClass" icon="assignment_ind" style="fill: white" size="16"></ng-md-icon>
             </md-button>
           </md-fab-actions>
 
           <md-fab-actions>
             <md-button aria-label="articleMenuDelete" ng-click="showConfirm(article._id)" class="md-fab md-raised md-mini md-warn">
+              <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
+                Delete
+              </md-tooltip>
               <ng-md-icon class="articleMenuDelete" icon="delete" style="fill: white" size="16"></ng-md-icon>
             </md-button>
           </md-fab-actions>

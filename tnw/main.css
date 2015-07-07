@@ -10,8 +10,10 @@ body {
   height: 100vh;
 }
 
-.mdProgressCircular{
-  float: center;
+.ProgressCircular{
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -20em;
 }
 
 .mainToolbar{
@@ -276,8 +278,12 @@ div.feature a {
 }
 
 
-.fabSpeedDial.md-fab:hover, .fabSpeedDial .md-fab.md-focused {
-  background-color: #000 !important; 
+.fabSpeedDial .md-fab:hover, .fabSpeedDial .md-fab.md-focused, 
+.fabSpeedDial2 .md-fab:hover, .fabSpeedDial2 .md-fab.md-focused, 
+.fabSpeedDial3 .md-fab:hover, .fabSpeedDial3 .md-fab.md-focused, 
+.fabSpeedDial4 .md-fab:hover, .fabSpeedDial4 .md-fab.md-focused,
+.fabSpeedDial5 .md-fab:hover, .fabSpeedDial5 .md-fab.md-focused {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26), inset 0 0 100px 100px rgba(0, 0, 0, 0.3) !important; 
 }
 
 .fabSpeedDial .lock-size {
