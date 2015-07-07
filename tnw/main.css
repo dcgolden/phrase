@@ -240,7 +240,7 @@ div.feature a {
   float: right;
   position:fixed;
   margin-top: .34em;
-  z-index: 100 !important;
+  z-index: 11 !important;
   margin-left: -.68em;
 }
 
@@ -248,7 +248,7 @@ div.feature a {
   float: right;
   position:fixed;
   margin-top: 2.22em;
-  z-index: 100 !important;
+  z-index: 11 !important;
   margin-left: -.68em;
 }
 
@@ -256,7 +256,7 @@ div.feature a {
   float: right;
   position:fixed;
   margin-top: .35em;
-  z-index: 100 !important;
+  z-index: 11 !important;
   margin-left: -.68em;
 }
 
@@ -264,7 +264,7 @@ div.feature a {
   float: right;
   position:fixed;
   margin-top: 6.22em;
-  z-index: 100 !important;
+  z-index: 11 !important;
   margin-left: -.68em;
 }
 
@@ -272,7 +272,7 @@ div.feature a {
   float: right;
   position:fixed;
   margin-top: 10em;
-  z-index: 100 !important;
+  z-index: 11 !important;
 }
 
 
@@ -389,5 +389,3 @@ textarea {
     resize: none;
     margin-right: auto;
 }
-
-
