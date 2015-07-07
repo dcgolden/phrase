@@ -10,10 +10,18 @@ body {
   height: 100vh;
 }
 
+div .progressCircular{
+  height: 50px;
+  width: 50px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .progressCircular{
+  margin-top: 20em;
   margin-left: auto;
   margin-right: auto;
-  margin-top: -20em;
+  display: inline-block;
 }
 
 .mainToolbar{
