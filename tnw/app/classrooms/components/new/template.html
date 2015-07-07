@@ -1,4 +1,4 @@
-<h3>New Classroom</h3>
+<span class="pageTitle">New Classroom</span><span>: {{classroom.name}}</span>
 <div>
 <form ng-submit="create(classroom)">
     <div>
@@ -8,11 +8,22 @@
         </md-input-container>
     </div>
     <div>
-    <md-input-container>
-        <label>Description</label>
-        <textarea ng-model="classroom.description"></textarea>
-    </md-input-container>
+        <md-input-container>
+            <label>Description</label>
+            <textarea ng-model="classroom.description"></textarea>
+        </md-input-container>
     <div>
-    <md-button class="md-primary md-raised btn">Update Article</button>
+
+    <span class="pageTitle">Add Sutdents</span>
+
+    <md-chips 
+        ng-model="classroom.students" 
+        placeholder="Enter a email" 
+        delete-button-label="Remove Tag" 
+        delete-hint="Press delete to remove tag">
+    </md-chips>
+
+    <md-button class="md-primary md-raised btn">Update Classroom</button>
+
 </form>
 </div>
