@@ -42,7 +42,7 @@ require('angular').module('app', [
 
     }])
     .directive('appNav', ['users', require('./components/app-nav')])
-    .controller('AppController', ['$scope', 'users', AppController])
+    .controller('AppController', ['$scope', 'classrooms', 'users', AppController])
     .constant('dbName', 'https://bivit-dev.iriscouch.com/bivit')
     .constant('remoteUserDbName', 'https://bivit-dev.iriscouch.com/_users')
     .constant('annotationDbName', 'https://bivit-dev.iriscouch.com/annotator')
