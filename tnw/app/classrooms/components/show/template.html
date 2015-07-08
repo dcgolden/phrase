@@ -22,7 +22,7 @@
     <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
     <p class="classroomDiscriptionShow" ng-bind="classroom.description"></p>
 
-    <div ng-if="$scope.articles">
+    <div ng-if="articles">
         <div class="pageTitle classroomsArticleTitle">Articles</div>
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
 
@@ -40,7 +40,7 @@
             </md-grid-list>
         </div>
     </div>
-    <div ng-if="!$scope.articles">
+    <div ng-if="!articles">
         <div class="pageTitle classroomsArticleTitle">Articles</div>
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider> 
         <div class="classroomsAddArticles">
@@ -48,12 +48,12 @@
             <a class="classroomsAddArticles" ui-sref="classrooms.edit({id: classroom._id})">Add an Article</a>
         </div>
     </div>
-    <div ng-if="$scope.students">
+    <div ng-if="students">
         <div class="pageTitle classroomsArticleTitle">Students</div>
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
         <div ng-repeat="student in students | filter:studentQuery" ng-bind="student.name"></div>
     </div>
-    <div ng-if="!$scope.students">
+    <div ng-if="!students">
         <div class="pageTitle classroomsArticleTitle">Students</div>
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
         <div class="classroomsAddStudents">
