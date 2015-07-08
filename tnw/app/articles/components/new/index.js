@@ -15,7 +15,7 @@ function controller($scope, articles, classrooms, $stateParams, $state, controll
 
     $scope.create = function(article) {
         articles.create(article).then(function(res) {
-            $state.go('articles.list');
+            $state.go('articles.list')
         });
     };
 }
