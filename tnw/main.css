@@ -7,7 +7,12 @@ html::-webkit-scrollbar{
 }
 
 body {
-  height: 100vh;
+  
+}
+
+.avatarSmall{
+  width: 44px!important;
+  height: 44px!important;
 }
 
 .progressCircular{
@@ -18,6 +23,10 @@ body {
 
 .mainToolbar{
   z-index: 4;
+}
+
+.loginButton{
+  margin-right: 1em;
 }
 
 .navbarText{
