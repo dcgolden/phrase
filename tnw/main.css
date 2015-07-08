@@ -40,6 +40,11 @@ body {
   padding: .8rem;
 }
 
+.classroomCardContainer{
+  padding-top: 3em;
+  padding-bottom: 3em; 
+}
+
 .classroomCardATag{
   text-decoration: none;
   width: 100%;
@@ -48,7 +53,7 @@ body {
 
 .classroomCardClassroom{
   margin: 0px;
-  font-size: 14px;
+  font-size: 18px;
   text-transform: uppercase;
   color: gray;
   text-decoration: none;
@@ -62,7 +67,9 @@ body {
 }
 
 .classroomPicker{
-
+  margin-left: auto;
+  margin-right: auto;
+  padding-left:.3em;
 }
 
 .active{
@@ -85,14 +92,6 @@ body {
 .articlesContainer{
   padding-top: 3em;
   padding-bottom: 3em;
-}
-
-.yourClasses{
-  font-size: 2em;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: .1em;
-  margin-top: .4em;
 }
 
 .navDividerMainPg{
@@ -234,8 +233,35 @@ div.feature a {
   margin-right: 10%;
 }
 
-.md-color-donfirm{
+.articleTitleInput{
 
+}
+
+.articleAuthorInput{
+  float: left;
+  width: 50%;
+}
+
+.articleSourceInput{
+  float: right;
+  width: 50%;
+}
+
+.articleClassroomInput{
+  padding-top: .1em;
+  clear: both;
+}
+
+.articleContentInput{
+  clear: both;
+} 
+
+.articlePDFInput{
+  clear: both;
+}
+
+.articleURLInput{
+  clear: both;
 }
 
 .articlesPage{

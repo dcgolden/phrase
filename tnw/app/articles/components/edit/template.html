@@ -30,34 +30,36 @@
   	<md-card class="articleCard">
 
 		<form ng-submit="update(article)">
-		  <div>
-				<md-input-container> 
-				<label>Title</label>
-				<input type ="text" name="title" ng-model="article.title">
-				</md-input-container>
-			</div>
-
-			<div>
-				<md-input-container> 
-				<label>Source</label>
-				<input type ="text" name="source" ng-model="article.source">
-				</md-input-container>
-			</div>
-
-			<div>
-				<md-input-container> 
-				<label>Author</label>
-				<input type ="text" name="author" ng-model="article.author">
-				</md-input-container>
-			</div>
-
-			<div>
-				<md-input-container>
-				<label>Content</label>
-				<textarea columns="1" rows="15" type="text" name="content" ng-model="article.content">
-				</textarea>
-				</md-input-container>
-			</div>
+		  	<div class="articleTitleInput">
+	            <md-input-container>
+	                <label>Title</label>
+	                <input type="text" name="title" ng-model="article.title">
+	            </md-input-container>
+	        </div>
+	        <div class="articleAuthorInput">
+	            <md-input-container flex>
+	                <label>Author</label>
+	                <input type="text" name="author" ng-model="article.author">
+	            </md-input-container>
+	        </div>
+	        <div class="articleSourceInput">
+	            <md-input-container flex>
+	                <label>Source</label>
+	                <input type="text" name="source" ng-model="article.source">
+	            </md-input-container>
+	        </div>
+	        <div class="articleClassroomInput">
+	            <md-select class="classroomPicker" md-on-open="loadClassrooms()" ng-model="article.classroom" placeholder="Which Classroom?">
+	                <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
+	            </md-select>
+	        </div>
+	        <div class="articleContentInput">
+	            <md-input-container>
+	                <label>Content</label>
+	                <textarea columns="1" rows="15" type="text" name="content" ng-model="article.content">
+	                </textarea>
+	            </md-input-container>
+	        </div>
 
 		  
 		</form>

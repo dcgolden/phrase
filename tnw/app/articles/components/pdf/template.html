@@ -25,25 +25,30 @@
         <md-content class="articleCardContainer">
             <md-card class="articleCard">
                 <form ng-submit="create(article)">
-                    <div>
+                    <div class="articleTitleInput">
                         <md-input-container>
                             <label>Title</label>
                             <input type="text" name="title" ng-model="article.title">
                         </md-input-container>
                     </div>
-                    <div>
-                        <md-input-container>
-                            <label>Source</label>
-                            <input type="text" name="source" ng-model="article.source">
-                        </md-input-container>
-                    </div>
-                    <div>
-                        <md-input-container>
+                    <div class="articleAuthorInput">
+                        <md-input-container flex>
                             <label>Author</label>
                             <input type="text" name="author" ng-model="article.author">
                         </md-input-container>
                     </div>
-                    <div>
+                    <div class="articleSourceInput">
+                        <md-input-container flex>
+                            <label>Source</label>
+                            <input type="text" name="source" ng-model="article.source">
+                        </md-input-container>
+                    </div>
+                    <div class="articleClassroomInput">
+                        <md-select class="classroomPicker" md-on-open="loadClassrooms()" ng-model="article.classroom" placeholder="Which Classroom?">
+                            <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
+                        </md-select>
+                    </div>
+                    <div class="articlePDFInput">
                         <md-input-container>
                             <input required type="file" name="pdf" ng-model="PDF" aria-label="pdf">
                             <div ng-messages="PDF.pdf.$error">
@@ -51,9 +56,6 @@
                             </div>
                         </md-input-container>
                     </div>
-                    <md-select class="classroomPicker" md-on-open="loadClassrooms()" ng-model="article.classroom" placeholder="Which Classroom?">
-                        <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
-                    </md-select>
                 </form>
             </md-card>
         </md-content>
