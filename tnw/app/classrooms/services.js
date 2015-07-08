@@ -23,13 +23,11 @@ module.exports = {
             return db.put(classroom)
         }
 
-        function getArticles() {
-            function(doc) {
+        function getArticles(doc) {
                 if (doc.type === "article" && doc.classroom === "classroom._id") {
                     emit(doc.title, doc);
                 }
             }
-        }
 
         function get(id) {
             console.log(id);
