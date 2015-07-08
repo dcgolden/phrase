@@ -10,6 +10,10 @@ body {
   
 }
 
+a {
+  text-decoration: none;
+}
+
 .avatarSmall{
   width: 44px!important;
   height: 44px!important;
@@ -81,6 +85,24 @@ body {
   padding-left:.3em;
 }
 
+.classroomDiscriptionShow{
+  width: 90%;
+}
+
+a.classroomsAddArticles, a.classroomsAddStudents{
+  color:blue!important;
+}
+
+.classroomsAddArticles, .classroomsAddStudents {
+  text-decoration: none;
+  color: gray;
+  font-size: 14px;
+}
+
+.classroomsArticleTitle{
+  padding-top: 1em;
+}
+
 .active{
   font-weight: bold !important;
   color: #3F51B5;                 /* change this color to match theme */
@@ -90,6 +112,11 @@ body {
 .navDivider{
   margin-top: .3em;
   margin-bottom: .3em;
+}
+
+.navDividerHalfWidth{
+  width: 45%;
+  margin-left: -5em; 
 }
 
 .searchIcon{

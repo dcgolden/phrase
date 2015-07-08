@@ -17,12 +17,49 @@
         </div>
     </div>
 </div>
-<div class="articlesPage">
+<div class="articlesPage classroomsPage">
     <p class="pageTitle" ng-bind="classroom.name"></p>
-    <p ng-bind="classroom.description"></p>
-    <div>
-        <p>Articles</p>
-        <p ng-repeat="article in articles" ng-bind="article.title"></p>
+    <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
+    <p class="classroomDiscriptionShow" ng-bind="classroom.description"></p>
+
+    <div ng-if="$scope.articles">
+        <div class="pageTitle classroomsArticleTitle">Articles</div>
+        <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
+
+        <div class="articlesContainer">
+            <md-grid-list md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="15px">
+                <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 whiteBack" ng-class="{zRaise2: hover}" md-rowspan="2"ng-mouseenter="hover = true" ng-mouseleave="hover = false">
+                    <div class="feature articleContentCardDiv">
+                        <a ui-sref="articles.show({ id: article._id})"></a>
+                        <div class="articleContentCard" ng-bind="article.content"></div>
+                        <md-grid-tile-footer>
+                            <h3 ng-bind="article.title" class="articleContentCardFooter"></h3>
+                        </md-grid-tile-footer>
+                    </div>
+                </md-grid-tile>
+            </md-grid-list>
+        </div>
     </div>
-    <div>
+    <div ng-if="!$scope.articles">
+        <div class="pageTitle classroomsArticleTitle">Articles</div>
+        <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider> 
+        <div class="classroomsAddArticles">
+            This classroom has no articles. 
+            <a class="classroomsAddArticles" ui-sref="classrooms.edit({id: classroom._id})">Add an Article</a>
+        </div>
+    </div>
+    <div ng-if="$scope.students">
+        <div class="pageTitle classroomsArticleTitle">Students</div>
+        <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
+        <div ng-repeat="student in students | filter:studentQuery" ng-bind="student.name"></div>
+    </div>
+    <div ng-if="!$scope.students">
+        <div class="pageTitle classroomsArticleTitle">Students</div>
+        <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
+        <div class="classroomsAddStudents">
+            this classroom has no students. 
+            <a class="classroomsAddStudents" ui-sref="classrooms.edit({id: classroom._id})">Add Students</a>
+        </div>
+    </div>
+<div>
     
