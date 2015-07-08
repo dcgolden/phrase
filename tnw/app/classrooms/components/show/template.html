@@ -20,8 +20,9 @@
 <div class="articlesPage">
     <p class="pageTitle" ng-bind="classroom.name"></p>
     <p ng-bind="classroom.description"></p>
-    <div ng-if="classroom.articles">
+    <div>
         <p>Articles</p>
+        <p ng-repeat="article in articles" ng-bind="article.title"></p>
     </div>
     <div>
     

@@ -1,13 +1,13 @@
-'use strict'
+'use strict';
 
-var cssify = require('cssify')
+var cssify = require('cssify');
 
-cssify.byUrl('//cdn.rawgit.com/angular/bower-material/master/angular-material.css')
-cssify.byUrl('/main.css')
+cssify.byUrl('//cdn.rawgit.com/angular/bower-material/master/angular-material.css');
+cssify.byUrl('/main.css');
 
 
-window.PouchDB = require('pouchdb')
-window.PouchDB.plugin(require('pouchdb-authentication'))
+window.PouchDB = require('pouchdb');
+window.PouchDB.plugin(require('pouchdb-authentication'));
 
 require('angular').module('app', [
         require('angular-animate'),
@@ -52,5 +52,5 @@ function AppController($scope, users) {
     $scope.showMenu = true;
     $scope.toggle = function() {
         $scope.showMenu = !$scope.showMenu;
-    }
+    };
 }
