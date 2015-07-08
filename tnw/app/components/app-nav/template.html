@@ -1,7 +1,7 @@
 <div ng-if="!activeUser">
 
   <!--TOOLBAR!!-->
-  <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1 mainToolbar">
+  <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1 mainToolbar mainToolbarNotActive">
     <div class="md-toolbar-tools">
       <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
         <div class="hamburgerMenuButton2" flex>
@@ -12,8 +12,10 @@
       <div class="toolbarCurrentPage"> Phrase
       </div>
       <span flex></span>
-      <md-button ui-sref="users.login">Login</md-button>
-      <md-button ui-sref="users.signup">Sign Up</md-button>
+      <md-button ui-sref="">Features</md-button>
+      <md-button ui-sref="">About</md-button>
+      <md-button ui-sref="">Contact Us</md-button>
+      <md-button class="loginButton" ng-click="showAdd($event)">Login</md-button>
     </div>
   </md-toolbar>
 
@@ -108,8 +110,7 @@
         </div>
       </md-button>
       <md-button class="md-icon-button" aria-label="profPic">
-        <ng-md-icon class="articleEditSubmit" icon="person" style="fill: white" size="24"></ng-md-icon>
-        <!--<img ng-src=".{{activeUser.profPic}}" class="md-avatar">-->
+        <user-avatar></user-avatar>
       </md-button>
     </div>
   </md-toolbar>
