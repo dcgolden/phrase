@@ -49,16 +49,15 @@
                             <textarea columns="1" rows="15" type="text" name="content" ng-model="article.content">
                             </textarea>
                         </md-input-container>
-                        <div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
-                            <md-select required name="classroompicker" ng-model="classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
-                                <md-select-label>{{ classroom ? classroom.name : 'Which Classroom?'}}</md-select-label>
-                                <md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.name}}</md-option>
-                            </md-select>
-                            <div ng-messages="CnP.classroompicker.$error">
-                                <div class="requiredPickerError" ng-message="required">This is required.</div>
-                            </div>
-                        </div>
                     </div>
+
+                    <div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
+                        <md-select required name="classroompicker" ng-model="article.classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
+                            <md-select-label>{{ classroom.name ? classrooms : 'Which Classroom?'}}</md-select-label>
+                            <md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.name}}</md-option>
+                        </md-select>
+                    </div>
+
                 </form>
             </md-card>
         </md-content>
