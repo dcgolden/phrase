@@ -10,6 +10,11 @@ body {
   
 }
 
+.avatarSmall{
+  width: 44px!important;
+  height: 44px!important;
+}
+
 .progressCircular{
   margin-top: 14em;
   margin-left: auto;
