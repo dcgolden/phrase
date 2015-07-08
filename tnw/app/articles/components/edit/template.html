@@ -48,7 +48,7 @@
 	                <input type="text" name="source" ng-model="article.source">
 	            </md-input-container>
 	        </div>
-	        <div class="articleClassroomInput">
+	        <div aria-label="Pick a classroom" class="articleClassroomInput">
 	            <md-select class="classroomPicker" md-on-open="loadClassrooms()" ng-model="article.classroom" placeholder="Which Classroom?">
 	                <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
 	            </md-select>

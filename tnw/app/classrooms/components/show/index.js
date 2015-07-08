@@ -14,7 +14,8 @@ function controller($scope, classrooms, $stateParams) {
             $scope.classroom = doc;
         });
 
-    classrooms.getArticles($stateParams.id).then(function(res) {
-        $scope.articles = res;
-    });
+    classrooms.getArticles($stateParams.id)
+        .then(function(res) {
+            $scope.articles = res;
+        });
 }
