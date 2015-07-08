@@ -32,10 +32,15 @@
     	<input type ="text" ng-model="classroomQuery">
   	</md-input-container>
 
-	<ul>
-	  <li ng-repeat="classroom in classrooms | filter:classroomQuery">
-	    <a ui-sref="classrooms.show({ id: classroom._id})" ng-bind="classroom.name"></a>
-	  </li>
-	</ul>
+	<md-card 
+    ng-class="{zRaise2: hover}" 
+    ng-mouseenter="hover = true" 
+    ng-mouseleave="hover = false" 
+    class="classroomCard" 
+    ng-repeat="classroom in classrooms | filter:classroomQuery">
+	    <a class="classroomCardATag" ui-sref="classrooms.show({ id: classroom._id})">
+        <p class="classroomCardClassroom" ng-bind="classroom.name"></p> 
+      </a>
+	</md-card>
 
 </div>

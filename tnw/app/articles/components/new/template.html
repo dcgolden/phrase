@@ -53,7 +53,7 @@
 
                     <div class="classroomPicker" layout="column" layout-align="center center" style="height: 100px;">
                         <md-select required name="classroompicker" ng-model="article.classroom" md-on-open="loadClassrooms()" style="min-width: 200px;">
-                            <md-select-label>{{ classroom.name ? classrooms : 'Which Classroom?'}}</md-select-label>
+                            <md-select-label>{{ classroom ? classrooms : 'Which Classroom?'}}</md-select-label>
                             <md-option ng-value="classroom" ng-repeat='classroom in classrooms'>{{classroom.name}}</md-option>
                         </md-select>
                     </div>
