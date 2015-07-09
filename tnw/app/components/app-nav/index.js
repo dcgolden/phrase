@@ -4,6 +4,7 @@ var fs = require('fs')
 
 module.exports = function (users) {
   return {
+    restrict: 'E',
     controller: ['$scope', 'users', '$state', '$mdSidenav', '$mdUtil', '$log', '$mdDialog', '$rootScope', '$stateParams', controller],
     template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
   }
@@ -71,14 +72,6 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
 
   $scope.SignUpDialog = function() {
     $scope.setting = false;
-    /*
-    $mdDialog.show({
-      controller: controller,
-      clickOutsideToClose: true,
-      template: '<md-dialog aria-label="popinLogin" class="loginPopup"> <md-content class="md-padding"> <div class="pageTitle">Hi there!</div> <div> <a class="loginPopupSubheader" ui-sref="home" ng-click="LoginDialog($event)"> Have an account? Login</a> </div> <form name="Signup" ng-submit="Signup(user)"> <div> <md-input-container flex class="loginPopupUsername"> <label>Username</label> <input type="text" ng-model="user.username"> </md-input-container> <md-input-container class="loginPopupPassword" flex> <label>Password</label> <input type="password" ng-model="user.password"> </md-input-container> </div> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button class="loginPopupCancel" ng-click="answer(\'not useful\')"> Login </md-button> <md-button class="loginPopupLogin" ng-click="signup(user)" class="md-primary"> Signup </md-button> </div></md-dialog>',
-      targetEvent: ev,
-    })
-*/
   }
 
   $scope.login = function (user) {
@@ -100,14 +93,7 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
         $state.go('users.login')
       })
   }
-
   $scope.hide = function() {
     $mdDialog.hide();
-  };
-  $scope.cancel = function() {
-    $mdDialog.cancel();
-  };
-  $scope.answer = function(answer) {
-    $mdDialog.hide(answer);
-  };
+  }
 };
