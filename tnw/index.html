@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-
-    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
+    <link rel="stylesheet" href="annotator.min.css">
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
   </head>
   <body>
 
@@ -25,6 +25,10 @@
     <script>
         var app = new annotator.App();
         app.include(annotator.ui.main);
+        app.include(annotator.storage.http, {
+            prefix: 'http://bivit-dev.iriscouch.com/annotator/_design/annotator/_rewrite'
+        });
+
         app.start();
     </script>
     
