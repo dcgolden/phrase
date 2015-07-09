@@ -3,19 +3,21 @@
   <!--TOOLBAR!!-->
   <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1 mainToolbar mainToolbarNotActive">
     <div class="md-toolbar-tools">
+    <!--
       <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
         <div class="hamburgerMenuButton2" flex>
           <ng-md-icon icon='menu' style="fill: white" size="24">
           </ng-md-icon>
         </div>
       </md-button>
+      -->
       <div class="toolbarCurrentPage"> Phrase
       </div>
       <span flex></span>
       <md-button>Features</md-button>
-      <md-button>About</md-button>
-      <md-button>Contact Us</md-button>
-      <md-button class="loginButton" ng-click="showAdd($event)">Login</md-button>
+      <md-button ui-sref="about">About</md-button>
+      <md-button ui-sref="contact">Contact Us</md-button>
+      <md-button class="loginButton" ng-click="LoginDialog($event)">Login</md-button>
     </div>
   </md-toolbar>
 

@@ -4,13 +4,12 @@ var fs = require('fs')
 
 module.exports = function (users) {
   return {
-    restrict: 'E',
-    controller: ['$scope', 'users', '$state', '$mdSidenav', '$mdUtil', '$log', '$mdDialog', controller],
-    template: fs.readFileSync(__dirname + '/template.html')
+    controller: ['$scope', 'users', '$state', '$mdSidenav', '$mdUtil', '$log', '$mdDialog', '$rootScope', '$stateParams', controller],
+    template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
   }
 }
 
-function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog) {
+function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog, $rootScope, $stateParams) {
 
   function buildToggler(navID) {
     var debounceFn =  $mdUtil.debounce(function(){
@@ -23,8 +22,6 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
 
     return debounceFn;
   }
-
-
 
   $scope.toggleLeft = buildToggler('left');
 
@@ -56,22 +53,54 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
     })
   }
 
-  $scope.showAdd = function(ev) {
+  $scope.setting = true;
+
+  $scope.LoginDialog = function(ev) {
+    $scope.setting = true;
     $mdDialog.show({
-        controller: DialogController,
-        template: '<md-dialog aria-label="Mango (Fruit)"> <md-content class="md-padding"> <form name="userForm"> <div layout layout-sm="column"> <md-input-container flex> <label>First Name</label> <input ng-model="user.firstName" placeholder="Placeholder text"> </md-input-container> <md-input-container flex> <label>Last Name</label> <input ng-model="theMax"> </md-input-container> </div> <md-input-container flex> <label>Address</label> <input ng-model="user.address"> </md-input-container> <div layout layout-sm="column"> <md-input-container flex> <label>City</label> <input ng-model="user.city"> </md-input-container> <md-input-container flex> <label>State</label> <input ng-model="user.state"> </md-input-container> <md-input-container flex> <label>Postal Code</label> <input ng-model="user.postalCode"> </md-input-container> </div> <md-input-container flex> <label>Biography</label> <textarea ng-model="user.biography" columns="1" md-maxlength="150"></textarea> </md-input-container> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button ng-click="answer(\'not useful\')"> Cancel </md-button> <md-button ng-click="answer(\'useful\')" class="md-primary"> Save </md-button> </div></md-dialog>',
+        controller: controller,
+        clickOutsideToClose: true,
+        template: '<md-dialog aria-label="popinLogin" class="loginPopup"> <div ng-if="setting"> <md-content class="md-padding"> <div class="pageTitle">Hi there!</div> <div> <a class="loginPopupSubheader" ui-sref="home" ng-click="SignUpDialog()"> New to Phrase? Sign Up</a> </div> <form name="Login" ng-submit="login(user)"> <div> <md-input-container flex class="loginPopupUsername"> <label>Username</label> <input type="text" ng-model="user.username"> </md-input-container> <md-input-container class="loginPopupPassword" flex> <label>Password</label> <input type="password" ng-model="user.password"> </md-input-container> </div> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button class="loginPopupCancel" ng-click="SignUpDialog()"> Sign Up </md-button> <md-button class="loginPopupLogin" ng-click="login(user)" class="md-raised md-primary"> Login </md-button> </div> </md-dialog> </div> <div ng-if="!setting"> <md-content class="md-padding"> <div class="pageTitle">Hi there!</div> <div> <a class="loginPopupSubheader" ui-sref="home" ng-click="LoginDialogTrue()"> Have an account? Login</a> </div> <form name="Signup" ng-submit="Signup(user)"> <div> <md-input-container flex class="loginPopupUsername"> <label>Username</label> <input type="text" ng-model="user.username"> </md-input-container> <md-input-container class="loginPopupPassword" flex> <label>Password</label> <input type="password" ng-model="user.password"> </md-input-container> </div> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button class="loginPopupCancel" ng-click="LoginDialogTrue()"> Login </md-button> <md-button class="loginPopupLogin" ng-click="signup(user)" class="md-raised md-primary"> Signup </md-button> </div> </div> </md-dialog>',
         targetEvent: ev,
       })
-      .then(function(answer) {
-        $scope.alert = 'You said the information was "' + answer + '".';
-      }, function() {
-        $scope.alert = 'You cancelled the dialog.';
-      });
   }
 
-}
+  $scope.LoginDialogTrue = function() {
+    $scope.setting = true;
+  }
 
-function DialogController($scope, $mdDialog) {
+  $scope.SignUpDialog = function() {
+    $scope.setting = false;
+    /*
+    $mdDialog.show({
+      controller: controller,
+      clickOutsideToClose: true,
+      template: '<md-dialog aria-label="popinLogin" class="loginPopup"> <md-content class="md-padding"> <div class="pageTitle">Hi there!</div> <div> <a class="loginPopupSubheader" ui-sref="home" ng-click="LoginDialog($event)"> Have an account? Login</a> </div> <form name="Signup" ng-submit="Signup(user)"> <div> <md-input-container flex class="loginPopupUsername"> <label>Username</label> <input type="text" ng-model="user.username"> </md-input-container> <md-input-container class="loginPopupPassword" flex> <label>Password</label> <input type="password" ng-model="user.password"> </md-input-container> </div> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button class="loginPopupCancel" ng-click="answer(\'not useful\')"> Login </md-button> <md-button class="loginPopupLogin" ng-click="signup(user)" class="md-primary"> Signup </md-button> </div></md-dialog>',
+      targetEvent: ev,
+    })
+*/
+  }
+
+  $scope.login = function (user) {
+    $mdDialog.hide()
+    users.login(user.username, user.password)
+      .then(function (res) {
+        $rootScope.$broadcast('users.login.success')
+        $state.go('home')
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
+  }
+
+  $scope.signup = function (user) {
+    $mdDialog.hide()
+    users.signup(user.username, user.password, user.email)
+      .then(function (res) {
+        $state.go('users.login')
+      })
+  }
+
   $scope.hide = function() {
     $mdDialog.hide();
   };
