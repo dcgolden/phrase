@@ -5,7 +5,6 @@ var cssify = require('cssify');
 cssify.byUrl('//cdn.rawgit.com/angular/bower-material/master/angular-material.css');
 cssify.byUrl('/main.css');
 
-
 window.PouchDB = require('pouchdb');
 window.PouchDB.plugin(require('pouchdb-authentication'));
 

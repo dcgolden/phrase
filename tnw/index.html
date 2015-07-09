@@ -1,36 +1,37 @@
 <!doctype html>
 <html ng-app="app">
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <title>Phrase - annotations</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="annotator.min.css">
     <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
-  </head>
-  <body>
+</head>
 
-  <div ng-controller='AppController'>
-
-    <div flex ng-show="showMenu">
-      <app-nav></app-nav>
+<body>
+    <div ng-controller='AppController'>
+        <div flex ng-show="showMenu">
+            <app-nav></app-nav>
+        </div>
+        <div class="mainView contentV" flex ui-view></div>
     </div>
-
-    <div class="mainView contentV" flex ui-view></div>
-  </div>
-
     <script src="/app/index.js"></script>
     <script src="annotator.min.js"></script>
     <script>
-        var app = new annotator.App();
-        app.include(annotator.ui.main);
-        app.include(annotator.storage.http, {
-            prefix: 'http://bivit-dev.iriscouch.com/annotator/_design/annotator/_rewrite'
+    'use strict';
+    var app = new annotator.App();
+    app.include(annotator.ui.main);
+    app.include(annotator.storage.http, {
+        prefix: 'http://bivit-dev.iriscouch.com/annotator/_design/annotator/_rewrite'
+    });
+    app
+        .start()
+        .then(function() {
+            app.annotations.load();
         });
-
-        app.start();
     </script>
-    
-  </body>
+</body>
+
 </html>
