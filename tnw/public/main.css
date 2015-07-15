@@ -7,16 +7,47 @@ html::-webkit-scrollbar{
 }
 
 body {
-  height: 100vh;
+  
 }
 
-.mdProgressCircular{
-  float: center;
-}
+a {
+  text-decoration: none;
 }
 
-.mainView{
-  padding: 0% 3% 0% 3%;
+.loginPopup{
+  min-width:24em;
+  height: auto;
+}
+
+.loginPopupSubheader{
+  padding-top: 1em;
+  padding-bottom:1em;
+  float: left;
+  color: gray;
+  font-size: 12px;
+}
+
+.loginPopupUsername{
+  clear:both;
+}
+
+.avatarSmall{
+  width: 44px!important;
+  height: 44px!important;
+}
+
+.progressCircular{
+  margin-top: 14em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mainToolbar{
+  z-index: 4;
+}
+
+.loginButton{
+  margin-right: 1em;
 }
 
 .navbarText{
@@ -25,16 +56,68 @@ body {
 }
 
 .searchBar{
-  width: 20%;
-  float: right;
-  margin-top: -5.5em;
-  z-index: 7;
+  float: left;
+  margin-left: 14em;
+  position: absolute;
+  margin-top: -1.2em;
+}
+
+.classroomCard {
+  width: 80%;
+  height: 8em;
+  margin-left: 3em;
+  margin-right: auto;
+  padding: .8rem;
+}
+
+.classroomCardContainer{
+  padding-top: 3em;
+  padding-bottom: 3em; 
+}
+
+.classroomCardATag{
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+}
+
+.classroomCardClassroom{
+  margin: 0px;
+  font-size: 18px;
+  text-transform: uppercase;
+  color: gray;
+  text-decoration: none;
+}
+
+.searchBarClassrooms{
+  float: left;
+  margin-left: 14em;
+  position: absolute;
+  margin-top: -3.41em;
 }
 
 .classroomPicker{
-  float: right;
-  margin-top: -2em;
-  margin-right: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left:.3em;
+}
+
+.classroomDiscriptionShow{
+  width: 90%;
+}
+
+a.classroomsAddArticles, a.classroomsAddStudents{
+  color:blue!important;
+}
+
+.classroomsAddArticles, .classroomsAddStudents {
+  text-decoration: none;
+  color: gray;
+  font-size: 14px;
+}
+
+.classroomsArticleTitle{
+  padding-top: 1em;
 }
 
 .active{
@@ -48,6 +131,11 @@ body {
   margin-bottom: .3em;
 }
 
+.navDividerHalfWidth{
+  width: 45%;
+  margin-left: -5em; 
+}
+
 .searchIcon{
   margin-top: .1em;
   margin-right: .2em;
@@ -57,14 +145,6 @@ body {
 .articlesContainer{
   padding-top: 3em;
   padding-bottom: 3em;
-}
-
-.yourClasses{
-  font-size: 2em;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: .1em;
-  margin-top: .4em;
 }
 
 .navDividerMainPg{
@@ -84,6 +164,10 @@ body {
   color: #333;
   text-decoration: none;
   width: auto;
+}
+
+a.navbarText{
+  text-decoration: none;
 }
 
 a.classroomMainPg:hover{
@@ -114,11 +198,16 @@ a.classroomMainPg:hover{
 }
 
 .hamburgerMenuButton2{
-  padding-top: .4em !important;
+  padding-top: .6em !important;
 }
 
 .hamburgerMenuButton3{
   padding-right: .5em !important;
+}
+
+.toolbarCurrentUser{
+  font-size: 13px;
+  padding-right: .5em;
 }
 
 .requiredPickerError{
@@ -165,12 +254,144 @@ div.feature a {
 
 .articleCardContainer{
   background-color: transparent !important;
-  white-space: pre-wrap;
-  margin-top: -6em;
 }
 
 .blueBar{
-  height: 16em !important;
+  height: 12em;
+}
+
+.articleEditSubmit{
+  margin-top: .6em;
+}
+
+.articleMenuEdit{
+  margin-top: .6em;
+}
+
+.articleMenuDelete{
+  margin-top: .2em;
+}
+
+.articleMenuClass{
+  margin-top: .2em;
+}
+
+.positioner{
+  float: right;
+  margin-right: 10%;
+}
+
+.positioner2{
+  float: right;
+  margin-right: 10%;
+}
+
+.articleTitleInput{
+
+}
+
+.articleAuthorInput{
+  float: left;
+  width: 50%;
+}
+
+.articleSourceInput{
+  float: right;
+  width: 50%;
+}
+
+.articleClassroomInput{
+  padding-top: .1em;
+  clear: both;
+}
+
+.articleContentInput{
+  clear: both;
+} 
+
+.articlePDFInput{
+  clear: both;
+}
+
+.articleURLInput{
+  clear: both;
+}
+
+.articlesPage{
+  padding-left: 2em;
+  padding-right: 2em;
+}
+
+.classroomsAddPage{
+  padding-left: 2em;
+  padding-right: 2em;
+  padding-top: 2em;
+}
+
+.pageTitle{
+  font-size: 30px;
+  margin-bottom: 0px;
+}
+
+.pageSubTitle{
+  color: gray; 
+}
+
+.fabSpeedDial5{
+  float: right;
+  position:fixed;
+  margin-top: .34em;
+  z-index: 11 !important;
+  margin-left: -.68em;
+}
+
+.fabSpeedDial4{
+  float: right;
+  position:fixed;
+  margin-top: 2.22em;
+  z-index: 11 !important;
+  margin-left: -.68em;
+}
+
+.fabSpeedDial3{
+  float: right;
+  position:fixed;
+  margin-top: .35em;
+  z-index: 11 !important;
+  margin-left: -.68em;
+}
+
+.fabSpeedDial2{
+  float: right;
+  position:fixed;
+  margin-top: 6.22em;
+  z-index: 11 !important;
+  margin-left: -.68em;
+}
+
+.fabSpeedDial{
+  float: right;
+  position:fixed;
+  margin-top: 10em;
+  z-index: 11 !important;
+}
+
+
+.fabSpeedDial .md-fab:hover, .fabSpeedDial .md-fab.md-focused, 
+.fabSpeedDial2 .md-fab:hover, .fabSpeedDial2 .md-fab.md-focused, 
+.fabSpeedDial3 .md-fab:hover, .fabSpeedDial3 .md-fab.md-focused, 
+.fabSpeedDial4 .md-fab:hover, .fabSpeedDial4 .md-fab.md-focused,
+.fabSpeedDial5 .md-fab:hover, .fabSpeedDial5 .md-fab.md-focused {
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26), inset 0 0 100px 100px rgba(0, 0, 0, 0.3) !important; 
+}
+
+.fabSpeedDial .lock-size {
+  min-width: 50px;
+  min-height: 50px;
+  width: 50px;
+  height: 50px;
+  margin-left: auto;
+  margin-right: auto; 
 }
 
 .articleContentCardFooter{
@@ -191,7 +412,7 @@ div.feature a {
   padding: 2rem;
   z-index: 7;
   margin-top: 5em;
-  width: 70%;
+  width: 60%;
   margin-right: auto;
   margin-left: auto;
 }
@@ -225,6 +446,11 @@ div.feature a {
   line-height: 1.7;
   color: #777;
   margin-top: 0;
+  padding-right:2em;
+  padding-left:2em;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: keep-all;
 }
 
 .articleCardSource{
@@ -260,4 +486,11 @@ div.feature a {
   margin-bottom: 10px; 
 }
 
-
+textarea {
+   -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 61%;
+    resize: none;
+    margin-right: auto;
+}

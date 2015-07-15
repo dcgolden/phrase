@@ -23,7 +23,7 @@
     "angular-pouchdb": "^2.1.0",
     "angular-ui-router": "^0.2.15",
     "annotator": "^2.0.0-alpha.3",
-    "browserify": "^10.2.3",
+    "browserify": "^10.2.6",
     "cssify": "^0.7.0",
     "jquery": "^2.1.4",
     "marked": "^0.3.3",

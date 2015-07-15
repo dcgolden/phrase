@@ -1,96 +1,167 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict'
+'use strict';
 
 
 
 module.exports = {
-  url: '/:id/edit',
-  controller: ['$scope', 'articles', '$stateParams', '$state', controller],
-  template: "<h3>Edit Article</h3>\n<form ng-submit=\"update(article)\">\n  <div>\n\t\t<md-input-container> \n\t\t<label>Title</label>\n\t\t<input type =\"text\" name=\"title\" ng-model=\"article.title\">\n\t\t</md-input-container>\n\t</div>\n\n\t<div>\n\t\t<md-input-container> \n\t\t<label>Source</label>\n\t\t<input type =\"text\" name=\"source\" ng-model=\"article.source\">\n\t\t</md-input-container>\n\t</div>\n\n\t<div>\n\t\t<md-input-container> \n\t\t<label>Author</label>\n\t\t<input type =\"text\" name=\"author\" ng-model=\"article.author\">\n\t\t</md-input-container>\n\t</div>\n\n\t<div>\n\t\t<md-input-container>\n\t\t<label>Content</label>\n\t\t<input type=\"text\" name=\"content\" ng-model=\"article.content\">\n\t\t</md-input-container>\n\t</div>\n\n  <md-button class=\"md-primary md-raised btn\">Update Article</button>\n</form>\n"
+    url: '/:id/edit',
+    controller: ['$scope', 'articles', 'classrooms', '$stateParams', '$state', controller],
+    template: "<style>\n  .topToolbar {\n  position: fixed;\n}\n</style>\n\n\n<div class=\"inflow\">\n  <div class=\"positioner2\">\n    <div class=\"fabSpeedDial2\" layout=\"column\">\n      <div class=\"lock-size\" layout=\"row\" layout-align=\"center center\">\n        <md-fab-speed-dial md-direction=\"down\" ng-class=\"md-scale\">\n          <md-fab-trigger>\n            <md-button aria-label=\"articleEditSubmit\" ng-click=\"update(article)\" class=\"md-fab md-color-confirm\">\n            \t<md-tooltip md-direction=\"down\" md-delay=\"200\" md-autohide=\"true\">\n                \tDone!\n              \t</md-tooltip>\n              <ng-md-icon class=\"articleEditSubmit\" icon=\"check\" style=\"fill: white\" size=\"24\">\n              </ng-md-icon>\n            </md-button>\n          </md-fab-trigger>\n        </md-fab-speed-dial>\n      </div>\n    </div>     \n  </div>\n</div>\n\n<md-content class=\"articleCardContainer\">  \n\n  \t<md-card class=\"articleCard\">\n\n\t\t<form ng-submit=\"update(article)\">\n\t\t  \t<div class=\"articleTitleInput\">\n\t            <md-input-container>\n\t                <label>Title</label>\n\t                <input type=\"text\" name=\"title\" ng-model=\"article.title\">\n\t            </md-input-container>\n\t        </div>\n\t        <div class=\"articleAuthorInput\">\n\t            <md-input-container flex>\n\t                <label>Author</label>\n\t                <input type=\"text\" name=\"author\" ng-model=\"article.author\">\n\t            </md-input-container>\n\t        </div>\n\t        <div class=\"articleSourceInput\">\n\t            <md-input-container flex>\n\t                <label>Source</label>\n\t                <input type=\"text\" name=\"source\" ng-model=\"article.source\">\n\t            </md-input-container>\n\t        </div>\n\t        <div aria-label=\"Pick a classroom\" class=\"articleClassroomInput\">\n\t            <md-select class=\"classroomPicker\" md-on-open=\"loadClassrooms()\" ng-model=\"article.classroom\" placeholder=\"Which Classroom?\">\n\t                <md-option ng-repeat=\"classroom in classrooms\" value=\"{{classroom._id}}\">{{classroom.name}}</md-option>\n\t            </md-select>\n\t        </div>\n\t        <div class=\"articleContentInput\">\n\t            <md-input-container>\n\t                <label>Content</label>\n\t                <textarea columns=\"1\" rows=\"15\" type=\"text\" name=\"content\" ng-model=\"article.content\">\n\t                </textarea>\n\t            </md-input-container>\n\t        </div>\n\n\t\t  \n\t\t</form>\n\n\t</md-card>\n\n</md-content>\n"
+};
+
+function controller($scope, articles, classrooms, $stateParams, $state) {
+
+    var article = "test";
+
+    articles.get($stateParams.id)
+    .then(function(doc) {
+        $scope.article = doc;
+        console.log(doc);
+    });
+    
+    classrooms.list()
+        .then(function(classRes) {
+            $scope.classrooms = classRes;
+        });
+
+
+    $scope.update = function(article) {
+        articles.update(article).then(function() {
+            $state.go('articles.show', {
+                id: article._id
+            });
+        });
+    };
 }
 
-function controller ($scope, articles, $stateParams, $state) {
-
-  articles.get($stateParams.id).then(function (doc) {
-    $scope.article = doc
-  })
-
-  $scope.update = function (article) {
-    articles.update(article).then(function (res) {
-      $state.go('articles.show', { id: article._id })
-    })
-  }
-}
 },{}],2:[function(require,module,exports){
 'use strict'
 
 
 
 module.exports = {
-  url: '/list',
-  controller: ['$scope', 'articles', controller],
-  template: "<!--<h1>Articles</h1>\n<a ui-sref=\"articles.new\">New Article</a>\n<ul>\n  <li ng-repeat=\"article in articles\">\n    <a ui-sref=\"articles.show({ id: article._id})\">{{article.title}}</a>\n  </li>\n</ul>-->\n\n<md-button class=\"md-fab floatingActionButton\" md-ink-ripple aria-label=\"Add Article\" ui-sref=\"articles.new\">\n  <div class=\"hamburgerMenuButton2\">\n    <ng-md-icon icon=\"add\" size=\"24\" style=\"fill: white\"></ng-md-icon>\n  </div>\n</md-button>\n\n<div>\n  <md-input-container class=\"searchBar\"> \n    <label>\n      <div class=\"searchIcon\">\n        <ng-md-icon icon=\"search\" size=\"15\" style=\"fill: grey\"></ng-md-icon>\n      </div>\n      search\n      </label>\n    <input type =\"text\" ng-model=\"articleQuery\">\n  </md-input-container>\n\n  <h2 class=\"pageTitle\">Your Articles</h2>\n  <md-divider class=\"navDivider navDividerMainPg\" ng-if=\"!$last\"></md-divider>\n\n  <!--<md-progress-circular class=\"md-accent mdProgressCircular\" md-mode=\"indeterminate\"></md-progress-circular>-->\n\n  <div class=\"articlesContainer\">\n    <md-grid-list md-cols-sm=\"2\" md-cols-md=\"4\" md-cols-gt-md=\"6\" md-row-height-gt-md=\"4:3\" md-row-height=\"4:3\" md-gutter=\"8px\" md-gutter-gt-sm=\"15px\">\n      <md-grid-tile md-ink-ripple ng-repeat=\"article in articles | filter:articleQuery\" class=\"md-whiteframe-z1 whiteBack\" ng-class=\"{zRaise2: hover}\" md-rowspan=\"2\"ng-mouseenter=\"hover = true\" ng-mouseleave=\"hover = false\">\n        <div class=\"feature articleContentCardDiv\">\n          <a ui-sref=\"articles.show({ id: article._id})\"></a>\n          <div class=\"articleContentCard\" ng-bind=\"article.content\"></div>\n          <md-grid-tile-footer>\n            <h3 ng-bind=\"article.title\" class=\"articleContentCardFooter\"></h3>\n          </md-grid-tile-footer>\n        </div>\n      </md-grid-tile>\n    </md-grid-list>\n  </div>\n</div>"
+    url: '/list',
+    controller: ['$scope', 'articles', controller],
+    template: "<div ng-if=\"!loadingArticles\" class=\"inflow\">\n  <div class=\"positioner2\">\n    <div class=\"fabSpeedDial3\" layout=\"column\">\n      <div class=\"lock-size\" layout=\"row\" layout-align=\"center center\">\n        <md-fab-speed-dial md-direction=\"down\" ng-class=\"md-scale\">\n          <md-fab-trigger>\n            <md-button aria-label=\"addArticleCnP\" ui-sref=\"articles.new\" class=\"md-fab\">\n              <md-tooltip md-direction=\"left\" md-delay=\"200\" md-autohide=\"true\">\n                Copy & Paste\n              </md-tooltip>\n              <ng-md-icon class=\"articleEditSubmit\" icon=\"add\" style=\"fill: white\" size=\"24\">\n              </ng-md-icon>\n            </md-button>\n          </md-fab-trigger>\n\n          <md-fab-actions>\n            <md-button aria-label=\"addArticleURL\" ui-sref=\"articles.url\" class=\"md-fab md-raised md-mini md-primary md-hue-2\">\n              <md-tooltip md-direction=\"left\" md-delay=\"200\" md-autohide=\"true\">\n                URL\n              </md-tooltip>\n              <ng-md-icon class=\"articleMenuClass\" icon=\"public\" style=\"fill: white\" size=\"16\">\n              </ng-md-icon>\n            </md-button>\n          </md-fab-actions>\n\n          <md-fab-actions>\n            <md-button aria-label=\"addArticlePDF\" ui-sref=\"articles.pdf\" class=\"md-fab md-raised md-mini md-primary md-hue-2\">\n              <md-tooltip md-direction=\"left\" md-delay=\"200\" md-autohide=\"true\">\n                PDF\n              </md-tooltip>\n              <ng-md-icon class=\"articleMenuClass\" icon=\"insert_drive_file\" style=\"fill: white\" size=\"16\">\n              </ng-md-icon>\n            </md-button>\n          </md-fab-actions>\n\n        </md-fab-speed-dial>\n      </div>\n    </div>     \n  </div>\n</div>\n\n<md-progress-circular ng-if=\"loadingArticles\" class=\"progressCircular md-accent\" md-mode=\"indeterminate\"></md-progress-circular>\n\n<div ng-if=\"!loadingArticles\" class=\"articlesPage\">\n  <md-input-container class=\"searchBar\"> \n    <label>\n      <div class=\"searchIcon\">\n        <ng-md-icon icon=\"search\" size=\"15\" style=\"fill: grey\"></ng-md-icon>\n      </div>\n      search\n      </label>\n    <input type =\"text\" ng-model=\"articleQuery\">\n  </md-input-container>\n\n  <p class=\"pageTitle\">Your Articles</p>\n\n  <div class=\"articlesContainer\">\n    <md-grid-list md-cols-sm=\"2\" md-cols-md=\"4\" md-cols-gt-md=\"6\" md-row-height-gt-md=\"4:3\" md-row-height=\"4:3\" md-gutter=\"8px\" md-gutter-gt-sm=\"15px\">\n      <md-grid-tile md-ink-ripple ng-repeat=\"article in articles | filter:articleQuery\" class=\"md-whiteframe-z1 whiteBack\" ng-class=\"{zRaise2: hover}\" md-rowspan=\"2\"ng-mouseenter=\"hover = true\" ng-mouseleave=\"hover = false\">\n        <div class=\"feature articleContentCardDiv\">\n          <a ui-sref=\"articles.show({ id: article._id})\"></a>\n          <div class=\"articleContentCard\" ng-bind=\"article.content\"></div>\n          <md-grid-tile-footer>\n            <h3 ng-bind=\"article.title\" class=\"articleContentCardFooter\"></h3>\n          </md-grid-tile-footer>\n        </div>\n      </md-grid-tile>\n    </md-grid-list>\n  </div>\n</div>"
 }
 
-function controller ($scope, articles) {
-  articles.list().then(function (docs) {
-    $scope.articles = docs
-  })
+function controller($scope, articles) {
+	$scope.loadingArticles = true;
+    articles.list()
+        .then(function(docs) {
+            $scope.articles = docs;
+            $scope.loadingArticles = false;
+        })
 }
+
 },{}],3:[function(require,module,exports){
 'use strict';
 
 
-
 module.exports = {
     url: '/new',
-    controller: ['$scope', 'articles', 'classrooms', '$state', controller],
-    template: "<h3>New Article</h3>\n<div>\n  <md-content class=\"md-padding\">\n    <md-tabs md-dynamic-height md-border-bottom>\n      <md-tab label=\"Copy and Paste\">\n        <md-content class=\"md-padding\">\n          <form ng-submit=\"create(article)\" name=\"CnP\">\n\n            <div>\n              <md-input-container> \n                  <label>Title</label>\n                  <input required type =\"text\" name=\"title\" ng-model=\"article.title\">\n                  <div ng-messages=\"CnP.title.$error\">\n                    <div ng-message=\"required\">This is required.</div>\n                  </div>\n                </md-input-container>\n              <div class=\"classroomPicker\" layout=\"column\" layout-align=\"center center\" style=\"height: 100px;\">\n                <md-select required name=\"classroompicker\" ng-model=\"article.classroom\" md-on-open=\"loadClassrooms()\" style=\"min-width: 200px;\">\n                  <md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>\n                  <md-option ng-value=\"classroom\" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>\n                </md-select>\n                <div ng-messages=\"CnP.classroompicker.$error\">\n                  <div class=\"requiredPickerError\" ng-message=\"required\">This is required.</div>\n                </div>\n             </div>\n            </div>\n\n            <div>\n              <md-input-container> \n                <label>Source</label>\n                <input type =\"text\" name=\"source\" ng-model=\"article.source\">\n              </md-input-container>\n            </div>\n\n            <div>\n              <md-input-container> \n                <label>Author</label>\n                <input type =\"text\" name=\"author\" ng-model=\"article.author\">\n              </md-input-container>\n            </div>\n\n            <div>\n              <md-input-container> \n                  <label>Content</label>\n                  <input required type =\"text\" name=\"Content\" ng-model=\"article.content\">\n                  <div ng-messages=\"CnP.content.$error\">\n                    <div ng-message=\"required\">This is required.</div>\n                  </div>\n                </md-input-container>\n            </div>\n\n            <button class=\"btn\">Create Article</button>\n          </form>\n        </md-content>\n      </md-tab>\n      <md-tab label=\"URL\">\n          <md-content class=\"md-padding\">\n            <form ng-submit=\"create(article)\" name=\"url\">\n              <div>\n                <md-input-container> \n                  <label>Title</label>\n                  <input required type =\"text\" name=\"title\" ng-model=\"article.title\">\n                  <div ng-messages=\"url.title.$error\">\n                    <div ng-message=\"required\">This is required.</div>\n                  </div>\n                </md-input-container>\n\n                <div class=\"classroomPicker\" layout=\"column\" layout-align=\"center center\" style=\"height: 100px;\">\n                    <md-select required name=\"classroompicker\" ng-model=\"article.classroom\" md-on-open=\"loadClassrooms()\" style=\"min-width: 200px;\">\n                      <md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>\n                      <md-option ng-value=\"classroom\" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>\n                    </md-select>\n                    <div ng-messages=\"CnP.classroompicker.$error\">\n                      <div class=\"requiredPickerError\" ng-message=\"required\">This is required.</div>\n                    </div>\n                </div>\n              </div>\n                    \n              <div>\n                <md-input-container> \n                  <label>Author</label>\n                  <input type =\"text\" ng-model=\"article.author\">\n                </md-input-container>\n              </div>\n\n              <div>\n                <md-input-container> \n                  <label>URL</label>\n                  <input required type =\"text\" name=\"url\" ng-model=\"article.URL\">\n                  <div ng-messages=\"url.url.$error\">\n                    <div ng-message=\"required\">This is required.</div>\n                  </div>\n                </md-input-container>\n              </div>\n\n              <button class=\"btn\">Create Article</button>\n            </form>\n          </md-content>\n        </md-tab>\n        <md-tab label=\"PDF\">\n            <md-content class=\"md-padding\">\n              <form ng-submit=\"create(article)\" name=\"PDF\">\n                <div>\n                  <md-input-container> \n                    <label>Title</label>\n                    <input required type =\"text\" name=\"title\" ng-model=\"article.title\">\n                    <div ng-messages=\"url.title.$error\">\n                      <div ng-message=\"required\">This is required.</div>\n                    </div>\n                  </md-input-container>\n\n                  <div class=\"classroomPicker\" layout=\"column\" layout-align=\"center center\" style=\"height: 100px;\">\n                      <md-select required name=\"classroompicker\" ng-model=\"article.classroom\" md-on-open=\"loadClassrooms()\" style=\"min-width: 200px;\">\n                        <md-select-label>{{ classroom ? classroom.classroomName : 'Which Classroom?'}}</md-select-label>\n                        <md-option ng-value=\"classroom\" ng-repeat='classroom in classrooms'>{{classroom.classroomName}}</md-option>\n                      </md-select>\n                      <div ng-messages=\"CnP.classroompicker.$error\">\n                        <div class=\"requiredPickerError\" ng-message=\"required\">This is required.</div>\n                      </div>\n                  </div>\n                </div>\n                      \n                <div>\n                  <md-input-container> \n                    <label>Author</label>\n                    <input type =\"text\" ng-model=\"article.author\">\n                  </md-input-container>\n                </div>\n\n                <div>\n                  <md-input-container> \n                    <input required type =\"file\" name=\"pdf\" ng-model=\"article.PDF\" aria-label=\"pdf\">\n                    <div ng-messages=\"PDF.pdf.$error\">\n                      <div ng-message=\"required\">This is required.</div>\n                    </div>\n                  </md-input-container>\n                </div>\n\n                <button class=\"btn\">Create Article</button>\n              </form>\n        </md-content>\n      </md-tab>\n    </md-tabs>\n  </md-content>\n</div>\n"
-}
+    controller: ['$scope', 'articles', 'classrooms', '$stateParams', '$state', controller],
+    template: "<div>\n    <style>\n    .topToolbar {\n        position: fixed;\n    }\n    </style>\n    <div class=\"inflow\">\n        <div class=\"positioner2\">\n            <div class=\"fabSpeedDial2\" layout=\"column\">\n                <div class=\"lock-size\" layout=\"row\" layout-align=\"center center\">\n                    <md-fab-speed-dial md-direction=\"down\" ng-class=\"md-scale\">\n                        <md-fab-trigger>\n                            <md-button aria-label=\"articleCreateSubmit\" ng-click=\"create(article)\" class=\"md-fab md-color-confirm\">\n                                <md-tooltip md-direction=\"down\" md-delay=\"200\" md-autohide=\"true\">\n                                    Done!\n                                </md-tooltip>\n                                <ng-md-icon class=\"articleEditSubmit\" icon=\"check\" style=\"fill: white\" size=\"24\">\n                                </ng-md-icon>\n                            </md-button>\n                        </md-fab-trigger>\n                    </md-fab-speed-dial>\n                </div>\n            </div>\n        </div>\n        <md-content class=\"articleCardContainer\">\n            <md-card class=\"articleCard\">\n                <form ng-submit=\"create(article)\">\n                    <div class=\"articleTitleInput\">\n                        <md-input-container>\n                            <label>Title</label>\n                            <input type=\"text\" name=\"title\" ng-model=\"article.title\">\n                        </md-input-container>\n                    </div>\n                    <div class=\"articleAuthorInput\">\n                        <md-input-container flex>\n                            <label>Author</label>\n                            <input type=\"text\" name=\"author\" ng-model=\"article.author\">\n                        </md-input-container>\n                    </div>\n                    <div class=\"articleSourceInput\">\n                        <md-input-container flex>\n                            <label>Source</label>\n                            <input type=\"text\" name=\"source\" ng-model=\"article.source\">\n                        </md-input-container>\n                    </div>\n                    <div class=\"articleClassroomInput\">\n                        <md-select class=\"classroomPicker\" md-on-open=\"loadClassrooms()\" ng-model=\"article.classroom\" placeholder=\"Which Classroom?\">\n                            <md-option ng-repeat=\"classroom in classrooms\" value=\"{{classroom._id}}\">{{classroom.name}}</md-option>\n                        </md-select>\n                    </div>\n                    <div class=\"articleContentInput\">\n                        <md-input-container>\n                            <label>Content</label>\n                            <textarea columns=\"1\" rows=\"15\" type=\"text\" name=\"content\" ng-model=\"article.content\">\n                            </textarea>\n                        </md-input-container>\n                    </div>\n                </form>\n            </md-card>\n        </md-content>\n    </div>\n</div>\n"
+};
 
-function controller($scope, articles, $state, classrooms) {
+function controller($scope, articles, classrooms, $stateParams, $state, controller) {
 
-    classrooms.list().then(function (res) {
-            $scope.classrooms = res
-        })
+    classrooms.list().then(function(classRes) {
+        $scope.classrooms = classRes;
+    });
 
     $scope.create = function(article) {
-        articles.create(article)
-        .then(function(res) {
+        articles.create(article).then(function(res) {
             $state.go('articles.list')
-        })
-    }
+        });
+    };
 }
+
 },{}],4:[function(require,module,exports){
 'use strict';
 
 
-
 module.exports = {
-  url: '/:id',
-  controller: ['$scope', 'articles', '$stateParams', '$state', controller],
-  template: "<!--Changing the style of the toolbar-->\n<style>\n\t.mainToolbar{\n\t\theight: 18em !important;\n\t\tz-index: 0;\n\t\tposition:absolute;\n\t}\n</style>\n\n<md-content class=\"articleCardContainer\">\n  <md-card class=\"articleCard\">\n  \t<span class=\"articleCardClassroom\" ng-bind=\"classroom.classroomName\"></span>\n\t<h2 ng-bind=\"article.title\" class=\"articleCardTitle\"></h2>\n\t<p ng-bind=\"article.author\" class=\"articleCardAuthor\"></p>\n\t<md-divider class=\"navDivider\" ng-if=\"!$last\"></md-divider>\n\t<p ng-bind=\"article.content\" class=\"articleCardContent\"></p>\n\t<p ng-bind=\"article.source\" class=\"articleCardSource\"></p>\n  </md-card>\n\n  <div>\n  \t<div class='wrap'>\n  \t\t<div class='content'>\n\n  \t\t<md-list>\n  \t\t\t<a ui-sref=\"articles.edit({id: article._id})\" class=\"navbarText\">\n\t  \t\t\t<md-list-item ng-click=\"\" >\n\t  \t\t\t\t<p>Edit</p>\n\t  \t\t\t</md-list-item>\n  \t\t\t</a>\n\n  \t\t\t<md-divider></md-divider>\n\n  \t\t\t<md-list-item ng-click=\"remove(article._id)\" >\n  \t\t\t\t<p>Delete</p>\n  \t\t\t</md-list-item>\n  \t\t</md-list>\n  \t\t</div>\n  \t</div>\n\n  <md-button ng-click=\"remove(article._id)\"flex class=\"md-raised md-warn btn deleteBtn\">\n    Delete\n  </md-button>\n\n  <md-button flex class=\"md-raised md-primary\" ui-sref=\"articles.edit({id: article._id})\">Edit Article</md-button>\n  </div>\n\n</md-content>\n\n"
+    url: '/pdf',
+    controller: ['$scope', 'articles', 'classrooms', '$stateParams', '$state', controller],
+    template: "<div>\n    <style>\n    .topToolbar {\n        position: fixed;\n    }\n    </style>\n    <div class=\"inflow\">\n        <div class=\"positioner2\">\n            <div class=\"fabSpeedDial2\" layout=\"column\">\n                <div class=\"lock-size\" layout=\"row\" layout-align=\"center center\">\n                    <md-fab-speed-dial md-direction=\"down\" ng-class=\"md-scale\">\n                        <md-fab-trigger>\n                            <md-button aria-label=\"articleCreateSubmit\" ng-click=\"create(article)\" class=\"md-fab md-color-confirm\">\n                                <md-tooltip md-direction=\"donw\" md-delay=\"200\" md-autohide=\"true\">\n                                    Done!\n                                </md-tooltip>\n                                <ng-md-icon class=\"articleEditSubmit\" icon=\"check\" style=\"fill: white\" size=\"24\">\n                                </ng-md-icon>\n                            </md-button>\n                        </md-fab-trigger>\n                    </md-fab-speed-dial>\n                </div>\n            </div>\n        </div>\n        <md-content class=\"articleCardContainer\">\n            <md-card class=\"articleCard\">\n                <form ng-submit=\"create(article)\">\n                    <div class=\"articleTitleInput\">\n                        <md-input-container>\n                            <label>Title</label>\n                            <input type=\"text\" name=\"title\" ng-model=\"article.title\">\n                        </md-input-container>\n                    </div>\n                    <div class=\"articleAuthorInput\">\n                        <md-input-container flex>\n                            <label>Author</label>\n                            <input type=\"text\" name=\"author\" ng-model=\"article.author\">\n                        </md-input-container>\n                    </div>\n                    <div class=\"articleSourceInput\">\n                        <md-input-container flex>\n                            <label>Source</label>\n                            <input type=\"text\" name=\"source\" ng-model=\"article.source\">\n                        </md-input-container>\n                    </div>\n                    <div class=\"articleClassroomInput\">\n                        <md-select class=\"classroomPicker\" md-on-open=\"loadClassrooms()\" ng-model=\"article.classroom\" placeholder=\"Which Classroom?\">\n                            <md-option ng-repeat=\"classroom in classrooms\" value=\"{{classroom._id}}\">{{classroom.name}}</md-option>\n                        </md-select>\n                    </div>\n                    <div class=\"articlePDFInput\">\n                        <md-input-container>\n                            <input required type=\"file\" name=\"pdf\" ng-model=\"PDF\" aria-label=\"pdf\">\n                            <div ng-messages=\"PDF.pdf.$error\">\n                                <div ng-message=\"required\">This is required.</div>\n                            </div>\n                        </md-input-container>\n                    </div>\n                </form>\n            </md-card>\n        </md-content>\n    </div>\n</div>\n"
 };
 
-$('a').on('click', function() {
-  $('.wrap, a').toggleClass('active');
+function controller($scope, articles, $state) {
 
-  return false;
-});
-
-function controller ($scope, articles, $stateParams, $state) {
-  articles.get($stateParams.id).then(function(doc) {
-    $scope.article = doc;
-  });
-
-  $scope.remove = function (id) {
+    classrooms.list().then(function(classRes) {
+        $scope.classrooms = classRes;
+    });
     
-    articles.remove(id).then(function (res) {
+    $scope.create = function (article) {
+    articles.create(article).then(function (res) {
       $state.go('articles.list');
     });
   };
 }
 },{}],5:[function(require,module,exports){
+'use strict';
+
+
+
+module.exports = {
+    url: '/:id',
+    controller: ['$scope', 'articles', '$stateParams', '$state', '$mdDialog', controller],
+    template: "<!-- Styling the Navbar on this page-->\n<style>\n  .topToolbar {\n  position: fixed;\n}\n</style>\n\n<div class=\"inflow\">\n  <div class=\"positioner\">\n    <div class=\"fabSpeedDial\" layout=\"column\">\n      <div class=\"lock-size\" layout=\"row\" layout-align=\"center center\">\n        <md-fab-speed-dial md-direction=\"down\" ng-class=\"md-scale\">\n          <md-fab-trigger>\n            <md-button aria-label=\"articleMenuEdit\" ui-sref=\"articles.edit({id: article._id})\" class=\"md-fab md-accent\">\n              <md-tooltip md-direction=\"left\" md-delay=\"200\" md-autohide=\"true\">\n                Edit Article\n              </md-tooltip>\n              <ng-md-icon class=\"articleMenuEdit\" icon=\"mode_edit\" style=\"fill: white\" size=\"24\">\n              </ng-md-icon>\n            </md-button>\n          </md-fab-trigger>\n\n          <md-fab-actions>\n            <md-button aria-label=\"articleMenuClass\" ng-click=\"\" class=\"md-fab md-raised md-mini md-primary md-hue-2\">\n              <md-tooltip md-direction=\"left\" md-delay=\"200\" md-autohide=\"true\">\n                Show Students\n              </md-tooltip>\n              <ng-md-icon class=\"articleMenuClass\" icon=\"assignment_ind\" style=\"fill: white\" size=\"16\"></ng-md-icon>\n            </md-button>\n          </md-fab-actions>\n\n          <md-fab-actions>\n            <md-button aria-label=\"articleMenuDelete\" ng-click=\"showConfirm(article._id)\" class=\"md-fab md-raised md-mini md-warn\">\n              <md-tooltip md-direction=\"left\" md-delay=\"200\" md-autohide=\"true\">\n                Delete\n              </md-tooltip>\n              <ng-md-icon class=\"articleMenuDelete\" icon=\"delete\" style=\"fill: white\" size=\"16\"></ng-md-icon>\n            </md-button>\n          </md-fab-actions>\n        </md-fab-speed-dial>\n      </div>\n    </div>\n  </div>\n</div>\n\n<md-content class=\"articleCardContainer\">  \n\n  <md-card class=\"articleCard\">\n  \t<span class=\"articleCardClassroom\" ng-bind=\"classroom.classroomName\"></span>\n\t  <h2 ng-bind=\"article.title\" class=\"articleCardTitle\"></h2>\n\t  <p ng-bind=\"article.author\" class=\"articleCardAuthor\"></p>\n\t  <md-divider class=\"navDivider\" ng-if=\"!$last\"></md-divider>\n    <p ng-bind=\"article.content\" class=\"articleCardContent\"></p>\n\t  <p ng-bind=\"article.source\" class=\"articleCardSource\"></p>\n  </md-card>\n\n</md-content>\n\n"
+};
+
+function controller($scope, articles, $stateParams, $state, $mdDialog) {
+    articles.get($stateParams.id).then(function(doc) {
+        $scope.article = doc;
+    });
+
+    var remove = function(id) {
+
+        articles.remove(id).then(function(res) {
+            $state.go('articles.list');
+        });
+    };
+
+    $scope.showConfirm = function(id) {
+        // Appending dialog to document.body to cover sidenav in docs app
+        var confirm = $mdDialog.confirm()
+            .parent(angular.element(document.body))
+            .title('Would you like to delete this article?')
+            .content('This will delete it forever.')
+            .ariaLabel('Article Delete')
+            .ok('Delete')
+            .cancel('Cancel');
+        $mdDialog.show(confirm).then(function() {
+            remove(id);
+            console.log('deleted!');
+        }, function() {});
+    };
+}
+
+},{}],6:[function(require,module,exports){
+'use strict';
+
+
+module.exports = {
+    url: '/url',
+    controller: ['$scope', 'articles', 'classrooms', '$stateParams', '$state', controller],
+    template: "<div>\n    <style>\n    .topToolbar {\n        position: fixed;\n    }\n    </style>\n    <div class=\"inflow\">\n        <div class=\"positioner2\">\n            <div class=\"fabSpeedDial2\" layout=\"column\">\n                <div class=\"lock-size\" layout=\"row\" layout-align=\"center center\">\n                    <md-fab-speed-dial md-direction=\"down\" ng-class=\"md-scale\">\n                        <md-fab-trigger>\n                            <md-button aria-label=\"articleCreateSubmit\" ng-click=\"create(article)\" class=\"md-fab md-color-confirm\">\n                                <md-tooltip md-direction=\"donw\" md-delay=\"200\" md-autohide=\"true\">\n                                    Done!\n                                </md-tooltip>\n                                <ng-md-icon class=\"articleEditSubmit\" icon=\"check\" style=\"fill: white\" size=\"24\">\n                                </ng-md-icon>\n                            </md-button>\n                        </md-fab-trigger>\n                    </md-fab-speed-dial>\n                </div>\n            </div>\n        </div>\n        <md-content class=\"articleCardContainer\">\n            <md-card class=\"articleCard\">\n                <form ng-submit=\"create(article)\">\n                    <div class=\"articleTitleInput\">\n                        <md-input-container>\n                            <label>Title</label>\n                            <input type=\"text\" name=\"title\" ng-model=\"article.title\">\n                        </md-input-container>\n                    </div>\n                    <div class=\"articleAuthorInput\">\n                        <md-input-container flex>\n                            <label>Author</label>\n                            <input type=\"text\" name=\"author\" ng-model=\"article.author\">\n                        </md-input-container>\n                    </div>\n                    <div class=\"articleSourceInput\">\n                        <md-input-container flex>\n                            <label>Source</label>\n                            <input type=\"text\" name=\"source\" ng-model=\"article.source\">\n                        </md-input-container>\n                    </div>\n                    <div class=\"articleClassroomInput\">\n                        <md-select class=\"classroomPicker\" md-on-open=\"loadClassrooms()\" ng-model=\"article.classroom\" placeholder=\"Which Classroom?\">\n                            <md-option ng-repeat=\"classroom in classrooms\" value=\"{{classroom._id}}\">{{classroom.name}}</md-option>\n                        </md-select>\n                    </div>\n                    <div class=\"articleURLInput\">\n                        <md-input-container>\n                            <label>URL</label>\n                            <input type=\"text\" name=\"author\" ng-model=\"article.url\">\n                        </md-input-container>\n                    </div>\n                </form>\n            </md-card>\n        </md-content>\n    </div>\n</div>\n"
+};
+
+function controller($scope, articles, $state) {
+
+    classrooms.list().then(function(classRes) {
+        $scope.classrooms = classRes;
+    });
+
+    $scope.create = function(article) {
+        articles.create(article).then(function(res) {
+            $state.go('articles.list');
+        });
+    };
+}
+
+},{}],7:[function(require,module,exports){
 /* commonjs package manager support (eg componentjs) */
 if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
   module.exports = 'app.articles';
@@ -107,64 +178,143 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
           })
           .state('articles.list', require('./components/list'))
           .state('articles.new', require('./components/new'))
+          .state('articles.url', require('./components/url'))
+          .state('articles.pdf', require('./components/pdf'))
           .state('articles.show', require('./components/show'))
           .state('articles.edit', require('./components/edit'))
 
      }])
+    .factory('classrooms', ['pouchDB', 'dbName', require('../classrooms/services').classrooms])
     .factory('articles', ['pouchDB', 'dbName', require('./services').articles])
+
 })( window, window.angular)
-},{"./components/edit":1,"./components/list":2,"./components/new":3,"./components/show":4,"./pouchdb":6,"./services":7}],6:[function(require,module,exports){
+},{"../classrooms/services":16,"./components/edit":1,"./components/list":2,"./components/new":3,"./components/pdf":4,"./components/show":5,"./components/url":6,"./pouchdb":8,"./services":9}],8:[function(require,module,exports){
 if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
   module.exports = 'pouchdb';
 }
 
 require('angular-pouchdb')
-},{"angular-pouchdb":36}],7:[function(require,module,exports){
+},{"angular-pouchdb":39}],9:[function(require,module,exports){
 'use strict';
 
 module.exports = {
-  articles: function (pouchDB, dbName) {
-    var db = pouchDB(dbName);
+    articles: function(pouchDB, dbName) {
+        var db = pouchDB(dbName);
 
-    function list () {
-      return db.allDocs({startkey: 'article', endkey: 'article{}', inclusive_end: true, include_docs: true})
-        .then(function (res) {
-          console.log(res.rows);
-          return res.rows.map(function (r) { return r.doc})
-      });
+        function list() {
+            return db.allDocs({
+                    startkey: 'article',
+                    endkey: 'article{}',
+                    inclusive_end: true,
+                    include_docs: true
+                })
+                .then(function(res) {
+                    console.log(res.rows);
+                    return res.rows.map(function(r) {
+                        return r.doc;
+                    });
+                });
+        }
+
+        function create(article) {
+            article.type = 'article';
+            article._id = 'article-' + (new Date()).toISOString()
+            return db.put(article);
+        }
+
+        function get(id) {
+            return db.get(id);
+        }
+
+        function update(article) {
+            return db.put(article);
+        }
+
+        function remove(id) {
+            return db.get(id).then(function(doc) {
+                return db.remove(doc);
+            });
+        }
+
+        return Object.freeze({
+            list: list,
+            create: create,
+            get: get,
+            update: update,
+            remove: remove
+        });
+        /*annotations: function(pouchDB, annotationDbName) {
+            var db = pouchDB(annotationDbName);
+
+            var ddoc = {
+                _id: '_design/annotator',
+                views: {
+                    annotations: {
+                        map: function(doc) {
+                            if ('uri' in doc && 'ranges' in doc) {
+                                emit(doc.uri, 1);
+                            }
+                        }.toString()
+                    }
+                }
+            };
+
+            function create(annotation) {
+                annotation.id = PouchDB.utils.uuid();
+                annotation._id = annotation.id;
+                return db.post(annotation)
+                    .then(function(resp) {
+                        annotation._rev = resp.rev;
+                        return annotation;
+                    })
+                    .catch(console.log.bind(console));
+            },
+
+
+            function query(queryObj) {
+                queryObj.reduce = false;
+                queryObj.include_docs = true;
+                return db.query('annotator/annotations', queryObj)
+                    .then(function(resp) {
+                        var annotations = [];
+                        for (var i = 0; i < resp.rows.length; i++) {
+                            annotations.push(resp.rows[i].doc);
+                        }
+                        return {
+                            results: annotations,
+                            metadata: {
+                                total: resp.rows.length
+                            }
+                        };
+                    })
+                    .catch(console.log.bind(console));
+            }
+
+            function update(annotation) {
+                return db.put(annotation)
+                    .then(function(resp) {
+                        annotation._rev = resp.rev;
+                        return annotation;
+                    })
+                    .catch(console.log.bind(console));
+            } {
+                return db.put(article);
+            }
+
+            function delete(annotation) {
+                return db.remove(annotation)
+                    .then(function(resp) {
+                        return annotation;
+                    })
+                    .catch(console.log.bind(console));
+            }
+            };
+        }
+    })*/
     }
-
-    function create (article) {
-      article.type = 'article';
-      article._id = 'article-' + (new Date()).toISOString()
-      return db.put(article);
-    }
-
-    function get (id) {
-      return db.get(id);
-    }
-
-    function update (article) {
-      return db.put(article);
-    }
-
-    function remove (id) {
-      return db.get(id).then(function (doc) {
-        return db.remove(doc);
-      });
-    }
-
-    return Object.freeze({
-      list: list,
-      create: create,
-      get: get,
-      update: update,
-      remove: remove
-    });
-  }
 };
 
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict'
 
 
@@ -172,7 +322,7 @@ module.exports = {
 module.exports = {
   url: '/:id/edit',
   controller: ['$scope', 'classrooms', '$stateParams', '$state', controller],
-  template: "<h3>Edit Classroom</h3>\n<form ng-submit=\"update(classroom)\">\n  <div>\n    <label>Name</label>\n    <input type=\"text\" ng-model=\"classroom.name\">\n  </div>\n  <button class=\"btn\">Update Classroom</button>\n</form>\n"
+  template: "<div class=\"inflow\">\n    <div class=\"positioner\">\n        <div class=\"fabSpeedDial3\" layout=\"column\">\n            <div class=\"lock-size\" layout=\"row\" layout-align=\"center center\">\n                <md-fab-speed-dial md-direction=\"down\" ng-class=\"md-scale\">\n                    <md-fab-trigger>\n                        <md-button aria-label=\"updateClassroom\" ng-click=\"update(classroom)\" class=\"md-fab\">\n                            <md-tooltip md-direction=\"down\" md-delay=\"200\" md-autohide=\"true\">\n                                Done!\n                            </md-tooltip>\n                            <ng-md-icon class=\"articleEditSubmit\" icon=\"check\" style=\"fill: white\" size=\"24\">\n                            </ng-md-icon>\n                        </md-button>\n                    </md-fab-trigger>\n                </md-fab-speed-dial>\n            </div>\n        </div>\n    </div>\n</div>\n<div class=\"articlesPage\">\n    <p class=\"pageTitle\">Edit Classroom</p>\n    <form ng-submit=\"update(classroom)\">\n        <div>\n            <md-input-container>\n                <label>Name</label>\n                <input type=\"text\" ng-model=\"classroom.name\">\n            </md-input-container>\n            <md-input-container>\n                <label>Description</label>\n                <textarea ng-model=\"classroom.description\"></textarea>\n            </md-input-container>\n        </div>\n    </form>\n</div>\n"
 }
 
 function controller ($scope, classrooms, $stateParams, $state) {
@@ -188,7 +338,7 @@ function controller ($scope, classrooms, $stateParams, $state) {
       })
   }
 }
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict'
 
 
@@ -196,7 +346,7 @@ function controller ($scope, classrooms, $stateParams, $state) {
 module.exports = {
   url: '/list',
   controller: ['$scope', 'classrooms', controller],
-  template: "<h1>ClassRooms</h1>\n<a ui-sref=\"classrooms.new\">New Classroom</a>\n<ul>\n  <li ng-repeat=\"classroom in classrooms\">\n    <a ui-sref=\"classrooms.show({ id: classroom._id})\" ng-bind=\"classroom.name\"></a>\n  </li>\n</ul>"
+  template: "<div class=\"inflow\">\n  <div class=\"positioner\">\n    <div class=\"fabSpeedDial3\" layout=\"column\">\n      <div class=\"lock-size\" layout=\"row\" layout-align=\"center center\">\n        <md-fab-speed-dial md-direction=\"down\" ng-class=\"md-scale\">\n          <md-fab-trigger>\n            <md-button aria-label=\"add Classroom\" ui-sref=\"classrooms.new\" class=\"md-fab\">\n              <md-tooltip md-direction=\"down\" md-delay=\"200\" md-autohide=\"true\">\n                New Classroom\n              </md-tooltip>\n              <ng-md-icon class=\"articleEditSubmit\" icon=\"add\" style=\"fill: white\" size=\"24\">\n              </ng-md-icon>\n            </md-button>\n          </md-fab-trigger>\n        </md-fab-speed-dial>\n      </div>\n    </div>     \n  </div>\n</div>\n\n<div class=\"articlesPage\">\n\n\t<p class=\"pageTitle\">Classrooms</p>\n\n\t<md-input-container class=\"searchBarClassrooms\"> \n    \t<label>\n      \t\t<div class=\"searchIcon\">\n        \t\t<ng-md-icon icon=\"search\" size=\"15\" style=\"fill: grey\"></ng-md-icon>\n      \t\t</div>\n      \t\tsearch\n      \t</label>\n    \t<input type =\"text\" ng-model=\"classroomQuery\">\n  \t</md-input-container>\n\n  <div class=\"classroomCardContainer\">\n  \t<md-card \n      ng-class=\"{zRaise2: hover}\" \n      ng-mouseenter=\"hover = true\" \n      ng-mouseleave=\"hover = false\" \n      class=\"classroomCard\" \n      ng-repeat=\"classroom in classrooms | filter:classroomQuery\">\n  \t    <a class=\"classroomCardATag\" ui-sref=\"classrooms.show({ id: classroom._id})\">\n          <p class=\"classroomCardClassroom\" ng-bind=\"classroom.name\"></p> \n        </a>\n<!-- ng-if for student maybe display grade in class, current/most recent assignment, #of docs-->\n\n<!-- ng-if for teacher maybe display class list, current/most recent assignment, # of docs, edit button, delete button-->\n\n  \t</md-card>\n  </div>\n</div>"
 }
 
 function controller ($scope, classrooms) {
@@ -204,7 +354,7 @@ function controller ($scope, classrooms) {
     $scope.classrooms = res
   })
 }
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict'
 
 
@@ -212,10 +362,13 @@ function controller ($scope, classrooms) {
 module.exports = {
   url: '/new',
   controller: ['$scope', 'classrooms', '$state', controller],
-  template: "<h3>New Classroom</h3>\n<form ng-submit=\"create(classroom)\">\n  <div>\n    <label>Name</label>\n    <input type=\"text\" ng-model=\"classroom.name\">\n  </div>\n  <div>\n    <label>Description</label>\n    <textarea ng-model=\"classroom.description\"></textarea>\n  </div> \n  <button class=\"btn\">Create Classroom</button>\n</form>\n"
+  template: "<div class=\"inflow\">\n  <div class=\"positioner\">\n    <div class=\"fabSpeedDial4\" layout=\"column\">\n      <div class=\"lock-size\" layout=\"row\" layout-align=\"center center\">\n        <md-fab-speed-dial md-direction=\"down\" ng-class=\"md-scale\">\n          <md-fab-trigger>\n            <md-button aria-label=\"add Classroom\" ng-click=\"create(classroom)\" class=\"md-fab\">\n              <md-tooltip md-direction=\"down\" md-delay=\"200\" md-autohide=\"true\">\n                Done!\n              </md-tooltip>\n              <ng-md-icon class=\"articleEditSubmit\" icon=\"check\" style=\"fill: white\" size=\"24\">\n              </ng-md-icon>\n            </md-button>\n          </md-fab-trigger>\n        </md-fab-speed-dial>\n      </div>\n    </div>     \n  </div>\n</div>\n\n<div class=\"classroomsAddPage\">\n\n    <span class=\"pageTitle\">New Classroom</span><span class=\"pageSubTitle\">: {{classroom.name}}</span>\n\n    <form ng-submit=\"create(classroom)\">\n        <div>\n            <md-input-container>\n                <label>Name</label>\n                <input type=\"text\" ng-model=\"classroom.name\">\n            </md-input-container>\n        </div>\n        <div>\n            <md-input-container>\n                <label>Description</label>\n                <textarea ng-model=\"classroom.description\"></textarea>\n            </md-input-container>\n        <div>\n\n        <span class=\"pageTitle\">Add Students</span>\n\n        <!--put it here-->\n\n    </form>\n</div>"
 }
 
 function controller ($scope, classrooms, $state) {
+	var self = this;
+    self.tags = [];
+
   $scope.create = function (classroom) {
     classrooms.create(classroom)
       .then(function (res) {
@@ -223,24 +376,31 @@ function controller ($scope, classrooms, $state) {
       })
   }
 }
-},{}],11:[function(require,module,exports){
-'use strict'
+
+},{}],13:[function(require,module,exports){
+'use strict';
 
 
 
 module.exports = {
-  url: '/:id',
-  controller: ['$scope', 'classrooms', '$stateParams', controller],
-  template: "<h3>Show Classroom</h3>\n<h3>{{classroom.name}}</h3>\n<a ui-sref=\"classrooms.edit({id: classroom._id})\">Edit Classroom</a>\n<a ui-sref=\"classrooms.list\">Back to Classrooms</a>\n"
+    url: '/:id',
+    controller: ['$scope', 'classrooms', '$stateParams', controller],
+    template: "<div class=\"inflow\">\n    <div class=\"positioner\">\n        <div class=\"fabSpeedDial5\" layout=\"column\">\n            <div class=\"lock-size\" layout=\"row\" layout-align=\"center center\">\n                <md-fab-speed-dial md-direction=\"down\" ng-class=\"md-scale\">\n                    <md-fab-trigger>\n                        <md-button aria-label=\"add Classroom\" ui-sref=\"classrooms.edit({id: classroom._id})\" class=\"md-fab\">\n                            <md-tooltip md-direction=\"down\" md-delay=\"200\" md-autohide=\"true\">\n                                Edit Classroom\n                            </md-tooltip>\n                            <ng-md-icon class=\"articleEditSubmit\" icon=\"edit\" style=\"fill: white\" size=\"24\">\n                            </ng-md-icon>\n                        </md-button>\n                    </md-fab-trigger>\n                </md-fab-speed-dial>\n            </div>\n        </div>\n    </div>\n</div>\n<div class=\"articlesPage classroomsPage\">\n    <p class=\"pageTitle\" ng-bind=\"classroom.name\"></p>\n    <md-divider class=\"navDivider navDividerHalfWidth\" ng-if=\"!$last\"></md-divider>\n    <p class=\"classroomDiscriptionShow\" ng-bind=\"classroom.description\"></p>\n\n    <div ng-if='articles && articles[0] != null'>\n        <div class=\"pageTitle classroomsArticleTitle\">Articles</div>\n        <md-divider class=\"navDivider navDividerHalfWidth\" ng-if=\"!$last\"></md-divider>\n\n        <div class=\"articlesContainer\">\n            <md-grid-list md-cols-sm=\"2\" md-cols-md=\"4\" md-cols-gt-md=\"6\" md-row-height-gt-md=\"4:3\" md-row-height=\"4:3\" md-gutter=\"8px\" md-gutter-gt-sm=\"15px\">\n                <md-grid-tile md-ink-ripple ng-repeat=\"article in articles | filter:articleQuery\" class=\"md-whiteframe-z1 whiteBack\" ng-class=\"{zRaise2: hover}\" md-rowspan=\"2\"ng-mouseenter=\"hover = true\" ng-mouseleave=\"hover = false\">\n                    <div class=\"feature articleContentCardDiv\">\n                        <a ui-sref=\"articles.show({ id: article._id})\"></a>\n                        <div class=\"articleContentCard\" ng-bind=\"article.content\"></div>\n                        <md-grid-tile-footer>\n                            <h3 ng-bind=\"article.title\" class=\"articleContentCardFooter\"></h3>\n                        </md-grid-tile-footer>\n                    </div>\n                </md-grid-tile>\n            </md-grid-list>\n        </div>\n    </div>\n    <div ng-if=\"!articles || articles[0] == null\">\n        <div class=\"pageTitle classroomsArticleTitle\">Articles</div>\n        <md-divider class=\"navDivider navDividerHalfWidth\" ng-if=\"!$last\"></md-divider> \n        <div class=\"classroomsAddArticles\">\n            This classroom has no articles. \n            <a class=\"classroomsAddArticles\" ui-sref=\"classrooms.edit({id: classroom._id})\">Add an Article</a>\n        </div>\n    </div>\n    <div ng-if=\"students\">\n        <div class=\"pageTitle classroomsArticleTitle\">Students</div>\n        <md-divider class=\"navDivider navDividerHalfWidth\" ng-if=\"!$last\"></md-divider>\n        <div ng-repeat=\"student in students | filter:studentQuery\" ng-bind=\"student.name\"></div>\n    </div>\n    <div ng-if=\"!students\">\n        <div class=\"pageTitle classroomsArticleTitle\">Students</div>\n        <md-divider class=\"navDivider navDividerHalfWidth\" ng-if=\"!$last\"></md-divider>\n        <div class=\"classroomsAddStudents\">\n            this classroom has no students. \n            <a class=\"classroomsAddStudents\" ui-sref=\"classrooms.edit({id: classroom._id})\">Add Students</a>\n        </div>\n    </div>\n<div>\n    \n"
+};
+
+function controller($scope, classrooms, $stateParams) {
+    classrooms.get($stateParams.id)
+        .then(function(doc) {
+            $scope.classroom = doc;
+        });
+
+    classrooms.getArticles($stateParams.id)
+        .then(function(res) {
+            $scope.articles = res;
+        });
 }
 
-function controller ($scope, classrooms, $stateParams) {
-  classrooms.get($stateParams.id)
-    .then(function (doc) {
-      $scope.classroom = doc
-    })
-}
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /* commonjs package manager support (eg componentjs) */
 if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
   module.exports = 'app.classrooms';
@@ -263,50 +423,74 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
      }])
     .factory('classrooms', ['pouchDB', 'dbName', require('./services').classrooms])
 })( window, window.angular)
-},{"./components/edit":8,"./components/list":9,"./components/new":10,"./components/show":11,"./pouchdb":13,"./services":14}],13:[function(require,module,exports){
-arguments[4][6][0].apply(exports,arguments)
-},{"angular-pouchdb":36,"dup":6}],14:[function(require,module,exports){
+},{"./components/edit":10,"./components/list":11,"./components/new":12,"./components/show":13,"./pouchdb":15,"./services":16}],15:[function(require,module,exports){
+arguments[4][8][0].apply(exports,arguments)
+},{"angular-pouchdb":39,"dup":8}],16:[function(require,module,exports){
+'use strict';
 module.exports = {
-  classrooms: function (pouchDB, dbName) {
-    var db = pouchDB(dbName)
+    classrooms: function(pouchDB, dbName) {
+        var db = pouchDB(dbName);
 
-    function list () {
-      return db.allDocs({startkey: 'classroom', endkey: 'classroom{}', inclusive_end: true, include_docs: true})
-      .then(function (res) {
-        console.log(res.rows)
-        return res.rows.map(function (r) { return r.doc })
-      })
+        function list() {
+            return db.allDocs({
+                    startkey: 'classroom',
+                    endkey: 'classroom{}',
+                    inclusive_end: true,
+                    include_docs: true
+                })
+                .then(function(res) {
+                    console.log(res.rows);
+                    return res.rows.map(function(r) {
+                        return r.doc;
+                    });
+                });
+        }
+
+        function create(classroom) {
+            classroom.type = 'classroom';
+            classroom._id = 'classroom-' + (new Date()).toISOString();
+            return db.put(classroom);
+        }
+
+        function getArticles(id) {
+            return db.query('articlesClass/articlesClass', {
+                key: id,
+                include_docs: true
+            })
+              .then(function(res) {
+                console.log(res.rows);
+                return res.rows.map(function(r) {
+                    return r.doc;
+                });
+            });
+
+        }
+
+        function get(id) {
+            console.log(id);
+            return db.get(id);
+        }
+
+        function update(classroom) {
+            return db.put(classroom);
+        }
+
+        function remove(id) {
+            return db.get(id).then(db.remove);
+        }
+
+        return Object.freeze({
+            list: list,
+            create: create,
+            get: get,
+            update: update,
+            remove: remove,
+            getArticles: getArticles
+        });
     }
+};
 
-    function create (classroom) {
-      classroom.type = 'classroom'
-      classroom._id = 'classroom-' + (new Date()).toISOString()
-      return db.put(classroom)
-    }
-
-    function get (id) {
-      console.log(id);
-      return db.get(id)
-    }
-
-    function update (classroom) {
-      return db.put(classroom)
-    }
-
-    function remove (id) {
-      return db.get(id).then(db.remove)
-    }
-
-    return Object.freeze({
-      list: list,
-      create: create,
-      get: get,
-      update: update,
-      remove: remove
-    })
-  }
-}
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict'
 
 
@@ -320,8 +504,7 @@ module.exports = {
 function controller ($scope) {
 
 }
-},{}],16:[function(require,module,exports){
-(function (Buffer){
+},{}],18:[function(require,module,exports){
 'use strict'
 
 
@@ -329,12 +512,12 @@ function controller ($scope) {
 module.exports = function (users) {
   return {
     restrict: 'E',
-    controller: ['$scope', 'users', '$state', '$mdSidenav', '$mdUtil', '$log', controller],
-    template: Buffer("PGRpdiBuZy1pZj0iIWFjdGl2ZVVzZXIiPgoKICA8IS0tVE9PTEJBUiEhLS0+CiAgPG1kLXRvb2xiYXIgbGF5b3V0LWFsaWduPSJsZWZ0IGNlbnRlciIgY2xhc3M9Im1kLXByaW1hcnkgbWQtd2hpdGVmcmFtZS16MSBtYWluVG9vbGJhciI+CiAgICA8ZGl2IGNsYXNzPSJtZC10b29sYmFyLXRvb2xzIj4KICAgICAgPG1kLWJ1dHRvbiBjbGFzcz0ibWQtaWNvbi1idXR0b24iIGFyaWEtbGFiZWw9IlNldHRpbmdzIiBuZy1jbGljaz0idG9nZ2xlTGVmdCgpIj4KICAgICAgICA8ZGl2IGNsYXNzPSJoYW1idXJnZXJNZW51QnV0dG9uMiIgZmxleD4KICAgICAgICAgIDxuZy1tZC1pY29uIGljb249J21lbnUnIHN0eWxlPSJmaWxsOiB3aGl0ZSIgc2l6ZT0iMzYiPgogICAgICAgICAgPC9uZy1tZC1pY29uPgogICAgICAgIDwvZGl2PgogICAgICA8L21kLWJ1dHRvbj4KICAgICAgPGRpdiBjbGFzcz0idG9vbGJhckN1cnJlbnRQYWdlIj4gUGhyYXNlCiAgICAgIDwvZGl2PgogICAgPC9kaXY+CiAgPC9tZC10b29sYmFyPgoKICA8IS0tU2lkZU5hdiEhLS0+CiAgPGRpdiBsYXlvdXQ9InJvdyIgZmxleD0iIiBuZy1jbGljaz0idG9nZ2xlTGVmdCgpIj4KICAgIDxtZC1zaWRlbmF2IHN0eWxlPSJoZWlnaHQ6NTAwcHg7IiBtZC1jb21wb25lbnQtaWQ9ImxlZnQiIGNsYXNzPSJtZC1zaWRlbmF2LWxlZnQgbWQtd2hpdGVmcmFtZS16MiI+CiAgICAgIDxtZC10b29sYmFyIGNsYXNzPSIiIG5nLWNsaWNrPSJ0b2dnbGVMZWZ0KCkiPgogICAgICAgIDxkaXYgY2xhc3M9Im1kLXRvb2xiYXItdG9vbHMiPgogICAgICAgICAgPGRpdiBjbGFzcz0iaGFtYnVyZ2VyTWVudUJ1dHRvbjIgaGFtYnVyZ2VyTWVudUJ1dHRvbjMiPgogICAgICAgICAgICA8bmctbWQtaWNvbiBpY29uPSJtZW51IiBzdHlsZT0iZmlsbDogd2hpdGUiIHNpemU9IjM2Ij4KICAgICAgICAgICAgPC9uZy1tZC1pY29uPgogICAgICAgICAgPC9kaXY+CiAgICAgICAgICA8ZGl2IGNsYXNzPSJuYXZiYXJDdXJyZW50UGFnZSBuYXZiYXJIb3ZlciI+CiAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L2Rpdj4KICAgICAgPC9tZC10b29sYmFyPgogICAgICA8bWQtY29udGVudCBsYXlvdXQtcGFkZGluZz0iIj4KICAgICAgICA8bWQtbGlzdCBoaWRlLW1kPSIiIHNob3ctZ3QtbWQ9IiI+CiAgICAgICAgICA8YSB1aS1zcmVmPSJob21lIiBjbGFzcz0ibmF2YmFyVGV4dCI+CiAgICAgICAgICAgIDxtZC1saXN0LWl0ZW0gbmctY2xpY2s9InRvZ2dsZUxlZnQoKSI+CiAgICAgICAgICAgICAgPGRpdiBjbGFzcz0ic2lkZU5hdkljb25zIj4KICAgICAgICAgICAgICAgIDxuZy1tZC1pY29uIGljb249ImhvbWUiIG5nLWNsYXNzPSIiIHN0eWxlPSJmaWxsOiBibGFjayIgc2l6ZT0iMzAiPgogICAgICAgICAgICAgICAgPC9uZy1tZC1pY29uPgogICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgIDxwIG5nLWNsYXNzPSIiPkhvbWU8L3A+CiAgICAgICAgICAgIDwvbWQtbGlzdC1pdGVtPgogICAgICAgICAgPC9hPgogICAgICAgICAgPG1kLWRpdmlkZXIgY2xhc3M9Im5hdkRpdmlkZXIiIG5nLWlmPSIhJGxhc3QiPjwvbWQtZGl2aWRlcj4KICAgICAgICAgIDxhIHVpLXNyZWY9InVzZXJzLmxvZ2luIiBjbGFzcz0ibmF2YmFyVGV4dCI+CiAgICAgICAgICAgIDxtZC1saXN0LWl0ZW0gbmctY2xpY2s9InRvZ2dsZUxlZnQoKSI+CiAgICAgICAgICAgICAgPGRpdiBjbGFzcz0ic2lkZU5hdkljb25zIj4KICAgICAgICAgICAgICAgIDxuZy1tZC1pY29uIGljb249InBlb3BsZSIgbmctY2xhc3M9IiIgc3R5bGU9ImZpbGw6IGJsYWNrIiBzaXplPSIzMCI+CiAgICAgICAgICAgICAgICA8L25nLW1kLWljb24+CiAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgPHAgbmctY2xhc3M9IiI+TG9naW48L3A+CiAgICAgICAgICAgIDwvbWQtbGlzdC1pdGVtPgogICAgICAgICAgPC9hPgogICAgICAgICAgPGEgdWktc3JlZj0idXNlcnMuc2lnbnVwIiBjbGFzcz0ibmF2YmFyVGV4dCI+CiAgICAgICAgICAgIDxtZC1saXN0LWl0ZW0gbmctY2xpY2s9InRvZ2dsZUxlZnQoKSI+CiAgICAgICAgICAgICAgPGRpdiBjbGFzcz0ic2lkZU5hdkljb25zIj4KICAgICAgICAgICAgICAgIDxuZy1tZC1pY29uIGljb249InNjaG9vbCIgbmctY2xhc3M9IiIgc3R5bGU9ImZpbGw6IGJsYWNrIiBzaXplPSIzMCI+CiAgICAgICAgICAgICAgICA8L25nLW1kLWljb24+CiAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgPHAgbmctY2xhc3M9IiI+U2lnbiBVcDwvcD4KICAgICAgICAgICAgPC9tZC1saXN0LWl0ZW0+CiAgICAgICAgICA8L2E+CiAgICAgICAgICA8bWQtZGl2aWRlciBjbGFzcz0ibmF2RGl2aWRlciIgbmctaWY9IiEkbGFzdCI+PC9tZC1kaXZpZGVyPgogICAgICAgICAgPGEgdWktc3JlZj0iYWJvdXQiIGNsYXNzPSJuYXZiYXJUZXh0Ij4KICAgICAgICAgICAgPG1kLWxpc3QtaXRlbSBuZy1jbGljaz0idG9nZ2xlTGVmdCgpIiB1aS1zcmVmPSJhYm91dCI+CiAgICAgICAgICAgICAgPGRpdiBjbGFzcz0ic2lkZU5hdkljb25zIj4KICAgICAgICAgICAgICAgIDxuZy1tZC1pY29uIGljb249ImluZm8iIG5nLWNsYXNzPSIiIHN0eWxlPSJmaWxsOiBibGFjayIgc2l6ZT0iMzAiPgogICAgICAgICAgICAgICAgPC9uZy1tZC1pY29uPgogICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgIDxwIG5nLWNsYXNzPSIiPkFib3V0PC9wPgogICAgICAgICAgICA8L21kLWxpc3QtaXRlbT4KICAgICAgICAgIDwvYT4KICAgICAgICAgIDxhIHVpLXNyZWY9ImNvbnRhY3QiIGNsYXNzPSJuYXZiYXJUZXh0Ij4KICAgICAgICAgICAgPG1kLWxpc3QtaXRlbSBuZy1jbGljaz0idG9nZ2xlTGVmdCgpIiB1aS1zcmVmPSJjb250YWN0Ij4KICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJzaWRlTmF2SWNvbnMiPgogICAgICAgICAgICAgICAgPG5nLW1kLWljb24gaWNvbj0iaGVscCIgbmctY2xhc3M9IiIgc3R5bGU9ImZpbGw6IGJsYWNrIiBzaXplPSIzMCI+CiAgICAgICAgICAgICAgICA8L25nLW1kLWljb24+CiAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgPHAgbmctY2xhc3M9IiI+Q29udGFjdDwvcD4KICAgICAgICAgICAgPC9tZC1saXN0LWl0ZW0+CiAgICAgICAgICA8L2E+CiAgICAgICAgPC9tZC1saXN0PgogICAgICA8L21kLWNvbnRlbnQ+CiAgICA8L21kLXNpZGVuYXY+CiAgPC9kaXY+CjwvZGl2PgoKPGRpdiBuZy1pZj0iYWN0aXZlVXNlciI+Cgo8IS0tVE9PTEJBUiEhLS0+CiAgPG1kLXRvb2xiYXIgbGF5b3V0LWFsaWduPSJsZWZ0IGNlbnRlciIgY2xhc3M9Im1kLXByaW1hcnkgbWQtd2hpdGVmcmFtZS16MSBtYWluVG9vbGJhciI+CiAgICA8ZGl2IGNsYXNzPSJtZC10b29sYmFyLXRvb2xzIj4KICAgICAgPG1kLWJ1dHRvbiBjbGFzcz0ibWQtaWNvbi1idXR0b24iIGFyaWEtbGFiZWw9IlNldHRpbmdzIiBuZy1jbGljaz0idG9nZ2xlTGVmdCgpIj4KICAgICAgICA8ZGl2IGNsYXNzPSJoYW1idXJnZXJNZW51QnV0dG9uMiIgZmxleD4KICAgICAgICAgIDxuZy1tZC1pY29uIGljb249J21lbnUnIHN0eWxlPSJmaWxsOiB3aGl0ZSIgc2l6ZT0iMzYiPgogICAgICAgICAgPC9uZy1tZC1pY29uPgogICAgICAgIDwvZGl2PgogICAgICA8L21kLWJ1dHRvbj4KICAgICAgPGRpdiBjbGFzcz0idG9vbGJhckN1cnJlbnRQYWdlIj4gUGhyYXNlCiAgICAgIDwvZGl2PgogICAgPC9kaXY+CiAgPC9tZC10b29sYmFyPgoKICA8IS0tU2lkZU5hdiEhLS0+CiAgPGRpdiBsYXlvdXQ9InJvdyIgZmxleD0iIiBuZy1jbGljaz0idG9nZ2xlTGVmdCgpIj4KICAgIDxtZC1zaWRlbmF2IHN0eWxlPSJoZWlnaHQ6NTAwcHg7IiBtZC1jb21wb25lbnQtaWQ9ImxlZnQiIGNsYXNzPSJtZC1zaWRlbmF2LWxlZnQgbWQtd2hpdGVmcmFtZS16MiI+CiAgICAgIDxtZC10b29sYmFyIGNsYXNzPSIiIG5nLWNsaWNrPSJ0b2dnbGVMZWZ0KCkiPgogICAgICAgIDxkaXYgY2xhc3M9Im1kLXRvb2xiYXItdG9vbHMiPgogICAgICAgICAgPGRpdiBjbGFzcz0iaGFtYnVyZ2VyTWVudUJ1dHRvbjIgaGFtYnVyZ2VyTWVudUJ1dHRvbjMiPgogICAgICAgICAgICA8bmctbWQtaWNvbiBpY29uPSJtZW51IiBzdHlsZT0iZmlsbDogd2hpdGUiIHNpemU9IjM2Ij4KICAgICAgICAgICAgPC9uZy1tZC1pY29uPgogICAgICAgICAgPC9kaXY+CiAgICAgICAgICA8ZGl2IGNsYXNzPSJuYXZiYXJDdXJyZW50UGFnZSBuYXZiYXJIb3ZlciI+CiAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L2Rpdj4KICAgICAgPC9tZC10b29sYmFyPgogICAgICA8bWQtY29udGVudCBsYXlvdXQtcGFkZGluZz0iIj4KICAgICAgICA8bWQtbGlzdCBoaWRlLW1kPSIiIHNob3ctZ3QtbWQ9IiI+CiAgICAgICAgICA8YSB1aS1zcmVmPSJob21lIiBjbGFzcz0ibmF2YmFyVGV4dCI+CiAgICAgICAgICAgIDxtZC1saXN0LWl0ZW0gbmctY2xpY2s9InRvZ2dsZUxlZnQoKSI+CiAgICAgICAgICAgICAgPGRpdiBjbGFzcz0ic2lkZU5hdkljb25zIj4KICAgICAgICAgICAgICAgIDxuZy1tZC1pY29uIGljb249ImhvbWUiIG5nLWNsYXNzPSIiIHN0eWxlPSJmaWxsOiBibGFjayIgc2l6ZT0iMzAiPgogICAgICAgICAgICAgICAgPC9uZy1tZC1pY29uPgogICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgIDxwIG5nLWNsYXNzPSIiPkhvbWU8L3A+CiAgICAgICAgICAgIDwvbWQtbGlzdC1pdGVtPgogICAgICAgICAgPC9hPgogICAgICAgICAgPG1kLWRpdmlkZXIgY2xhc3M9Im5hdkRpdmlkZXIiIG5nLWlmPSIhJGxhc3QiPjwvbWQtZGl2aWRlcj4KICAgICAgICAgIDxhIHVpLXNyZWY9ImNsYXNzcm9vbXMubGlzdCIgY2xhc3M9Im5hdmJhclRleHQiPgogICAgICAgICAgICA8bWQtbGlzdC1pdGVtIG5nLWNsaWNrPSJ0b2dnbGVMZWZ0KCkiPgogICAgICAgICAgICAgIDxkaXYgY2xhc3M9InNpZGVOYXZJY29ucyI+CiAgICAgICAgICAgICAgICA8bmctbWQtaWNvbiBpY29uPSJzY2hvb2wiIG5nLWNsYXNzPSIiIHN0eWxlPSJmaWxsOiBibGFjayIgc2l6ZT0iMzAiPgogICAgICAgICAgICAgICAgPC9uZy1tZC1pY29uPgogICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgIDxwIG5nLWNsYXNzPSIiPkNsYXNzcm9vbXM8L3A+CiAgICAgICAgICAgIDwvbWQtbGlzdC1pdGVtPgogICAgICAgICAgPC9hPgogICAgICAgICAgPGEgdWktc3JlZj0iYXJ0aWNsZXMubGlzdCIgY2xhc3M9Im5hdmJhclRleHQiPgogICAgICAgICAgICA8bWQtbGlzdC1pdGVtIG5nLWNsaWNrPSJ0b2dnbGVMZWZ0KCkiIHVpLXNyZWY9ImFydGljbGVzLmxpc3QiPgogICAgICAgICAgICAgIDxkaXYgY2xhc3M9InNpZGVOYXZJY29ucyI+CiAgICAgICAgICAgICAgICA8bmctbWQtaWNvbiBpY29uPSJteV9saWJyYXJ5X2Jvb2tzIiBuZy1jbGFzcz0iIiBzdHlsZT0iZmlsbDogYmxhY2siIHNpemU9IjMwIj4KICAgICAgICAgICAgICAgIDwvbmctbWQtaWNvbj4KICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICA8cCBuZy1jbGFzcz0iIj5BcnRpY2xlczwvcD4KICAgICAgICAgICAgPC9tZC1saXN0LWl0ZW0+CiAgICAgICAgICA8L2E+CiAgICAgICAgICA8bWQtZGl2aWRlciBjbGFzcz0ibmF2RGl2aWRlciIgbmctaWY9IiEkbGFzdCI+PC9tZC1kaXZpZGVyPgogICAgICAgICAgPGEgdWktc3JlZj0iYWJvdXQiIGNsYXNzPSJuYXZiYXJUZXh0Ij4KICAgICAgICAgICAgPG1kLWxpc3QtaXRlbSBuZy1jbGljaz0idG9nZ2xlTGVmdCgpIiB1aS1zcmVmPSJhYm91dCI+CiAgICAgICAgICAgICAgPGRpdiBjbGFzcz0ic2lkZU5hdkljb25zIj4KICAgICAgICAgICAgICAgIDxuZy1tZC1pY29uIGljb249ImluZm8iIG5nLWNsYXNzPSIiIHN0eWxlPSJmaWxsOiBibGFjayIgc2l6ZT0iMzAiPgogICAgICAgICAgICAgICAgPC9uZy1tZC1pY29uPgogICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgIDxwIG5nLWNsYXNzPSIiPkFib3V0PC9wPgogICAgICAgICAgICA8L21kLWxpc3QtaXRlbT4KICAgICAgICAgIDwvYT4KICAgICAgICAgIDxhIHVpLXNyZWY9ImNvbnRhY3QiIGNsYXNzPSJuYXZiYXJUZXh0Ij4KICAgICAgICAgICAgPG1kLWxpc3QtaXRlbSBuZy1jbGljaz0idG9nZ2xlTGVmdCgpIiB1aS1zcmVmPSJjb250YWN0Ij4KICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJzaWRlTmF2SWNvbnMiPgogICAgICAgICAgICAgICAgPG5nLW1kLWljb24gaWNvbj0iaGVscCIgbmctY2xhc3M9IiIgc3R5bGU9ImZpbGw6IGJsYWNrIiBzaXplPSIzMCI+CiAgICAgICAgICAgICAgICA8L25nLW1kLWljb24+CiAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgPHAgbmctY2xhc3M9IiI+Q29udGFjdDwvcD4KICAgICAgICAgICAgPC9tZC1saXN0LWl0ZW0+CiAgICAgICAgICA8L2E+CiAgICAgICAgICA8YSBuZy1jbGljaz0ibG9nb3V0KCkiIGNsYXNzPSJuYXZiYXJUZXh0Ij4KICAgICAgICAgICAgPG1kLWxpc3QtaXRlbSBuZy1jbGljaz0idG9nZ2xlTGVmdCgpIj4KICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJzaWRlTmF2SWNvbnMiPgogICAgICAgICAgICAgICAgPG5nLW1kLWljb24gaWNvbj0iZXhpdF90b19hcHAiIG5nLWNsYXNzPSIiIHN0eWxlPSJmaWxsOiBibGFjayIgc2l6ZT0iMzAiPgogICAgICAgICAgICAgICAgPC9uZy1tZC1pY29uPgogICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgIDxwIG5nLWNsYXNzPSIiPkxvZ291dDwvcD4KICAgICAgICAgICAgPC9tZC1saXN0LWl0ZW0+CiAgICAgICAgICA8L2E+CiAgICAgICAgPC9tZC1saXN0PgogICAgICA8L21kLWNvbnRlbnQ+CiAgICA8L21kLXNpZGVuYXY+CiAgPC9kaXY+CiAgCjwvZGl2Pg==","base64")
+    controller: ['$scope', 'users', '$state', '$mdSidenav', '$mdUtil', '$log', '$mdDialog', '$rootScope', '$stateParams', controller],
+    template: "<div ng-if=\"!activeUser\">\n\n  <!--TOOLBAR!!-->\n  <md-toolbar layout-align=\"left center\" class=\"md-primary md-whiteframe-z1 mainToolbar mainToolbarNotActive\">\n    <div class=\"md-toolbar-tools\">\n    <!--\n      <md-button class=\"md-icon-button\" aria-label=\"Settings\" ng-click=\"toggleLeft()\">\n        <div class=\"hamburgerMenuButton2\" flex>\n          <ng-md-icon icon='menu' style=\"fill: white\" size=\"24\">\n          </ng-md-icon>\n        </div>\n      </md-button>\n      -->\n      <div class=\"toolbarCurrentPage\"> Phrase\n      </div>\n      <span flex></span>\n      <md-button>Features</md-button>\n      <md-button ui-sref=\"about\">About</md-button>\n      <md-button ui-sref=\"contact\">Contact Us</md-button>\n      <md-button class=\"loginButton\" ng-click=\"LoginDialog($event)\">Login</md-button>\n    </div>\n  </md-toolbar>\n\n  <!--SideNav!!-->\n  <div layout=\"row\" flex=\"\" ng-click=\"toggleLeft()\">\n    <md-sidenav style=\"height:500px;\" md-component-id=\"left\" class=\"md-sidenav-left md-whiteframe-z2\">\n      <md-toolbar class=\"\" ng-click=\"toggleLeft()\">\n        <div class=\"md-toolbar-tools\">\n          <div class=\"hamburgerMenuButton2 hamburgerMenuButton3\">\n            <ng-md-icon icon=\"menu\" style=\"fill: white\" size=\"24\">\n            </ng-md-icon>\n          </div>\n          <div class=\"navbarCurrentPage navbarHover\">\n          </div>\n        </div>\n      </md-toolbar>\n      <md-content layout-padding=\"\">\n        <md-list hide-md=\"\" show-gt-md=\"\">\n          <a ui-sref=\"home\" class=\"navbarText\">\n            <md-list-item ng-click=\"toggleLeft()\">\n              <div class=\"sideNavIcons\">\n                <ng-md-icon icon=\"home\" ng-class=\"\" style=\"fill: black\" size=\"30\">\n                </ng-md-icon>\n              </div>\n              <p ng-class=\"\">Home</p>\n            </md-list-item>\n          </a>\n          <md-divider class=\"navDivider\" ng-if=\"!$last\"></md-divider>\n          <a ui-sref=\"users.login\" class=\"navbarText\">\n            <md-list-item ng-click=\"toggleLeft()\">\n              <div class=\"sideNavIcons\">\n                <ng-md-icon icon=\"people\" ng-class=\"\" style=\"fill: black\" size=\"30\">\n                </ng-md-icon>\n              </div>\n              <p ng-class=\"\">Login</p>\n            </md-list-item>\n          </a>\n          <a ui-sref=\"users.signup\" class=\"navbarText\">\n            <md-list-item ng-click=\"toggleLeft()\">\n              <div class=\"sideNavIcons\">\n                <ng-md-icon icon=\"school\" ng-class=\"\" style=\"fill: black\" size=\"30\">\n                </ng-md-icon>\n              </div>\n              <p ng-class=\"\">Sign Up</p>\n            </md-list-item>\n          </a>\n          <md-divider class=\"navDivider\" ng-if=\"!$last\"></md-divider>\n          <a ui-sref=\"about\" class=\"navbarText\">\n            <md-list-item ng-click=\"toggleLeft()\" ui-sref=\"about\">\n              <div class=\"sideNavIcons\">\n                <ng-md-icon icon=\"info\" ng-class=\"\" style=\"fill: black\" size=\"30\">\n                </ng-md-icon>\n              </div>\n              <p ng-class=\"\">About</p>\n            </md-list-item>\n          </a>\n          <a ui-sref=\"contact\" class=\"navbarText\">\n            <md-list-item ng-click=\"toggleLeft()\" ui-sref=\"contact\">\n              <div class=\"sideNavIcons\">\n                <ng-md-icon icon=\"help\" ng-class=\"\" style=\"fill: black\" size=\"30\">\n                </ng-md-icon>\n              </div>\n              <p ng-class=\"\">Contact</p>\n            </md-list-item>\n          </a>\n        </md-list>\n      </md-content>\n    </md-sidenav>\n  </div>\n</div>\n\n<div ng-if=\"activeUser\">\n\n<!--TOOLBAR!!-->\n  <md-toolbar layout-align=\"left center\" class=\"md-primary md-whiteframe-z1 topToolbar mainToolbar\">\n    <div class=\"md-toolbar-tools\">\n      <md-button class=\"md-icon-button\" aria-label=\"Settings\" ng-click=\"toggleLeft()\">\n        <div class=\"hamburgerMenuButton2\" flex>\n          <ng-md-icon icon='menu' style=\"fill: white\" size=\"24\">\n          </ng-md-icon>\n        </div>\n      </md-button>\n      <div class=\"toolbarCurrentPage\"> Phrase</div>\n      <span flex></span>\n      <md-button ui-sref=\"users.show\" class=\"toolbarCurrentUser\">{{activeUser}}</md-button>\n      <md-button class=\"md-icon-button hamburgerMenuButton2\" aria-label=\"notifications\">\n        <div ng-if=\"notification\">\n          <ng-md-icon icon='notifications' style=\"fill: white\" size=\"24\"></ng-md-icon>\n        </div>\n        <div ng-if=\"!notification\">\n          <ng-md-icon icon='notifications_none' style=\"fill: white\" size=\"24\"></ng-md-icon>\n        </div>\n      </md-button>\n      <md-button class=\"avatarSmall md-icon-button\" aria-label=\"profPic\">\n        <user-avatar></user-avatar>\n      </md-button>\n    </div>\n  </md-toolbar>\n\n  <!--SideNav!!-->\n  <div layout=\"row\" flex=\"\" ng-click=\"toggleLeft()\">\n    <md-sidenav style=\"height:500px;\" md-component-id=\"left\" class=\"md-sidenav-left md-whiteframe-z2\">\n      <md-toolbar class=\"\" ng-click=\"toggleLeft()\">\n        <div class=\"md-toolbar-tools\">\n          <div class=\"hamburgerMenuButton2 hamburgerMenuButton3\">\n            <ng-md-icon icon=\"menu\" style=\"fill: white\" size=\"24\">\n            </ng-md-icon>\n          </div>\n          <div class=\"navbarCurrentPage navbarHover\">\n          </div>\n        </div>\n      </md-toolbar>\n      <md-content layout-padding=\"\">\n        <md-list hide-md=\"\" show-gt-md=\"\">\n          <a ui-sref=\"home\" class=\"navbarText\">\n            <md-list-item ng-click=\"toggleLeft()\">\n              <div class=\"sideNavIcons\">\n                <ng-md-icon icon=\"home\" ng-class=\"\" style=\"fill: black\" size=\"30\">\n                </ng-md-icon>\n              </div>\n              <p ng-class=\"\">Home</p>\n            </md-list-item>\n          </a>\n          <md-divider class=\"navDivider\" ng-if=\"!$last\"></md-divider>\n          <a ui-sref=\"classrooms.list\" class=\"navbarText\">\n            <md-list-item ng-click=\"toggleLeft()\">\n              <div class=\"sideNavIcons\">\n                <ng-md-icon icon=\"school\" ng-class=\"\" style=\"fill: black\" size=\"30\">\n                </ng-md-icon>\n              </div>\n              <p ng-class=\"\">Classrooms</p>\n            </md-list-item>\n          </a>\n          <a ui-sref=\"articles.list\" class=\"navbarText\">\n            <md-list-item ng-click=\"toggleLeft()\" ui-sref=\"articles.list\">\n              <div class=\"sideNavIcons\">\n                <ng-md-icon icon=\"my_library_books\" ng-class=\"\" style=\"fill: black\" size=\"30\">\n                </ng-md-icon>\n              </div>\n              <p ng-class=\"\">Articles</p>\n            </md-list-item>\n          </a>\n          <md-divider class=\"navDivider\" ng-if=\"!$last\"></md-divider>\n          <a ui-sref=\"about\" class=\"navbarText\">\n            <md-list-item ng-click=\"toggleLeft()\" ui-sref=\"about\">\n              <div class=\"sideNavIcons\">\n                <ng-md-icon icon=\"info\" ng-class=\"\" style=\"fill: black\" size=\"30\">\n                </ng-md-icon>\n              </div>\n              <p ng-class=\"\">About</p>\n            </md-list-item>\n          </a>\n          <a ui-sref=\"contact\" class=\"navbarText\">\n            <md-list-item ng-click=\"toggleLeft()\" ui-sref=\"contact\">\n              <div class=\"sideNavIcons\">\n                <ng-md-icon icon=\"help\" ng-class=\"\" style=\"fill: black\" size=\"30\">\n                </ng-md-icon>\n              </div>\n              <p ng-class=\"\">Contact</p>\n            </md-list-item>\n          </a>\n          <a ng-click=\"logout()\" class=\"navbarText\">\n            <md-list-item ng-click=\"toggleLeft()\">\n              <div class=\"sideNavIcons\">\n                <ng-md-icon icon=\"exit_to_app\" ng-class=\"\" style=\"fill: black\" size=\"30\">\n                </ng-md-icon>\n              </div>\n              <p ng-class=\"\">Logout</p>\n            </md-list-item>\n          </a>\n        </md-list>\n      </md-content>\n    </md-sidenav>\n  </div>\n  \n</div>"
   }
 }
 
-function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log) {
+function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog, $rootScope, $stateParams) {
 
   function buildToggler(navID) {
     var debounceFn =  $mdUtil.debounce(function(){
@@ -377,9 +560,60 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log) {
       })
     })
   }
-}
-}).call(this,require("buffer").Buffer)
-},{"buffer":41}],17:[function(require,module,exports){
+
+  $scope.setting = true;
+
+  $scope.LoginDialog = function(ev) {
+    $scope.setting = true;
+    $mdDialog.show({
+        controller: controller,
+        clickOutsideToClose: true,
+        template: '<md-dialog aria-label="popinLogin" class="loginPopup"> <div ng-if="setting"> <md-content class="md-padding"> <div class="pageTitle">Hi there!</div> <div> <a class="loginPopupSubheader" ui-sref="home" ng-click="SignUpDialog()"> New to Phrase? Sign Up</a> </div> <form name="Login" ng-submit="login(user)"> <div> <md-input-container flex class="loginPopupUsername"> <label>Username</label> <input type="text" ng-model="user.username"> </md-input-container> <md-input-container class="loginPopupPassword" flex> <label>Password</label> <input type="password" ng-model="user.password"> </md-input-container> </div> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button class="loginPopupCancel" ng-click="SignUpDialog()"> Sign Up </md-button> <md-button class="loginPopupLogin" type="button" ng-click="login(user)" class="md-raised md-primary"> Login </md-button> </div> </md-dialog> </div> <div ng-if="!setting"> <md-content class="md-padding"> <div class="pageTitle">Hi there!</div> <div> <a class="loginPopupSubheader" ui-sref="home" ng-click="LoginDialogTrue()"> Have an account? Login</a> </div> <form name="Signup" ng-submit="Signup(user)"> <div> <md-input-container flex class="loginPopupUsername"> <label>Username</label> <input type="text" ng-model="user.username"> </md-input-container> <md-input-container class="loginPopupPassword" flex> <label>Password</label> <input type="password" ng-model="user.password"> </md-input-container> </div> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button class="loginPopupCancel" ng-click="LoginDialogTrue()"> Login </md-button> <md-button class="loginPopupLogin" type="button" ng-click="signup(user)" class="md-raised md-primary"> Signup </md-button> </div> </div> </md-dialog>',
+        targetEvent: ev,
+      })
+  }
+
+  $scope.LoginDialogTrue = function() {
+    $scope.setting = true;
+  }
+
+  $scope.SignUpDialog = function() {
+    $scope.setting = false;
+  }
+
+  $scope.login = function (user) {
+    $mdDialog.hide()
+    users.login(user.username, user.password)
+      .then(function (res) {
+        $rootScope.$broadcast('users.login.success')
+        $state.go('home')
+      })
+      .catch(function (err) {
+        console.log(err)
+      })
+  }
+
+  $scope.signup = function (user) {
+    $mdDialog.hide()
+    users.signup(user.username, user.password, user.email)
+      .then(function (res) {
+        $state.go('users.login')
+      })
+  };
+  
+  $scope.hide = function() {
+    $mdDialog.hide();
+  };
+
+  $scope.cancel = function() {
+    $mdDialog.cancel();
+  };
+
+  $scope.answer = function(answer) {
+    $mdDialog.hide(answer);
+  };
+};
+},{}],19:[function(require,module,exports){
 'use strict'
 
 
@@ -393,7 +627,7 @@ module.exports = {
 function controller ($scope) {
 
 }
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict'
 
 
@@ -401,19 +635,82 @@ function controller ($scope) {
 module.exports = {
   url: '/',
   controller: ['$scope', controller],
-  template: "<h1>Home</h1>"
+  template: "<div class=\"homePage\">\n</div>"
 }
 
 function controller ($scope) {
 
 }
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
+'use strict';
+
+var cssify = require('cssify');
+
+cssify.byUrl('//cdn.rawgit.com/angular/bower-material/master/angular-material.css');
+cssify.byUrl('/main.css');
+
+window.PouchDB = require('pouchdb');
+window.PouchDB.plugin(require('pouchdb-authentication'));
+
+require('angular').module('app', [
+        require('angular-animate'),
+        require('angular-aria'),
+        require('angular-material'),
+        require('./ng-icons'),
+        require('angular-ui-router'),
+        require('angular-messages'),
+        require('./classrooms'),
+        require('./articles'),
+        require('./users')
+    ])
+    .config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
+        $urlRouterProvider.otherwise('/')
+        $stateProvider
+            .state('home', require('./components/home'))
+            .state('about', require('./components/about'))
+            .state('contact', require('./components/contact'))
+
+        $mdThemingProvider.theme('default')
+            .primaryPalette('indigo', {
+                'default': '500', // by default use shade 500 from the palette for primary intentions
+                'hue-1': '100', // use shade 100 for the <code>md-hue-1</code> class
+                'hue-2': '500', // use shade 500 for the <code>md-hue-2</code> class
+                'hue-3': '700' // use shade 700 for the <code>md-hue-3</code> class
+            })
+            // If you specify less than all of the keys, it will inherit from the
+            // default shades
+            .accentPalette('pink', {
+                'default': 'A200' // use shade A200 for default, and keep all other shades the same
+            });
+
+    }])
+    .directive('appNav', ['users', require('./components/app-nav')])
+    .directive('userAvatar', function() {
+        return {
+            replace: true,
+            template: '<svg class="user-avatar" viewBox="0 0 128 128" height="64" width="64" pointer-events="none" display="block" > <path fill="#FF8A80" d="M0 0h128v128H0z"/> <path fill="#FFE0B2" d="M36.3 94.8c6.4 7.3 16.2 12.1 27.3 12.4 10.7-.3 20.3-4.7 26.7-11.6l.2.1c-17-13.3-12.9-23.4-8.5-28.6 1.3-1.2 2.8-2.5 4.4-3.9l13.1-11c1.5-1.2 2.6-3 2.9-5.1.6-4.4-2.5-8.4-6.9-9.1-1.5-.2-3 0-4.3.6-.3-1.3-.4-2.7-1.6-3.5-1.4-.9-2.8-1.7-4.2-2.5-7.1-3.9-14.9-6.6-23-7.9-5.4-.9-11-1.2-16.1.7-3.3 1.2-6.1 3.2-8.7 5.6-1.3 1.2-2.5 2.4-3.7 3.7l-1.8 1.9c-.3.3-.5.6-.8.8-.1.1-.2 0-.4.2.1.2.1.5.1.6-1-.3-2.1-.4-3.2-.2-4.4.6-7.5 4.7-6.9 9.1.3 2.1 1.3 3.8 2.8 5.1l11 9.3c1.8 1.5 3.3 3.8 4.6 5.7 1.5 2.3 2.8 4.9 3.5 7.6 1.7 6.8-.8 13.4-5.4 18.4-.5.6-1.1 1-1.4 1.7-.2.6-.4 1.3-.6 2-.4 1.5-.5 3.1-.3 4.6.4 3.1 1.8 6.1 4.1 8.2 3.3 3 8 4 12.4 4.5 5.2.6 10.5.7 15.7.2 4.5-.4 9.1-1.2 13-3.4 5.6-3.1 9.6-8.9 10.5-15.2M76.4 46c.9 0 1.6.7 1.6 1.6 0 .9-.7 1.6-1.6 1.6-.9 0-1.6-.7-1.6-1.6-.1-.9.7-1.6 1.6-1.6zm-25.7 0c.9 0 1.6.7 1.6 1.6 0 .9-.7 1.6-1.6 1.6-.9 0-1.6-.7-1.6-1.6-.1-.9.7-1.6 1.6-1.6z"/> <path fill="#E0F7FA" d="M105.3 106.1c-.9-1.3-1.3-1.9-1.3-1.9l-.2-.3c-.6-.9-1.2-1.7-1.9-2.4-3.2-3.5-7.3-5.4-11.4-5.7 0 0 .1 0 .1.1l-.2-.1c-6.4 6.9-16 11.3-26.7 11.6-11.2-.3-21.1-5.1-27.5-12.6-.1.2-.2.4-.2.5-3.1.9-6 2.7-8.4 5.4l-.2.2s-.5.6-1.5 1.7c-.9 1.1-2.2 2.6-3.7 4.5-3.1 3.9-7.2 9.5-11.7 16.6-.9 1.4-1.7 2.8-2.6 4.3h109.6c-3.4-7.1-6.5-12.8-8.9-16.9-1.5-2.2-2.6-3.8-3.3-5z"/> <circle fill="#444" cx="76.3" cy="47.5" r="2"/> <circle fill="#444" cx="50.7" cy="47.6" r="2"/> <path fill="#444" d="M48.1 27.4c4.5 5.9 15.5 12.1 42.4 8.4-2.2-6.9-6.8-12.6-12.6-16.4C95.1 20.9 92 10 92 10c-1.4 5.5-11.1 4.4-11.1 4.4H62.1c-1.7-.1-3.4 0-5.2.3-12.8 1.8-22.6 11.1-25.7 22.9 10.6-1.9 15.3-7.6 16.9-10.2z"/> </svg>'
+        };
+    })
+    .controller('AppController', ['$scope', 'classrooms', 'users', AppController])
+    .constant('dbName', 'https://bivit-dev.iriscouch.com/bivit')
+    .constant('remoteUserDbName', 'https://bivit-dev.iriscouch.com/_users')
+    .constant('annotationDbName', 'https://bivit-dev.iriscouch.com/annotator')
+    //.factory('classrooms', ['pouchDb', require('./services/classrooms')])
+
+function AppController($scope, users) {
+    $scope.showMenu = true;
+    $scope.toggle = function() {
+        $scope.showMenu = !$scope.showMenu;
+    };
+}
+
+},{"./articles":7,"./classrooms":14,"./components/about":17,"./components/app-nav":18,"./components/contact":19,"./components/home":20,"./ng-icons":22,"./users":27,"angular":42,"angular-animate":31,"angular-aria":33,"angular-material":36,"angular-messages":38,"angular-ui-router":40,"cssify":46,"pouchdb":128,"pouchdb-authentication":47}],22:[function(require,module,exports){
 if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
   module.exports = 'ngMdIcons';
 }
 
 require('angular-material-icons')
-},{"angular-material-icons":31}],20:[function(require,module,exports){
+},{"angular-material-icons":34}],23:[function(require,module,exports){
 'use strict'
 
 
@@ -435,7 +732,7 @@ function controller ($scope, users, $state) {
     return users.changePassword(user.username, user.password)
   }
 }
-},{}],21:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 'use strict'
 
 
@@ -458,7 +755,7 @@ function controller ($scope, users, $state, $rootScope) {
       })
   }
 }
-},{}],22:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict'
 
 
@@ -479,7 +776,7 @@ function controller ($scope, users, $state) {
       $scope.user = user
     })
 }
-},{}],23:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 'use strict'
 
 
@@ -498,7 +795,7 @@ function controller ($scope, users, $state, $rootScope) {
       })
   }
 }
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /* commonjs package manager support (eg componentjs) */
 if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
   module.exports = 'app.users';
@@ -521,9 +818,9 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
      }])
     .factory('users', ['pouchDB', 'remoteUserDbName', require('./services').users])
 })( window, window.angular)
-},{"./components/change-password":20,"./components/login":21,"./components/show":22,"./components/signup":23,"./pouchdb":25,"./services":26}],25:[function(require,module,exports){
-arguments[4][6][0].apply(exports,arguments)
-},{"angular-pouchdb":36,"dup":6}],26:[function(require,module,exports){
+},{"./components/change-password":23,"./components/login":24,"./components/show":25,"./components/signup":26,"./pouchdb":28,"./services":29}],28:[function(require,module,exports){
+arguments[4][8][0].apply(exports,arguments)
+},{"angular-pouchdb":39,"dup":8}],29:[function(require,module,exports){
 module.exports = {
   users: function (pouchDB, remoteUserDbName) {
     var db = pouchDB(remoteUserDbName)
@@ -563,9 +860,9 @@ module.exports = {
     })
   }
 }
-},{}],27:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 /**
- * @license AngularJS v1.4.0
+ * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -1070,7 +1367,8 @@ var $$AnimateChildrenDirective = [function() {
  * unless you really need a digest to kick off afterwards.
  *
  * Keep in mind that, to make this easier, ngAnimate has tweaked the JS animations API to recognize when a runner instance is returned from $animateCss
- * (so there is no need to call `runner.done(doneFn)` inside of your JavaScript animation code). Check the [animation code above](#usage) to see how this works.
+ * (so there is no need to call `runner.done(doneFn)` inside of your JavaScript animation code).
+ * Check the {@link ngAnimate.$animateCss#usage animation code above} to see how this works.
  *
  * @param {DOMElement} element the element that will be animated
  * @param {object} options the animation-related options that will be applied during the animation
@@ -3586,7 +3884,7 @@ var $$AnimationProvider = ['$animateProvider', function($animateProvider) {
  *   opacity:0;
  * }
  *
- * /&#42; The starting CSS styles for the enter animation &#42;/
+ * /&#42; The finishing CSS styles for the enter animation &#42;/
  * .fade.ng-enter.ng-enter-active {
  *   opacity:1;
  * }
@@ -4273,13 +4571,13 @@ angular.module('ngAnimate', [])
 
 })(window, window.angular);
 
-},{}],28:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 require('./angular-animate');
 module.exports = 'ngAnimate';
 
-},{"./angular-animate":27}],29:[function(require,module,exports){
+},{"./angular-animate":30}],32:[function(require,module,exports){
 /**
- * @license AngularJS v1.4.0
+ * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -4299,8 +4597,8 @@ module.exports = 'ngAnimate';
  *
  * ## Usage
  *
- * For ngAria to do its magic, simply include the module as a dependency. The directives supported
- * by ngAria are:
+ * For ngAria to do its magic, simply include the module `ngAria` as a dependency. The following
+ * directives are supported:
  * `ngModel`, `ngDisabled`, `ngShow`, `ngHide`, `ngClick`, `ngDblClick`, and `ngMessages`.
  *
  * Below is a more detailed breakdown of the attributes handled by ngAria:
@@ -4400,9 +4698,8 @@ function $AriaProvider() {
       var ariaCamelName = attr.$normalize(ariaAttr);
       if (config[ariaCamelName] && !attr[ariaCamelName]) {
         scope.$watch(attr[attrName], function(boolVal) {
-          if (negate) {
-            boolVal = !boolVal;
-          }
+          // ensure boolean value
+          boolVal = negate ? !boolVal : !!boolVal;
           elem.attr(ariaAttr, boolVal);
         });
       }
@@ -4550,13 +4847,23 @@ ngAriaModule.directive('ngShow', ['$aria', function($aria) {
                 elem.attr('role', 'slider');
               }
               if ($aria.config('ariaValue')) {
-                if (attr.min && !elem.attr('aria-valuemin')) {
-                  elem.attr('aria-valuemin', attr.min);
+                var needsAriaValuemin = !elem.attr('aria-valuemin') &&
+                    (attr.hasOwnProperty('min') || attr.hasOwnProperty('ngMin'));
+                var needsAriaValuemax = !elem.attr('aria-valuemax') &&
+                    (attr.hasOwnProperty('max') || attr.hasOwnProperty('ngMax'));
+                var needsAriaValuenow = !elem.attr('aria-valuenow');
+
+                if (needsAriaValuemin) {
+                  attr.$observe('min', function ngAriaValueMinReaction(newVal) {
+                    elem.attr('aria-valuemin', newVal);
+                  });
                 }
-                if (attr.max && !elem.attr('aria-valuemax')) {
-                  elem.attr('aria-valuemax', attr.max);
+                if (needsAriaValuemax) {
+                  attr.$observe('max', function ngAriaValueMinReaction(newVal) {
+                    elem.attr('aria-valuemax', newVal);
+                  });
                 }
-                if (!elem.attr('aria-valuenow')) {
+                if (needsAriaValuenow) {
                   scope.$watch(ngAriaWatchModelValue, function ngAriaValueNowReaction(newVal) {
                     elem.attr('aria-valuenow', newVal);
                   });
@@ -4657,11 +4964,11 @@ ngAriaModule.directive('ngShow', ['$aria', function($aria) {
 
 })(window, window.angular);
 
-},{}],30:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 require('./angular-aria');
 module.exports = 'ngAria';
 
-},{"./angular-aria":29}],31:[function(require,module,exports){
+},{"./angular-aria":32}],34:[function(require,module,exports){
 angular.module("ngMdIcons",[]).directive("ngMdIcon",function(){var e={"3d_rotation":'<path d="M7.52 21.48C4.25 19.94 1.91 16.76 1.55 13H.05C.56 19.16 5.71 24 12 24l.66-.03-3.81-3.81-1.33 1.32z"/><path d="M16.57 12.2c0 .42-.05.79-.14 1.13-.1.33-.24.62-.43.85-.19.23-.43.41-.71.53-.29.12-.62.18-.99.18h-.91V9.12h.97c.72 0 1.27.23 1.64.69.38.46.57 1.12.57 1.99v.4zm.39-3.16c-.32-.33-.7-.59-1.14-.77-.43-.18-.92-.27-1.46-.27H12v8h2.3c.55 0 1.06-.09 1.51-.27.45-.18.84-.43 1.16-.76.32-.33.57-.73.74-1.19.17-.47.26-.99.26-1.57v-.4c0-.58-.09-1.1-.26-1.57-.18-.47-.43-.87-.75-1.2zm-8.55 5.92c-.19 0-.37-.03-.52-.08-.16-.06-.29-.13-.4-.24-.11-.1-.2-.22-.26-.37-.06-.14-.09-.3-.09-.47h-1.3c0 .36.07.68.21.95.14.27.33.5.56.69.24.18.51.32.82.41.3.1.62.15.96.15.37 0 .72-.05 1.03-.15.32-.1.6-.25.83-.44.23-.19.42-.43.55-.72.13-.29.2-.61.2-.97 0-.19-.02-.38-.07-.56-.05-.18-.12-.35-.23-.51-.1-.16-.24-.3-.4-.43-.17-.13-.37-.23-.61-.31.2-.09.37-.2.52-.33.15-.13.27-.27.37-.42.1-.15.17-.3.22-.46.05-.16.07-.32.07-.48 0-.36-.06-.68-.18-.96-.12-.28-.29-.51-.51-.69-.2-.19-.47-.33-.77-.43C9.1 8.05 8.76 8 8.39 8c-.36 0-.69.05-1 .16-.3.11-.57.26-.79.45-.21.19-.38.41-.51.67-.12.26-.18.54-.18.85h1.3c0-.17.03-.32.09-.45s.14-.25.25-.34c.11-.09.23-.17.38-.22.15-.05.3-.08.48-.08.4 0 .7.1.89.31.19.2.29.49.29.86 0 .18-.03.34-.08.49-.05.15-.14.27-.25.37-.11.1-.25.18-.41.24-.16.06-.36.09-.58.09H7.5v1.03h.77c.22 0 .42.02.6.07s.33.13.45.23c.12.11.22.24.29.4.07.16.1.35.1.57 0 .41-.12.72-.35.93-.23.23-.55.33-.95.33z"/><path d="M12 0l-.66.03 3.81 3.81 1.33-1.33c3.27 1.55 5.61 4.72 5.96 8.48h1.5C23.44 4.84 18.29 0 12 0z"/>',
 accessibility:'<path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z"/><path d="M21 9h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/>',account_balance:'<path d="M4 10v7h3v-7H4z"/><path d="M10 10v7h3v-7h-3z"/><path d="M2 22h19v-3H2v3z"/><path d="M16 10v7h3v-7h-3z"/><path d="M11.5 1L2 6v2h19V6l-9.5-5z"/>',account_balance_wallet:'<path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9z"/><path d="M16 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM12 16h10V8H12v8z"/>',
 account_box:'<path d="M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z"/>',account_child:'<circle cx="12" cy="13.49" r="1.5"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 2.5c1.24 0 2.25 1.01 2.25 2.25S13.24 9 12 9 9.75 7.99 9.75 6.75 10.76 4.5 12 4.5zm5 10.56v2.5c-.45.41-.96.77-1.5 1.05v-.68c0-.34-.17-.65-.46-.92-.65-.62-1.89-1.02-3.04-1.02-.96 0-1.96.28-2.65.73l-.17.12-.21.17c.78.47 1.63.72 2.54.82l1.33.15c.37.04.66.36.66.75 0 .29-.16.53-.4.66-.28.15-.64.09-.95.09-.35 0-.69-.01-1.03-.05-.5-.06-.99-.17-1.46-.33-.49-.16-.97-.38-1.42-.64-.22-.13-.44-.27-.65-.43l-.31-.24c-.04-.02-.28-.18-.28-.23v-4.28c0-1.58 2.63-2.78 5-2.78s5 1.2 5 2.78v1.78z"/>',
@@ -4930,12 +5237,12 @@ star:'<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 
 return{restrict:"E",link:function(g,f,d){var c,b;g=function(a){void 0===e[a]&&(a="help");if(a!=c){try{f.html('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="'+b+'" height="'+b+'"><g id="'+a+'" style="display:none">'+e[a]+'</g><g id="'+c+'" style="display:none">'+e[c]+"</g></svg>"),(new SVGMorpheus(f.children()[0])).to(a,JSON.parse(d.options||null))}catch(g){f.html('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="'+b+'" height="'+b+'">'+e[a]+"</svg>")}c=a}};var h=
 function(a){a!=b&&(f.children()[0].setAttribute("width",a),f.children()[0].setAttribute("height",a),b=a)};(function(){if(void 0!==d.icon){c=d.icon;var a=c.match(/ic_(.*)_([0-9]+)px.svg/m);null!==a&&(c=a[1],b=a[2])}else c="help";void 0===e[c]&&(c="help");void 0!==d.size?b=d.size:null!==b&&(b=24);f.html('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="'+b+'" height="'+b+'">'+e[c]+"</svg>")})();void 0!==d.icon&&d.$observe("icon",g);void 0!==d.size&&d.$observe("size",h)}}});
 
-},{}],32:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 /*!
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.9.6
+ * v0.10.0
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -4943,7 +5250,7 @@ function(a){a!=b&&(f.children()[0].setAttribute("width",a),f.children()[0].setAt
 (function(){
 "use strict";
 
-angular.module('ngMaterial', ["ng","ngAnimate","ngAria","material.core","material.core.gestures","material.core.theming.palette","material.core.theming","material.components.autocomplete","material.components.backdrop","material.components.bottomSheet","material.components.button","material.components.card","material.components.checkbox","material.components.content","material.components.chips","material.components.dialog","material.components.divider","material.components.gridList","material.components.icon","material.components.input","material.components.list","material.components.progressCircular","material.components.progressLinear","material.components.radioButton","material.components.select","material.components.sidenav","material.components.slider","material.components.sticky","material.components.subheader","material.components.swipe","material.components.switch","material.components.tabs","material.components.toast","material.components.toolbar","material.components.tooltip","material.components.whiteframe"]);
+angular.module('ngMaterial', ["ng","ngAnimate","ngAria","material.core","material.core.gestures","material.core.theming.palette","material.core.theming","material.components.autocomplete","material.components.backdrop","material.components.bottomSheet","material.components.button","material.components.card","material.components.checkbox","material.components.content","material.components.chips","material.components.dialog","material.components.fabActions","material.components.divider","material.components.fabSpeedDial","material.components.fabToolbar","material.components.gridList","material.components.fabTrigger","material.components.icon","material.components.input","material.components.list","material.components.menu","material.components.progressCircular","material.components.progressLinear","material.components.radioButton","material.components.select","material.components.sidenav","material.components.slider","material.components.subheader","material.components.sticky","material.components.swipe","material.components.switch","material.components.tabs","material.components.toast","material.components.toolbar","material.components.tooltip","material.components.whiteframe"]);
 })();
 (function(){
 "use strict";
@@ -5437,7 +5744,7 @@ mdMediaFactory.$inject = ["$mdConstant", "$rootScope", "$window"];
  * will create its own instance of this array and the app's IDs
  * will not be unique.
  */
-var nextUniqueId = ['0','0','0'];
+var nextUniqueId = 0;
 
 angular.module('material.core')
 .factory('$mdUtil', ["$cacheFactory", "$document", "$timeout", "$q", "$window", "$mdConstant", function($cacheFactory, $document, $timeout, $q, $window, $mdConstant) {
@@ -5472,65 +5779,59 @@ angular.module('material.core')
     offsetRect: function(element, offsetParent) {
       return Util.clientRect(element, offsetParent, true);
     },
-    // Disables scroll around the passed element. Goes up the DOM to find a
-    // disableTarget (a md-content that is scrolling, or the body as a fallback)
-    // and uses CSS/JS to prevent it from scrolling
+
+    // Annoying method to copy nodes to an array, thanks to IE
+    nodesToArray: function (nodes) {
+      var results = [];
+      for (var i = 0; i < nodes.length; ++i) {
+        results.push(nodes.item(i));
+      }
+      return results;
+    },
+
+    // Disables scroll around the passed element.
     disableScrollAround: function(element) {
-      element = element instanceof angular.element ? element[0] : element;
-      var parentEl = element;
-      var disableTarget;
+      if (Util.disableScrollAround._enableScrolling) return Util.disableScrollAround._enableScrolling;
+      element = angular.element(element);
+      var body = $document[0].body,
+          restoreBody = disableBodyScroll(),
+          restoreElement = disableElementScroll();
 
-      // Find the highest level scrolling md-content
-      while (parentEl = this.getClosest(parentEl, 'MD-CONTENT', true)) {
-        if (isScrolling(parentEl)) {
-          disableTarget = angular.element(parentEl)[0];
-        }
-      }
-
-      // Default to the body if no scrolling md-content
-      if (!disableTarget) {
-        disableTarget = $document[0].body;
-        if (!isScrolling(disableTarget)) return angular.noop;
-      }
-
-      if (disableTarget.nodeName == 'BODY') {
-        return disableBodyScroll();
-      } else {
-        return disableElementScroll();
-      }
+      return Util.disableScrollAround._enableScrolling = function () {
+        restoreBody();
+        restoreElement();
+        delete Util.disableScrollAround._enableScrolling;
+      };
 
       // Creates a virtual scrolling mask to absorb touchmove, keyboard, scrollbar clicking, and wheel events
       function disableElementScroll() {
-        var scrollMask = angular.element('<div class="md-scroll-mask"><div class="md-scroll-mask-bar"></div></div>');
-        var computedStyle = $window.getComputedStyle(disableTarget);
-        var disableRect = disableTarget.getBoundingClientRect();
-        var scrollWidth = disableRect.width - disableTarget.clientWidth;
-        applyStyles(scrollMask[0], {
-          zIndex: computedStyle.zIndex == 'auto' ? 2 : computedStyle.zIndex + 1,
-          width: disableRect.width + 'px',
-          height: disableRect.height + 'px',
-          top: disableRect.top + 'px',
-          left: disableRect.left + 'px'
-        });
-        scrollMask[0].firstElementChild.style.width = scrollWidth + 'px';
-        $document[0].body.appendChild(scrollMask[0]);
+        var zIndex = $window.getComputedStyle(element[0]).zIndex - 1;
+        if (isNaN(zIndex)) zIndex = 99;
+        var scrollMask = angular.element(
+            '<div class="md-scroll-mask" style="z-index: ' + zIndex + '">' +
+            '  <div class="md-scroll-mask-bar"></div>' +
+            '</div>');
+        body.appendChild(scrollMask[0]);
 
         scrollMask.on('wheel', preventDefault);
         scrollMask.on('touchmove', preventDefault);
         $document.on('keydown', disableKeyNav);
 
-        return function restoreScroll() {
+        return function restoreScroll () {
           scrollMask.off('wheel');
           scrollMask.off('touchmove');
           scrollMask[0].parentNode.removeChild(scrollMask[0]);
           $document.off('keydown', disableKeyNav);
+          delete Util.disableScrollAround._enableScrolling;
         };
 
-        // Prevent keypresses from elements inside the disableTarget
+        // Prevent keypresses from elements inside the body
         // used to stop the keypresses that could cause the page to scroll
         // (arrow keys, spacebar, tab, etc).
         function disableKeyNav(e) {
-          if (disableTarget.contains(e.target)) {
+          //-- temporarily removed this logic, will possibly re-add at a later date
+          return;
+          if (!element[0].contains(e.target)) {
             e.preventDefault();
             e.stopImmediatePropagation();
           }
@@ -5541,12 +5842,13 @@ angular.module('material.core')
         }
       }
 
-      // Converts the disableTarget (body) to a position fixed block and translate it to the propper scroll position
+      // Converts the body to a position fixed block and translate it to the proper scroll
+      // position
       function disableBodyScroll() {
-        var restoreStyle = disableTarget.getAttribute('style') || '';
-        var scrollOffset = disableTarget.scrollTop;
+        var restoreStyle = body.getAttribute('style') || '';
+        var scrollOffset = body.scrollTop + body.parentElement.scrollTop;
 
-        applyStyles(disableTarget, {
+        applyStyles(body, {
           position: 'fixed',
           width: '100%',
           overflowY: 'scroll',
@@ -5554,8 +5856,8 @@ angular.module('material.core')
         });
 
         return function restoreScroll() {
-          disableTarget.setAttribute('style', restoreStyle);
-          disableTarget.scrollTop = scrollOffset;
+          body.setAttribute('style', restoreStyle);
+          body.scrollTop = scrollOffset;
         };
       }
 
@@ -5564,13 +5866,11 @@ angular.module('material.core')
           el.style[key] = styles[key];
         }
       }
-
-      function isScrolling(el) {
-        if (el instanceof angular.element) el = el[0];
-        return el.scrollHeight > el.offsetHeight;
-      }
     },
-
+    enableScrolling: function () {
+      var method = this.disableScrollAround._enableScrolling;
+      method && method();
+    },
     floatingScrollbars: function() {
       if (this.floatingScrollbars.cached === undefined) {
         var tempNode = angular.element('<div style="width: 100%; z-index: -1; position: absolute; height: 35px; overflow-y: scroll"><div style="height: 60;"></div></div>');
@@ -5686,34 +5986,12 @@ angular.module('material.core')
     },
 
     /**
-     * nextUid, from angular.js.
-     * A consistent way of creating unique IDs in angular. The ID is a sequence of alpha numeric
-     * characters such as '012ABC'. The reason why we are not using simply a number counter is that
-     * the number string gets longer over time, and it can also overflow, where as the nextId
-     * will grow much slower, it is a string, and it will never overflow.
+     * Get a unique ID.
      *
-     * @returns an unique alpha-numeric string
+     * @returns {string} an unique numeric string
      */
     nextUid: function() {
-      var index = nextUniqueId.length;
-      var digit;
-
-      while (index) {
-        index--;
-        digit = nextUniqueId[index].charCodeAt(0);
-        if (digit == 57 /*'9'*/) {
-          nextUniqueId[index] = 'A';
-          return nextUniqueId.join('');
-        }
-        if (digit == 90  /*'Z'*/) {
-          nextUniqueId[index] = '0';
-        } else {
-          nextUniqueId[index] = String.fromCharCode(digit + 1);
-          return nextUniqueId.join('');
-        }
-      }
-      nextUniqueId.unshift('0');
-      return nextUniqueId.join('');
+      return '' + nextUniqueId++;
     },
 
     // Stop watchers and events from firing on a scope without destroying it,
@@ -8595,6 +8873,12 @@ function parseRules(theme, colorType, rules) {
     if (hueName !== 'default') {
       newRule = newRule.replace(themeNameRegex, '.md-' + theme.name + '-theme.md-' + hueName);
     }
+
+    // Don't apply a selector rule to the default theme, making it easier to override
+    // styles of the base-component
+    if (theme.name == 'default') {
+      newRule = newRule.replace(/\.md-default-theme/g, '');
+    }
     generatedRules.push(newRule);
   });
 
@@ -9128,10 +9412,8 @@ angular
  * `<md-button>` is a button directive with optional ink ripples (default enabled).
  *
  * If you supply a `href` or `ng-href` attribute, it will become an `<a>` element. Otherwise, it will
- * become a `<button>` element.
- *
- * As per the [material design spec](http://www.google.com/design/spec/style/color.html#color-ui-color-application)
- * the FAB button is in the accent color by default. The primary color palette may be used with
+ * become a `<button>` element. As per the [Material Design specifications](http://www.google.com/design/spec/style/color.html#color-ui-color-application)
+ * the FAB button background is filled with the accent color [by default]. The primary color palette may be used with
  * the `md-primary` class.
  *
  * @param {boolean=} md-no-ink If present, disable ripple ink effects.
@@ -9141,25 +9423,31 @@ angular
  * If no default text is found, a warning will be logged.
  *
  * @usage
+ *
+ * Regular buttons:
+ *
  * <hljs lang="html">
+ *  <md-button> Flat Button </md-button>
+ *  <md-button href="http://google.com"> Flat link </md-button>
+ *  <md-button class="md-raised"> Raised Button </md-button>
+ *  <md-button ng-disabled="true"> Disabled Button </md-button>
  *  <md-button>
- *    Flat Button
+ *    <md-icon md-svg-src="your/icon.svg"></md-icon>
+ *    Register Now
  *  </md-button>
- *  <md-button href="http://google.com">
- *    Flat link
- *  </md-button>
- *  <md-button class="md-raised">
- *    Raised Button
- *  </md-button>
- *  <md-button ng-disabled="true">
- *    Disabled Button
- *  </md-button>
+ * </hljs>
+ *
+ * FAB buttons:
+ *
+ * <hljs lang="html">
  *  <md-button class="md-fab" aria-label="FAB">
  *    <md-icon md-svg-src="your/icon.svg"></md-icon>
  *  </md-button>
+ *  <!-- mini-FAB -->
  *  <md-button class="md-fab md-mini" aria-label="Mini FAB">
  *    <md-icon md-svg-src="your/icon.svg"></md-icon>
  *  </md-button>
+ *  <!-- Button with SVG Icon -->
  *  <md-button class="md-icon-button" aria-label="Custom Icon Button">
  *    <md-icon md-svg-icon="path/to/your.svg"></md-icon>
  *  </md-button>
@@ -9698,14 +9986,14 @@ MdDialogDirective.$inject = ["$$rAF", "$mdTheming"];
  *          },
  *          controller: DialogController
  *       });
- *       function DialogController(scope, $mdDialog, items) {
- *         scope.items = items;
- *         scope.closeDialog = function() {
+ *       function DialogController($scope, $mdDialog, items) {
+ *         $scope.items = items;
+ *         $scope.closeDialog = function() {
  *           $mdDialog.hide();
  *         }
  *       }
  *     }
- *
+ *   }
  * })(angular);
  * </hljs>
  *
@@ -9927,6 +10215,8 @@ MdDialogDirective.$inject = ["$$rAF", "$mdTheming"];
  * Hide an existing dialog and resolve the promise returned from `$mdDialog.show()`.
  *
  * @param {*=} response An argument for the resolved promise.
+ *
+ * @returns {promise} A promise that is resolved when the dialog has been closed.
  */
 
 /**
@@ -9937,6 +10227,8 @@ MdDialogDirective.$inject = ["$$rAF", "$mdTheming"];
  * Hide an existing dialog and reject the promise returned from `$mdDialog.show()`.
  *
  * @param {*=} response An argument for the rejected promise.
+ *
+ * @returns {promise} A promise that is resolved when the dialog has been closed.
  */
 
 function MdDialogProvider($$interimElementProvider) {
@@ -10270,6 +10562,58 @@ MdDialogProvider.$inject = ["$$interimElementProvider"];
 (function(){
 "use strict";
 
+(function() {
+  'use strict';
+
+  angular
+    .module('material.components.fabActions', ['material.core'])
+    .directive('mdFabActions', MdFabActionsDirective);
+
+  /**
+   * @ngdoc directive
+   * @name mdFabActions
+   * @module material.components.fabSpeedDial
+   *
+   * @restrict E
+   *
+   * @description
+   * The `<md-fab-actions>` directive is used inside of a `<md-fab-speed-dial>` or
+   * `<md-fab-toolbar>` directive to mark the an element (or elements) as the actions and setup the
+   * proper event listeners.
+   *
+   * @usage
+   * See the `<md-fab-speed-dial>` or `<md-fab-toolbar>` directives for example usage.
+   */
+  function MdFabActionsDirective() {
+    return {
+      restrict: 'E',
+
+      require: ['^?mdFabSpeedDial', '^?mdFabToolbar'],
+
+      link: function(scope, element, attributes, controllers) {
+        // Grab whichever parent controller is used
+        var controller = controllers[0] || controllers[1];
+
+        // Make the children open/close their parent directive
+        if (controller) {
+          angular.forEach(element.children(), function(child) {
+            angular.element(child).on('focus', controller.open);
+            angular.element(child).on('blur', controller.close);
+          });
+        }
+
+        // After setting up the listeners, wrap every child in a new div and add a class that we can
+        // scale/fling independently
+        element.children().wrap('<div class="md-fab-action-item">');
+      }
+    }
+  }
+
+})();
+})();
+(function(){
+"use strict";
+
 /**
  * @ngdoc module
  * @name material.components.divider
@@ -10306,6 +10650,446 @@ function MdDividerDirective($mdTheming) {
 }
 MdDividerDirective.$inject = ["$mdTheming"];
 
+})();
+(function(){
+"use strict";
+
+(function() {
+  'use strict';
+
+  angular
+    .module('material.components.fabSpeedDial', [
+      'material.core',
+      'material.components.fabTrigger',
+      'material.components.fabActions'
+    ])
+    .directive('mdFabSpeedDial', MdFabSpeedDialDirective)
+    .animation('.md-fling', MdFabSpeedDialFlingAnimation)
+    .animation('.md-scale', MdFabSpeedDialScaleAnimation);
+
+  /**
+   * @ngdoc directive
+   * @name mdFabSpeedDial
+   * @module material.components.fabSpeedDial
+   *
+   * @restrict E
+   *
+   * @description
+   * The `<md-fab-speed-dial>` directive is used to present a series of popup elements (usually
+   * `<md-button>`s) for quick access to common actions.
+   *
+   * There are currently two animations available by applying one of the following classes to
+   * the component:
+   *
+   *  - `md-fling` - The speed dial items appear from underneath the trigger and move into their
+   *    appropriate positions.
+   *  - `md-scale` - The speed dial items appear in their proper places by scaling from 0% to 100%.
+   *
+   * @usage
+   * <hljs lang="html">
+   * <md-fab-speed-dial direction="up" class="md-fling">
+   *   <md-fab-trigger>
+   *     <md-button aria-label="Add..."><md-icon icon="/img/icons/plus.svg"></md-icon></md-button>
+   *   </md-fab-trigger>
+   *
+   *   <md-fab-actions>
+   *     <md-button aria-label="Add User">
+   *       <md-icon icon="/img/icons/user.svg"></md-icon>
+   *     </md-button>
+   *
+   *     <md-button aria-label="Add Group">
+   *       <md-icon icon="/img/icons/group.svg"></md-icon>
+   *     </md-button>
+   *   </md-fab-actions>
+   * </md-fab-speed-dial>
+   * </hljs>
+   *
+   * @param {string=} md-direction From which direction you would like the speed dial to appear
+   * relative to the trigger element.
+   * @param {expression=} md-open Programmatically control whether or not the speed-dial is visible.
+   */
+  function MdFabSpeedDialDirective() {
+    FabSpeedDialController.$inject = ["$scope", "$element", "$animate"];
+    return {
+      restrict: 'E',
+
+      scope: {
+        direction: '@?mdDirection',
+        isOpen: '=?mdOpen'
+      },
+
+      bindToController: true,
+      controller: FabSpeedDialController,
+      controllerAs: 'vm',
+
+      link: FabSpeedDialLink
+    };
+
+    function FabSpeedDialLink(scope, element) {
+      // Prepend an element to hold our CSS variables so we can use them in the animations below
+      element.prepend('<div class="md-css-variables"></div>');
+    }
+
+    function FabSpeedDialController($scope, $element, $animate) {
+      var vm = this;
+
+      // Define our open/close functions
+      // Note: Used by fabTrigger and fabActions directives
+      vm.open = function() {
+        $scope.$apply('vm.isOpen = true');
+      };
+
+      vm.close = function() {
+        $scope.$apply('vm.isOpen = false');
+      };
+
+      setupDefaults();
+      setupListeners();
+      setupWatchers();
+
+      // Set our default variables
+      function setupDefaults() {
+        // Set the default direction to 'down' if none is specified
+        vm.direction = vm.direction || 'down';
+
+        // Set the default to be closed
+        vm.isOpen = vm.isOpen || false;
+      }
+
+      // Setup our event listeners
+      function setupListeners() {
+        $element.on('mouseenter', vm.open);
+        $element.on('mouseleave', vm.close);
+      }
+
+      // Setup our watchers
+      function setupWatchers() {
+        // Watch for changes to the direction and update classes/attributes
+        $scope.$watch('vm.direction', function(newDir, oldDir) {
+          // Add the appropriate classes so we can target the direction in the CSS
+          $animate.removeClass($element, 'md-' + oldDir);
+          $animate.addClass($element, 'md-' + newDir);
+        });
+
+
+        // Watch for changes to md-open
+        $scope.$watch('vm.isOpen', function(isOpen) {
+          var toAdd = isOpen ? 'md-is-open' : '';
+          var toRemove = isOpen ? '' : 'md-is-open';
+
+          $animate.setClass($element, toAdd, toRemove);
+        });
+      }
+    }
+  }
+
+  function MdFabSpeedDialFlingAnimation() {
+    function runAnimation(element) {
+      var el = element[0];
+      var ctrl = element.controller('mdFabSpeedDial');
+      var items = el.querySelectorAll('.md-fab-action-item');
+
+      // Grab our element which stores CSS variables
+      var variablesElement = el.querySelector('.md-css-variables');
+
+      // Setup JS variables based on our CSS variables
+      var startZIndex = variablesElement.style.zIndex;
+
+      // Always reset the items to their natural position/state
+      angular.forEach(items, function(item, index) {
+        var styles = item.style;
+
+        styles.transform = '';
+        styles.transitionDelay = '';
+        styles.opacity = 1;
+
+        // Make the items closest to the trigger have the highest z-index
+        item.style.zIndex = (items.length - index) + startZIndex;
+      });
+
+      // If the control is closed, hide the items behind the trigger
+      if (!ctrl.isOpen) {
+        angular.forEach(items, function(item, index) {
+          var newPosition, axis;
+
+          switch (ctrl.direction) {
+            case 'up':
+              newPosition = item.scrollHeight * (index + 1);
+              axis = 'Y';
+              break;
+            case 'down':
+              newPosition = -item.scrollHeight * (index + 1);
+              axis = 'Y';
+              break;
+            case 'left':
+              newPosition = item.scrollWidth * (index + 1);
+              axis = 'X';
+              break;
+            case 'right':
+              newPosition = -item.scrollWidth * (index + 1);
+              axis = 'X';
+              break;
+          }
+
+          item.style.transform = 'translate' + axis + '(' + newPosition + 'px)';
+        });
+      }
+    }
+
+    return {
+      addClass: function(element, className, done) {
+        if (element.hasClass('md-fling')) {
+          runAnimation(element);
+        }
+      },
+      removeClass: function(element, className, done) {
+        runAnimation(element);
+      }
+    }
+  }
+
+  function MdFabSpeedDialScaleAnimation() {
+    var delay = 65;
+
+    function runAnimation(element) {
+      var el = element[0];
+      var ctrl = element.controller('mdFabSpeedDial');
+      var items = el.querySelectorAll('.md-fab-action-item');
+
+      // Always reset the items to their natural position/state
+      angular.forEach(items, function(item, index) {
+        var styles = item.style,
+          offsetDelay = index * delay;
+
+        styles.opacity = ctrl.isOpen ? 1 : 0;
+        styles.transform = ctrl.isOpen ? 'scale(1)' : 'scale(0)';
+        styles.transitionDelay = (ctrl.isOpen ?  offsetDelay : (items.length - offsetDelay)) + 'ms';
+      });
+    }
+
+    return {
+      addClass: function(element, className, done) {
+        runAnimation(element);
+      },
+
+      removeClass: function(element, className, done) {
+        runAnimation(element);
+      }
+    }
+  }
+})();
+
+})();
+(function(){
+"use strict";
+
+(function() {
+  'use strict';
+
+  angular
+    .module('material.components.fabToolbar', [
+      'material.core',
+      'material.components.fabTrigger',
+      'material.components.fabActions'
+    ])
+    .directive('mdFabToolbar', MdFabToolbarDirective)
+    .animation('.md-fab-toolbar', MdFabToolbarAnimation);
+
+  /**
+   * @ngdoc directive
+   * @name mdFabToolbar
+   * @module material.components.fabToolbar
+   *
+   * @restrict E
+   *
+   * @description
+   *
+   * The `<md-fab-toolbar>` directive is used present a toolbar of elements (usually `<md-button>`s)
+   * for quick access to common actions when a floating action button is activated (via hover or
+   * keyboard navigation).
+   *
+   * @usage
+   *
+   * <hljs lang="html">
+   * <md-fab-toolbar>
+   *   <md-fab-trigger>
+   *     <md-button aria-label="Add..."><md-icon icon="/img/icons/plus.svg"></md-icon></md-button>
+   *   </md-fab-trigger>
+   *
+   *   <md-fab-actions>
+   *     <md-button aria-label="Add User">
+   *       <md-icon icon="/img/icons/user.svg"></md-icon>
+   *     </md-button>
+   *
+   *     <md-button aria-label="Add Group">
+   *       <md-icon icon="/img/icons/group.svg"></md-icon>
+   *     </md-button>
+   *   </md-fab-actions>
+   * </md-fab-toolbar>
+   * </hljs>
+   *
+   * @param {expression=} md-open Programmatically control whether or not the toolbar is visible.
+   */
+  function MdFabToolbarDirective() {
+    FabToolbarController.$inject = ["$scope", "$element", "$animate"];
+    return {
+      restrict: 'E',
+      transclude: true,
+      template:
+        '<div class="md-fab-toolbar-wrapper">' +
+        '  <div class="md-fab-toolbar-content" ng-transclude></div>' +
+        '</div>',
+
+      scope: {
+        isOpen: '=?mdOpen'
+      },
+
+      bindToController: true,
+      controller: FabToolbarController,
+      controllerAs: 'vm',
+
+      link: link
+    };
+
+    function FabToolbarController($scope, $element, $animate) {
+      var vm = this;
+
+      // Set the default to be closed
+      vm.isOpen = vm.isOpen || false;
+
+      vm.open = function() {
+        vm.isOpen = true;
+        $scope.$apply();
+      };
+
+      vm.close = function() {
+        vm.isOpen = false;
+        $scope.$apply();
+      };
+
+      // Add our class so we can trigger the animation on start
+      $element.addClass('md-fab-toolbar');
+
+      // Setup some mouse events so the hover effect can be triggered
+      // anywhere over the toolbar
+      $element.on('mouseenter', vm.open);
+      $element.on('mouseleave', vm.close);
+
+      // Watch for changes to md-open and toggle our class
+      $scope.$watch('vm.isOpen', function(isOpen) {
+        var toAdd = isOpen ? 'md-is-open' : '';
+        var toRemove = isOpen ? '' : 'md-is-open';
+
+        $animate.setClass($element, toAdd, toRemove);
+      });
+    }
+
+    function link(scope, element, attributes) {
+      // Don't allow focus on the trigger
+      element.find('md-fab-trigger').find('button').attr('tabindex', '-1');
+
+      // Prepend the background element to the trigger's button
+      element.find('md-fab-trigger').find('button')
+        .prepend('<div class="md-fab-toolbar-background"></div>');
+    }
+  }
+
+  function MdFabToolbarAnimation() {
+    var originalIconDelay;
+
+    function runAnimation(element, className, done) {
+      var el = element[0];
+      var ctrl = element.controller('mdFabToolbar');
+
+      // Grab the relevant child elements
+      var backgroundElement = el.querySelector('.md-fab-toolbar-background');
+      var triggerElement = el.querySelector('md-fab-trigger button');
+      var iconElement = el.querySelector('md-fab-trigger button md-icon');
+      var actions = element.find('md-fab-actions').children();
+
+      // If we have both elements, use them to position the new background
+      if (triggerElement && backgroundElement) {
+        // Get our variables
+        var color = window.getComputedStyle(triggerElement).getPropertyValue('background-color');
+        var width = el.offsetWidth;
+        var height = el.offsetHeight;
+
+        // Make a square
+        var scale = width * 2;
+
+        // Set some basic styles no matter what animation we're doing
+        backgroundElement.style.backgroundColor = color;
+        backgroundElement.style.borderRadius = width + 'px';
+
+        // If we're open
+        if (ctrl.isOpen) {
+
+          // Set the width/height to take up the full toolbar width
+          backgroundElement.style.width = scale + 'px';
+          backgroundElement.style.height = scale + 'px';
+
+          // Set the top/left to move up/left (or right) by the scale width/height
+          backgroundElement.style.top = -(scale / 2) + 'px';
+
+          if (element.hasClass('md-left')) {
+            backgroundElement.style.left = -(scale / 2) + 'px';
+            backgroundElement.style.right = null;
+          }
+
+          if (element.hasClass('md-right')) {
+            backgroundElement.style.right = -(scale / 2) + 'px';
+            backgroundElement.style.left = null;
+          }
+
+          // Set the next close animation to have the proper delays
+          backgroundElement.style.transitionDelay = '0ms';
+          iconElement.style.transitionDelay = '.3s';
+
+          // Apply a transition delay to actions
+          angular.forEach(actions, function(action, index) {
+            action.style.transitionDelay = (actions.length - index) * 25 + 'ms';
+          });
+        } else {
+          // Otherwise, set the width/height to the trigger's width/height
+          backgroundElement.style.width = triggerElement.offsetWidth + 'px';
+          backgroundElement.style.height = triggerElement.offsetHeight + 'px';
+
+          // Reset the position
+          backgroundElement.style.top = '0px';
+
+          if (element.hasClass('md-left')) {
+            backgroundElement.style.left = '0px';
+            backgroundElement.style.right = null;
+          }
+
+          if (element.hasClass('md-right')) {
+            backgroundElement.style.right = '0px';
+            backgroundElement.style.left = null;
+          }
+
+          // Set the next open animation to have the proper delays
+          backgroundElement.style.transitionDelay = '200ms';
+          iconElement.style.transitionDelay = '0ms';
+
+          // Apply a transition delay to actions
+          angular.forEach(actions, function(action, index) {
+            action.style.transitionDelay = (index * 25) + 'ms';
+          });
+        }
+      }
+    }
+
+    return {
+      addClass: function(element, className, done) {
+        runAnimation(element, className, done);
+      },
+
+      removeClass: function(element, className, done) {
+        runAnimation(element, className, done);
+      }
+    }
+  }
+})();
 })();
 (function(){
 "use strict";
@@ -11067,6 +11851,55 @@ function GridTileCaptionDirective() {
 (function(){
 "use strict";
 
+(function() {
+  'use strict';
+
+  angular
+    .module('material.components.fabTrigger', [ 'material.core' ])
+    .directive('mdFabTrigger', MdFabTriggerDirective);
+
+  /**
+   * @ngdoc directive
+   * @name mdFabTrigger
+   * @module material.components.fabSpeedDial
+   *
+   * @restrict E
+   *
+   * @description
+   * The `<md-fab-trigger>` directive is used inside of a `<md-fab-speed-dial>` or
+   * `<md-fab-toolbar>` directive to mark the an element (or elements) as the trigger and setup the
+   * proper event listeners.
+   *
+   * @usage
+   * See the `<md-fab-speed-dial>` or `<md-fab-toolbar>` directives for example usage.
+   */
+  function MdFabTriggerDirective() {
+    return {
+      restrict: 'E',
+
+      require: ['^?mdFabSpeedDial', '^?mdFabToolbar'],
+
+      link: function(scope, element, attributes, controllers) {
+        // Grab whichever parent controller is used
+        var controller = controllers[0] || controllers[1];
+
+        // Make the children open/close their parent directive
+        if (controller) {
+          angular.forEach(element.children(), function(child) {
+            angular.element(child).on('focus', controller.open);
+            angular.element(child).on('blur', controller.close);
+          });
+        }
+      }
+    }
+  }
+})();
+
+
+})();
+(function(){
+"use strict";
+
 /**
  * @ngdoc module
  * @name material.components.icon
@@ -11086,43 +11919,140 @@ angular.module('material.components.icon', [
  * @restrict E
  *
  * @description
- * The `md-icon` directive is an markup element useful for showing an icon based on a font-face
- * or a SVG. Both external SVGs (via URLs) or cached SVG from icon sets can be
- * easily loaded and used.
+ * The `<md-icon>` directive is an markup element useful for showing an icon based on a font-icon
+ * or a SVG. Icons are view-only elements that should not be used directly as buttons; instead nest a `<md-icon>`
+ * inside a `md-button` to add hover and click features.
  *
- * @param {string} md-svg-src String URL [or expression ] used to load, cache, and display an external SVG.
- * @param {string} md-svg-icon String name used for lookup of the icon from the internal cache; interpolated strings or
+ * When using SVGs, both external SVGs (via URLs) or sets of SVGs [from icon sets] can be
+ * easily loaded and used.When use font-icons, developers must following three (3) simple steps:
+ *
+ * <ol>
+ * <li>Load the font library. e.g.<br/>
+ *    &lt;link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+ *    rel="stylesheet"&gt;
+ * </li>
+ * <li> Use either (a) font-icon class names or (b) font ligatures to render the font glyph by using its textual name</li>
+ * <li> Use &lt;md-icon md-font-icon="classname" /&gt; or <br/>
+ *     use &lt;md-icon md-font-set="font library classname or alias"&gt; textual_name &lt;/md-icon&gt; or <br/>
+ *     use &lt;md-icon md-font-set="font library classname or alias"&gt; numerical_character_reference &lt;/md-icon&gt;
+ * </li>
+ * </ol>
+ *
+ * Full details for these steps can be found:
+ *
+ * <ul>
+ * <li>http://google.github.io/material-design-icons/</li>
+ * <li>http://google.github.io/material-design-icons/#icon-font-for-the-web</li>
+ * </ul>
+ *
+ * The Material Design icon style <code>.material-icons</code> and the icon font references are published in
+ * Material Design Icons:
+ *
+ * <ul>
+ * <li>http://www.google.com/design/icons/</li>
+ * <li>https://www.google.com/design/icons/#ic_accessibility</li>
+ * </ul>
+ *
+ * <h2 id="material_design_icons">Material Design Icons</h2>
+ * Using the Material Design Icon-Selector, developers can easily and quickly search for a Material Design font-icon and
+ * determine its textual name and character reference code. Click on any icon to see the slide-up information
+ * panel with details regarding a SVG download or information on the font-icon usage.
+ *
+ * <a href="https://www.google.com/design/icons/#ic_accessibility" target="_blank" style="border-bottom:none;">
+ * <img src="https://cloud.githubusercontent.com/assets/210413/7902490/fe8dd14c-0780-11e5-98fb-c821cc6475e6.png"
+ *      aria-label="Material Design Icon-Selector" style="max-width:75%;padding-left:10%">
+ * </a>
+ *
+ * <span class="image_caption">
+ *  Click on the image above to link to the
+ *  <a href="https://www.google.com/design/icons/#ic_accessibility" target="_blank">Material Design Icon-Selector</a>.
+ * </span>
+ *
+ * @param {string} md-font-icon Name of CSS icon associated with the font-face will be used
+ * to render the icon. Requires the fonts and the named CSS styles to be preloaded.
+ * @param {string} md-font-set CSS style name associated with the font library; which will be assigned as
+ * the class for the font-icon ligature. This value may also be an alias that is used to lookup the classname;
+ * internally use `$mdIconProvider.fontSet(<alias>)` to determine the style name.
+ * @param {string} md-svg-src URL [or expression ] used to load, cache, and display an external SVG.
+ * @param {string} md-svg-icon Name used for lookup of the icon from the internal cache; interpolated strings or
  * expressions may also be used. Specific set names can be used with the syntax `<set name>:<icon name>`.<br/><br/>
  * To use icon sets, developers are required to pre-register the sets using the `$mdIconProvider` service.
- * @param {string} md-font-icon String name of CSS icon associated with the font-face will be used
- * to render the icon. Requires the fonts and the named CSS styles to be preloaded.
- * @param {string=} alt Labels icon for accessibility. If an empty string is provided, icon
- * will be hidden from accessibility layer with `aria-hidden="true"`. If there's no alt on the icon
+ * @param {string=} aria-label Labels icon for accessibility. If an empty string is provided, icon
+ * will be hidden from accessibility layer with `aria-hidden="true"`. If there's no aria-label on the icon
  * nor a label on the parent element, a warning will be logged to the console.
  *
  * @usage
+ * When using SVGs:
  * <hljs lang="html">
- *  <md-icon md-font-icon="android"          alt="android " ></md-icon>
- *  <md-icon md-svg-icon="action:android"    alt="android " ></md-icon>
- *  <md-icon md-svg-src="/android.svg"       alt="android " ></md-icon>
- *  <md-icon md-svg-src="{{ getAndroid() }}" alt="android " ></md-icon>
+ *
+ *  <!-- Icon ID; may contain optional icon set prefix; icons must registered using $mdIconProvider -->
+ *  <md-icon md-svg-icon="social:android"    aria-label="android " ></md-icon>
+ *
+ *  <!-- Icon urls; may be preloaded in templateCache -->
+ *  <md-icon md-svg-src="/android.svg"       aria-label="android " ></md-icon>
+ *  <md-icon md-svg-src="{{ getAndroid() }}" aria-label="android " ></md-icon>
+ *
  * </hljs>
+ *
+ * Use the <code>$mdIconProvider</code> to configure your application with
+ * svg iconsets.
+ *
+ * <hljs lang="js">
+ *  angular.module('appSvgIconSets', ['ngMaterial'])
+ *    .controller('DemoCtrl', function($scope) {})
+ *    .config(function($mdIconProvider) {
+ *      $mdIconProvider
+ *         .iconSet('social', 'img/icons/sets/social-icons.svg', 24)
+ *         .defaultIconSet('img/icons/sets/core-icons.svg', 24);
+ *     });
+ * </hljs>
+ *
+ *
+ * When using Font Icons with classnames:
+ * <hljs lang="html">
+ *
+ *  <md-icon md-font-icon="android" aria-label="android" ></md-icon>
+ *  <md-icon class="icon_home"      aria-label="Home"    ></md-icon>
+ *
+ * </hljs>
+ *
+ * When using Material Font Icons with ligatures:
+ * <hljs lang="html">
+ *  <!-- For Material Design Icons -->
+ *  <!-- The class '.material-icons' is auto-added. -->
+ *  <md-icon> face </md-icon>
+ *  <md-icon class="md-light md-48"> face </md-icon>
+ *  <md-icon md-font-set="material-icons"> face </md-icon>
+ *  <md-icon> #xE87C; </md-icon>
+ * </hljs>
+ *
+ * When using other Font-Icon libraries:
+ *
+ * <hljs lang="js">
+ *  // Specify a font-icon style alias
+ *  angular.config(function($mdIconProvider) {
+ *    $mdIconProvider.fontSet('fa', 'fontawesome');
+ *  });
+ * </hljs>
+ *
+ * <hljs lang="html">
+ *  <md-icon md-font-set="fa">email</md-icon>
+ * </hljs>
+ *
  */
-function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
+function mdIconDirective($mdIcon, $mdTheming, $mdAria, $interpolate ) {
+
   return {
     scope: {
+      fontSet : '@mdFontSet',
       fontIcon: '@mdFontIcon',
-      svgIcon: '@mdSvgIcon',
-      svgSrc: '@mdSvgSrc'
+      svgIcon : '@mdSvgIcon',
+      svgSrc  : '@mdSvgSrc'
     },
     restrict: 'E',
-    template: getTemplate,
-    link: postLink
+    link : postLink
   };
 
-  function getTemplate(element, attr) {
-    return attr.mdFontIcon ? '<span class="md-font" ng-class="fontIcon"></span>' : '';
-  }
 
   /**
    * Directive postLink
@@ -11131,15 +12061,27 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
   function postLink(scope, element, attr) {
     $mdTheming(element);
 
-    var ariaLabel = attr.alt || scope.fontIcon || scope.svgIcon;
+    prepareForFontIcon();
+
+    // If using a font-icon, then the textual name of the icon itself
+    // provides the aria-label.
+
+    var label = attr.alt || scope.fontIcon || scope.svgIcon || element.text();
     var attrName = attr.$normalize(attr.$attr.mdSvgIcon || attr.$attr.mdSvgSrc || '');
 
-    if (attr.alt != '' && !parentsHaveText()) {
-      $mdAria.expect(element, 'aria-label', ariaLabel);
-      $mdAria.expect(element, 'role', 'img');
-    } else {
-      // Hide from the accessibility layer.
-      $mdAria.expect(element, 'aria-hidden', 'true');
+    if ( !attr['aria-label'] ) {
+
+      if (label != '' && !parentsHaveText() ) {
+
+        $mdAria.expect(element, 'aria-label', label);
+        $mdAria.expect(element, 'role', 'img');
+
+      } else if ( !element.text() ) {
+        // If not a font-icon with ligature, then
+        // hide from the accessibility layer.
+
+        $mdAria.expect(element, 'aria-hidden', 'true');
+      }
     }
 
     if (attrName) {
@@ -11155,6 +12097,7 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
 
       });
     }
+
     function parentsHaveText() {
       var parent = element.parent();
       if (parent.attr('aria-label') || parent.text()) {
@@ -11165,9 +12108,21 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
       }
       return false;
     }
+
+    function prepareForFontIcon () {
+      if (!scope.svgIcon && !scope.svgSrc) {
+        if (scope.fontIcon) {
+          element.addClass('md-font');
+          element.addClass(scope.fontIcon);
+        } else {
+          element.addClass($mdIcon.fontSet(scope.fontSet));
+        }
+      }
+
+    }
   }
 }
-mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
+mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
 
 })();
 (function(){
@@ -11187,17 +12142,21 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
     * icons and icon sets to be pre-registered and associated with source URLs **before** the `<md-icon />`
     * directives are compiled.
     *
-    * Loading of the actual svg files are deferred to on-demand requests and are loaded
+    * If using font-icons, the developer is repsonsible for loading the fonts.
+    *
+    * If using SVGs, loading of the actual svg files are deferred to on-demand requests and are loaded
     * internally by the `$mdIcon` service using the `$http` service. When an SVG is requested by name/ID,
     * the `$mdIcon` service searches its registry for the associated source URL;
     * that URL is used to on-demand load and parse the SVG dynamically.
     *
+    * @usage
     * <hljs lang="js">
     *   app.config(function($mdIconProvider) {
     *
     *     // Configure URLs for icons specified by [set:]id.
     *
     *     $mdIconProvider
+    *          .defaultFontSet( 'fontawesome' )
     *          .defaultIconSet('my/app/icons.svg')       // Register a default set of SVG icons
     *          .iconSet('social', 'my/app/social.svg')   // Register a named icon set of SVGs
     *          .icon('android', 'my/app/android.svg')    // Register a specific icon (by name)
@@ -11245,8 +12204,8 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
     * @param {string} id Icon name/id used to register the icon
     * @param {string} url specifies the external location for the data file. Used internally by `$http` to load the
     * data or as part of the lookup in `$templateCache` if pre-loading was configured.
-    * @param {string=} iconSize Number indicating the width and height of the icons in the set. All icons
-    * in the icon set must be the same size. Default size is 24.
+    * @param {number=} viewBoxSize Sets the width and height the icon's viewBox.
+    * It is ignored for icons with an existing viewBox. Default size is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -11270,13 +12229,14 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
     * @description
     * Register a source URL for a 'named' set of icons; group of SVG definitions where each definition
     * has an icon id. Individual icons can be subsequently retrieved from this cached set using
-    * `$mdIcon( <icon set name>:<icon name> )`
+    * `$mdIcon(<icon set name>:<icon name>)`
     *
     * @param {string} id Icon name/id used to register the iconset
     * @param {string} url specifies the external location for the data file. Used internally by `$http` to load the
     * data or as part of the lookup in `$templateCache` if pre-loading was configured.
-    * @param {string=} iconSize Number indicating the width and height of the icons in the set. All icons
-    * in the icon set must be the same size. Default size is 24.
+    * @param {number=} viewBoxSize Sets the width and height of the viewBox of all icons in the set. 
+    * It is ignored for icons with an existing viewBox. All icons in the icon set should be the same size.
+    * Default value is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -11300,12 +12260,13 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
     * @description
     * Register a source URL for the default 'named' set of icons. Unless explicitly registered,
     * subsequent lookups of icons will failover to search this 'default' icon set.
-    * Icon can be retrieved from this cached, default set using `$mdIcon( <icon name> )`
+    * Icon can be retrieved from this cached, default set using `$mdIcon(<name>)`
     *
     * @param {string} url specifies the external location for the data file. Used internally by `$http` to load the
     * data or as part of the lookup in `$templateCache` if pre-loading was configured.
-    * @param {string=} iconSize Number indicating the width and height of the icons in the set. All icons
-    * in the icon set must be the same size. Default size is 24.
+    * @param {number=} viewBoxSize Sets the width and height of the viewBox of all icons in the set. 
+    * It is ignored for icons with an existing viewBox. All icons in the icon set should be the same size.
+    * Default value is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -11321,17 +12282,48 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
     * </hljs>
     *
     */
+  /**
+   * @ngdoc method
+   * @name $mdIconProvider#defaultFontSet
+   *
+   * @description
+   * When using Font-Icons, Angular Material assumes the the Material Design icons will be used and automatically
+   * configures the default font-set == 'material-icons'. Note that the font-set references the font-icon library
+   * class style that should be applied to the `<md-icon>`.
+   *
+   * Configuring the default means that the attributes
+   * `md-font-set="material-icons"` or `class="material-icons"` do not need to be explicitly declared on the
+   * `<md-icon>` markup. For example:
+   *
+   *  `<md-icon> face </md-icon>`
+   *  will render as
+   *  `<span class="material-icons"> face </span>`, and
+   *
+   *  `<md-icon md-font-set="fa"> face </md-icon>`
+   *  will render as
+   *  `<span class="fa"> face </span>`
+   *
+   * @param {string} name of the font-library style that should be applied to the md-icon DOM element
+   *
+   * @usage
+   * <hljs lang="js">
+   *   app.config(function($mdIconProvider) {
+   *     $mdIconProvider.defaultFontSet( 'fontawesome' );
+   *   });
+   * </hljs>
+   *
+   */
+
    /**
     * @ngdoc method
-    * @name $mdIconProvider#defaultIconSize
+    * @name $mdIconProvider#defaultViewBoxSize
     *
     * @description
     * While `<md-icon />` markup can also be style with sizing CSS, this method configures
     * the default width **and** height used for all icons; unless overridden by specific CSS.
     * The default sizing is (24px, 24px).
-    *
-    * @param {string} iconSize Number indicating the width and height of the icons in the set. All icons
-    * in the icon set must be the same size. Default size is 24.
+    * @param {number=} viewBoxSize Sets the width and height of the viewBox for an icon or an icon set.
+    * All icons in a set should be the same size. The default value is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -11342,41 +12334,68 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
     *     // Configure URLs for icons specified by [set:]id.
     *
     *     $mdIconProvider
-    *          .defaultIconSize(36)   // Register a default icon size (width == height)
+    *          .defaultViewBoxSize(36)   // Register a default icon size (width == height)
     *   });
     * </hljs>
     *
     */
 
  var config = {
-   defaultIconSize: 24
+   defaultViewBoxSize: 24,
+   defaultFontSet: 'material-icons',
+   fontSets : [ ]
  };
 
  function MdIconProvider() { }
 
  MdIconProvider.prototype = {
-   icon : function icon(id, url, iconSize) {
+   icon : function (id, url, viewBoxSize) {
      if ( id.indexOf(':') == -1 ) id = '$default:' + id;
 
-     config[id] = new ConfigurationItem(url, iconSize );
+     config[id] = new ConfigurationItem(url, viewBoxSize );
      return this;
    },
 
-   iconSet : function iconSet(id, url, iconSize) {
-     config[id] = new ConfigurationItem(url, iconSize );
+   iconSet : function (id, url, viewBoxSize) {
+     config[id] = new ConfigurationItem(url, viewBoxSize );
      return this;
    },
 
-   defaultIconSet : function defaultIconSet(url, iconSize) {
+   defaultIconSet : function (url, viewBoxSize) {
      var setName = '$default';
 
      if ( !config[setName] ) {
-       config[setName] = new ConfigurationItem(url, iconSize );
+       config[setName] = new ConfigurationItem(url, viewBoxSize );
      }
 
-     config[setName].iconSize = iconSize || config.defaultIconSize;
+     config[setName].viewBoxSize = viewBoxSize || config.defaultViewBoxSize;
 
      return this;
+   },
+
+   defaultViewBoxSize : function (viewBoxSize) {
+     config.defaultViewBoxSize = viewBoxSize;
+     return this;
+   },
+   
+   /**
+    * Register an alias name associated with a font-icon library style ;
+    */
+   fontSet : function fontSet(alias, className) {
+    config.fontSets.push({
+      alias : alias,
+      fontSet : className || alias
+    });
+   },
+
+   /**
+    * Specify a default style name associated with a font-icon library
+    * fallback to Material Icons.
+    *
+    */
+   defaultFontSet : function defaultFontSet(className) {
+    config.defaultFontSet = !className ? '' : className;
+    return this;
    },
 
    defaultIconSize : function defaultIconSize(iconSize) {
@@ -11423,7 +12442,7 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
 
    $get : ['$http', '$q', '$log', '$templateCache', function($http, $q, $log, $templateCache) {
      this.preloadIcons($templateCache);
-     return new MdIconService(config, $http, $q, $log, $templateCache);
+     return MdIconService(config, $http, $q, $log, $templateCache);
    }]
  };
 
@@ -11431,9 +12450,9 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
     *  Configuration item stored in the Icon registry; used for lookups
     *  to load if not already cached in the `loaded` cache
     */
-   function ConfigurationItem(url, iconSize) {
+   function ConfigurationItem(url, viewBoxSize) {
      this.url = url;
-     this.iconSize = iconSize || config.defaultIconSize;
+     this.viewBoxSize = viewBoxSize || config.defaultViewBoxSize;
    }
 
  /**
@@ -11473,7 +12492,7 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
   * };
   * </hljs>
   *
-  * NOTE: The `md-icon` directive internally uses the `$mdIcon` service to query, loaded, and instantiate
+  * NOTE: The `<md-icon />  ` directive internally uses the `$mdIcon` service to query, loaded, and instantiate
   * SVG DOM elements.
   */
  function MdIconService(config, $http, $q, $log, $templateCache) {
@@ -11481,8 +12500,15 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
    var urlRegex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/i;
 
    Icon.prototype = { clone : cloneSVG, prepare: prepareAndStyle };
+   getIcon.fontSet = findRegisteredFontSet;
 
-   return function getIcon(id) {
+   // Publish service...
+   return getIcon;
+
+   /**
+    * Actual $mdIcon service is essentially a lookup function
+    */
+   function getIcon(id) {
      id = id || '';
 
      // If already loaded and cached, use a clone of the cached icon.
@@ -11497,7 +12523,23 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
          .catch(announceIdNotFound)
          .catch(announceNotFound)
          .then( cacheIcon(id) );
-   };
+   }
+
+   /**
+    * Lookup registered fontSet style using its alias...
+    * If not found,
+    */
+   function findRegisteredFontSet(alias) {
+      var useDefault = angular.isUndefined(alias) || !(alias && alias.length);
+      if ( useDefault ) return config.defaultFontSet;
+
+      var result = alias;
+      angular.forEach(config.fontSets, function(it){
+        if ( it.alias == alias ) result = it.fontSet || result;
+      });
+
+      return result;
+   }
 
    /**
     * Prepare and cache the loaded icon for the specified `id`
@@ -11608,13 +12650,13 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
     *  loaded iconCache store.
     */
    function prepareAndStyle() {
-     var iconSize = this.config ? this.config.iconSize : config.defaultIconSize;
+     var viewBoxSize = this.config ? this.config.viewBoxSize : config.defaultViewBoxSize;
          angular.forEach({
            'fit'   : '',
            'height': '100%',
            'width' : '100%',
            'preserveAspectRatio': 'xMidYMid meet',
-           'viewBox' : this.element.getAttribute('viewBox') || ('0 0 ' + iconSize + ' ' + iconSize)
+           'viewBox' : this.element.getAttribute('viewBox') || ('0 0 ' + viewBoxSize + ' ' + viewBoxSize)
          }, function(val, attr) {
            this.element.setAttribute(attr, val);
          }, this);
@@ -11762,7 +12804,8 @@ function labelDirective() {
  *   <input type="text" ng-model="color" required md-maxlength="10">
  * </md-input-container>
  * </hljs>
- * <h3>With Errors (uses [ngMessages](https://docs.angularjs.org/api/ngMessages))</h3>
+ * <h3>With Errors</h3>
+ *
  * <hljs lang="html">
  * <form name="userForm">
  *   <md-input-container>
@@ -11791,6 +12834,7 @@ function labelDirective() {
  * </form>
  * </hljs>
  *
+ * Requires [ngMessages](https://docs.angularjs.org/api/ngMessages).
  * Behaves like the [AngularJS input directive](https://docs.angularjs.org/api/ng/directive/input).
  *
  */
@@ -12215,13 +13259,15 @@ function mdListItemDirective($mdAria, $mdConstant, $timeout) {
         }
 
         if (!hasClick && !proxies.length) {
-          firstChild.addEventListener('keypress', function(e) {
+          firstChild && firstChild.addEventListener('keypress', function(e) {
             if (e.target.nodeName != 'INPUT' && e.target.nodeName != 'TEXTAREA') {
               var keyCode = e.which || e.keyCode;
               if (keyCode == $mdConstant.KEY_CODE.SPACE) {
-                firstChild.click();
-                e.preventDefault();
-                e.stopPropagation();
+                if (firstChild) {
+                  firstChild.click();
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
               }
             }
           });
@@ -12264,6 +13310,625 @@ function MdListController($scope, $element, $mdListInkRipple) {
   }
 }
 MdListController.$inject = ["$scope", "$element", "$mdListInkRipple"];
+
+
+})();
+(function(){
+"use strict";
+
+/**
+ * @ngdoc module
+ * @name material.components.menu
+ */
+
+angular.module('material.components.menu', [
+  'material.core',
+  'material.components.backdrop'
+])
+.directive('mdMenu', MenuDirective)
+.controller('mdMenuCtrl', MenuController);
+
+/**
+ * @ngdoc directive
+ * @name mdMenu
+ * @module material.components.menu
+ * @restrict E
+ * @description
+ *
+ * Menus are elements that open when clicked. They are useful for displaying
+ * additional options within the context of an action.
+ *
+ * Every `md-menu` must specify exactly two child elements. The first element is what is
+ * left in the DOM and is used to open the menu. This element is called the trigger element.
+ * The trigger element's scope has access to `$mdOpenMenu()`
+ * which it may call to open the menu.
+ *
+ * The second element is the `md-menu-content` element which represents the
+ * contents of the menu when it is open. Typically this will contain `md-menu-item`s,
+ * but you can do custom content as well.
+ *
+ * <hljs lang="html">
+ * <md-menu>
+ *  <!-- Trigger element is a md-button with an icon -->
+ *  <md-button ng-click="$mdOpenMenu()" class="md-icon-button" aria-label="Open sample menu">
+ *    <md-icon md-svg-icon="call:phone"></md-icon>
+ *  </md-button>
+ *  <md-menu-content>
+ *    <md-menu-item><md-button ng-click="doSomething()">Do Something</md-button></md-menu-item>
+ *  </md-menu-content>
+ * </md-menu>
+ * </hljs>
+
+ * ## Sizing Menus
+ *
+ * The width of the menu when it is open may be specified by specifying a `width`
+ * attribute on the `md-menu-content` element.
+ * See the [Material Design Spec](http://www.google.com/design/spec/components/menus.html#menus-specs)
+ * for more information.
+ *
+ *
+ * ## Aligning Menus
+ *
+ * When a menu opens, it is important that the content aligns with the trigger element.
+ * Failure to align menus can result in jarring experiences for users as content
+ * suddenly shifts. To help with this, `md-menu` provides serveral APIs to help
+ * with alignment.
+ *
+ * ### Target Mode
+ *
+ * By default, `md-menu` will attempt to align the `md-menu-content` by aligning
+ * designated child elements in both the trigger and the menu content.
+ *
+ * To specify the alignment element in the `trigger` you can use the `md-menu-origin`
+ * attribute on a child element. If no `md-menu-origin` is specified, the `md-menu`
+ * will be used as the origin element.
+ *
+ * Similarly, the `md-menu-content` may specify a `md-menu-align-target` for a
+ * `md-menu-item` to specify the node that it should try and align with.
+ *
+ * In this example code, we specify an icon to be our origin element, and an
+ * icon in our menu content to be our alignment target. This ensures that both
+ * icons are aligned when the menu opens.
+ *
+ * <hljs lang="html">
+ * <md-menu>
+ *  <md-button ng-click="$mdOpenMenu()" class="md-icon-button" aria-label="Open some menu">
+ *    <md-icon md-menu-origin md-svg-icon="call:phone"></md-icon>
+ *  </md-button>
+ *  <md-menu-content>
+ *    <md-menu-item>
+ *      <md-button ng-click="doSomething()" aria-label="Do something">
+ *        <md-icon md-menu-align-target md-svg-icon="call:phone"></md-icon>
+ *        Do Something
+ *      </md-button>
+ *    </md-menu-item>
+ *  </md-menu-content>
+ * </md-menu>
+ * </hljs>
+ *
+ * Sometimes we want to specify alignment on the right side of an element, for example
+ * if we have a menu on the right side a toolbar, we want to right align our menu content.
+ *
+ * We can specify the origin by using the `md-position-mode` attribute on both
+ * the `x` and `y` axis. Right now only the `x-axis` has more than one option.
+ * You may specify the default mode of `target target` or
+ * `target-right target` to specify a right-oriented alignment target. See the
+ * position section of the demos for more examples.
+ *
+ * ### Menu Offsets
+ *
+ * It is sometimes unavoidable to need to have a deeper level of control for
+ * the positioning of a menu to ensure perfect alignment. `md-menu` provides
+ * the `md-offset` attribute to allow pixel level specificty of adjusting the
+ * exact positioning.
+ *
+ * This offset is provided in the format of `x y` or `n` where `n` will be used
+ * in both the `x` and `y` axis.
+ *
+ * For example, to move a menu by `2px` from the top, we can use:
+ * <hljs lang="html">
+ * <md-menu md-offset="2 0">
+ *   <!-- menu-content -->
+ * </md-menu>
+ * </hljs>
+ *
+ * @usage
+ * <hljs lang="html">
+ * <md-menu>
+ *  <md-button ng-click="$mdOpenMenu()" class="md-icon-button">
+ *    <md-icon md-svg-icon="call:phone"></md-icon>
+ *  </md-button>
+ *  <md-menu-content>
+ *    <md-menu-item><md-button ng-click="doSomething()">Do Something</md-button></md-menu-item>
+ *  </md-menu-content>
+ * </md-menu>
+ * </hljs>
+ *
+ * @param {string} md-position-mode The position mode in the form of
+             `x`, `y`. Default value is `target`,`target`. Right now the `x` axis
+             also suppports `target-right`.
+ * @param {string} md-offset An offset to apply to the dropdown after positioning
+             `x`, `y`. Default value is `0`,`0`.
+ *
+ */
+
+function MenuDirective($mdMenu) {
+  return {
+    restrict: 'E',
+    require: 'mdMenu',
+    controller: 'mdMenuCtrl', // empty function to be built by link
+    scope: true,
+    compile: compile
+  };
+
+  function compile(templateElement) {
+    templateElement.addClass('md-menu');
+    var triggerElement = templateElement.children()[0];
+    if (!triggerElement.hasAttribute('ng-click')) {
+      triggerElement = triggerElement.querySelector('[ng-click]');
+    }
+    triggerElement && triggerElement.setAttribute('aria-haspopup', 'true');
+    if (templateElement.children().length != 2) {
+      throw Error('Invalid HTML for md-menu. Expected two children elements.');
+    }
+    return link;
+  }
+
+  function link(scope, element, attrs, mdMenuCtrl) {
+
+    // Move everything into a md-menu-container and pass it to the controller
+    var menuContainer = angular.element(
+      '<div class="md-open-menu-container md-whiteframe-z2"></div>'
+    );
+    var menuContents = element.children()[1];
+    menuContainer.append(menuContents);
+    mdMenuCtrl.init(menuContainer);
+
+    scope.$on('$destroy', function() {
+      if (mdMenuCtrl.isOpen) {
+        menuContainer.remove();
+        mdMenuCtrl.close();
+      }
+    });
+
+  }
+}
+MenuDirective.$inject = ["$mdMenu"];
+
+function MenuController($mdMenu, $attrs, $element, $scope) {
+
+  var menuContainer;
+  var ctrl = this;
+  var triggerElement;
+
+  // Called by our linking fn to provide access to the menu-content
+  // element removed during link
+  this.init = function(setMenuContainer) {
+    menuContainer = setMenuContainer;
+    triggerElement = $element[0].querySelector('[ng-click]');
+  };
+
+  // Uses the $mdMenu interim element service to open the menu contents
+  this.open = function openMenu() {
+    ctrl.isOpen = true;
+    triggerElement.setAttribute('aria-expanded', 'true');
+    $mdMenu.show({
+      mdMenuCtrl: ctrl,
+      element: menuContainer,
+      target: $element[0]
+    });
+  };
+  // Expose a open function to the child scope for html to use
+  $scope.$mdOpenMenu = this.open;
+
+  // Use the $mdMenu interim element service to close the menu contents
+  this.close = function closeMenu(skipFocus) {
+    ctrl.isOpen = false;
+    triggerElement.setAttribute('aria-expanded', 'false');
+    $mdMenu.hide();
+
+    if (!skipFocus) {
+      $element.children()[0].focus();
+    }
+  };
+
+  // Build a nice object out of our string attribute which specifies the
+  // target mode for left and top positioning
+  this.positionMode = function() {
+    var attachment = ($attrs.mdPositionMode || 'target').split(' ');
+
+    // If attachment is a single item, duplicate it for our second value.
+    // ie. 'target' -> 'target target'
+    if (attachment.length == 1) {
+      attachment.push(attachment[0]);
+    }
+
+    return {
+      left: attachment[0],
+      top: attachment[1]
+    };
+  };
+
+  // Build a nice object out of our string attribute which specifies
+  // the offset of top and left in pixels.
+  this.offsets = function() {
+    var offsets = ($attrs.mdOffset || '0 0').split(' ').map(parseFloat);
+    if (offsets.length == 2) {
+      return {
+        left: offsets[0],
+        top: offsets[1]
+      };
+    } else if (offsets.length == 1) {
+      return {
+        top: offsets[0],
+        left: offsets[0]
+      };
+    } else {
+      throw Error('Invalid offsets specified. Please follow format <x, y> or <n>');
+    }
+  };
+}
+MenuController.$inject = ["$mdMenu", "$attrs", "$element", "$scope"];
+
+})();
+(function(){
+"use strict";
+
+angular.module('material.components.menu')
+.provider('$mdMenu', MenuProvider);
+
+/*
+ * Interim element provider for the menu.
+ * Handles behavior for a menu while it is open, including:
+ *    - handling animating the menu opening/closing
+ *    - handling key/mouse events on the menu element
+ *    - handling enabling/disabling scroll while the menu is open
+ *    - handling redrawing during resizes and orientation changes
+ *
+ */
+
+function MenuProvider($$interimElementProvider) {
+  var MENU_EDGE_MARGIN = 8;
+
+  menuDefaultOptions.$inject = ["$$rAF", "$window", "$mdUtil", "$mdTheming", "$timeout", "$mdConstant", "$document"];
+  return $$interimElementProvider('$mdMenu')
+    .setDefaults({
+      methods: ['target'],
+      options: menuDefaultOptions
+    });
+
+  /* @ngInject */
+  function menuDefaultOptions($$rAF, $window, $mdUtil, $mdTheming, $timeout, $mdConstant, $document) {
+    return {
+      parent: 'body',
+      onShow: onShow,
+      onRemove: onRemove,
+      hasBackdrop: true,
+      disableParentScroll: true,
+      skipCompile: true,
+      themable: true
+    };
+
+    /**
+     * Boilerplate interimElement onShow function
+     * Handles inserting the menu into the DOM, positioning it, and wiring up
+     * various interaction events
+     */
+    function onShow(scope, element, opts) {
+
+      // Sanitize and set defaults on opts
+      buildOpts(opts);
+
+      // Wire up theming on our menu element
+      $mdTheming.inherit(opts.menuContentEl, opts.target);
+
+      // Register various listeners to move menu on resize/orientation change
+      handleResizing();
+
+      // Disable scrolling
+      if (opts.disableParentScroll) {
+        opts.restoreScroll = $mdUtil.disableScrollAround(opts.element);
+      }
+
+      // Only activate click listeners after a short time to stop accidental double taps/clicks
+      // from clicking the wrong item
+      $timeout(activateInteraction, 75, false);
+
+      if (opts.backdrop) {
+        $mdTheming.inherit(opts.backdrop, opts.parent);
+        opts.parent.append(opts.backdrop);
+      }
+      showMenu();
+
+      // Return the promise for when our menu is done animating in
+      return $mdUtil.transitionEndPromise(element, {timeout: 350});
+
+      /** Check for valid opts and set some sane defaults */
+      function buildOpts() {
+        if (!opts.target) {
+          throw Error(
+            '$mdMenu.show() expected a target to animate from in options.target'
+          );
+        }
+        angular.extend(opts, {
+          alreadyOpen: false,
+          isRemoved: false,
+          target: angular.element(opts.target), //make sure it's not a naked dom node
+          parent: angular.element(opts.parent),
+          menuContentEl: angular.element(element[0].querySelector('md-menu-content')),
+          backdrop: opts.hasBackdrop && angular.element('<md-backdrop class="md-menu-backdrop md-click-catcher">')
+        });
+      }
+
+      /** Wireup various resize listeners for screen changes */
+      function handleResizing() {
+        opts.resizeFn = function() {
+          positionMenu(element, opts);
+        };
+        angular.element($window).on('resize', opts.resizeFn);
+        angular.element($window).on('orientationchange', opts.resizeFn);
+      }
+
+      /**
+       * Place the menu into the DOM and call positioning related functions
+       */
+      function showMenu() {
+        opts.parent.append(element);
+
+        element.removeClass('md-leave');
+        // Kick off our animation/positioning but first, wait a few frames
+        // so all of our computed positions/sizes are accurate
+        $$rAF(function() {
+          $$rAF(function() {
+            positionMenu(element, opts);
+            // Wait a frame before fading in menu (md-active) so that we don't trigger
+            // transitions on the menu position changing
+            $$rAF(function() {
+              element.addClass('md-active');
+              opts.alreadyOpen = true;
+              element[0].style[$mdConstant.CSS.TRANSFORM] = '';
+            });
+          });
+        });
+      }
+
+
+      /**
+       * Activate interaction on the menu. Wire up keyboard listerns for
+       * clicks, keypresses, backdrop closing, etc.
+       */
+      function activateInteraction() {
+        element.addClass('md-clickable');
+
+        // close on backdrop click
+        opts.backdrop && opts.backdrop.on('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          opts.mdMenuCtrl.close(true);
+        });
+
+        // Wire up keyboard listeners.
+        // Close on escape, focus next item on down arrow, focus prev item on up
+        opts.menuContentEl.on('keydown', function(ev) {
+          scope.$apply(function() {
+            switch (ev.keyCode) {
+              case $mdConstant.KEY_CODE.ESCAPE: opts.mdMenuCtrl.close(); break;
+              case $mdConstant.KEY_CODE.UP_ARROW: focusMenuItem(ev, opts.menuContentEl, opts, -1); break;
+              case $mdConstant.KEY_CODE.DOWN_ARROW: focusMenuItem(ev, opts.menuContentEl, opts, 1); break;
+            }
+          });
+        });
+
+        // Close menu on menu item click, if said menu-item is not disabled
+        opts.menuContentEl.on('click', function(e) {
+          var target = e.target;
+          // Traverse up the event until we get to the menuContentEl to see if
+          // there is an ng-click and that the ng-click is not disabled
+          do {
+            if (target && target.hasAttribute('ng-click')) {
+              if (!target.hasAttribute('disabled')) {
+                close();
+              }
+              break;
+            }
+          } while ((target = target.parentNode) && target != opts.menuContentEl)
+
+          function close() {
+            scope.$apply(function() {
+              opts.mdMenuCtrl.close();
+            });
+          }
+        });
+
+        // kick off initial focus in the menu on the first element
+        var focusTarget = opts.menuContentEl[0].querySelector('[md-menu-focus-target]');
+        if (!focusTarget) focusTarget = opts.menuContentEl[0].firstElementChild.firstElementChild;
+        focusTarget.focus();
+      }
+    }
+
+    /**
+      * Takes a keypress event and focuses the next/previous menu
+      * item from the emitting element
+      * @param {event} e - The origin keypress event
+      * @param {angular.element} menuEl - The menu element
+      * @param {object} opts - The interim element options for the mdMenu
+      * @param {number} direction - The direction to move in (+1 = next, -1 = prev)
+      */
+    function focusMenuItem(e, menuEl, opts, direction) {
+      var currentItem = $mdUtil.getClosest(e.target, 'MD-MENU-ITEM');
+
+      var items = $mdUtil.nodesToArray(menuEl[0].children);
+      var currentIndex = items.indexOf(currentItem);
+
+      // Traverse through our elements in the specified direction (+/-1) and try to
+      // focus them until we find one that accepts focus
+      for (var i = currentIndex + direction; i >= 0 && i < items.length; i = i + direction) {
+        var focusTarget = items[i].firstElementChild || items[i];
+        var didFocus = attemptFocus(focusTarget);
+        if (didFocus) {
+          break;
+        }
+      }
+    }
+
+    /**
+     * Attempts to focus an element. Checks whether that element is the currently
+     * focused element after attempting.
+     * @param {HTMLElement} el - the element to attempt focus on
+     * @returns {bool} - whether the element was successfully focused
+     */
+    function attemptFocus(el) {
+      if (el && el.getAttribute('tabindex') != -1) {
+        el.focus();
+        if ($document[0].activeElement == el) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+
+    /**
+     * Boilerplate interimElement onRemove function
+     * Handles removing the menu from the DOM, cleaning up the element
+     * and removing various listeners
+     */
+    function onRemove(scope, element, opts) {
+      opts.isRemoved = true;
+      element.addClass('md-leave')
+        .removeClass('md-clickable');
+
+      // Disable resizing handlers
+      angular.element($window).off('resize', opts.resizeFn);
+      angular.element($window).off('orientationchange', opts.resizeFn);
+      opts.resizeFn = undefined;
+
+      // Wait for animate out, then remove from the DOM
+      return $mdUtil.transitionEndPromise(element, { timeout: 350 }).then(function() {
+        element.removeClass('md-active');
+        opts.backdrop && opts.backdrop.remove();
+        if (element[0].parentNode === opts.parent[0]) {
+          opts.parent[0].removeChild(element[0]);
+        }
+        opts.restoreScroll && opts.restoreScroll();
+      });
+    }
+
+    /**
+     * Computes menu position and sets the style on the menu container
+     * @param {HTMLElement} el - the menu container element
+     * @param {object} opts - the interim element options object
+     */
+    function positionMenu(el, opts) {
+      if (opts.isRemoved) return;
+
+      var containerNode = el[0],
+          openMenuNode = el[0].firstElementChild,
+          openMenuNodeRect = openMenuNode.getBoundingClientRect(),
+          boundryNode = opts.parent[0],
+          boundryNodeRect = boundryNode.getBoundingClientRect();
+
+      var originNode = opts.target[0].querySelector('[md-menu-origin]') || opts.target[0],
+          originNodeRect = originNode.getBoundingClientRect();
+
+
+      var bounds = {
+        left: boundryNodeRect.left + MENU_EDGE_MARGIN,
+        top: boundryNodeRect.top + MENU_EDGE_MARGIN,
+        bottom: boundryNodeRect.bottom - MENU_EDGE_MARGIN,
+        right: boundryNodeRect.right - MENU_EDGE_MARGIN
+      };
+
+
+      var alignTarget, alignTargetRect, existingOffsets;
+      var positionMode = opts.mdMenuCtrl.positionMode();
+
+      if (positionMode.top == 'target' || positionMode.left == 'target' || positionMode.left == 'target-right') {
+        // TODO: Allow centering on an arbitrary node, for now center on first menu-item's child
+        alignTarget = openMenuNode.firstElementChild.firstElementChild || openMenuNode.firstElementChild;
+        alignTarget = alignTarget.querySelector('[md-menu-align-target]') || alignTarget;
+        alignTargetRect = alignTarget.getBoundingClientRect();
+
+        existingOffsets = {
+          top: parseFloat(containerNode.style.top || 0),
+          left: parseFloat(containerNode.style.left || 0)
+        };
+      }
+
+      var position = { };
+      var transformOrigin = 'top ';
+
+      switch (positionMode.top) {
+        case 'target':
+          position.top = existingOffsets.top + originNodeRect.top - alignTargetRect.top;
+          break;
+        // Future support for mdMenuBar
+        // case 'top':
+        //   position.top = originNodeRect.top;
+        //   break;
+        // case 'bottom':
+        //   position.top = originNodeRect.top + originNodeRect.height;
+        //   break;
+        default:
+          throw new Error('Invalid target mode "' + positionMode.top + '" specified for md-menu on Y axis.');
+      }
+
+      switch (positionMode.left) {
+        case 'target':
+          position.left = existingOffsets.left + originNodeRect.left - alignTargetRect.left;
+          transformOrigin += 'left';
+          break;
+        case 'target-right':
+          position.left = originNodeRect.right - openMenuNodeRect.width + (openMenuNodeRect.right - alignTargetRect.right);
+          transformOrigin += 'right';
+          break;
+        // Future support for mdMenuBar
+        // case 'left':
+        //   position.left = originNodeRect.left;
+        //   transformOrigin += 'left';
+        //   break;
+        // case 'right':
+        //   position.left = originNodeRect.right - containerNode.offsetWidth;
+        //   transformOrigin += 'right';
+        //   break;
+        default:
+          throw new Error('Invalid target mode "' + positionMode.left + '" specified for md-menu on X axis.');
+      }
+
+      var offsets = opts.mdMenuCtrl.offsets();
+      position.top += offsets.top;
+      position.left += offsets.left;
+
+      clamp(position);
+
+      el.css({
+        top: position.top + 'px',
+        left: position.left + 'px'
+      });
+
+      containerNode.style[$mdConstant.CSS.TRANSFORM_ORIGIN] = transformOrigin;
+
+      // Animate a scale out if we aren't just repositioning
+      if (!opts.alreadyOpen) {
+        containerNode.style[$mdConstant.CSS.TRANSFORM] = 'scale(' +
+          Math.min(originNodeRect.width / containerNode.offsetWidth, 1.0) + ',' +
+          Math.min(originNodeRect.height / containerNode.offsetHeight, 1.0) +
+        ')';
+      }
+
+      /**
+       * Clamps the repositioning of the menu within the confines of
+       * bounding element (often the screen/body)
+       */
+      function clamp(pos) {
+        pos.top = Math.max(Math.min(pos.top, bounds.bottom - containerNode.offsetHeight), bounds.top);
+        pos.left = Math.max(Math.min(pos.left, bounds.right - containerNode.offsetWidth), bounds.left);
+      }
+    }
+  }
+}
+MenuProvider.$inject = ["$$interimElementProvider"];
 
 })();
 (function(){
@@ -12844,6 +14509,7 @@ angular.module('material.components.select', [
  * @description Displays a select box, bound to an ng-model.
  *
  * @param {expression} ng-model The model!
+ * @param {expression=} md-on-close expression to be evaluated when the select is closed
  * @param {boolean=} multiple Whether it's multiple.
  * @param {string=} placeholder Placeholder hint text.
  * @param {string=} aria-label Optional label for accessibility. Only necessary if no placeholder or
@@ -12958,7 +14624,7 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $interpolate, 
       $mdTheming(element);
 
       if (attr.name && formCtrl) {
-        var selectEl = element.parent()[0].querySelector('select[name=".' + attr.name + '"]')
+        var selectEl = element.parent()[0].querySelector('select[name=".' + attr.name + '"]');
         formCtrl.$removeControl(angular.element(selectEl).controller());
       }
 
@@ -12978,6 +14644,10 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $interpolate, 
 
       mdSelectCtrl.setIsPlaceholder = function(val) {
         val ? labelEl.addClass('md-placeholder') : labelEl.removeClass('md-placeholder');
+      };
+
+      mdSelectCtrl.triggerClose = function() {
+        $parse(attr.mdOnClose)(scope);
       };
 
       scope.$$postDigest(function() {
@@ -13043,6 +14713,7 @@ function SelectDirective($mdSelect, $mdUtil, $mdTheming, $mdAria, $interpolate, 
           element.on('keydown', handleKeypress);
         }
       });
+
       if (!attr.disabled && !attr.ngDisabled) {
         element.attr({'tabindex': attr.tabindex, 'aria-disabled': 'false'});
         element.on('click', openSelect);
@@ -13281,7 +14952,7 @@ function SelectMenuDirective($parse, $mdUtil, $mdTheming) {
     };
 
     self.selectedLabels = function() {
-      var selectedOptionEls = nodesToArray($element[0].querySelectorAll('md-option[selected]'));
+      var selectedOptionEls = $mdUtil.nodesToArray($element[0].querySelectorAll('md-option[selected]'));
       if (selectedOptionEls.length) {
         return selectedOptionEls.map(function(el) { return el.textContent; }).join(', ');
       } else {
@@ -13544,7 +15215,7 @@ function SelectProvider($$interimElementProvider) {
       }
 
       if (opts.disableParentScroll && !$mdUtil.getClosest(opts.target, 'MD-DIALOG')) {
-        opts.restoreScroll = $mdUtil.disableScrollAround(opts.target);
+        opts.restoreScroll = $mdUtil.disableScrollAround(opts.element);
       } else {
         opts.disableParentScroll = false;
       }
@@ -13622,7 +15293,7 @@ function SelectProvider($$interimElementProvider) {
 
 
         function focusOption(direction) {
-          var optionsArray = nodesToArray(optionNodes);
+          var optionsArray = $mdUtil.nodesToArray(optionNodes);
           var index = optionsArray.indexOf(opts.focusedNode);
           if (index === -1) {
             // We lost the previously focused element, reset to first option
@@ -13687,6 +15358,7 @@ function SelectProvider($$interimElementProvider) {
           opts.restoreScroll();
         }
         if (opts.restoreFocus) opts.target.focus();
+        mdSelect && mdSelect.triggerClose();
       });
     }
 
@@ -13838,14 +15510,6 @@ function SelectProvider($$interimElementProvider) {
 }
 SelectProvider.$inject = ["$$interimElementProvider"];
 
-// Annoying method to copy nodes to an array, thanks to IE
-function nodesToArray(nodes) {
-  var results = [];
-  for (var i = 0; i < nodes.length; ++i) {
-    results.push(nodes.item(i));
-  }
-  return results;
-}
 
 })();
 (function(){
@@ -14382,9 +16046,9 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
     var throttledRefreshDimensions = $mdUtil.throttle(refreshSliderDimensions, 5000);
 
     // Default values, overridable by attrs
-    attr.min ? attr.$observe('min', updateMin) : updateMin(0);
-    attr.max ? attr.$observe('max', updateMax) : updateMax(100);
-    attr.step ? attr.$observe('step', updateStep) : updateStep(1);
+    angular.isDefined(attr.min) ? attr.$observe('min', updateMin) : updateMin(0);
+    angular.isDefined(attr.max) ? attr.$observe('max', updateMax) : updateMax(100);
+    angular.isDefined(attr.step)? attr.$observe('step', updateStep) : updateStep(1);
 
     // We have to manually stop the $watch on ngDisabled because it exists
     // on the parent scope, and won't be automatically destroyed when
@@ -14540,7 +16204,9 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
     }
     function stepValidator(value) {
       if (angular.isNumber(value)) {
-        return Math.round(value / step) * step;
+        var formattedValue = (Math.round(value / step) * step);
+        // Format to 3 digits after the decimal point - fixes #2015.
+        return (Math.round(formattedValue * 1000) / 1000);
       }
     }
 
@@ -14660,6 +16326,93 @@ function SliderDirective($$rAF, $window, $mdAria, $mdUtil, $mdConstant, $mdThemi
   }
 }
 SliderDirective.$inject = ["$$rAF", "$window", "$mdAria", "$mdUtil", "$mdConstant", "$mdTheming", "$mdGesture", "$parse"];
+
+})();
+(function(){
+"use strict";
+
+/**
+ * @ngdoc module
+ * @name material.components.subheader
+ * @description
+ * SubHeader module
+ *
+ *  Subheaders are special list tiles that delineate distinct sections of a
+ *  list or grid list and are typically related to the current filtering or
+ *  sorting criteria. Subheader tiles are either displayed inline with tiles or
+ *  can be associated with content, for example, in an adjacent column.
+ *
+ *  Upon scrolling, subheaders remain pinned to the top of the screen and remain
+ *  pinned until pushed on or off screen by the next subheader. @see [Material
+ *  Design Specifications](https://www.google.com/design/spec/components/subheaders.html)
+ *
+ *  > To improve the visual grouping of content, use the system color for your subheaders.
+ *
+ */
+angular.module('material.components.subheader', [
+  'material.core',
+  'material.components.sticky'
+])
+  .directive('mdSubheader', MdSubheaderDirective);
+
+/**
+ * @ngdoc directive
+ * @name mdSubheader
+ * @module material.components.subheader
+ *
+ * @restrict E
+ *
+ * @description
+ * The `<md-subheader>` directive is a subheader for a section. By default it is sticky.
+ * You can make it not sticky by applying the `md-no-sticky` class to the subheader.
+ *
+ *
+ * @usage
+ * <hljs lang="html">
+ * <md-subheader>Online Friends</md-subheader>
+ * </hljs>
+ */
+
+function MdSubheaderDirective($mdSticky, $compile, $mdTheming) {
+  return {
+    restrict: 'E',
+    replace: true,
+    transclude: true,
+    template: 
+      '<h2 class="md-subheader">' +
+        '<div class="md-subheader-inner">' +
+          '<span class="md-subheader-content"></span>' +
+        '</div>' +
+      '</h2>',
+    compile: function(element, attr, transclude) {
+      return function postLink(scope, element, attr) {
+        $mdTheming(element);
+        var outerHTML = element[0].outerHTML;
+
+        function getContent(el) {
+          return angular.element(el[0].querySelector('.md-subheader-content'));
+        }
+
+        // Transclude the user-given contents of the subheader
+        // the conventional way.
+        transclude(scope, function(clone) {
+          getContent(element).append(clone);
+        });
+
+        // Create another clone, that uses the outer and inner contents
+        // of the element, that will be 'stickied' as the user scrolls.
+        if (!element.hasClass('md-no-sticky')) {
+          transclude(scope, function(clone) {
+            var stickyClone = $compile(angular.element(outerHTML))(scope);
+            getContent(stickyClone).append(clone);
+            $mdSticky(scope, element, stickyClone);
+          });
+        }
+      };
+    }
+  };
+}
+MdSubheaderDirective.$inject = ["$mdSticky", "$compile", "$mdTheming"];
 
 })();
 (function(){
@@ -14819,6 +16572,9 @@ function MdSticky($document, $mdConstant, $compile, $$rAF, $mdUtil) {
       }
       item.height = item.element.prop('offsetHeight');
       item.clone.css('margin-left', item.left + 'px');
+      if ($mdUtil.floatingScrollbars()) {
+        item.clone.css('margin-right', '0');
+      }
     }
 
 
@@ -14966,93 +16722,6 @@ function MdSticky($document, $mdConstant, $compile, $$rAF, $mdUtil) {
 
 }
 MdSticky.$inject = ["$document", "$mdConstant", "$compile", "$$rAF", "$mdUtil"];
-
-})();
-(function(){
-"use strict";
-
-/**
- * @ngdoc module
- * @name material.components.subheader
- * @description
- * SubHeader module
- *
- *  Subheaders are special list tiles that delineate distinct sections of a
- *  list or grid list and are typically related to the current filtering or
- *  sorting criteria. Subheader tiles are either displayed inline with tiles or
- *  can be associated with content, for example, in an adjacent column.
- *
- *  Upon scrolling, subheaders remain pinned to the top of the screen and remain
- *  pinned until pushed on or off screen by the next subheader. @see [Material
- *  Design Specifications](https://www.google.com/design/spec/components/subheaders.html)
- *
- *  > To improve the visual grouping of content, use the system color for your subheaders.
- *
- */
-angular.module('material.components.subheader', [
-  'material.core',
-  'material.components.sticky'
-])
-  .directive('mdSubheader', MdSubheaderDirective);
-
-/**
- * @ngdoc directive
- * @name mdSubheader
- * @module material.components.subheader
- *
- * @restrict E
- *
- * @description
- * The `<md-subheader>` directive is a subheader for a section. By default it is sticky.
- * You can make it not sticky by applying the `md-no-sticky` class to the subheader.
- *
- *
- * @usage
- * <hljs lang="html">
- * <md-subheader>Online Friends</md-subheader>
- * </hljs>
- */
-
-function MdSubheaderDirective($mdSticky, $compile, $mdTheming) {
-  return {
-    restrict: 'E',
-    replace: true,
-    transclude: true,
-    template: 
-      '<h2 class="md-subheader">' +
-        '<div class="md-subheader-inner">' +
-          '<span class="md-subheader-content"></span>' +
-        '</div>' +
-      '</h2>',
-    compile: function(element, attr, transclude) {
-      return function postLink(scope, element, attr) {
-        $mdTheming(element);
-        var outerHTML = element[0].outerHTML;
-
-        function getContent(el) {
-          return angular.element(el[0].querySelector('.md-subheader-content'));
-        }
-
-        // Transclude the user-given contents of the subheader
-        // the conventional way.
-        transclude(scope, function(clone) {
-          getContent(element).append(clone);
-        });
-
-        // Create another clone, that uses the outer and inner contents
-        // of the element, that will be 'stickied' as the user scrolls.
-        if (!element.hasClass('md-no-sticky')) {
-          transclude(scope, function(clone) {
-            var stickyClone = $compile(angular.element(outerHTML))(scope);
-            getContent(stickyClone).append(clone);
-            $mdSticky(scope, element, stickyClone);
-          });
-        }
-      };
-    }
-  };
-}
-MdSubheaderDirective.$inject = ["$mdSticky", "$compile", "$mdTheming"];
 
 })();
 (function(){
@@ -15777,7 +17446,8 @@ angular
  * @param {string=} md-direction Which direction would you like the tooltip to go?  Supports left, right, top, and bottom.  Defaults to bottom.
  * @param {boolean=} md-autohide If present or provided with a boolean value, the tooltip will hide on mouse leave, regardless of focus
  */
-function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdTheming, $rootElement, $animate, $q) {
+function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdTheming, $rootElement,
+                            $animate, $q) {
 
   var TOOLTIP_SHOW_DELAY = 300;
   var TOOLTIP_WINDOW_EDGE_SPACE = 8;
@@ -15824,14 +17494,14 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
     }
 
     function configureWatchers () {
-      scope.$watch('visible', function (isVisible) {
-        if (isVisible) showTooltip();
-        else hideTooltip();
-      });
       scope.$on('$destroy', function() {
         scope.visible = false;
         element.remove();
         angular.element($window).off('resize', debouncedOnResize);
+      });
+      scope.$watch('visible', function (isVisible) {
+        if (isVisible) showTooltip();
+        else hideTooltip();
       });
     }
 
@@ -15848,26 +17518,48 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
 
     function getParentWithPointerEvents () {
       var parent = element.parent();
-      while ($window.getComputedStyle(parent[0])['pointer-events'] == 'none') {
+      while (parent && $window.getComputedStyle(parent[0])['pointer-events'] == 'none') {
         parent = parent.parent();
       }
       return parent;
     }
 
-    function getNearestContentElement () {
-      var current = element.parent()[0];
-      // Look for the nearest parent md-content, stopping at the rootElement.
-      while (current && current !== $rootElement[0] && current !== document.body) {
-        if (current.tagName && current.tagName.toLowerCase() == 'md-content') break;
-        current = current.parentNode;
-      }
-      return current;
+     function getNearestContentElement () {
+       var current = element.parent()[0];
+       // Look for the nearest parent md-content, stopping at the rootElement.
+       while (current && current !== $rootElement[0] && current !== document.body) {
+         current = current.parentNode;
+       }
+       return current;
+     }
+
+    function hasComputedStyleValue(key, value) {
+        // Check if we should show it or not...
+        var computedStyles = $window.getComputedStyle(element[0]);
+        return angular.isDefined(computedStyles[key]) && (computedStyles[key] == value);
     }
 
     function bindEvents () {
-      var autohide = scope.hasOwnProperty('autohide') ? scope.autohide : attr.hasOwnProperty('mdAutohide');
-      parent.on('focus mouseenter touchstart', function() { setVisible(true); });
-      parent.on('blur mouseleave touchend touchcancel', function() { if ($document[0].activeElement !== parent[0] || autohide) setVisible(false); });
+      var mouseActive = false;
+      var enterHandler = function() {
+        if (!hasComputedStyleValue('pointer-events','none')) {
+          setVisible(true);
+        }
+      };
+      var leaveHandler = function () {
+        var autohide = scope.hasOwnProperty('autohide') ? scope.autohide : attr.hasOwnProperty('mdAutohide');
+        if (autohide || mouseActive || ($document[0].activeElement !== parent[0]) ) {
+          setVisible(false);
+        }
+        mouseActive = false;
+      };
+
+      // to avoid `synthetic clicks` we listen to mousedown instead of `click`
+      parent.on('mousedown', function() { mouseActive = true; });
+      parent.on('focus mouseenter touchstart', enterHandler );
+      parent.on('blur mouseleave touchend touchcancel', leaveHandler );
+
+
       angular.element($window).on('resize', debouncedOnResize);
     }
 
@@ -15893,8 +17585,8 @@ function MdTooltipDirective($timeout, $window, $$rAF, $document, $mdUtil, $mdThe
 
       // Check if we should display it or not.
       // This handles hide-* and show-* along with any user defined css
-      var computedStyles = $window.getComputedStyle(element[0]);
-      if (angular.isDefined(computedStyles.display) && computedStyles.display == 'none') {
+      if ( hasComputedStyleValue('display','none') ) {
+        scope.visible = false;
         element.detach();
         return;
       }
@@ -15999,11 +17691,10 @@ var ITEM_HEIGHT = 41,
     MAX_HEIGHT = 5.5 * ITEM_HEIGHT,
     MENU_PADDING = 8;
 
-function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $mdTheming, $window, $animate, $rootElement) {
-
+function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $mdTheming, $window,
+                             $animate, $rootElement, $attrs) {
   //-- private variables
-
-  var self      = this,
+  var ctrl      = this,
       itemParts = $scope.itemsExpr.split(/ in /i),
       itemExpr  = itemParts[1],
       elements  = null,
@@ -16011,43 +17702,48 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
       cache     = {},
       noBlur    = false,
       selectedItemWatchers = [],
-      hasFocus  = false;
+      hasFocus  = false,
+      lastCount = 0;
+
+  //-- public variables with handlers
+  defineProperty('hidden', handleHiddenChange, true);
 
   //-- public variables
-
-  self.scope    = $scope;
-  self.parent   = $scope.$parent;
-  self.itemName = itemParts[0];
-  self.matches  = [];
-  self.loading  = false;
-  self.hidden   = true;
-  self.index    = null;
-  self.messages = [];
-  self.id       = $mdUtil.nextUid();
+  ctrl.scope      = $scope;
+  ctrl.parent     = $scope.$parent;
+  ctrl.itemName   = itemParts[0];
+  ctrl.matches    = [];
+  ctrl.loading    = false;
+  ctrl.hidden     = true;
+  ctrl.index      = null;
+  ctrl.messages   = [];
+  ctrl.id         = $mdUtil.nextUid();
+  ctrl.isDisabled = null;
+  ctrl.isRequired = null;
 
   //-- public methods
-
-  self.keydown  = keydown;
-  self.blur     = blur;
-  self.focus    = focus;
-  self.clear    = clearValue;
-  self.select   = select;
-  self.getCurrentDisplayValue         = getCurrentDisplayValue;
-  self.registerSelectedItemWatcher    = registerSelectedItemWatcher;
-  self.unregisterSelectedItemWatcher  = unregisterSelectedItemWatcher;
-
-  self.listEnter = function () { noBlur = true; };
-  self.listLeave = function () {
-    noBlur = false;
-    if (!hasFocus) self.hidden = true;
-  };
-  self.mouseUp   = function () { elements.input.focus(); };
+  ctrl.keydown    = keydown;
+  ctrl.blur       = blur;
+  ctrl.focus      = focus;
+  ctrl.clear      = clearValue;
+  ctrl.select     = select;
+  ctrl.listEnter  = onListEnter;
+  ctrl.listLeave  = onListLeave;
+  ctrl.mouseUp    = onMouseup;
+  ctrl.getCurrentDisplayValue         = getCurrentDisplayValue;
+  ctrl.registerSelectedItemWatcher    = registerSelectedItemWatcher;
+  ctrl.unregisterSelectedItemWatcher  = unregisterSelectedItemWatcher;
 
   return init();
 
   //-- initialization methods
 
+  /**
+   * Initialize the controller, setup watchers, gather elements
+   */
   function init () {
+    $mdUtil.initOptionalProperties($scope, $attrs, { searchText: null, selectedItem: null } );
+    $mdTheming($element);
     configureWatchers();
     $timeout(function () {
       gatherElements();
@@ -16056,6 +17752,10 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     });
   }
 
+  /**
+   * Calculates the dropdown's position and applies the new styles to the menu element
+   * @returns {*}
+   */
   function positionDropdown () {
     if (!elements) return $timeout(positionDropdown, 0, false);
     var hrect  = elements.wrap.getBoundingClientRect(),
@@ -16082,6 +17782,9 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     elements.$.ul.css(styles);
     $timeout(correctHorizontalAlignment, 0, false);
 
+    /**
+     * Makes sure that the menu doesn't go off of the screen on either side.
+     */
     function correctHorizontalAlignment () {
       var dropdown = elements.ul.getBoundingClientRect(),
           styles   = {};
@@ -16092,6 +17795,9 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     }
   }
 
+  /**
+   * Moves the dropdown menu to the body tag in order to avoid z-index and overflow issues.
+   */
   function moveDropdown () {
     if (!elements.$.root.length) return;
     $mdTheming(elements.$.ul);
@@ -16100,23 +17806,38 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     if ($animate.pin) $animate.pin(elements.$.ul, $rootElement);
   }
 
+  /**
+   * Sends focus to the input element.
+   */
   function focusElement () {
     if ($scope.autofocus) elements.input.focus();
   }
 
+  /**
+   * Sets up any watchers used by autocomplete
+   */
   function configureWatchers () {
     var wait = parseInt($scope.delay, 10) || 0;
-    $scope.$watch('searchText', wait
-        ? $mdUtil.debounce(handleSearchText, wait)
-        : handleSearchText);
+    $attrs.$observe('disabled', function (value) { ctrl.isDisabled = value; });
+    $attrs.$observe('required', function (value) { ctrl.isRequired = value !== null; });
+    $scope.$watch('searchText', wait ? $mdUtil.debounce(handleSearchText, wait) : handleSearchText);
     registerSelectedItemWatcher(selectedItemChange);
     $scope.$watch('selectedItem', handleSelectedItemChange);
-    $scope.$watch('$mdAutocompleteCtrl.hidden', function (hidden, oldHidden) {
-      if (!hidden && oldHidden) positionDropdown();
-    });
     angular.element($window).on('resize', positionDropdown);
+    $scope.$on('$destroy', cleanup);
   }
 
+  /**
+   * Removes any events or leftover elements created by this controller
+   */
+  function cleanup () {
+    angular.element($window).off('resize', positionDropdown);
+    elements.$.ul.remove();
+  }
+
+  /**
+   * Gathers all of the elements needed for this controller
+   */
   function gatherElements () {
     elements = {
       main:  $element[0],
@@ -16130,6 +17851,10 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     elements.$ = getAngularElements(elements);
   }
 
+  /**
+   * Finds the element that the menu will base its position on
+   * @returns {*}
+   */
   function getSnapTarget () {
     for (var element = $element; element.length; element = element.parent()) {
       if (angular.isDefined(element.attr('md-autocomplete-snap'))) return element[0];
@@ -16137,6 +17862,11 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     return elements.wrap;
   }
 
+  /**
+   * Gathers angular-wrapped versions of each element
+   * @param elements
+   * @returns {{}}
+   */
   function getAngularElements (elements) {
     var obj = {};
     for (var key in elements) {
@@ -16147,6 +17877,47 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
 
   //-- event/change handlers
 
+  /**
+   * Handles changes to the `hidden` property.
+   * @param hidden
+   * @param oldHidden
+   */
+  function handleHiddenChange (hidden, oldHidden) {
+    if (!hidden && oldHidden) positionDropdown();
+    if (!hidden) {
+      if (elements) $timeout(function () { $mdUtil.disableScrollAround(elements.ul); }, 0, false);
+    } else {
+      $mdUtil.enableScrolling();
+    }
+  }
+
+  /**
+   * When the user mouses over the dropdown menu, ignore blur events.
+   */
+  function onListEnter () {
+    noBlur = true;
+  }
+
+  /**
+   * When the user's mouse leaves the menu, blur events may hide the menu again.
+   */
+  function onListLeave () {
+    noBlur = false;
+    if (!hasFocus) ctrl.hidden = true;
+  }
+
+  /**
+   * When the mouse button is released, send focus back to the input field.
+   */
+  function onMouseup () {
+    elements.input.focus();
+  }
+
+  /**
+   * Handles changes to the selected item.
+   * @param selectedItem
+   * @param previousSelectedItem
+   */
   function selectedItemChange (selectedItem, previousSelectedItem) {
     if (selectedItem) {
       $scope.searchText = getDisplayValue(selectedItem);
@@ -16155,6 +17926,12 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
       $scope.itemChange(getItemScope(selectedItem));
   }
 
+  /**
+   * Calls any external watchers listening for the selected item.  Used in conjunction with
+   * `registerSelectedItemWatcher`.
+   * @param selectedItem
+   * @param previousSelectedItem
+   */
   function handleSelectedItemChange(selectedItem, previousSelectedItem) {
     for (var i = 0; i < selectedItemWatchers.length; ++i) {
       selectedItemWatchers[i](selectedItem, previousSelectedItem);
@@ -16182,8 +17959,13 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     }
   }
 
+  /**
+   * Handles changes to the searchText property.
+   * @param searchText
+   * @param previousSearchText
+   */
   function handleSearchText (searchText, previousSearchText) {
-    self.index = getDefaultIndex();
+    ctrl.index = getDefaultIndex();
     //-- do nothing on init
     if (searchText === previousSearchText) return;
     //-- clear selected item if search text no longer matches it
@@ -16194,55 +17976,65 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
       $scope.textChange(getItemScope($scope.selectedItem));
     //-- cancel results if search text is not long enough
     if (!isMinLengthMet()) {
-      self.loading = false;
-      self.matches = [];
-      self.hidden = shouldHide();
+      ctrl.loading = false;
+      ctrl.matches = [];
+      ctrl.hidden = shouldHide();
       updateMessages();
     } else {
       handleQuery();
     }
   }
 
+  /**
+   * Handles input blur event, determines if the dropdown should hide.
+   */
   function blur () {
     hasFocus = false;
-    if (!noBlur) self.hidden = true;
+    if (!noBlur) ctrl.hidden = true;
   }
 
+  /**
+   * Handles input focus event, determines if the dropdown should show.
+   */
   function focus () {
     hasFocus = true;
     //-- if searchText is null, let's force it to be a string
     if (!angular.isString($scope.searchText)) $scope.searchText = '';
     if ($scope.minLength > 0) return;
-    self.hidden = shouldHide();
-    if (!self.hidden) handleQuery();
+    ctrl.hidden = shouldHide();
+    if (!ctrl.hidden) handleQuery();
   }
 
+  /**
+   * Handles keyboard input.
+   * @param event
+   */
   function keydown (event) {
     switch (event.keyCode) {
       case $mdConstant.KEY_CODE.DOWN_ARROW:
-        if (self.loading) return;
+        if (ctrl.loading) return;
         event.preventDefault();
-        self.index = Math.min(self.index + 1, self.matches.length - 1);
+        ctrl.index = Math.min(ctrl.index + 1, ctrl.matches.length - 1);
         updateScroll();
-        updateSelectionMessage();
+        updateMessages();
         break;
       case $mdConstant.KEY_CODE.UP_ARROW:
-        if (self.loading) return;
+        if (ctrl.loading) return;
         event.preventDefault();
-        self.index = self.index < 0 ? self.matches.length - 1 : Math.max(0, self.index - 1);
+        ctrl.index = ctrl.index < 0 ? ctrl.matches.length - 1 : Math.max(0, ctrl.index - 1);
         updateScroll();
-        updateSelectionMessage();
+        updateMessages();
         break;
       case $mdConstant.KEY_CODE.TAB:
       case $mdConstant.KEY_CODE.ENTER:
-        if (self.hidden || self.loading || self.index < 0 || self.matches.length < 1) return;
+        if (ctrl.hidden || ctrl.loading || ctrl.index < 0 || ctrl.matches.length < 1) return;
         event.preventDefault();
-        select(self.index);
+        select(ctrl.index);
         break;
       case $mdConstant.KEY_CODE.ESCAPE:
-        self.matches = [];
-        self.hidden = true;
-        self.index = getDefaultIndex();
+        ctrl.matches = [];
+        ctrl.hidden = true;
+        ctrl.index = getDefaultIndex();
         break;
       default:
     }
@@ -16250,47 +18042,106 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
 
   //-- getters
 
+  /**
+   * Returns the minimum length needed to display the dropdown.
+   * @returns {*}
+   */
   function getMinLength () {
     return angular.isNumber($scope.minLength) ? $scope.minLength : 1;
   }
 
+  /**
+   * Returns the display value for an item.
+   * @param item
+   * @returns {*}
+   */
   function getDisplayValue (item) {
     return (item && $scope.itemText) ? $scope.itemText(getItemScope(item)) : item;
   }
 
+  /**
+   * Returns the locals object for compiling item templates.
+   * @param item
+   * @returns {{}}
+   */
   function getItemScope (item) {
     if (!item) return;
     var locals = {};
-    if (self.itemName) locals[self.itemName] = item;
+    if (ctrl.itemName) locals[ctrl.itemName] = item;
     return locals;
   }
 
+  /**
+   * Returns the default index based on whether or not autoselect is enabled.
+   * @returns {number}
+   */
   function getDefaultIndex () {
     return $scope.autoselect ? 0 : -1;
   }
 
+  /**
+   * Determines if the menu should be hidden.
+   * @returns {boolean}
+   */
   function shouldHide () {
     if (!isMinLengthMet()) return true;
   }
 
+  /**
+   * Returns the display value of the current item.
+   * @returns {*}
+   */
   function getCurrentDisplayValue () {
-    return getDisplayValue(self.matches[self.index]);
+    return getDisplayValue(ctrl.matches[ctrl.index]);
   }
 
+  /**
+   * Determines if the minimum length is met by the search text.
+   * @returns {*}
+   */
   function isMinLengthMet () {
-    return $scope.searchText.length >= getMinLength();
+    return angular.isDefined($scope.searchText) && $scope.searchText.length >= getMinLength();
   }
 
   //-- actions
 
-  function select (index) {
-    $scope.selectedItem = self.matches[index];
-    $scope.searchText = getDisplayValue($scope.selectedItem) || $scope.searchText;
-    self.hidden = true;
-    self.index = 0;
-    self.matches = [];
+  /**
+   * Defines a public property with a handler and a default value.
+   * @param key
+   * @param handler
+   * @param value
+   */
+  function defineProperty (key, handler, value) {
+    Object.defineProperty(ctrl, key, {
+      get: function () { return value; },
+      set: function (newValue) {
+        var oldValue = value;
+        value = newValue;
+        handler(newValue, oldValue);
+      }
+    });
   }
 
+  /**
+   * Selects the item at the given index.
+   * @param index
+   */
+  function select (index) {
+    $scope.selectedItem = ctrl.matches[index];
+    ctrl.hidden = true;
+    ctrl.index = 0;
+    ctrl.matches = [];
+    //-- force form to update state for validation
+    $timeout(function () {
+      elements.$.input.controller('ngModel').$setViewValue(getDisplayValue($scope.selectedItem) ||
+          $scope.searchText);
+      ctrl.hidden = true;
+    });
+  }
+
+  /**
+   * Clears the searchText value and selected item.
+   */
   function clearValue () {
     $scope.searchText = '';
     select(-1);
@@ -16303,46 +18154,60 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     elements.input.focus();
   }
 
+  /**
+   * Fetches the results for the provided search text.
+   * @param searchText
+   */
   function fetchResults (searchText) {
     var items = $scope.$parent.$eval(itemExpr),
         term = searchText.toLowerCase();
     if (angular.isArray(items)) {
       handleResults(items);
-    } else {
-      self.loading = true;
+    } else if (items) {
+      ctrl.loading = true;
       if (items.success) items.success(handleResults);
       if (items.then)    items.then(handleResults);
-      if (items.error)   items.error(function () { self.loading = false; });
+      if (items.error)   items.error(function () { ctrl.loading = false; });
     }
     function handleResults (matches) {
       cache[term] = matches;
-      self.loading = false;
       if (searchText !== $scope.searchText) return; //-- just cache the results if old request
+      ctrl.loading = false;
       promise = null;
-      self.matches = matches;
-      self.hidden = shouldHide();
+      ctrl.matches = matches;
+      ctrl.hidden = shouldHide();
       updateMessages();
       positionDropdown();
     }
   }
 
+  /**
+   * Updates the ARIA messages
+   */
   function updateMessages () {
-    if (self.hidden) return;
-    switch (self.matches.length) {
-      case 0:  return self.messages.splice(0);
-      case 1:  return self.messages.push({ display: 'There is 1 match available.' });
-      default: return self.messages.push({ display: 'There are '
-          + self.matches.length
-          + ' matches available.' });
+    ctrl.messages = [ getCountMessage(), getCurrentDisplayValue() ];
+  }
+
+  /**
+   * Returns the ARIA message for how many results match the current query.
+   * @returns {*}
+   */
+  function getCountMessage () {
+    if (lastCount === ctrl.matches.length) return '';
+    lastCount = ctrl.matches.length;
+    switch (ctrl.matches.length) {
+      case 0:  return 'There are no matches available.';
+      case 1:  return 'There is 1 match available.';
+      default: return 'There are ' + ctrl.matches.length + ' matches available.';
     }
   }
 
-  function updateSelectionMessage () {
-    self.messages.push({ display: getCurrentDisplayValue() });
-  }
-
+  /**
+   * Makes sure that the focused element is within view.
+   */
   function updateScroll () {
-    var li  = elements.li[self.index],
+    if (!elements.li[ctrl.index]) return;
+    var li  = elements.li[ctrl.index],
         top = li.offsetTop,
         bot = top + li.offsetHeight,
         hgt = elements.ul.clientHeight;
@@ -16353,6 +18218,10 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     }
   }
 
+  /**
+   * Starts the query to gather the results for the current searchText.  Attempts to return cached
+   * results first, then forwards the process to `fetchResults` if necessary.
+   */
   function handleQuery () {
     var searchText = $scope.searchText,
         term = searchText.toLowerCase();
@@ -16363,16 +18232,16 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $timeout, $
     }
     //-- if results are cached, pull in cached results
     if (!$scope.noCache && cache[term]) {
-      self.matches = cache[term];
+      ctrl.matches = cache[term];
       updateMessages();
     } else {
       fetchResults(searchText);
     }
-    self.hidden = shouldHide();
+    if (hasFocus) ctrl.hidden = shouldHide();
   }
 
 }
-MdAutocompleteCtrl.$inject = ["$scope", "$element", "$mdUtil", "$mdConstant", "$timeout", "$mdTheming", "$window", "$animate", "$rootElement"];
+MdAutocompleteCtrl.$inject = ["$scope", "$element", "$mdUtil", "$mdConstant", "$timeout", "$mdTheming", "$window", "$animate", "$rootElement", "$attrs"];
 
 })();
 (function(){
@@ -16397,10 +18266,23 @@ angular
  * In more complex cases, you may want to include other content such as a message to display when
  * no matches were found.  You can do this by wrapping your template in `md-item-template` and adding
  * a tag for `md-not-found`.  An example of this is shown below.
+ * ### Validation
+ *
+ * You can use `ng-messages` to include validation the same way that you would normally validate;
+ * however, if you want to replicate a standard input with a floating label, you will have to do the
+ * following:
+ *
+ * - Make sure that your template is wrapped in `md-item-template`
+ * - Add your `ng-messages` code inside of `md-autocomplete`
+ * - Add your validation properties to `md-autocomplete` (ie. `required`)
+ * - Add a `name` to `md-autocomplete` (to be used on the generated `input`)
+ *
+ * There is an example below of how this should look.
+ *
  *
  * @param {expression} md-items An expression in the format of `item in items` to iterate over matches for your search.
- * @param {expression} md-selected-item-change An expression to be run each time a new item is selected
- * @param {expression} md-search-text-change An expression to be run each time the search text updates
+ * @param {expression=} md-selected-item-change An expression to be run each time a new item is selected
+ * @param {expression=} md-search-text-change An expression to be run each time the search text updates
  * @param {string=} md-search-text A model to bind the search query text to
  * @param {object=} md-selected-item A model to bind the selected item to
  * @param {string=} md-item-text An expression that will convert your object to a single string.
@@ -16412,6 +18294,7 @@ angular
  * @param {boolean=} md-autofocus If true, will immediately focus the input element
  * @param {boolean=} md-autoselect If true, the first item will be selected by default
  * @param {string=} md-menu-class This will be applied to the dropdown menu for styling
+ * @param {string=} md-floating-label This will add a floating label to autocomplete and wrap it in `md-input-container`
  *
  * @usage
  * ###Basic Example
@@ -16443,71 +18326,95 @@ angular
  *
  * In this example, our code utilizes `md-item-template` and `md-not-found` to specify the different
  * parts that make up our component.
+ *
+ * ### Example with validation
+ * <hljs lang="html">
+ * <form name="autocompleteForm">
+ *   <md-autocomplete
+ *       required
+ *       input-name="autocomplete"
+ *       md-selected-item="selectedItem"
+ *       md-search-text="searchText"
+ *       md-items="item in getMatches(searchText)"
+ *       md-item-text="item.display">
+ *     <md-item-template>
+ *       <span md-highlight-text="searchText">{{item.display}}</span>
+ *     </md-item-template>
+ *     <div ng-messages="autocompleteForm.autocomplete.$error">
+ *       <div ng-message="required">This field is required</div>
+ *     </div>
+ *   </md-autocomplete>
+ * </form>
+ * </hljs>
+ *
+ * In this example, our code utilizes `md-item-template` and `md-not-found` to specify the different
+ * parts that make up our component.
  */
 
 function MdAutocomplete ($mdTheming, $mdUtil) {
   return {
     controller:   'MdAutocompleteCtrl',
     controllerAs: '$mdAutocompleteCtrl',
-    link:         link,
     scope:        {
-      name:          '@',
-      searchText:    '=?mdSearchText',
-      selectedItem:  '=?mdSelectedItem',
-      itemsExpr:     '@mdItems',
-      itemText:      '&mdItemText',
-      placeholder:   '@placeholder',
-      noCache:       '=?mdNoCache',
-      itemChange:    '&?mdSelectedItemChange',
-      textChange:    '&?mdSearchTextChange',
-      minLength:     '=?mdMinLength',
-      delay:         '=?mdDelay',
-      autofocus:     '=?mdAutofocus',
-      floatingLabel: '@?mdFloatingLabel',
-      autoselect:    '=?mdAutoselect',
-      menuClass:     '@?mdMenuClass'
+      inputName:      '@mdInputName',
+      inputMinlength: '@mdInputMinlength',
+      inputMaxlength: '@mdInputMaxlength',
+      searchText:     '=?mdSearchText',
+      selectedItem:   '=?mdSelectedItem',
+      itemsExpr:      '@mdItems',
+      itemText:       '&mdItemText',
+      placeholder:    '@placeholder',
+      noCache:        '=?mdNoCache',
+      itemChange:     '&?mdSelectedItemChange',
+      textChange:     '&?mdSearchTextChange',
+      minLength:      '=?mdMinLength',
+      delay:          '=?mdDelay',
+      autofocus:      '=?mdAutofocus',
+      floatingLabel:  '@?mdFloatingLabel',
+      autoselect:     '=?mdAutoselect',
+      menuClass:      '@?mdMenuClass'
     },
     template: function (element, attr) {
+      var noItemsTemplate = getNoItemsTemplate(),
+          itemTemplate = getItemTemplate(),
+          leftover = element.html();
       return '\
-        <md-autocomplete-wrap ng-class="{ \'md-whiteframe-z1\': !floatingLabel }" role="listbox">\
+        <md-autocomplete-wrap\
+            layout="row"\
+            ng-class="{ \'md-whiteframe-z1\': !floatingLabel }"\
+            role="listbox">\
           ' + getInputElement() + '\
-          <button\
-              type="button"\
-              tabindex="-1"\
-              ng-if="$mdAutocompleteCtrl.scope.searchText && !isDisabled"\
-              ng-click="$mdAutocompleteCtrl.clear()">\
-            <md-icon md-svg-icon="md-cancel"></md-icon>\
-            <span class="md-visually-hidden">Clear</span>\
-          </button>\
           <md-progress-linear\
               ng-if="$mdAutocompleteCtrl.loading"\
               md-mode="indeterminate"></md-progress-linear>\
           <ul role="presentation"\
               class="md-autocomplete-suggestions md-whiteframe-z1 {{menuClass || \'\'}}"\
               id="ul-{{$mdAutocompleteCtrl.id}}"\
+              ng-hide="$mdAutocompleteCtrl.hidden"\
               ng-mouseenter="$mdAutocompleteCtrl.listEnter()"\
               ng-mouseleave="$mdAutocompleteCtrl.listLeave()"\
               ng-mouseup="$mdAutocompleteCtrl.mouseUp()">\
             <li ng-repeat="(index, item) in $mdAutocompleteCtrl.matches"\
                 ng-class="{ selected: index === $mdAutocompleteCtrl.index }"\
-                ng-hide="$mdAutocompleteCtrl.hidden"\
                 ng-click="$mdAutocompleteCtrl.select(index)"\
                 md-autocomplete-list-item="$mdAutocompleteCtrl.itemName">\
-                ' + getItemTemplate() + '\
+                ' + itemTemplate + '\
             </li>\
-            ' + getNoItemsTemplate() + '\
+            ' + noItemsTemplate + '\
           </ul>\
         </md-autocomplete-wrap>\
         <aria-status\
             class="md-visually-hidden"\
             role="status"\
             aria-live="assertive">\
-          <p ng-repeat="message in $mdAutocompleteCtrl.messages">{{message.display}}</p>\
+          <p ng-repeat="message in $mdAutocompleteCtrl.messages" ng-if="message">{{message}}</p>\
         </aria-status>';
 
       function getItemTemplate() {
-        var templateTag = element.find('md-item-template').remove();
-        return templateTag.length ? templateTag.html() : element.html();
+        var templateTag = element.find('md-item-template').remove(),
+            html = templateTag.length ? templateTag.html() : element.html();
+        if (!templateTag.length) element.empty();
+        return html;
       }
 
       function getNoItemsTemplate() {
@@ -16525,13 +18432,16 @@ function MdAutocomplete ($mdTheming, $mdUtil) {
       function getInputElement() {
         if (attr.mdFloatingLabel) {
           return '\
-            <md-input-container ng-if="floatingLabel">\
+            <md-input-container flex ng-if="floatingLabel">\
               <label>{{floatingLabel}}</label>\
               <input type="search"\
                   id="fl-input-{{$mdAutocompleteCtrl.id}}"\
-                  name="{{name}}"\
+                  name="{{inputName}}"\
                   autocomplete="off"\
-                  ng-disabled="isDisabled"\
+                  ng-required="isRequired"\
+                  ng-minlength="inputMinlength"\
+                  ng-maxlength="inputMaxlength"\
+                  ng-disabled="$mdAutocompleteCtrl.isDisabled"\
                   ng-model="$mdAutocompleteCtrl.scope.searchText"\
                   ng-keydown="$mdAutocompleteCtrl.keydown($event)"\
                   ng-blur="$mdAutocompleteCtrl.blur()"\
@@ -16542,15 +18452,17 @@ function MdAutocomplete ($mdTheming, $mdUtil) {
                   aria-haspopup="true"\
                   aria-activedescendant=""\
                   aria-expanded="{{!$mdAutocompleteCtrl.hidden}}"/>\
+              <div md-autocomplete-parent-scope md-autocomplete-replace>' + leftover + '</div>\
             </md-input-container>';
         } else {
           return '\
-            <input type="search"\
+            <input flex type="search"\
                 id="input-{{$mdAutocompleteCtrl.id}}"\
-                name="{{name}}"\
+                name="{{inputName}}"\
                 ng-if="!floatingLabel"\
                 autocomplete="off"\
-                ng-disabled="isDisabled"\
+                ng-required="isRequired"\
+                ng-disabled="$mdAutocompleteCtrl.isDisabled"\
                 ng-model="$mdAutocompleteCtrl.scope.searchText"\
                 ng-keydown="$mdAutocompleteCtrl.keydown($event)"\
                 ng-blur="$mdAutocompleteCtrl.blur()"\
@@ -16561,19 +18473,20 @@ function MdAutocomplete ($mdTheming, $mdUtil) {
                 aria-autocomplete="list"\
                 aria-haspopup="true"\
                 aria-activedescendant=""\
-                aria-expanded="{{!$mdAutocompleteCtrl.hidden}}"/>';
+                aria-expanded="{{!$mdAutocompleteCtrl.hidden}}"/>\
+            <button\
+                type="button"\
+                tabindex="-1"\
+                ng-if="$mdAutocompleteCtrl.scope.searchText && !$mdAutocompleteCtrl.isDisabled"\
+                ng-click="$mdAutocompleteCtrl.clear()">\
+              <md-icon md-svg-icon="md-close"></md-icon>\
+              <span class="md-visually-hidden">Clear</span>\
+            </button>\
+                ';
         }
       }
     }
   };
-
-  function link (scope, element, attr) {
-    attr.$observe('disabled', function (value) { scope.isDisabled = value; });
-
-    $mdUtil.initOptionalProperties(scope, attr, {searchText:null, selectedItem:null} );
-
-    $mdTheming(element);
-  }
 }
 MdAutocomplete.$inject = ["$mdTheming", "$mdUtil"];
 
@@ -16711,6 +18624,10 @@ function MdAutocompleteParentScope ($compile, $mdUtil) {
   function postLink (scope, element, attr) {
     var ctrl     = scope.$parent.$mdAutocompleteCtrl;
     $compile(element.contents())(ctrl.parent);
+    if (attr.hasOwnProperty('mdAutocompleteReplace')) {
+      element.after(element.contents());
+      element.remove();
+    }
   }
 }
 MdAutocompleteParentScope.$inject = ["$compile", "$mdUtil"];
@@ -17735,8 +19652,34 @@ function MdTab () {
   return {
     require: '^?mdTabs',
     terminal: true,
+    template: function (element, attr) {
+      var label = getLabel(),
+          body  = getTemplate();
+      return '' +
+          '<md-tab-label>' + label + '</md-tab-label>' +
+          '<md-tab-body>' + body + '</md-tab-body>';
+      function getLabel () {
+        return getLabelElement() || getLabelAttribute() || getElementContents();
+        function getLabelAttribute () { return attr.label; }
+        function getLabelElement () {
+          var label = element.find('md-tab-label').eq(0);
+          if (label.length) return label.remove().html();
+        }
+        function getElementContents () {
+          var html = element.html();
+          element.empty();
+          return html;
+        }
+      }
+      function getTemplate () {
+        var content = element.find('md-tab-body').eq(0),
+            template = content.length ? content.html() : attr.label ? element.html() : '';
+        if (content.length) content.remove();
+        else if (attr.label) element.empty();
+        return template;
+      }
+    },
     scope: {
-      label:    '@',
       active:   '=?mdActive',
       disabled: '=?ngDisabled',
       select:   '&?mdOnSelect',
@@ -17749,12 +19692,15 @@ function MdTab () {
     if (!ctrl) return;
     var tabs = element.parent()[0].getElementsByTagName('md-tab'),
         index = Array.prototype.indexOf.call(tabs, element[0]),
+        body = element.find('md-tab-body').eq(0).remove(),
+        label = element.find('md-tab-label').eq(0).remove(),
         data = ctrl.insertTab({
           scope:    scope,
           parent:   scope.$parent,
           index:    index,
-          template: getTemplate(),
-          label:    getLabel()
+          element:  element,
+          template: body.html(),
+          label:    label.html()
         }, index);
 
     scope.select   = scope.select   || angular.noop;
@@ -17773,28 +19719,6 @@ function MdTab () {
     );
     scope.$on('$destroy', function () { ctrl.removeTab(data); });
 
-    function getLabel () {
-      var label = attr.label || (element.find('md-tab-label')[0] || element[0]).innerHTML;
-      return getLabelAttribute() || getLabelElement() || getElementContents();
-      function getLabelAttribute () { return attr.label; }
-      function getLabelElement () {
-        var label = element.find('md-tab-label');
-        if (label.length) return label.remove().html();
-      }
-      function getElementContents () {
-        var html = element.html();
-        element.empty();
-        return html;
-      }
-    }
-
-    function getTemplate () {
-      var content = element.find('md-tab-body'),
-          template = content.length ? content.html() : attr.label ? element.html() : null;
-      if (content.length) content.remove();
-      else if (attr.label) element.empty();
-      return template;
-    }
   }
 }
 
@@ -17815,6 +19739,19 @@ function MdTabItem () {
     }
   };
 }
+
+})();
+(function(){
+"use strict";
+
+angular
+    .module('material.components.tabs')
+    .directive('mdTabLabel', MdTabLabel);
+
+function MdTabLabel () {
+  return { terminal: true };
+}
+
 
 })();
 (function(){
@@ -17850,27 +19787,34 @@ angular
  * @ngInject
  */
 function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $mdTabInkRipple,
-                           $mdUtil, $animate) {
-  var ctrl     = this,
-      locked   = false,
-      elements = getElements(),
-      queue    = [];
+                           $mdUtil, $animate, $attrs, $compile, $mdTheming) {
+  //-- define private properties
+  var ctrl       = this,
+      locked     = false,
+      elements   = getElements(),
+      queue      = [],
+      destroyed  = false,
+      loaded     = false;
 
+  //-- define public properties with change handlers
+  defineProperty('focusIndex', handleFocusIndexChange, $scope.selectedIndex || 0);
+  defineProperty('offsetLeft', handleOffsetChange, 0);
+  defineProperty('hasContent', handleHasContent, false);
+
+  //-- define public properties
   ctrl.scope = $scope;
   ctrl.parent = $scope.$parent;
   ctrl.tabs = [];
   ctrl.lastSelectedIndex = null;
-  ctrl.focusIndex = 0;
-  ctrl.offsetLeft = 0;
-  ctrl.hasContent = false;
   ctrl.hasFocus = false;
   ctrl.lastClick = true;
+  ctrl.shouldPaginate = false;
+  ctrl.shouldCenterTabs = shouldCenterTabs();
 
+  //-- define public methods
   ctrl.redirectFocus = redirectFocus;
   ctrl.attachRipple = attachRipple;
   ctrl.shouldStretchTabs = shouldStretchTabs;
-  ctrl.shouldPaginate = shouldPaginate;
-  ctrl.shouldCenterTabs = shouldCenterTabs;
   ctrl.insertTab = insertTab;
   ctrl.removeTab = removeTab;
   ctrl.select = select;
@@ -17882,43 +19826,145 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
   ctrl.canPageBack = canPageBack;
   ctrl.refreshIndex = refreshIndex;
   ctrl.incrementSelectedIndex = incrementSelectedIndex;
-  ctrl.updateInkBarStyles = updateInkBarStyles;
+  ctrl.updateInkBarStyles = $mdUtil.debounce(updateInkBarStyles, 100);
   ctrl.updateTabOrder = $mdUtil.debounce(updateTabOrder, 100);
 
   init();
 
+  /**
+   * Perform initialization for the controller, setup events and watcher(s)
+   */
   function init () {
-    $scope.$watch('selectedIndex', handleSelectedIndexChange);
-    $scope.$watch('$mdTabsCtrl.focusIndex', handleFocusIndexChange);
-    $scope.$watch('$mdTabsCtrl.offsetLeft', handleOffsetChange);
-    $scope.$watch('$mdTabsCtrl.hasContent', handleHasContent);
-    angular.element($window).on('resize', function () { $scope.$apply(handleWindowResize); });
-    $timeout(updateInkBarStyles, 0, false);
-    $timeout(updateHeightFromContent, 0, false);
+    $scope.selectedIndex = $scope.selectedIndex || 0;
+    compileTemplate();
+    configureWatchers();
+    bindEvents();
+    $mdTheming($element);
+    $timeout(function () {
+      updateHeightFromContent();
+      adjustOffset();
+      updatePagination();
+      ctrl.tabs[$scope.selectedIndex] && ctrl.tabs[$scope.selectedIndex].scope.select();
+      loaded = true;
+    });
   }
 
+  function compileTemplate () {
+    var template = $attrs.$mdTabsTemplate,
+        element  = angular.element(elements.data);
+    element.html(template);
+    $compile(element.contents())(ctrl.parent);
+    delete $attrs.$mdTabsTemplate;
+  }
+
+  function bindEvents () {
+    angular.element($window).on('resize', handleWindowResize);
+    angular.element(elements.paging).on('DOMSubtreeModified', ctrl.updateInkBarStyles);
+    angular.element(elements.paging).on('DOMSubtreeModified', updatePagination);
+  }
+
+  function configureWatchers () {
+    $mdUtil.initOptionalProperties($scope, $attrs);
+    $attrs.$observe('mdNoBar', function (value) { $scope.noInkBar = angular.isDefined(value); });
+    $scope.$watch('selectedIndex', handleSelectedIndexChange);
+    $scope.$watch('dynamicHeight', function (value) {
+      if (value) $element.addClass('md-dynamic-height');
+      else $element.removeClass('md-dynamic-height');
+    });
+    $scope.$on('$destroy', cleanup);
+  }
+
+  /**
+   * Remove any events defined by this controller
+   */
+  function cleanup () {
+    destroyed = true;
+    angular.element($window).off('resize', handleWindowResize);
+    angular.element(elements.paging).off('DOMSubtreeModified', ctrl.updateInkBarStyles);
+    angular.element(elements.paging).off('DOMSubtreeModified', updatePagination);
+  }
+
+  //-- Change handlers
+
+  /**
+   * Add/remove the `md-no-tab-content` class depending on `ctrl.hasContent`
+   * @param hasContent
+   */
   function handleHasContent (hasContent) {
     $element[hasContent ? 'removeClass' : 'addClass']('md-no-tab-content');
   }
 
-  function getElements () {
-    var elements      = {};
-
-    //-- gather tab bar elements
-    elements.wrapper  = $element[0].getElementsByTagName('md-tabs-wrapper')[0];
-    elements.canvas   = elements.wrapper.getElementsByTagName('md-tabs-canvas')[0];
-    elements.paging   = elements.canvas.getElementsByTagName('md-pagination-wrapper')[0];
-    elements.tabs     = elements.paging.getElementsByTagName('md-tab-item');
-    elements.dummies  = elements.canvas.getElementsByTagName('md-dummy-tab');
-    elements.inkBar   = elements.paging.getElementsByTagName('md-ink-bar')[0];
-
-    //-- gather tab content elements
-    elements.contentsWrapper = $element[0].getElementsByTagName('md-tabs-content-wrapper')[0];
-    elements.contents = elements.contentsWrapper.getElementsByTagName('md-tab-content');
-
-    return elements;
+  /**
+   * Apply ctrl.offsetLeft to the paging element when it changes
+   * @param left
+   */
+  function handleOffsetChange (left) {
+    var newValue = ctrl.shouldCenterTabs ? '' : '-' + left + 'px';
+    angular.element(elements.paging).css($mdConstant.CSS.TRANSFORM, 'translate3d(' + newValue + ', 0, 0)');
+    $scope.$broadcast('$mdTabsPaginationChanged');
   }
 
+  /**
+   * Update the UI whenever `ctrl.focusIndex` is updated
+   * @param newIndex
+   * @param oldIndex
+   */
+  function handleFocusIndexChange (newIndex, oldIndex) {
+    if (newIndex === oldIndex) return;
+    if (!elements.tabs[newIndex]) return;
+    adjustOffset();
+    redirectFocus();
+  }
+
+  /**
+   * Update the UI whenever the selected index changes. Calls user-defined select/deselect methods.
+   * @param newValue
+   * @param oldValue
+   */
+  function handleSelectedIndexChange (newValue, oldValue) {
+    if (newValue === oldValue) return;
+
+    $scope.selectedIndex = getNearestSafeIndex(newValue);
+    ctrl.lastSelectedIndex = oldValue;
+    ctrl.updateInkBarStyles();
+    updateHeightFromContent();
+    adjustOffset(newValue);
+    $scope.$broadcast('$mdTabsChanged');
+    ctrl.tabs[oldValue] && ctrl.tabs[oldValue].scope.deselect();
+    ctrl.tabs[newValue] && ctrl.tabs[newValue].scope.select();
+  }
+
+  /**
+   * Queues up a call to `handleWindowResize` when a resize occurs while the tabs component is
+   * hidden.
+   */
+  function handleResizeWhenVisible () {
+    //-- if there is already a watcher waiting for resize, do nothing
+    if (handleResizeWhenVisible.watcher) return;
+    //-- otherwise, we will abuse the $watch function to check for visible
+    handleResizeWhenVisible.watcher = $scope.$watch(function () {
+      //-- since we are checking for DOM size, we use $timeout to wait for after the DOM updates
+      $timeout(function () {
+        //-- if the watcher has already run (ie. multiple digests in one cycle), do nothing
+        if (!handleResizeWhenVisible.watcher) return;
+
+        if ($element.prop('offsetParent')) {
+          handleResizeWhenVisible.watcher();
+          handleResizeWhenVisible.watcher = null;
+
+          //-- we have to trigger our own $apply so that the DOM bindings will update
+          handleWindowResize();
+        }
+      }, 0, false);
+    });
+  }
+
+  //-- Event handlers / actions
+
+  /**
+   * Handle user keyboard interactions
+   * @param event
+   */
   function keydown (event) {
     switch (event.keyCode) {
       case $mdConstant.KEY_CODE.LEFT_ARROW:
@@ -17938,73 +19984,100 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     ctrl.lastClick = false;
   }
 
-  function updateTabOrder () {
-    var selectedItem = ctrl.tabs[$scope.selectedIndex],
-        focusItem = ctrl.tabs[ctrl.focusIndex];
-    ctrl.tabs = ctrl.tabs.sort(function (a, b) {
-      return a.index - b.index;
-    });
-    $scope.selectedIndex = ctrl.tabs.indexOf(selectedItem);
-    ctrl.focusIndex = ctrl.tabs.indexOf(focusItem);
-    $timeout(updateInkBarStyles, 0, false);
+  /**
+   * Update the selected index and trigger a click event on the original `md-tab` element in order
+   * to fire user-added click events.
+   * @param index
+   */
+  function select (index) {
+    if (!locked) ctrl.focusIndex = $scope.selectedIndex = index;
+    ctrl.lastClick = true;
+    ctrl.tabs[index].element.triggerHandler('click');
   }
 
-  function incrementSelectedIndex (inc, focus) {
-    var newIndex,
-        index = focus ? ctrl.focusIndex : $scope.selectedIndex;
-    for (newIndex = index + inc;
-         ctrl.tabs[newIndex] && ctrl.tabs[newIndex].scope.disabled;
-         newIndex += inc) {}
-    if (ctrl.tabs[newIndex]) {
-      if (focus) ctrl.focusIndex = newIndex;
-      else $scope.selectedIndex = newIndex;
+  /**
+   * When pagination is on, this makes sure the selected index is in view.
+   * @param event
+   */
+  function scroll (event) {
+    if (!ctrl.shouldPaginate) return;
+    event.preventDefault();
+    ctrl.offsetLeft = fixOffset(ctrl.offsetLeft - event.wheelDelta);
+  }
+
+  /**
+   * Slides the tabs over approximately one page forward.
+   */
+  function nextPage () {
+    var viewportWidth = elements.canvas.clientWidth,
+        totalWidth = viewportWidth + ctrl.offsetLeft,
+        i, tab;
+    for (i = 0; i < elements.tabs.length; i++) {
+      tab = elements.tabs[i];
+      if (tab.offsetLeft + tab.offsetWidth > totalWidth) break;
     }
+    ctrl.offsetLeft = fixOffset(tab.offsetLeft);
   }
 
-  function handleOffsetChange (left) {
-    var newValue = shouldCenterTabs() ? '' : '-' + left + 'px';
-    angular.element(elements.paging).css('transform', 'translate3d(' + newValue + ', 0, 0)');
-    $scope.$broadcast('$mdTabsPaginationChanged');
+  /**
+   * Slides the tabs over approximately one page backward.
+   */
+  function previousPage () {
+    var i, tab;
+    for (i = 0; i < elements.tabs.length; i++) {
+      tab = elements.tabs[i];
+      if (tab.offsetLeft + tab.offsetWidth >= ctrl.offsetLeft) break;
+    }
+    ctrl.offsetLeft = fixOffset(tab.offsetLeft + tab.offsetWidth - elements.canvas.clientWidth);
   }
 
-  function handleFocusIndexChange (newIndex, oldIndex) {
-    if (newIndex === oldIndex) return;
-    if (!elements.tabs[newIndex]) return;
-    adjustOffset();
-    redirectFocus();
-  }
-
-  function redirectFocus () {
-    elements.dummies[ctrl.focusIndex].focus();
-  }
-
-  function adjustOffset () {
-    if (shouldCenterTabs()) return;
-    var tab = elements.tabs[ctrl.focusIndex],
-        left = tab.offsetLeft,
-        right = tab.offsetWidth + left;
-    ctrl.offsetLeft = Math.max(ctrl.offsetLeft, fixOffset(right - elements.canvas.clientWidth));
-    ctrl.offsetLeft = Math.min(ctrl.offsetLeft, fixOffset(left));
-  }
-
+  /**
+   * Update size calculations when the window is resized.
+   */
   function handleWindowResize () {
-    ctrl.lastSelectedIndex = $scope.selectedIndex;
-    ctrl.offsetLeft = fixOffset(ctrl.offsetLeft);
-    $timeout(updateInkBarStyles, 0, false);
+    $scope.$apply(function () {
+      ctrl.lastSelectedIndex = $scope.selectedIndex;
+      ctrl.offsetLeft = fixOffset(ctrl.offsetLeft);
+      $timeout(ctrl.updateInkBarStyles, 0, false);
+      $timeout(updatePagination);
+    });
   }
 
-  function processQueue () {
-    queue.forEach(function (func) { $timeout(func); });
-    queue = [];
+  /**
+   * Remove a tab from the data and select the nearest valid tab.
+   * @param tabData
+   */
+  function removeTab (tabData) {
+    var selectedIndex = $scope.selectedIndex,
+        tab = ctrl.tabs.splice(tabData.getIndex(), 1)[0];
+    refreshIndex();
+    //-- when removing a tab, if the selected index did not change, we have to manually trigger the
+    //   tab select/deselect events
+    if ($scope.selectedIndex === selectedIndex && !destroyed) {
+      tab.scope.deselect();
+      ctrl.tabs[$scope.selectedIndex] && ctrl.tabs[$scope.selectedIndex].scope.select();
+    }
+    $timeout(function () {
+      updatePagination();
+      ctrl.offsetLeft = fixOffset(ctrl.offsetLeft);
+    });
   }
 
+  /**
+   * Create an entry in the tabs array for a new tab at the specified index.
+   * @param tabData
+   * @param index
+   * @returns {*}
+   */
   function insertTab (tabData, index) {
     var proto = {
           getIndex: function () { return ctrl.tabs.indexOf(tab); },
           isActive: function () { return this.getIndex() === $scope.selectedIndex; },
           isLeft:   function () { return this.getIndex() < $scope.selectedIndex; },
           isRight:  function () { return this.getIndex() > $scope.selectedIndex; },
-          hasFocus: function () { return !ctrl.lastClick && ctrl.hasFocus && this.getIndex() === ctrl.focusIndex; },
+          shouldRender: function () { return !$scope.noDisconnect || this.isActive(); },
+          hasFocus: function () { return !ctrl.lastClick
+              && ctrl.hasFocus && this.getIndex() === ctrl.focusIndex; },
           id:       $mdUtil.nextUid()
         },
         tab = angular.extend(proto, tabData);
@@ -18015,9 +20088,198 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     }
     processQueue();
     updateHasContent();
+    //-- if autoselect is enabled, select the newly added tab
+    if (loaded && $scope.autoselect) $timeout(function () { select(ctrl.tabs.indexOf(tab)); });
+    $timeout(updatePagination);
     return tab;
   }
 
+  //-- Getter methods
+
+  /**
+   * Gathers references to all of the DOM elements used by this controller.
+   * @returns {{}}
+   */
+  function getElements () {
+    var elements      = {};
+
+    //-- gather tab bar elements
+    elements.wrapper  = $element[0].getElementsByTagName('md-tabs-wrapper')[0];
+    elements.data     = $element[0].getElementsByTagName('md-tab-data')[0];
+    elements.canvas   = elements.wrapper.getElementsByTagName('md-tabs-canvas')[0];
+    elements.paging   = elements.canvas.getElementsByTagName('md-pagination-wrapper')[0];
+    elements.tabs     = elements.paging.getElementsByTagName('md-tab-item');
+    elements.dummies  = elements.canvas.getElementsByTagName('md-dummy-tab');
+    elements.inkBar   = elements.paging.getElementsByTagName('md-ink-bar')[0];
+
+    //-- gather tab content elements
+    elements.contentsWrapper = $element[0].getElementsByTagName('md-tabs-content-wrapper')[0];
+    elements.contents = elements.contentsWrapper.getElementsByTagName('md-tab-content');
+
+    return elements;
+  }
+
+  /**
+   * Determines whether or not the left pagination arrow should be enabled.
+   * @returns {boolean}
+   */
+  function canPageBack () {
+    return ctrl.offsetLeft > 0;
+  }
+
+  /**
+   * Determines whether or not the right pagination arrow should be enabled.
+   * @returns {*|boolean}
+   */
+  function canPageForward () {
+    var lastTab = elements.tabs[elements.tabs.length - 1];
+    return lastTab && lastTab.offsetLeft + lastTab.offsetWidth > elements.canvas.clientWidth +
+        ctrl.offsetLeft;
+  }
+
+  /**
+   * Determines if the UI should stretch the tabs to fill the available space.
+   * @returns {*}
+   */
+  function shouldStretchTabs () {
+    switch ($scope.stretchTabs) {
+      case 'always': return true;
+      case 'never':  return false;
+      default:       return !ctrl.shouldPaginate
+          && $window.matchMedia('(max-width: 600px)').matches;
+    }
+  }
+
+  /**
+   * Determines if the tabs should appear centered.
+   * @returns {string|boolean}
+   */
+  function shouldCenterTabs () {
+    return $scope.centerTabs && !ctrl.shouldPaginate;
+  }
+
+  /**
+   * Determines if pagination is necessary to display the tabs within the available space.
+   * @returns {boolean}
+   */
+  function shouldPaginate () {
+    if ($scope.noPagination || !loaded) return false;
+    var canvasWidth = $element.prop('clientWidth');
+    angular.forEach(elements.dummies, function (tab) { canvasWidth -= tab.offsetWidth; });
+    return canvasWidth < 0;
+  }
+
+  /**
+   * Finds the nearest tab index that is available.  This is primarily used for when the active
+   * tab is removed.
+   * @param newIndex
+   * @returns {*}
+   */
+  function getNearestSafeIndex(newIndex) {
+    var maxOffset = Math.max(ctrl.tabs.length - newIndex, newIndex),
+        i, tab;
+    for (i = 0; i <= maxOffset; i++) {
+      tab = ctrl.tabs[newIndex + i];
+      if (tab && (tab.scope.disabled !== true)) return tab.getIndex();
+      tab = ctrl.tabs[newIndex - i];
+      if (tab && (tab.scope.disabled !== true)) return tab.getIndex();
+    }
+    return newIndex;
+  }
+
+  //-- Utility methods
+
+  /**
+   * Defines a property using a getter and setter in order to trigger a change handler without
+   * using `$watch` to observe changes.
+   * @param key
+   * @param handler
+   * @param value
+   */
+  function defineProperty (key, handler, value) {
+    Object.defineProperty(ctrl, key, {
+      get: function () { return value; },
+      set: function (newValue) {
+        var oldValue = value;
+        value = newValue;
+        handler(newValue, oldValue);
+      }
+    });
+  }
+
+  /**
+   * Updates whether or not pagination should be displayed.
+   */
+  function updatePagination () {
+    ctrl.shouldPaginate = shouldPaginate();
+    ctrl.shouldCenterTabs = shouldCenterTabs();
+    $timeout(function () {
+      adjustOffset($scope.selectedIndex);
+    });
+  }
+
+  /**
+   * Re-orders the tabs and updates the selected and focus indexes to their new positions.
+   * This is triggered by `tabDirective.js` when the user's tabs have been re-ordered.
+   */
+  function updateTabOrder () {
+    var selectedItem = ctrl.tabs[$scope.selectedIndex],
+        focusItem = ctrl.tabs[ctrl.focusIndex];
+    ctrl.tabs = ctrl.tabs.sort(function (a, b) {
+      return a.index - b.index;
+    });
+    $scope.selectedIndex = ctrl.tabs.indexOf(selectedItem);
+    ctrl.focusIndex = ctrl.tabs.indexOf(focusItem);
+  }
+
+  /**
+   * This moves the selected or focus index left or right.  This is used by the keydown handler.
+   * @param inc
+   */
+  function incrementSelectedIndex (inc) {
+    var newIndex,
+        index = ctrl.focusIndex;
+    for (newIndex = index + inc;
+         ctrl.tabs[newIndex] && ctrl.tabs[newIndex].scope.disabled;
+         newIndex += inc) {}
+    if (ctrl.tabs[newIndex]) {
+      ctrl.focusIndex = newIndex;
+    }
+  }
+
+  /**
+   * This is used to forward focus to dummy elements.  This method is necessary to avoid aniation
+   * issues when attempting to focus an item that is out of view.
+   */
+  function redirectFocus () {
+    elements.dummies[ctrl.focusIndex].focus();
+  }
+
+  /**
+   * Forces the pagination to move the focused tab into view.
+   */
+  function adjustOffset (index) {
+    if (ctrl.shouldCenterTabs) return;
+    if (index == null) index = ctrl.focusIndex;
+    var tab = elements.tabs[index],
+        left = tab.offsetLeft,
+        right = tab.offsetWidth + left;
+    ctrl.offsetLeft = Math.max(ctrl.offsetLeft, fixOffset(right - elements.canvas.clientWidth));
+    ctrl.offsetLeft = Math.min(ctrl.offsetLeft, fixOffset(left));
+  }
+
+  /**
+   * Iterates through all queued functions and clears the queue.  This is used for functions that
+   * are called before the UI is ready, such as size calculations.
+   */
+  function processQueue () {
+    queue.forEach(function (func) { $timeout(func); });
+    queue = [];
+  }
+
+  /**
+   * Determines if the tab content area is needed.
+   */
   function updateHasContent () {
     var hasContent = false;
     angular.forEach(ctrl.tabs, function (tab) {
@@ -18026,53 +20288,18 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     ctrl.hasContent = hasContent;
   }
 
-  function removeTab (tabData) {
-    ctrl.tabs.splice(tabData.getIndex(), 1);
-    refreshIndex();
-    $timeout(function () {
-      updateInkBarStyles();
-      ctrl.offsetLeft = fixOffset(ctrl.offsetLeft);
-    });
-  }
-
+  /**
+   * Moves the indexes to their nearest valid values.
+   */
   function refreshIndex () {
     $scope.selectedIndex = getNearestSafeIndex($scope.selectedIndex);
     ctrl.focusIndex = getNearestSafeIndex(ctrl.focusIndex);
   }
 
-  function handleSelectedIndexChange (newValue, oldValue) {
-    if (newValue === oldValue) return;
-
-    $scope.selectedIndex = getNearestSafeIndex(newValue);
-    ctrl.lastSelectedIndex = oldValue;
-    updateInkBarStyles();
-    updateHeightFromContent();
-    $scope.$broadcast('$mdTabsChanged');
-    ctrl.tabs[oldValue] && ctrl.tabs[oldValue].scope.deselect();
-    ctrl.tabs[newValue] && ctrl.tabs[newValue].scope.select();
-  }
-
-  function handleResizeWhenVisible () {
-    //-- if there is already a watcher waiting for resize, do nothing
-    if (handleResizeWhenVisible.watcher) return;
-    //-- otherwise, we will abuse the $watch function to check for visible
-    handleResizeWhenVisible.watcher = $scope.$watch(function () {
-      //-- since we are checking for DOM size, we use $timeout to wait for after the DOM updates
-      $timeout(function () {
-        //-- if the watcher has already run (ie. multiple digests in one cycle), do nothing
-        if (!handleResizeWhenVisible.watcher) return;
-
-        if ($element.prop('offsetParent')) {
-          handleResizeWhenVisible.watcher();
-          handleResizeWhenVisible.watcher = null;
-
-          //-- we have to trigger our own $apply so that the DOM bindings will update
-          $scope.$apply(handleWindowResize);
-        }
-      }, 0, false);
-    });
-  }
-
+  /**
+   * Calculates the content height of the current tab.
+   * @returns {*}
+   */
   function updateHeightFromContent () {
     if (!$scope.dynamicHeight) return $element.css('height', '');
     if (!ctrl.tabs.length) return queue.push(updateHeightFromContent);
@@ -18095,8 +20322,13 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
         });
   }
 
+  /**
+   * Repositions the ink bar to the selected tab.
+   * @returns {*}
+   */
   function updateInkBarStyles () {
-    if (!ctrl.tabs.length) return queue.push(updateInkBarStyles);
+    if (!elements.tabs[$scope.selectedIndex]) return;
+    if (!ctrl.tabs.length) return queue.push(ctrl.updateInkBarStyles);
     //-- if the element is not visible, we will not be able to calculate sizes until it is
     //-- we should treat that as a resize event rather than just updating the ink bar
     if (!$element.prop('offsetParent')) return handleResizeWhenVisible();
@@ -18109,63 +20341,28 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     angular.element(elements.inkBar).css({ left: left + 'px', right: right + 'px' });
   }
 
+  /**
+   * Adds left/right classes so that the ink bar will animate properly.
+   */
   function updateInkBarClassName () {
     var newIndex = $scope.selectedIndex,
         oldIndex = ctrl.lastSelectedIndex,
         ink = angular.element(elements.inkBar);
-    ink.removeClass('md-left md-right');
     if (!angular.isNumber(oldIndex)) return;
     if (newIndex < oldIndex) {
-      ink.addClass('md-left');
+      ink.addClass('md-left').removeClass('md-right');
     } else if (newIndex > oldIndex) {
-      ink.addClass('md-right');
+      ink.addClass('md-right').removeClass('md-left');
     }
   }
 
-  function getNearestSafeIndex(newIndex) {
-    var maxOffset = Math.max(ctrl.tabs.length - newIndex, newIndex),
-        i, tab;
-    for (i = 0; i <= maxOffset; i++) {
-      tab = ctrl.tabs[newIndex + i];
-      if (tab && (tab.scope.disabled !== true)) return tab.getIndex();
-      tab = ctrl.tabs[newIndex - i];
-      if (tab && (tab.scope.disabled !== true)) return tab.getIndex();
-    }
-    return newIndex;
-  }
-
-  function shouldStretchTabs () {
-    switch ($scope.stretchTabs) {
-      case 'always': return true;
-      case 'never':  return false;
-      default:       return !shouldPaginate() && $window.matchMedia('(max-width: 600px)').matches;
-    }
-  }
-
-  function shouldCenterTabs () {
-    return $scope.centerTabs && !shouldPaginate();
-  }
-
-  function shouldPaginate () {
-    if ($scope.noPagination) return false;
-    var canvasWidth = $element.prop('clientWidth');
-    angular.forEach(elements.tabs, function (tab) { canvasWidth -= tab.offsetWidth; });
-    return canvasWidth < 0;
-  }
-
-  function select (index) {
-    if (!locked) ctrl.focusIndex = $scope.selectedIndex = index;
-    ctrl.lastClick = true;
-  }
-
-  function scroll (event) {
-    if (!shouldPaginate()) return;
-    event.preventDefault();
-    ctrl.offsetLeft = fixOffset(ctrl.offsetLeft - event.wheelDelta);
-  }
-
+  /**
+   * Takes an offset value and makes sure that it is within the min/max allowed values.
+   * @param value
+   * @returns {*}
+   */
   function fixOffset (value) {
-    if (!elements.tabs.length || !shouldPaginate()) return 0;
+    if (!elements.tabs.length || !ctrl.shouldPaginate) return 0;
     var lastTab = elements.tabs[elements.tabs.length - 1],
         totalWidth = lastTab.offsetLeft + lastTab.offsetWidth;
     value = Math.max(0, value);
@@ -18173,41 +20370,17 @@ function MdTabsController ($scope, $element, $window, $timeout, $mdConstant, $md
     return value;
   }
 
-  function nextPage () {
-    var viewportWidth = elements.canvas.clientWidth,
-        totalWidth = viewportWidth + ctrl.offsetLeft,
-        i, tab;
-    for (i = 0; i < elements.tabs.length; i++) {
-      tab = elements.tabs[i];
-      if (tab.offsetLeft + tab.offsetWidth > totalWidth) break;
-    }
-    ctrl.offsetLeft = fixOffset(tab.offsetLeft);
-  }
-
-  function previousPage () {
-    var i, tab;
-    for (i = 0; i < elements.tabs.length; i++) {
-      tab = elements.tabs[i];
-      if (tab.offsetLeft + tab.offsetWidth >= ctrl.offsetLeft) break;
-    }
-    ctrl.offsetLeft = fixOffset(tab.offsetLeft + tab.offsetWidth - elements.canvas.clientWidth);
-  }
-
-  function canPageBack () {
-    return ctrl.offsetLeft > 0;
-  }
-
-  function canPageForward () {
-    var lastTab = elements.tabs[elements.tabs.length - 1];
-    return lastTab && lastTab.offsetLeft + lastTab.offsetWidth > elements.canvas.clientWidth + ctrl.offsetLeft;
-  }
-
+  /**
+   * Attaches a ripple to the tab item element.
+   * @param scope
+   * @param element
+   */
   function attachRipple (scope, element) {
     var options = { colorElement: angular.element(elements.inkBar) };
     $mdTabInkRipple.attach(scope, element, options);
   }
 }
-MdTabsController.$inject = ["$scope", "$element", "$window", "$timeout", "$mdConstant", "$mdTabInkRipple", "$mdUtil", "$animate"];
+MdTabsController.$inject = ["$scope", "$element", "$window", "$timeout", "$mdConstant", "$mdTabInkRipple", "$mdUtil", "$animate", "$attrs", "$compile", "$mdTheming"];
 
 })();
 (function(){
@@ -18274,6 +20447,9 @@ MdTabsController.$inject = ["$scope", "$element", "$window", "$timeout", "$mdCon
  * @param {boolean=} md-dynamic-height When enabled, the tab wrapper will resize based on the contents of the selected tab
  * @param {boolean=} md-center-tabs When enabled, tabs will be centered provided there is no need for pagination
  * @param {boolean=} md-no-pagination When enabled, pagination will remain off
+ * @param {boolean=} md-swipe-content When enabled, swipe gestures will be enabled for the content area to jump between tabs
+ * @param {boolean=} md-no-disconnect If your tab content has background tasks (ie. event listeners), you will want to include this to prevent the scope from being disconnected
+ * @param {boolean=} md-autoselect When present, any tabs added after the initial load will be automatically selected
  *
  * @usage
  * <hljs lang="html">
@@ -18307,10 +20483,13 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
       dynamicHeight: '=?mdDynamicHeight',
       centerTabs:    '=?mdCenterTabs',
       selectedIndex: '=?mdSelected',
-      stretchTabs:   '@?mdStretchTabs'
+      stretchTabs:   '@?mdStretchTabs',
+      swipeContent:  '=?mdSwipeContent',
+      noDisconnect:  '=?mdNoDisconnect',
+      autoselect:    '=?mdAutoselect'
     },
     template: function (element, attr) {
-      var content = attr["$mdTabsTemplate"] = element.html();
+      attr["$mdTabsTemplate"] = element.html();
       return '\
         <md-tabs-wrapper ng-class="{ \'md-stretch-tabs\': $mdTabsCtrl.shouldStretchTabs() }">\
           <md-tab-data></md-tab-data>\
@@ -18320,7 +20499,7 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
               aria-label="Previous Page"\
               aria-disabled="{{!$mdTabsCtrl.canPageBack()}}"\
               ng-class="{ \'md-disabled\': !$mdTabsCtrl.canPageBack() }"\
-              ng-if="$mdTabsCtrl.shouldPaginate()"\
+              ng-if="$mdTabsCtrl.shouldPaginate"\
               ng-click="$mdTabsCtrl.previousPage()">\
             <md-icon md-svg-icon="md-tabs-arrow"></md-icon>\
           </md-prev-button>\
@@ -18330,7 +20509,7 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
               aria-label="Next Page"\
               aria-disabled="{{!$mdTabsCtrl.canPageForward()}}"\
               ng-class="{ \'md-disabled\': !$mdTabsCtrl.canPageForward() }"\
-              ng-if="$mdTabsCtrl.shouldPaginate()"\
+              ng-if="$mdTabsCtrl.shouldPaginate"\
               ng-click="$mdTabsCtrl.nextPage()">\
             <md-icon md-svg-icon="md-tabs-arrow"></md-icon>\
           </md-next-button>\
@@ -18339,13 +20518,13 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
               aria-activedescendant="tab-item-{{$mdTabsCtrl.tabs[$mdTabsCtrl.focusIndex].id}}"\
               ng-focus="$mdTabsCtrl.redirectFocus()"\
               ng-class="{\
-                  \'md-paginated\': $mdTabsCtrl.shouldPaginate(),\
-                  \'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs()\
+                  \'md-paginated\': $mdTabsCtrl.shouldPaginate,\
+                  \'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs\
               }"\
               ng-keydown="$mdTabsCtrl.keydown($event)"\
               role="tablist">\
             <md-pagination-wrapper\
-                ng-class="{ \'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs() }"\
+                ng-class="{ \'md-center-tabs\': $mdTabsCtrl.shouldCenterTabs }"\
                 md-tab-scroll="$mdTabsCtrl.scroll($event)">\
               <md-tab-item\
                   tabindex="-1"\
@@ -18371,6 +20550,7 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
             </md-pagination-wrapper>\
             <div class="md-visually-hidden md-dummy-wrapper">\
               <md-dummy-tab\
+                  class="md-tab"\
                   tabindex="-1"\
                   id="tab-item-{{tab.id}}"\
                   role="tab"\
@@ -18390,12 +20570,10 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
               id="tab-content-{{tab.id}}"\
               role="tabpanel"\
               aria-labelledby="tab-item-{{tab.id}}"\
-              md-swipe-left="$mdTabsCtrl.incrementSelectedIndex(1)"\
-              md-swipe-right="$mdTabsCtrl.incrementSelectedIndex(-1)"\
+              md-swipe-left="swipeContent && $mdTabsCtrl.incrementSelectedIndex(1)"\
+              md-swipe-right="swipeContent && $mdTabsCtrl.incrementSelectedIndex(-1)"\
               ng-if="$mdTabsCtrl.hasContent"\
-              ng-repeat="(index, tab) in $mdTabsCtrl.tabs" \
-              md-template="tab.template"\
-              md-scope="tab.parent"\
+              ng-repeat="(index, tab) in $mdTabsCtrl.tabs"\
               md-connected-if="tab.isActive()"\
               ng-class="{\
                 \'md-no-transition\': $mdTabsCtrl.lastSelectedIndex == null,\
@@ -18403,31 +20581,17 @@ function MdTabs ($mdTheming, $mdUtil, $compile) {
                 \'md-left\':          tab.isLeft(),\
                 \'md-right\':         tab.isRight(),\
                 \'md-no-scroll\':     dynamicHeight\
-              }"></md-tab-content>\
+              }">\
+            <div\
+                md-template="tab.template"\
+                md-scope="tab.parent"\
+                ng-if="tab.shouldRender()"></div>\
+          </md-tab-content>\
         </md-tabs-content-wrapper>\
       ';
     },
     controller: 'MdTabsController',
-    controllerAs: '$mdTabsCtrl',
-    link: function (scope, element, attr) {
-      compileTabData(attr.$mdTabsTemplate);
-      delete attr.$mdTabsTemplate;
-
-      $mdUtil.initOptionalProperties(scope, attr);
-
-      //-- watch attributes
-      attr.$observe('mdNoBar', function (value) { scope.noInkBar = angular.isDefined(value); });
-      //-- set default value for selectedIndex
-      scope.selectedIndex = angular.isNumber(scope.selectedIndex) ? scope.selectedIndex : 0;
-      //-- apply themes
-      $mdTheming(element);
-
-      function compileTabData (template) {
-        var dataElement = element.find('md-tab-data');
-        dataElement.html(template);
-        $compile(dataElement.contents())(scope.$parent);
-      }
-    }
+    controllerAs: '$mdTabsCtrl'
   };
 }
 MdTabs.$inject = ["$mdTheming", "$mdUtil", "$compile"];
@@ -18458,13 +20622,15 @@ function MdTemplate ($compile, $mdUtil, $timeout) {
     $compile(element.contents())(compileScope);
     return $timeout(handleScope);
     function handleScope () {
-      scope.$watch('connected', function (value) { value ? reconnect() : disconnect(); });
+      scope.$watch('connected', function (value) { value === false ? disconnect() : reconnect(); });
       scope.$on('$destroy', reconnect);
     }
     function disconnect () {
+      if (ctrl.scope.noDisconnect) return;
       $mdUtil.disconnectScope(compileScope);
     }
     function reconnect () {
+      if (ctrl.scope.noDisconnect) return;
       $mdUtil.reconnectScope(compileScope);
     }
   }
@@ -18473,12 +20639,12 @@ MdTemplate.$inject = ["$compile", "$mdUtil", "$timeout"];
 
 })();
 (function(){ 
-angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ; sets LTR and RTL within the same style call */md-autocomplete.md-THEME_NAME-theme {  background: '{{background-50}}'; }  md-autocomplete.md-THEME_NAME-theme button md-icon path {    fill: '{{background-600}}'; }  md-autocomplete.md-THEME_NAME-theme button:after {    background: '{{background-600-0.3}}'; }.md-autocomplete-suggestions.md-THEME_NAME-theme {  background: '{{background-50}}'; }  .md-autocomplete-suggestions.md-THEME_NAME-theme li {    color: '{{background-900}}'; }    .md-autocomplete-suggestions.md-THEME_NAME-theme li .highlight {      color: '{{background-600}}'; }    .md-autocomplete-suggestions.md-THEME_NAME-theme li:hover, .md-autocomplete-suggestions.md-THEME_NAME-theme li.selected {      background: '{{background-200}}'; }md-backdrop.md-opaque.md-THEME_NAME-theme {  background-color: '{{foreground-4-0.5}}'; }md-bottom-sheet.md-THEME_NAME-theme {  background-color: '{{background-50}}';  border-top-color: '{{background-300}}'; }  md-bottom-sheet.md-THEME_NAME-theme.md-list md-list-item {    color: '{{foreground-1}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    background-color: '{{background-50}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    color: '{{foreground-1}}'; }a.md-button.md-THEME_NAME-theme, .md-button.md-THEME_NAME-theme {  border-radius: 3px; }  a.md-button.md-THEME_NAME-theme:not([disabled]):hover, .md-button.md-THEME_NAME-theme:not([disabled]):hover {    background-color: '{{background-500-0.2}}'; }  a.md-button.md-THEME_NAME-theme:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme:not([disabled]).md-focused {    background-color: '{{background-500-0.2}}'; }  a.md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover, .md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover {    background-color: transparent; }  a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {    border-radius: 50%;    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab md-icon, .md-button.md-THEME_NAME-theme.md-fab md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {      background-color: '{{accent-A700}}'; }  a.md-button.md-THEME_NAME-theme.md-icon-button, .md-button.md-THEME_NAME-theme.md-icon-button {    border-radius: 50%; }  a.md-button.md-THEME_NAME-theme.md-primary, .md-button.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised, a.md-button.md-THEME_NAME-theme.md-primary.md-fab, .md-button.md-THEME_NAME-theme.md-primary.md-raised, .md-button.md-THEME_NAME-theme.md-primary.md-fab {      color: '{{primary-contrast}}';      background-color: '{{primary-color}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon {        color: '{{primary-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover {        background-color: '{{primary-color}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused {        background-color: '{{primary-600}}'; }    a.md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon {      color: '{{primary-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {    border-radius: 50%;    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {      background-color: '{{accent-A700}}'; }  a.md-button.md-THEME_NAME-theme.md-raised, .md-button.md-THEME_NAME-theme.md-raised {    color: '{{background-contrast}}';    background-color: '{{background-50}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon {      color: '{{background-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover {      background-color: '{{background-50}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused {      background-color: '{{background-200}}'; }  a.md-button.md-THEME_NAME-theme.md-warn, .md-button.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised, a.md-button.md-THEME_NAME-theme.md-warn.md-fab, .md-button.md-THEME_NAME-theme.md-warn.md-raised, .md-button.md-THEME_NAME-theme.md-warn.md-fab {      color: '{{warn-contrast}}';      background-color: '{{warn-color}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon {        color: '{{warn-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover {        background-color: '{{warn-color}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused {        background-color: '{{warn-700}}'; }    a.md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon {      color: '{{warn-color}}'; }  a.md-button.md-THEME_NAME-theme.md-accent, .md-button.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised, a.md-button.md-THEME_NAME-theme.md-accent.md-fab, .md-button.md-THEME_NAME-theme.md-accent.md-raised, .md-button.md-THEME_NAME-theme.md-accent.md-fab {      color: '{{accent-contrast}}';      background-color: '{{accent-color}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon {        color: '{{accent-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover {        background-color: '{{accent-color}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused {        background-color: '{{accent-700}}'; }    a.md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon {      color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme[disabled], a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], a.md-button.md-THEME_NAME-theme.md-accent[disabled], a.md-button.md-THEME_NAME-theme.md-warn[disabled], .md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-accent[disabled], .md-button.md-THEME_NAME-theme.md-warn[disabled] {    color: '{{foreground-3}}';    cursor: not-allowed; }    a.md-button.md-THEME_NAME-theme[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon, .md-button.md-THEME_NAME-theme[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon {      color: '{{foreground-3}}'; }  a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled] {    background-color: '{{foreground-4}}'; }  a.md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme[disabled] {    background-color: transparent; }md-card.md-THEME_NAME-theme {  background-color: '{{background-color}}';  border-radius: 2px; }  md-card.md-THEME_NAME-theme .md-card-image {    border-radius: 2px 2px 0 0; }md-checkbox.md-THEME_NAME-theme .md-ripple {  color: '{{accent-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked.md-focused .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon {  background-color: '{{accent-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-ripple {  color: '{{primary-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon {  background-color: '{{primary-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked.md-focused .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-ripple {  color: '{{warn-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon {  background-color: '{{warn-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked.md-focused:not([disabled]) .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-icon {  border-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled].md-checked .md-icon {  background-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-label {  color: '{{foreground-3}}'; }md-content.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }md-chips.md-THEME_NAME-theme .md-chips {  box-shadow: 0 1px '{{background-300}}'; }  md-chips.md-THEME_NAME-theme .md-chips.md-focused {    box-shadow: 0 2px '{{primary-color}}'; }md-chips.md-THEME_NAME-theme .md-chip {  background: '{{background-300}}';  color: '{{background-800}}'; }  md-chips.md-THEME_NAME-theme .md-chip.md-focused {    background: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-chips.md-THEME_NAME-theme .md-chip.md-focused md-icon {      color: '{{primary-contrast}}'; }md-chips.md-THEME_NAME-theme md-chip-remove .md-button md-icon path {  fill: '{{background-500}}'; }.md-contact-suggestion span.md-contact-email {  color: '{{background-400}}'; }md-dialog.md-THEME_NAME-theme {  border-radius: 4px;  background-color: '{{background-color}}'; }  md-dialog.md-THEME_NAME-theme.md-content-overflow .md-actions {    border-top-color: '{{foreground-4}}'; }md-divider.md-THEME_NAME-theme {  border-top-color: '{{foreground-4}}'; }md-icon.md-THEME_NAME-theme {  color: '{{foreground-2}}'; }  md-icon.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  md-icon.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  md-icon.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-input-container.md-THEME_NAME-theme .md-input {  color: '{{foreground-1}}';  border-color: '{{foreground-4}}';  text-shadow: '{{foreground-shadow}}'; }  md-input-container.md-THEME_NAME-theme .md-input::-webkit-input-placeholder, md-input-container.md-THEME_NAME-theme .md-input::-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-ms-input-placeholder {    color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme > md-icon {  color: '{{foreground-1}}'; }md-input-container.md-THEME_NAME-theme label, md-input-container.md-THEME_NAME-theme .md-placeholder {  text-shadow: '{{foreground-shadow}}';  color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme ng-messages, md-input-container.md-THEME_NAME-theme [ng-message], md-input-container.md-THEME_NAME-theme [data-ng-message], md-input-container.md-THEME_NAME-theme [x-ng-message] {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-has-value label {  color: '{{foreground-2}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused .md-input {  border-color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused label {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused md-icon {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent .md-input {  border-color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent label {  color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid.md-input-focused label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid data-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid x-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid [ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [data-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [x-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid .md-char-counter {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme .md-input[disabled], [disabled] md-input-container.md-THEME_NAME-theme .md-input {  border-bottom-color: transparent;  color: '{{foreground-3}}';  background-image: linear-gradient(to right, '{{foreground-4}}' 0%, '{{foreground-4}}' 33%, transparent 0%);  background-image: -ms-linear-gradient(left, transparent 0%, '{{foreground-4}}' 100%); }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h4, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h4 {  color: '{{foreground-1}}'; }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text p, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text p {  color: '{{foreground-2}}'; }md-list.md-THEME_NAME-theme .md-proxy-focus.md-focused div.md-no-style {  background-color: '{{background-100}}'; }md-list.md-THEME_NAME-theme md-list-item > md-icon {  color: '{{foreground-2}}'; }  md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight {    color: '{{primary-color}}'; }    md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight.md-accent {      color: '{{accent-color}}'; }md-list.md-THEME_NAME-theme md-list-item button {  background-color: '{{background-color}}'; }  md-list.md-THEME_NAME-theme md-list-item button.md-button:not([disabled]):hover {    background-color: '{{background-color}}'; }md-progress-circular.md-THEME_NAME-theme {  background-color: transparent; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-gap {    border-top-color: '{{primary-color}}';    border-bottom-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-top-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-right-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle {    border-left-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-gap {    border-top-color: '{{warn-color}}';    border-bottom-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-top-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-right-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle {    border-left-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-gap {    border-top-color: '{{accent-color}}';    border-bottom-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-top-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-right-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle {    border-left-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme .md-container {  background-color: '{{primary-100}}'; }md-progress-linear.md-THEME_NAME-theme .md-bar {  background-color: '{{primary-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-container {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-bar {  background-color: '{{warn-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-container {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-bar {  background-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-bar1 {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-dashed:before {  background: radial-gradient('{{warn-100}}' 0%, '{{warn-100}}' 16%, transparent 42%); }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-bar1 {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-dashed:before {  background: radial-gradient('{{accent-100}}' 0%, '{{accent-100}}' 16%, transparent 42%); }md-radio-button.md-THEME_NAME-theme .md-off {  border-color: '{{foreground-2}}'; }md-radio-button.md-THEME_NAME-theme .md-on {  background-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-off {  border-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-ink-ripple {  color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme .md-container .md-ripple {  color: '{{accent-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-on {  background-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off {  border-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple {  color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple {  color: '{{primary-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-on {  background-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off {  border-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple {  color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple {  color: '{{warn-600}}'; }md-radio-group.md-THEME_NAME-theme[disabled], md-radio-button.md-THEME_NAME-theme[disabled] {  color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-off, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-off {    border-color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-on, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-on {    border-color: '{{foreground-3}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked:not([disabled]).md-primary .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked.md-primary .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-select.md-THEME_NAME-theme.ng-invalid.ng-dirty .md-select-label {  color: '{{warn-500}}' !important;  border-bottom-color: '{{warn-500}}' !important; }md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-label {  border-bottom-color: '{{primary-color}}';  color: '{{ foreground-1 }}'; }  md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-label.md-placeholder {    color: '{{ foreground-1 }}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-accent .md-select-label {  border-bottom-color: '{{accent-color}}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-warn .md-select-label {  border-bottom-color: '{{warn-color}}'; }md-select.md-THEME_NAME-theme[disabled] .md-select-label {  color: '{{foreground-3}}'; }  md-select.md-THEME_NAME-theme[disabled] .md-select-label.md-placeholder {    color: '{{foreground-3}}'; }md-select.md-THEME_NAME-theme .md-select-label {  border-bottom-color: '{{foreground-4}}'; }  md-select.md-THEME_NAME-theme .md-select-label.md-placeholder {    color: '{{foreground-2}}'; }md-select-menu.md-THEME_NAME-theme md-optgroup {  color: '{{foreground-2}}'; }  md-select-menu.md-THEME_NAME-theme md-optgroup md-option {    color: '{{foreground-1}}'; }md-select-menu.md-THEME_NAME-theme md-option[selected] {  color: '{{primary-500}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected]:focus {    color: '{{primary-600}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent {    color: '{{accent-500}}'; }    md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent:focus {      color: '{{accent-600}}'; }md-select-menu.md-THEME_NAME-theme md-option:focus:not([selected]) {  background: '{{background-200}}'; }md-sidenav.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track {  background-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme .md-track-ticks {  background-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-focus-thumb {  background-color: '{{foreground-2}}'; }md-slider.md-THEME_NAME-theme .md-focus-ring {  border-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-disabled-thumb {  border-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme.md-min .md-thumb:after {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track.md-track-fill {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb:after {  border-color: '{{accent-color}}';  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-sign {  background-color: '{{accent-color}}'; }  md-slider.md-THEME_NAME-theme .md-sign:after {    border-top-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb-text {  color: '{{accent-contrast}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-track.md-track-fill {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb:after {  border-color: '{{warn-color}}';  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-sign {  background-color: '{{warn-color}}'; }  md-slider.md-THEME_NAME-theme.md-warn .md-sign:after {    border-top-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb-text {  color: '{{warn-contrast}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-track.md-track-fill {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb:after {  border-color: '{{primary-color}}';  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-sign {  background-color: '{{primary-color}}'; }  md-slider.md-THEME_NAME-theme.md-primary .md-sign:after {    border-top-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb-text {  color: '{{primary-contrast}}'; }md-slider.md-THEME_NAME-theme[disabled] .md-thumb:after {  border-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme[disabled]:not(.md-min) .md-thumb:after {  background-color: '{{foreground-3}}'; }.md-subheader.md-THEME_NAME-theme {  color: '{{ foreground-2-0.23 }}';  background-color: '{{background-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme .md-thumb {  background-color: '{{background-50}}'; }md-switch.md-THEME_NAME-theme .md-bar {  background-color: '{{background-500}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-thumb {  background-color: '{{accent-color}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-bar {  background-color: '{{accent-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-focused .md-thumb:before {  background-color: '{{accent-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-thumb {  background-color: '{{primary-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-bar {  background-color: '{{primary-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary.md-focused .md-thumb:before {  background-color: '{{primary-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-thumb {  background-color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-bar {  background-color: '{{warn-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn.md-focused .md-thumb:before {  background-color: '{{warn-color-0.26}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-thumb {  background-color: '{{background-400}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-bar {  background-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: transparent;  border-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme .md-paginator md-icon {  color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{accent-color}}';  background: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme .md-tab {  color: '{{foreground-2}}'; }  md-tabs.md-THEME_NAME-theme .md-tab[disabled] {    color: '{{foreground-3}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-active, md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    background: '{{primary-color-0.1}}'; }  md-tabs.md-THEME_NAME-theme .md-tab .md-ripple-container {    color: '{{accent-100}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-tabs-wrapper {  background-color: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]) {  color: '{{accent-100}}'; }  md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-focused {    color: '{{accent-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-focused {    background: '{{accent-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-ink-bar {  color: '{{primary-600-1}}';  background: '{{primary-600-1}}'; }md-tabs.md-THEME_NAME-theme.md-primary md-tabs-wrapper {  background-color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]) {  color: '{{primary-100}}'; }  md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-focused {    color: '{{primary-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-focused {    background: '{{primary-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-warn md-tabs-wrapper {  background-color: '{{warn-color}}'; }md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]) {  color: '{{warn-100}}'; }  md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-focused {    color: '{{warn-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-focused {    background: '{{warn-contrast-0.1}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{primary-color}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{primary-100}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{primary-contrast}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{primary-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{accent-color}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{accent-100}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{accent-contrast}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{accent-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{primary-600-1}}';  background: '{{primary-600-1}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{warn-color}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{warn-100}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{warn-contrast}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{warn-contrast-0.1}}'; }md-toast.md-THEME_NAME-theme {  background-color: #323232;  color: '{{background-50}}'; }  md-toast.md-THEME_NAME-theme .md-button {    color: '{{background-50}}'; }    md-toast.md-THEME_NAME-theme .md-button.md-highlight {      color: '{{primary-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-accent {        color: '{{accent-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-warn {        color: '{{warn-A200}}'; }md-toolbar.md-THEME_NAME-theme {  background-color: '{{primary-color}}';  color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme md-icon {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme .md-button {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme.md-accent {    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }  md-toolbar.md-THEME_NAME-theme.md-warn {    background-color: '{{warn-color}}';    color: '{{warn-contrast}}'; }md-tooltip.md-THEME_NAME-theme {  color: '{{background-A100}}'; }  md-tooltip.md-THEME_NAME-theme .md-background {    background-color: '{{foreground-2}}'; }"); 
+angular.module("material.core").constant("$MD_THEME_CSS", "/* mixin definition ; sets LTR and RTL within the same style call */md-autocomplete.md-THEME_NAME-theme {  background: '{{background-50}}'; }  md-autocomplete.md-THEME_NAME-theme[disabled] {    background: '{{background-100}}'; }  md-autocomplete.md-THEME_NAME-theme button md-icon path {    fill: '{{background-600}}'; }  md-autocomplete.md-THEME_NAME-theme button:after {    background: '{{background-600-0.3}}'; }.md-autocomplete-suggestions.md-THEME_NAME-theme {  background: '{{background-50}}'; }  .md-autocomplete-suggestions.md-THEME_NAME-theme li {    color: '{{background-900}}'; }    .md-autocomplete-suggestions.md-THEME_NAME-theme li .highlight {      color: '{{background-600}}'; }    .md-autocomplete-suggestions.md-THEME_NAME-theme li:hover, .md-autocomplete-suggestions.md-THEME_NAME-theme li.selected {      background: '{{background-200}}'; }md-backdrop.md-opaque.md-THEME_NAME-theme {  background-color: '{{foreground-4-0.5}}'; }md-bottom-sheet.md-THEME_NAME-theme {  background-color: '{{background-50}}';  border-top-color: '{{background-300}}'; }  md-bottom-sheet.md-THEME_NAME-theme.md-list md-list-item {    color: '{{foreground-1}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    background-color: '{{background-50}}'; }  md-bottom-sheet.md-THEME_NAME-theme .md-subheader {    color: '{{foreground-1}}'; }a.md-button.md-THEME_NAME-theme, .md-button.md-THEME_NAME-theme {  border-radius: 3px; }  a.md-button.md-THEME_NAME-theme:not([disabled]):hover, .md-button.md-THEME_NAME-theme:not([disabled]):hover {    background-color: '{{background-500-0.2}}'; }  a.md-button.md-THEME_NAME-theme:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme:not([disabled]).md-focused {    background-color: '{{background-500-0.2}}'; }  a.md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover, .md-button.md-THEME_NAME-theme:not([disabled]).md-icon-button:hover {    background-color: transparent; }  a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {    border-radius: 50%;    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab md-icon, .md-button.md-THEME_NAME-theme.md-fab md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {      background-color: '{{accent-A700}}'; }  a.md-button.md-THEME_NAME-theme.md-icon-button, .md-button.md-THEME_NAME-theme.md-icon-button {    border-radius: 50%; }  a.md-button.md-THEME_NAME-theme.md-primary, .md-button.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }    a.md-button.md-THEME_NAME-theme.md-primary.md-raised, a.md-button.md-THEME_NAME-theme.md-primary.md-fab, .md-button.md-THEME_NAME-theme.md-primary.md-raised, .md-button.md-THEME_NAME-theme.md-primary.md-fab {      color: '{{primary-contrast}}';      background-color: '{{primary-color}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]) md-icon {        color: '{{primary-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]):hover {        background-color: '{{primary-color}}'; }      a.md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-primary.md-fab:not([disabled]).md-focused {        background-color: '{{primary-600}}'; }    a.md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-primary:not([disabled]) md-icon {      color: '{{primary-color}}'; }  a.md-button.md-THEME_NAME-theme.md-fab, .md-button.md-THEME_NAME-theme.md-fab {    border-radius: 50%;    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]) .md-icon {      color: '{{accent-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]):hover {      background-color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-fab:not([disabled]).md-focused {      background-color: '{{accent-A700}}'; }  a.md-button.md-THEME_NAME-theme.md-raised, .md-button.md-THEME_NAME-theme.md-raised {    color: '{{background-contrast}}';    background-color: '{{background-50}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]) .md-icon {      color: '{{background-contrast}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]):hover {      background-color: '{{background-50}}'; }    a.md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-raised:not([disabled]).md-focused {      background-color: '{{background-200}}'; }  a.md-button.md-THEME_NAME-theme.md-warn, .md-button.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }    a.md-button.md-THEME_NAME-theme.md-warn.md-raised, a.md-button.md-THEME_NAME-theme.md-warn.md-fab, .md-button.md-THEME_NAME-theme.md-warn.md-raised, .md-button.md-THEME_NAME-theme.md-warn.md-fab {      color: '{{warn-contrast}}';      background-color: '{{warn-color}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]) md-icon {        color: '{{warn-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]):hover {        background-color: '{{warn-color}}'; }      a.md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-warn.md-fab:not([disabled]).md-focused {        background-color: '{{warn-700}}'; }    a.md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-warn:not([disabled]) md-icon {      color: '{{warn-color}}'; }  a.md-button.md-THEME_NAME-theme.md-accent, .md-button.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }    a.md-button.md-THEME_NAME-theme.md-accent.md-raised, a.md-button.md-THEME_NAME-theme.md-accent.md-fab, .md-button.md-THEME_NAME-theme.md-accent.md-raised, .md-button.md-THEME_NAME-theme.md-accent.md-fab {      color: '{{accent-contrast}}';      background-color: '{{accent-color}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]) md-icon {        color: '{{accent-contrast}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]):hover, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]):hover {        background-color: '{{accent-color}}'; }      a.md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, a.md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-raised:not([disabled]).md-focused, .md-button.md-THEME_NAME-theme.md-accent.md-fab:not([disabled]).md-focused {        background-color: '{{accent-700}}'; }    a.md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon, .md-button.md-THEME_NAME-theme.md-accent:not([disabled]) md-icon {      color: '{{accent-color}}'; }  a.md-button.md-THEME_NAME-theme[disabled], a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], a.md-button.md-THEME_NAME-theme.md-accent[disabled], a.md-button.md-THEME_NAME-theme.md-warn[disabled], .md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-accent[disabled], .md-button.md-THEME_NAME-theme.md-warn[disabled] {    color: '{{foreground-3}}';    cursor: not-allowed; }    a.md-button.md-THEME_NAME-theme[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, a.md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon, .md-button.md-THEME_NAME-theme[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-raised[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-fab[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-accent[disabled] md-icon, .md-button.md-THEME_NAME-theme.md-warn[disabled] md-icon {      color: '{{foreground-3}}'; }  a.md-button.md-THEME_NAME-theme.md-raised[disabled], a.md-button.md-THEME_NAME-theme.md-fab[disabled], .md-button.md-THEME_NAME-theme.md-raised[disabled], .md-button.md-THEME_NAME-theme.md-fab[disabled] {    background-color: '{{foreground-4}}'; }  a.md-button.md-THEME_NAME-theme[disabled], .md-button.md-THEME_NAME-theme[disabled] {    background-color: transparent; }md-card.md-THEME_NAME-theme {  background-color: '{{background-color}}';  border-radius: 2px; }  md-card.md-THEME_NAME-theme .md-card-image {    border-radius: 2px 2px 0 0; }md-checkbox.md-THEME_NAME-theme .md-ripple {  color: '{{accent-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme.md-checked.md-focused .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon {  background-color: '{{accent-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-ripple {  color: '{{primary-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ripple {  color: '{{background-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon {  background-color: '{{primary-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked.md-focused .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-ripple {  color: '{{warn-600}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn .md-icon {  border-color: '{{foreground-2}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon {  background-color: '{{warn-color-0.87}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked.md-focused:not([disabled]) .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-checkbox.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-icon:after {  border-color: '{{background-200}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-icon {  border-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled].md-checked .md-icon {  background-color: '{{foreground-3}}'; }md-checkbox.md-THEME_NAME-theme[disabled] .md-label {  color: '{{foreground-3}}'; }md-content.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }md-chips.md-THEME_NAME-theme .md-chips {  box-shadow: 0 1px '{{background-300}}'; }  md-chips.md-THEME_NAME-theme .md-chips.md-focused {    box-shadow: 0 2px '{{primary-color}}'; }md-chips.md-THEME_NAME-theme .md-chip {  background: '{{background-300}}';  color: '{{background-800}}'; }  md-chips.md-THEME_NAME-theme .md-chip.md-focused {    background: '{{primary-color}}';    color: '{{primary-contrast}}'; }    md-chips.md-THEME_NAME-theme .md-chip.md-focused md-icon {      color: '{{primary-contrast}}'; }md-chips.md-THEME_NAME-theme md-chip-remove .md-button md-icon path {  fill: '{{background-500}}'; }.md-contact-suggestion span.md-contact-email {  color: '{{background-400}}'; }md-dialog.md-THEME_NAME-theme {  border-radius: 4px;  background-color: '{{background-color}}'; }  md-dialog.md-THEME_NAME-theme.md-content-overflow .md-actions {    border-top-color: '{{foreground-4}}'; }md-divider.md-THEME_NAME-theme {  border-top-color: '{{foreground-4}}'; }md-icon.md-THEME_NAME-theme {  color: '{{foreground-2}}'; }  md-icon.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  md-icon.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  md-icon.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-input-container.md-THEME_NAME-theme .md-input {  color: '{{foreground-1}}';  border-color: '{{foreground-4}}';  text-shadow: '{{foreground-shadow}}'; }  md-input-container.md-THEME_NAME-theme .md-input::-webkit-input-placeholder, md-input-container.md-THEME_NAME-theme .md-input::-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-moz-placeholder, md-input-container.md-THEME_NAME-theme .md-input:-ms-input-placeholder {    color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme > md-icon {  color: '{{foreground-1}}'; }md-input-container.md-THEME_NAME-theme label, md-input-container.md-THEME_NAME-theme .md-placeholder {  text-shadow: '{{foreground-shadow}}';  color: '{{foreground-3}}'; }md-input-container.md-THEME_NAME-theme ng-messages, md-input-container.md-THEME_NAME-theme [ng-message], md-input-container.md-THEME_NAME-theme [data-ng-message], md-input-container.md-THEME_NAME-theme [x-ng-message] {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-has-value label {  color: '{{foreground-2}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused .md-input {  border-color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused label {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused md-icon {  color: '{{primary-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent .md-input {  border-color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-accent label {  color: '{{accent-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme:not(.md-input-invalid).md-input-focused.md-warn label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid .md-input {  border-color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid.md-input-focused label {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme.md-input-invalid ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid data-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid x-ng-message, md-input-container.md-THEME_NAME-theme.md-input-invalid [ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [data-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid [x-ng-message], md-input-container.md-THEME_NAME-theme.md-input-invalid .md-char-counter {  color: '{{warn-500}}'; }md-input-container.md-THEME_NAME-theme .md-input[disabled], [disabled] md-input-container.md-THEME_NAME-theme .md-input {  border-bottom-color: transparent;  color: '{{foreground-3}}';  background-image: linear-gradient(to right, '{{foreground-3}}' 0%, '{{foreground-3}}' 33%, transparent 0%);  background-image: -ms-linear-gradient(left, transparent 0%, '{{foreground-3}}' 100%); }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text h4, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h3, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text h4 {  color: '{{foreground-1}}'; }md-list.md-THEME_NAME-theme md-list-item.md-2-line .md-list-item-text p, md-list.md-THEME_NAME-theme md-list-item.md-3-line .md-list-item-text p {  color: '{{foreground-2}}'; }md-list.md-THEME_NAME-theme .md-proxy-focus.md-focused div.md-no-style {  background-color: '{{background-100}}'; }md-list.md-THEME_NAME-theme md-list-item > md-icon {  color: '{{foreground-2}}'; }  md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight {    color: '{{primary-color}}'; }    md-list.md-THEME_NAME-theme md-list-item > md-icon.md-highlight.md-accent {      color: '{{accent-color}}'; }md-list.md-THEME_NAME-theme md-list-item button {  background-color: '{{background-color}}'; }  md-list.md-THEME_NAME-theme md-list-item button.md-button:not([disabled]):hover {    background-color: '{{background-color}}'; }md-menu-content.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }  md-menu-content.md-THEME_NAME-theme md-menu-divider {    background-color: '{{foreground-4}}'; }md-progress-circular.md-THEME_NAME-theme {  background-color: transparent; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-gap {    border-top-color: '{{primary-color}}';    border-bottom-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-top-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-right .md-half-circle {    border-right-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme .md-inner .md-left .md-half-circle {    border-left-color: '{{primary-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-gap {    border-top-color: '{{warn-color}}';    border-bottom-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-top-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-right .md-half-circle {    border-right-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-warn .md-inner .md-left .md-half-circle {    border-left-color: '{{warn-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-gap {    border-top-color: '{{accent-color}}';    border-bottom-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle, md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-top-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-right .md-half-circle {    border-right-color: '{{accent-color}}'; }  md-progress-circular.md-THEME_NAME-theme.md-accent .md-inner .md-left .md-half-circle {    border-left-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme .md-container {  background-color: '{{primary-100}}'; }md-progress-linear.md-THEME_NAME-theme .md-bar {  background-color: '{{primary-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-container {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-warn .md-bar {  background-color: '{{warn-color}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-container {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme.md-accent .md-bar {  background-color: '{{accent-color}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-bar1 {  background-color: '{{warn-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-warn .md-dashed:before {  background: radial-gradient('{{warn-100}}' 0%, '{{warn-100}}' 16%, transparent 42%); }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-bar1 {  background-color: '{{accent-100}}'; }md-progress-linear.md-THEME_NAME-theme[md-mode=buffer].md-accent .md-dashed:before {  background: radial-gradient('{{accent-100}}' 0%, '{{accent-100}}' 16%, transparent 42%); }md-radio-button.md-THEME_NAME-theme .md-off {  border-color: '{{foreground-2}}'; }md-radio-button.md-THEME_NAME-theme .md-on {  background-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-off {  border-color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme.md-checked .md-ink-ripple {  color: '{{accent-color-0.87}}'; }md-radio-button.md-THEME_NAME-theme .md-container .md-ripple {  color: '{{accent-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-on {  background-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-off {  border-color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary.md-checked .md-ink-ripple {  color: '{{primary-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-primary .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-primary .md-container .md-ripple {  color: '{{primary-600}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-on, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-on {  background-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-off, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-off {  border-color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn.md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-checked .md-ink-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn.md-checked .md-ink-ripple {  color: '{{warn-color-0.87}}'; }md-radio-group.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-group.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]) .md-warn .md-container .md-ripple, md-radio-button.md-THEME_NAME-theme:not([disabled]).md-warn .md-container .md-ripple {  color: '{{warn-600}}'; }md-radio-group.md-THEME_NAME-theme[disabled], md-radio-button.md-THEME_NAME-theme[disabled] {  color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-off, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-off {    border-color: '{{foreground-3}}'; }  md-radio-group.md-THEME_NAME-theme[disabled] .md-container .md-on, md-radio-button.md-THEME_NAME-theme[disabled] .md-container .md-on {    border-color: '{{foreground-3}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked .md-container:before {  background-color: '{{accent-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked:not([disabled]).md-primary .md-container:before {  background-color: '{{primary-color-0.26}}'; }md-radio-group.md-THEME_NAME-theme.md-focused:not(:empty) .md-checked.md-primary .md-container:before {  background-color: '{{warn-color-0.26}}'; }md-select.md-THEME_NAME-theme.ng-invalid.ng-dirty .md-select-label {  color: '{{warn-500}}' !important;  border-bottom-color: '{{warn-500}}' !important; }md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-label {  border-bottom-color: '{{primary-color}}';  color: '{{ foreground-1 }}'; }  md-select.md-THEME_NAME-theme:not([disabled]):focus .md-select-label.md-placeholder {    color: '{{ foreground-1 }}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-accent .md-select-label {  border-bottom-color: '{{accent-color}}'; }md-select.md-THEME_NAME-theme:not([disabled]):focus.md-warn .md-select-label {  border-bottom-color: '{{warn-color}}'; }md-select.md-THEME_NAME-theme[disabled] .md-select-label {  color: '{{foreground-3}}'; }  md-select.md-THEME_NAME-theme[disabled] .md-select-label.md-placeholder {    color: '{{foreground-3}}'; }md-select.md-THEME_NAME-theme .md-select-label {  border-bottom-color: '{{foreground-4}}'; }  md-select.md-THEME_NAME-theme .md-select-label.md-placeholder {    color: '{{foreground-2}}'; }md-select-menu.md-THEME_NAME-theme md-optgroup {  color: '{{foreground-2}}'; }  md-select-menu.md-THEME_NAME-theme md-optgroup md-option {    color: '{{foreground-1}}'; }md-select-menu.md-THEME_NAME-theme md-option[selected] {  color: '{{primary-500}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected]:focus {    color: '{{primary-600}}'; }  md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent {    color: '{{accent-500}}'; }    md-select-menu.md-THEME_NAME-theme md-option[selected].md-accent:focus {      color: '{{accent-600}}'; }md-select-menu.md-THEME_NAME-theme md-option:focus:not([selected]) {  background: '{{background-200}}'; }md-sidenav.md-THEME_NAME-theme {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track {  background-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme .md-track-ticks {  background-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-focus-thumb {  background-color: '{{foreground-2}}'; }md-slider.md-THEME_NAME-theme .md-focus-ring {  border-color: '{{foreground-4}}'; }md-slider.md-THEME_NAME-theme .md-disabled-thumb {  border-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme.md-min .md-thumb:after {  background-color: '{{background-color}}'; }md-slider.md-THEME_NAME-theme .md-track.md-track-fill {  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb:after {  border-color: '{{accent-color}}';  background-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-sign {  background-color: '{{accent-color}}'; }  md-slider.md-THEME_NAME-theme .md-sign:after {    border-top-color: '{{accent-color}}'; }md-slider.md-THEME_NAME-theme .md-thumb-text {  color: '{{accent-contrast}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-track.md-track-fill {  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb:after {  border-color: '{{warn-color}}';  background-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-sign {  background-color: '{{warn-color}}'; }  md-slider.md-THEME_NAME-theme.md-warn .md-sign:after {    border-top-color: '{{warn-color}}'; }md-slider.md-THEME_NAME-theme.md-warn .md-thumb-text {  color: '{{warn-contrast}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-track.md-track-fill {  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb:after {  border-color: '{{primary-color}}';  background-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-sign {  background-color: '{{primary-color}}'; }  md-slider.md-THEME_NAME-theme.md-primary .md-sign:after {    border-top-color: '{{primary-color}}'; }md-slider.md-THEME_NAME-theme.md-primary .md-thumb-text {  color: '{{primary-contrast}}'; }md-slider.md-THEME_NAME-theme[disabled] .md-thumb:after {  border-color: '{{foreground-3}}'; }md-slider.md-THEME_NAME-theme[disabled]:not(.md-min) .md-thumb:after {  background-color: '{{foreground-3}}'; }.md-subheader.md-THEME_NAME-theme {  color: '{{ foreground-2-0.23 }}';  background-color: '{{background-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-primary {    color: '{{primary-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-accent {    color: '{{accent-color}}'; }  .md-subheader.md-THEME_NAME-theme.md-warn {    color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme .md-thumb {  background-color: '{{background-50}}'; }md-switch.md-THEME_NAME-theme .md-bar {  background-color: '{{background-500}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-thumb {  background-color: '{{accent-color}}'; }md-switch.md-THEME_NAME-theme.md-checked .md-bar {  background-color: '{{accent-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-focused .md-thumb:before {  background-color: '{{accent-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-thumb {  background-color: '{{primary-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary .md-bar {  background-color: '{{primary-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-primary.md-focused .md-thumb:before {  background-color: '{{primary-color-0.26}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-thumb {  background-color: '{{warn-color}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn .md-bar {  background-color: '{{warn-color-0.5}}'; }md-switch.md-THEME_NAME-theme.md-checked.md-warn.md-focused .md-thumb:before {  background-color: '{{warn-color-0.26}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-thumb {  background-color: '{{background-400}}'; }md-switch.md-THEME_NAME-theme[disabled] .md-bar {  background-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: transparent;  border-color: '{{foreground-4}}'; }md-tabs.md-THEME_NAME-theme .md-paginator md-icon {  color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{accent-color}}';  background: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme .md-tab {  color: '{{foreground-2}}'; }  md-tabs.md-THEME_NAME-theme .md-tab[disabled] {    color: '{{foreground-3}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-active, md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    color: '{{primary-color}}'; }  md-tabs.md-THEME_NAME-theme .md-tab.md-focused {    background: '{{primary-color-0.1}}'; }  md-tabs.md-THEME_NAME-theme .md-tab .md-ripple-container {    color: '{{accent-100}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-tabs-wrapper {  background-color: '{{accent-color}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]) {  color: '{{accent-100}}'; }  md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-focused {    color: '{{accent-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-accent md-tab-item:not([disabled]).md-focused {    background: '{{accent-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-accent md-ink-bar {  color: '{{primary-600-1}}';  background: '{{primary-600-1}}'; }md-tabs.md-THEME_NAME-theme.md-primary md-tabs-wrapper {  background-color: '{{primary-color}}'; }md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]) {  color: '{{primary-100}}'; }  md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-focused {    color: '{{primary-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-primary md-tab-item:not([disabled]).md-focused {    background: '{{primary-contrast-0.1}}'; }md-tabs.md-THEME_NAME-theme.md-warn md-tabs-wrapper {  background-color: '{{warn-color}}'; }md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]) {  color: '{{warn-100}}'; }  md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-active, md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-focused {    color: '{{warn-contrast}}'; }  md-tabs.md-THEME_NAME-theme.md-warn md-tab-item:not([disabled]).md-focused {    background: '{{warn-contrast-0.1}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{primary-color}}'; }md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{primary-100}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{primary-contrast}}'; }  md-toolbar > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{primary-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{accent-color}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{accent-100}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{accent-contrast}}'; }  md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{accent-contrast-0.1}}'; }md-toolbar.md-accent > md-tabs.md-THEME_NAME-theme md-ink-bar {  color: '{{primary-600-1}}';  background: '{{primary-600-1}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tabs-wrapper {  background-color: '{{warn-color}}'; }md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]) {  color: '{{warn-100}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-active, md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    color: '{{warn-contrast}}'; }  md-toolbar.md-warn > md-tabs.md-THEME_NAME-theme md-tab-item:not([disabled]).md-focused {    background: '{{warn-contrast-0.1}}'; }md-toast.md-THEME_NAME-theme {  background-color: #323232;  color: '{{background-50}}'; }  md-toast.md-THEME_NAME-theme .md-button {    color: '{{background-50}}'; }    md-toast.md-THEME_NAME-theme .md-button.md-highlight {      color: '{{primary-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-accent {        color: '{{accent-A200}}'; }      md-toast.md-THEME_NAME-theme .md-button.md-highlight.md-warn {        color: '{{warn-A200}}'; }md-toolbar.md-THEME_NAME-theme {  background-color: '{{primary-color}}';  color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme md-icon {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme .md-button {    color: '{{primary-contrast}}'; }  md-toolbar.md-THEME_NAME-theme.md-accent {    background-color: '{{accent-color}}';    color: '{{accent-contrast}}'; }  md-toolbar.md-THEME_NAME-theme.md-warn {    background-color: '{{warn-color}}';    color: '{{warn-contrast}}'; }md-tooltip.md-THEME_NAME-theme {  color: '{{background-A100}}'; }  md-tooltip.md-THEME_NAME-theme .md-background {    background-color: '{{foreground-2}}'; }"); 
 })();
 
 
 })(window, window.angular);
-},{}],33:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 // Should already be required, here for clarity
 require('angular');
 
@@ -18492,9 +20658,9 @@ require('./angular-material');
 // Export namespace
 module.exports = 'ngMaterial';
 
-},{"./angular-material":32,"angular":39,"angular-animate":28,"angular-aria":30}],34:[function(require,module,exports){
+},{"./angular-material":35,"angular":42,"angular-animate":31,"angular-aria":33}],37:[function(require,module,exports){
 /**
- * @license AngularJS v1.4.0
+ * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -18551,7 +20717,7 @@ var jqLite = angular.element;
  *
  * ```javascript
  * <!-- keep in mind that ngModel automatically sets these error flags -->
- * myField.$error = { minlength : true, required : false };
+ * myField.$error = { minlength : true, required : true };
  * ```
  *
  * Then the `required` message will be displayed first. When required is false then the `minlength` message
@@ -18751,7 +20917,7 @@ angular.module('ngMessages', [])
     *
     * @description
     * `ngMessages` is a directive that is designed to show and hide messages based on the state
-    * of a key/value object that it listens on. The directive itself compliments error message
+    * of a key/value object that it listens on. The directive itself complements error message
     * reporting with the `ngModel` $error object (which stores a key/value state of validation errors).
     *
     * `ngMessages` manages the state of internal messages within its container element. The internal
@@ -19172,11 +21338,11 @@ function ngMessageDirectiveFactory(restrict) {
 
 })(window, window.angular);
 
-},{}],35:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 require('./angular-messages');
 module.exports = 'ngMessages';
 
-},{"./angular-messages":34}],36:[function(require,module,exports){
+},{"./angular-messages":37}],39:[function(require,module,exports){
 if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.exports === exports) {
   module.exports = 'pouchdb';
 }
@@ -19273,7 +21439,7 @@ angular.module('pouchdb', [])
   }]);
 })(window, window.angular);
 
-},{}],37:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /**
  * State-based routing for AngularJS
  * @version v0.2.15
@@ -23644,9 +25810,9 @@ angular.module('ui.router.state')
   .filter('isState', $IsStateFilter)
   .filter('includedByState', $IncludedByStateFilter);
 })(window, window.angular);
-},{}],38:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 /**
- * @license AngularJS v1.4.0
+ * @license AngularJS v1.4.1
  * (c) 2010-2015 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -23704,7 +25870,7 @@ function minErr(module, ErrorConstructor) {
       return match;
     });
 
-    message += '\nhttp://errors.angularjs.org/1.4.0/' +
+    message += '\nhttp://errors.angularjs.org/1.4.1/' +
       (module ? module + '/' : '') + code;
 
     for (i = SKIP_INDEXES, paramPrefix = '?'; i < templateArgs.length; i++, paramPrefix = '&') {
@@ -24511,9 +26677,18 @@ function copy(source, destination, stackSource, stackDest) {
 
   if (!destination) {
     destination = source;
-    if (source) {
+    if (isObject(source)) {
+      var index;
+      if (stackSource && (index = stackSource.indexOf(source)) !== -1) {
+        return stackDest[index];
+      }
+
+      // TypedArray, Date and RegExp have specific copy functionality and must be
+      // pushed onto the stack before returning.
+      // Array and other objects create the base object and recurse to copy child
+      // objects. The array/object will be pushed onto the stack when recursed.
       if (isArray(source)) {
-        destination = copy(source, [], stackSource, stackDest);
+        return copy(source, [], stackSource, stackDest);
       } else if (isTypedArray(source)) {
         destination = new source.constructor(source);
       } else if (isDate(source)) {
@@ -24521,9 +26696,14 @@ function copy(source, destination, stackSource, stackDest) {
       } else if (isRegExp(source)) {
         destination = new RegExp(source.source, source.toString().match(/[^\/]*$/)[0]);
         destination.lastIndex = source.lastIndex;
-      } else if (isObject(source)) {
+      } else {
         var emptyObject = Object.create(getPrototypeOf(source));
-        destination = copy(source, emptyObject, stackSource, stackDest);
+        return copy(source, emptyObject, stackSource, stackDest);
+      }
+
+      if (stackDest) {
+        stackSource.push(source);
+        stackDest.push(destination);
       }
     }
   } else {
@@ -24534,9 +26714,6 @@ function copy(source, destination, stackSource, stackDest) {
     stackDest = stackDest || [];
 
     if (isObject(source)) {
-      var index = stackSource.indexOf(source);
-      if (index !== -1) return stackDest[index];
-
       stackSource.push(source);
       stackDest.push(destination);
     }
@@ -24545,12 +26722,7 @@ function copy(source, destination, stackSource, stackDest) {
     if (isArray(source)) {
       destination.length = 0;
       for (var i = 0; i < source.length; i++) {
-        result = copy(source[i], null, stackSource, stackDest);
-        if (isObject(source[i])) {
-          stackSource.push(source[i]);
-          stackDest.push(result);
-        }
-        destination.push(result);
+        destination.push(copy(source[i], null, stackSource, stackDest));
       }
     } else {
       var h = destination.$$hashKey;
@@ -24564,20 +26736,20 @@ function copy(source, destination, stackSource, stackDest) {
       if (isBlankObject(source)) {
         // createMap() fast path --- Safe to avoid hasOwnProperty check because prototype chain is empty
         for (key in source) {
-          putValue(key, source[key], destination, stackSource, stackDest);
+          destination[key] = copy(source[key], null, stackSource, stackDest);
         }
       } else if (source && typeof source.hasOwnProperty === 'function') {
         // Slow path, which must rely on hasOwnProperty
         for (key in source) {
           if (source.hasOwnProperty(key)) {
-            putValue(key, source[key], destination, stackSource, stackDest);
+            destination[key] = copy(source[key], null, stackSource, stackDest);
           }
         }
       } else {
         // Slowest path --- hasOwnProperty can't be called as a method
         for (key in source) {
           if (hasOwnProperty.call(source, key)) {
-            putValue(key, source[key], destination, stackSource, stackDest);
+            destination[key] = copy(source[key], null, stackSource, stackDest);
           }
         }
       }
@@ -24585,16 +26757,6 @@ function copy(source, destination, stackSource, stackDest) {
     }
   }
   return destination;
-
-  function putValue(key, val, destination, stackSource, stackDest) {
-    // No context allocation, trivial outer scope, easily inlined
-    var result = copy(val, null, stackSource, stackDest);
-    if (isObject(val)) {
-      stackSource.push(val);
-      stackDest.push(result);
-    }
-    destination[key] = result;
-  }
 }
 
 /**
@@ -25652,7 +27814,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link auto.$provide#provider $provide.provider()}.
            */
-          provider: invokeLater('$provide', 'provider'),
+          provider: invokeLaterAndSetModuleName('$provide', 'provider'),
 
           /**
            * @ngdoc method
@@ -25663,7 +27825,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link auto.$provide#factory $provide.factory()}.
            */
-          factory: invokeLater('$provide', 'factory'),
+          factory: invokeLaterAndSetModuleName('$provide', 'factory'),
 
           /**
            * @ngdoc method
@@ -25674,7 +27836,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link auto.$provide#service $provide.service()}.
            */
-          service: invokeLater('$provide', 'service'),
+          service: invokeLaterAndSetModuleName('$provide', 'service'),
 
           /**
            * @ngdoc method
@@ -25709,7 +27871,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link auto.$provide#decorator $provide.decorator()}.
            */
-          decorator: invokeLater('$provide', 'decorator'),
+          decorator: invokeLaterAndSetModuleName('$provide', 'decorator'),
 
           /**
            * @ngdoc method
@@ -25743,7 +27905,7 @@ function setupModuleLoader(window) {
            * See {@link ng.$animateProvider#register $animateProvider.register()} and
            * {@link ngAnimate ngAnimate module} for more information.
            */
-          animation: invokeLater('$animateProvider', 'register'),
+          animation: invokeLaterAndSetModuleName('$animateProvider', 'register'),
 
           /**
            * @ngdoc method
@@ -25761,7 +27923,7 @@ function setupModuleLoader(window) {
            * (`myapp_subsection_filterx`).
            * </div>
            */
-          filter: invokeLater('$filterProvider', 'register'),
+          filter: invokeLaterAndSetModuleName('$filterProvider', 'register'),
 
           /**
            * @ngdoc method
@@ -25773,7 +27935,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link ng.$controllerProvider#register $controllerProvider.register()}.
            */
-          controller: invokeLater('$controllerProvider', 'register'),
+          controller: invokeLaterAndSetModuleName('$controllerProvider', 'register'),
 
           /**
            * @ngdoc method
@@ -25786,7 +27948,7 @@ function setupModuleLoader(window) {
            * @description
            * See {@link ng.$compileProvider#directive $compileProvider.directive()}.
            */
-          directive: invokeLater('$compileProvider', 'directive'),
+          directive: invokeLaterAndSetModuleName('$compileProvider', 'directive'),
 
           /**
            * @ngdoc method
@@ -25833,6 +27995,19 @@ function setupModuleLoader(window) {
           if (!queue) queue = invokeQueue;
           return function() {
             queue[insertMethod || 'push']([provider, method, arguments]);
+            return moduleInstance;
+          };
+        }
+
+        /**
+         * @param {string} provider
+         * @param {string} method
+         * @returns {angular.Module}
+         */
+        function invokeLaterAndSetModuleName(provider, method) {
+          return function(recipeName, factoryFunction) {
+            if (factoryFunction && isFunction(factoryFunction)) factoryFunction.$$moduleName = name;
+            invokeQueue.push([provider, method, arguments]);
             return moduleInstance;
           };
         }
@@ -25979,11 +28154,11 @@ function toDebugString(obj) {
  * - `codeName` – `{string}` – Code name of the release, such as "jiggling-armfat".
  */
 var version = {
-  full: '1.4.0',    // all of these placeholder strings will be replaced by grunt's
+  full: '1.4.1',    // all of these placeholder strings will be replaced by grunt's
   major: 1,    // package task
   minor: 4,
-  dot: 0,
-  codeName: 'jaracimrman-existence'
+  dot: 1,
+  codeName: 'hyperionic-illumination'
 };
 
 
@@ -26307,6 +28482,13 @@ function jqLiteAcceptsData(node) {
   // Otherwise we are only interested in elements (1) and documents (9)
   var nodeType = node.nodeType;
   return nodeType === NODE_TYPE_ELEMENT || !nodeType || nodeType === NODE_TYPE_DOCUMENT;
+}
+
+function jqLiteHasData(node) {
+  for (var key in jqCache[node.ng339]) {
+    return true;
+  }
+  return false;
 }
 
 function jqLiteBuildFragment(html, context) {
@@ -26683,7 +28865,8 @@ function getAliasedAttrName(element, name) {
 
 forEach({
   data: jqLiteData,
-  removeData: jqLiteRemoveData
+  removeData: jqLiteRemoveData,
+  hasData: jqLiteHasData
 }, function(fn, name) {
   JQLite[name] = fn;
 });
@@ -27892,7 +30075,7 @@ function createInjector(modulesToLoad, strictDi) {
           }));
 
 
-  forEach(loadModules(modulesToLoad), function(fn) { instanceInjector.invoke(fn || noop); });
+  forEach(loadModules(modulesToLoad), function(fn) { if (fn) instanceInjector.invoke(fn); });
 
   return instanceInjector;
 
@@ -29115,7 +31298,7 @@ function Browser(window, document, $log, $sniffer) {
         // Do the assignment again so that those two variables are referentially identical.
         lastHistoryState = cachedState;
       } else {
-        if (!sameBase) {
+        if (!sameBase || reloadLocation) {
           reloadLocation = url;
         }
         if (replace) {
@@ -30121,12 +32304,15 @@ function $TemplateCacheProvider() {
  *   * `controller` - the directive's required controller instance(s) - Instances are shared
  *     among all directives, which allows the directives to use the controllers as a communication
  *     channel. The exact value depends on the directive's `require` property:
+ *       * no controller(s) required: the directive's own controller, or `undefined` if it doesn't have one
  *       * `string`: the controller instance
  *       * `array`: array of controller instances
- *       * no controller(s) required: `undefined`
  *
  *     If a required controller cannot be found, and it is optional, the instance is `null`,
  *     otherwise the {@link error:$compile:ctreq Missing Required Controller} error is thrown.
+ *
+ *     Note that you can also require the directive's own controller - it will be made available like
+ *     like any other controller.
  *
  *   * `transcludeFn` - A transclude linking function pre-bound to the correct transclusion scope.
  *     This is the same as the `$transclude`
@@ -30574,6 +32760,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
                 if (isObject(bindings.isolateScope)) {
                   directive.$$isolateBindings = bindings.isolateScope;
                 }
+                directive.$$moduleName = directiveFactory.$$moduleName;
                 directives.push(directive);
               } catch (e) {
                 $exceptionHandler(e);
@@ -31145,8 +33332,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
 
             if (nodeLinkFn.transcludeOnThisElement) {
               childBoundTranscludeFn = createBoundTranscludeFn(
-                  scope, nodeLinkFn.transclude, parentBoundTranscludeFn,
-                  nodeLinkFn.elementTranscludeOnThisElement);
+                  scope, nodeLinkFn.transclude, parentBoundTranscludeFn);
 
             } else if (!nodeLinkFn.templateOnThisElement && parentBoundTranscludeFn) {
               childBoundTranscludeFn = parentBoundTranscludeFn;
@@ -31168,7 +33354,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       }
     }
 
-    function createBoundTranscludeFn(scope, transcludeFn, previousBoundTranscludeFn, elementTransclusion) {
+    function createBoundTranscludeFn(scope, transcludeFn, previousBoundTranscludeFn) {
 
       var boundTranscludeFn = function(transcludedScope, cloneFn, controllers, futureParentElement, containingScope) {
 
@@ -31267,6 +33453,13 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
           }
           break;
         case NODE_TYPE_TEXT: /* Text Node */
+          if (msie === 11) {
+            // Workaround for #11781
+            while (node.parentNode && node.nextSibling && node.nextSibling.nodeType === NODE_TYPE_TEXT) {
+              node.nodeValue = node.nodeValue + node.nextSibling.nodeValue;
+              node.parentNode.removeChild(node.nextSibling);
+            }
+          }
           addTextInterpolateDirective(directives, node.nodeValue);
           break;
         case NODE_TYPE_COMMENT: /* Comment */
@@ -31559,7 +33752,6 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
 
       nodeLinkFn.scope = newScopeDirective && newScopeDirective.scope === true;
       nodeLinkFn.transcludeOnThisElement = hasTranscludeDirective;
-      nodeLinkFn.elementTranscludeOnThisElement = hasElementTranscludeDirective;
       nodeLinkFn.templateOnThisElement = hasTemplate;
       nodeLinkFn.transclude = childTranscludeFn;
 
@@ -31720,9 +33912,12 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
           for (i in elementControllers) {
             controller = elementControllers[i];
             var controllerResult = controller();
+
             if (controllerResult !== controller.instance) {
+              // If the controller constructor has a return value, overwrite the instance
+              // from setupControllers and update the element data
               controller.instance = controllerResult;
-              $element.data('$' + directive.name + 'Controller', controllerResult);
+              $element.data('$' + i + 'Controller', controllerResult);
               if (controller === controllerForBindings) {
                 // Remove and re-install bindToController bindings
                 thisLinkFn.$$destroyBindings();
@@ -32022,11 +34217,18 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       return a.index - b.index;
     }
 
-
     function assertNoDuplicate(what, previousDirective, directive, element) {
+
+      function wrapModuleNameIfDefined(moduleName) {
+        return moduleName ?
+          (' (module: ' + moduleName + ')') :
+          '';
+      }
+
       if (previousDirective) {
-        throw $compileMinErr('multidir', 'Multiple directives [{0}, {1}] asking for {2} on: {3}',
-            previousDirective.name, directive.name, what, startingTag(element));
+        throw $compileMinErr('multidir', 'Multiple directives [{0}{1}, {2}{3}] asking for {4} on: {5}',
+            previousDirective.name, wrapModuleNameIfDefined(previousDirective.$$moduleName),
+            directive.name, wrapModuleNameIfDefined(directive.$$moduleName), what, startingTag(element));
       }
     }
 
@@ -32207,26 +34409,28 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       var fragment = document.createDocumentFragment();
       fragment.appendChild(firstElementToRemove);
 
-      // Copy over user data (that includes Angular's $scope etc.). Don't copy private
-      // data here because there's no public interface in jQuery to do that and copying over
-      // event listeners (which is the main use of private data) wouldn't work anyway.
-      jqLite(newNode).data(jqLite(firstElementToRemove).data());
+      if (jqLite.hasData(firstElementToRemove)) {
+        // Copy over user data (that includes Angular's $scope etc.). Don't copy private
+        // data here because there's no public interface in jQuery to do that and copying over
+        // event listeners (which is the main use of private data) wouldn't work anyway.
+        jqLite(newNode).data(jqLite(firstElementToRemove).data());
 
-      // Remove data of the replaced element. We cannot just call .remove()
-      // on the element it since that would deallocate scope that is needed
-      // for the new node. Instead, remove the data "manually".
-      if (!jQuery) {
-        delete jqLite.cache[firstElementToRemove[jqLite.expando]];
-      } else {
-        // jQuery 2.x doesn't expose the data storage. Use jQuery.cleanData to clean up after
-        // the replaced element. The cleanData version monkey-patched by Angular would cause
-        // the scope to be trashed and we do need the very same scope to work with the new
-        // element. However, we cannot just cache the non-patched version and use it here as
-        // that would break if another library patches the method after Angular does (one
-        // example is jQuery UI). Instead, set a flag indicating scope destroying should be
-        // skipped this one time.
-        skipDestroyOnNextJQueryCleanData = true;
-        jQuery.cleanData([firstElementToRemove]);
+        // Remove data of the replaced element. We cannot just call .remove()
+        // on the element it since that would deallocate scope that is needed
+        // for the new node. Instead, remove the data "manually".
+        if (!jQuery) {
+          delete jqLite.cache[firstElementToRemove[jqLite.expando]];
+        } else {
+          // jQuery 2.x doesn't expose the data storage. Use jQuery.cleanData to clean up after
+          // the replaced element. The cleanData version monkey-patched by Angular would cause
+          // the scope to be trashed and we do need the very same scope to work with the new
+          // element. However, we cannot just cache the non-patched version and use it here as
+          // that would break if another library patches the method after Angular does (one
+          // example is jQuery UI). Instead, set a flag indicating scope destroying should be
+          // skipped this one time.
+          skipDestroyOnNextJQueryCleanData = true;
+          jQuery.cleanData([firstElementToRemove]);
+        }
       }
 
       for (var k = 1, kk = elementsToRemove.length; k < kk; k++) {
@@ -32267,9 +34471,19 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
         lastValue,
         parentGet, parentSet, compare;
 
+        if (!hasOwnProperty.call(attrs, attrName)) {
+          // In the case of user defined a binding with the same name as a method in Object.prototype but didn't set
+          // the corresponding attribute. We need to make sure subsequent code won't access to the prototype function
+          attrs[attrName] = undefined;
+        }
+
         switch (mode) {
 
           case '@':
+            if (!attrs[attrName] && !optional) {
+              destination[scopeName] = undefined;
+            }
+
             attrs.$observe(attrName, function(value) {
               destination[scopeName] = value;
             });
@@ -32286,6 +34500,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
               return;
             }
             parentGet = $parse(attrs[attrName]);
+
             if (parentGet.literal) {
               compare = equals;
             } else {
@@ -32324,9 +34539,6 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
             break;
 
           case '&':
-            // Don't assign Object.prototype method to scope
-            if (!attrs.hasOwnProperty(attrName) && optional) break;
-
             parentGet = $parse(attrs[attrName]);
 
             // Don't assign noop to destination if expression is not valid
@@ -32727,13 +34939,17 @@ function $HttpParamSerializerProvider() {
    * @name $httpParamSerializer
    * @description
    *
-   * Default $http params serializer that converts objects to a part of a request URL
+   * Default {@link $http `$http`} params serializer that converts objects to strings
    * according to the following rules:
+   *
    * * `{'foo': 'bar'}` results in `foo=bar`
    * * `{'foo': Date.now()}` results in `foo=2015-04-01T09%3A50%3A49.262Z` (`toISOString()` and encoded representation of a Date object)
    * * `{'foo': ['bar', 'baz']}` results in `foo=bar&foo=baz` (repeated key for each array element)
    * * `{'foo': {'bar':'baz'}}` results in `foo=%7B%22bar%22%3A%22baz%22%7D"` (stringified and encoded representation of an object)
+   *
+   * Note that serializer will sort the request parameters alphabetically.
    * */
+
   this.$get = function() {
     return function ngParamSerializer(params) {
       if (!params) return '';
@@ -32760,7 +34976,43 @@ function $HttpParamSerializerJQLikeProvider() {
    * @name $httpParamSerializerJQLike
    * @description
    *
-   * Alternative $http params serializer that follows jQuery's [`param()`](http://api.jquery.com/jquery.param/) method logic.
+   * Alternative {@link $http `$http`} params serializer that follows
+   * jQuery's [`param()`](http://api.jquery.com/jquery.param/) method logic.
+   * The serializer will also sort the params alphabetically.
+   *
+   * To use it for serializing `$http` request parameters, set it as the `paramSerializer` property:
+   *
+   * ```js
+   * $http({
+   *   url: myUrl,
+   *   method: 'GET',
+   *   params: myParams,
+   *   paramSerializer: '$httpParamSerializerJQLike'
+   * });
+   * ```
+   *
+   * It is also possible to set it as the default `paramSerializer` in the
+   * {@link $httpProvider#defaults `$httpProvider`}.
+   *
+   * Additionally, you can inject the serializer and use it explicitly, for example to serialize
+   * form data for submission:
+   *
+   * ```js
+   * .controller(function($http, $httpParamSerializerJQLike) {
+   *   //...
+   *
+   *   $http({
+   *     url: myUrl,
+   *     method: 'POST',
+   *     data: $httpParamSerializerJQLike(myData),
+   *     headers: {
+   *       'Content-Type': 'application/x-www-form-urlencoded'
+   *     }
+   *   });
+   *
+   * });
+   * ```
+   *
    * */
   this.$get = function() {
     return function jQueryLikeParamSerializer(params) {
@@ -32934,10 +35186,11 @@ function $HttpProvider() {
    *     - **`defaults.headers.put`**
    *     - **`defaults.headers.patch`**
    *
-   * - **`defaults.paramSerializer`** - {string|function(Object<string,string>):string} - A function used to prepare string representation
-   * of request parameters (specified as an object).
-   * If specified as string, it is interpreted as a function registered with the {@link auto.$injector $injector}.
-   * Defaults to {@link ng.$httpParamSerializer $httpParamSerializer}.
+   *
+   * - **`defaults.paramSerializer`** - `{string|function(Object<string,string>):string}` - A function
+   *  used to the prepare string representation of request parameters (specified as an object).
+   *  If specified as string, it is interpreted as a function registered with the {@link auto.$injector $injector}.
+   *  Defaults to {@link ng.$httpParamSerializer $httpParamSerializer}.
    *
    **/
   var defaults = this.defaults = {
@@ -33403,15 +35656,17 @@ function $HttpProvider() {
      * properties of either $httpProvider.defaults at config-time, $http.defaults at run-time,
      * or the per-request config object.
      *
+     * In order to prevent collisions in environments where multiple Angular apps share the
+     * same domain or subdomain, we recommend that each application uses unique cookie name.
+     *
      *
      * @param {object} config Object describing the request to be made and how it should be
      *    processed. The object has following properties:
      *
      *    - **method** – `{string}` – HTTP method (e.g. 'GET', 'POST', etc)
      *    - **url** – `{string}` – Absolute or relative URL of the resource that is being requested.
-     *    - **params** – `{Object.<string|Object>}` – Map of strings or objects which will be turned
-     *      to `?key1=value1&key2=value2` after the url. If the value is not a string, it will be
-     *      JSONified.
+     *    - **params** – `{Object.<string|Object>}` – Map of strings or objects which will be serialized
+     *      with the `paramSerializer` and appended as GET parameters.
      *    - **data** – `{string|Object}` – Data to be sent as the request message data.
      *    - **headers** – `{Object}` – Map of strings or functions which return strings representing
      *      HTTP headers to send to the server. If the return value of a function is null, the
@@ -33429,10 +35684,14 @@ function $HttpProvider() {
      *      transform function or an array of such functions. The transform function takes the http
      *      response body, headers and status and returns its transformed (typically deserialized) version.
      *      See {@link ng.$http#overriding-the-default-transformations-per-request
-     *      Overriding the Default Transformations}
-     *    - **paramSerializer** - {string|function(Object<string,string>):string} - A function used to prepare string representation
-     *      of request parameters (specified as an object).
-     *      Is specified as string, it is interpreted as function registered in with the {$injector}.
+     *      Overriding the Default TransformationjqLiks}
+     *    - **paramSerializer** - `{string|function(Object<string,string>):string}` - A function used to
+     *      prepare the string representation of request parameters (specified as an object).
+     *      If specified as string, it is interpreted as function registered with the
+     *      {@link $injector $injector}, which means you can create your own serializer
+     *      by registering it as a {@link auto.$provide#service service}.
+     *      The default serializer is the {@link $httpParamSerializer $httpParamSerializer};
+     *      alternatively, you can use the {@link $httpParamSerializerJQLike $httpParamSerializerJQLike}
      *    - **cache** – `{boolean|Cache}` – If true, a default $http cache will be used to cache the
      *      GET request, otherwise if a cache instance built with
      *      {@link ng.$cacheFactory $cacheFactory}, this cache will be used for
@@ -36860,8 +39119,10 @@ ASTCompiler.prototype = {
               nameId.name = ast.property.name;
             }
           }
-          recursionFn(intoId);
+        }, function() {
+          self.assign(intoId, 'undefined');
         });
+        recursionFn(intoId);
       }, !!create);
       break;
     case AST.CallExpression:
@@ -36899,8 +39160,10 @@ ASTCompiler.prototype = {
             }
             expression = self.ensureSafeObject(expression);
             self.assign(intoId, expression);
-            recursionFn(intoId);
+          }, function() {
+            self.assign(intoId, 'undefined');
           });
+          recursionFn(intoId);
         });
       }
       break;
@@ -38283,6 +40546,19 @@ function qFactory(nextTick, exceptionHandler) {
 
   /**
    * @ngdoc method
+   * @name $q#resolve
+   * @kind function
+   *
+   * @description
+   * Alias of {@link ng.$q#when when} to maintain naming consistency with ES6.
+   *
+   * @param {*} value Value or a promise
+   * @returns {Promise} Returns a promise of the passed value or promise
+   */
+  var resolve = when;
+
+  /**
+   * @ngdoc method
    * @name $q#all
    * @kind function
    *
@@ -38349,6 +40625,7 @@ function qFactory(nextTick, exceptionHandler) {
   $Q.defer = defer;
   $Q.reject = reject;
   $Q.when = when;
+  $Q.resolve = resolve;
   $Q.all = all;
 
   return $Q;
@@ -41658,9 +43935,11 @@ function $FilterProvider($provide) {
  *     `{name: {first: 'John', last: 'Doe'}}` will **not** be matched by `{name: 'John'}`, but
  *     **will** be matched by `{$: 'John'}`.
  *
- *   - `function(value, index)`: A predicate function can be used to write arbitrary filters. The
- *     function is called for each element of `array`. The final result is an array of those
- *     elements that the predicate returned true for.
+ *   - `function(value, index, array)`: A predicate function can be used to write arbitrary filters.
+ *     The function is called for each element of the array, with the element, its index, and
+ *     the entire array itself as arguments.
+ *
+ *     The final result is an array of those elements that the predicate returned true for.
  *
  * @param {function(actual, expected)|true|undefined} comparator Comparator which is used in
  *     determining if the expected value (from the filter expression) and actual value (from
@@ -41961,9 +44240,10 @@ function currencyFilter($locale) {
  * @description
  * Formats a number as text.
  *
+ * If the input is null or undefined, it will just be returned.
+ * If the input is infinite (Infinity/-Infinity) the Infinity symbol '∞' is returned.
  * If the input is not a number an empty string is returned.
  *
- * If the input is an infinite (Infinity/-Infinity) the Infinity symbol '∞' is returned.
  *
  * @param {number|string} number Number to format.
  * @param {(number|string)=} fractionSize Number of decimal places to round the number to.
@@ -42592,7 +44872,7 @@ function limitToFilter() {
  * @description
  * Orders a specified `array` by the `expression` predicate. It is ordered alphabetically
  * for strings and numerically for numbers. Note: if you notice numbers are not being sorted
- * correctly, make sure they are actually being saved as numbers and not strings.
+ * as expected, make sure they are actually being saved as numbers and not strings.
  *
  * @param {Array} array The array to sort.
  * @param {function(*)|string|Array.<(function(*)|string)>=} expression A predicate to be
@@ -42667,19 +44947,40 @@ function limitToFilter() {
                   {name:'Mike', phone:'555-4321', age:21},
                   {name:'Adam', phone:'555-5678', age:35},
                   {name:'Julie', phone:'555-8765', age:29}];
-             $scope.predicate = '-age';
+             $scope.predicate = 'age';
+             $scope.reverse = true;
+             $scope.order = function(predicate) {
+               $scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+               $scope.predicate = predicate;
+             };
            }]);
        </script>
+       <style type="text/css">
+         .sortorder:after {
+           content: '\25b2';
+         }
+         .sortorder.reverse:after {
+           content: '\25bc';
+         }
+       </style>
        <div ng-controller="ExampleController">
          <pre>Sorting predicate = {{predicate}}; reverse = {{reverse}}</pre>
          <hr/>
          [ <a href="" ng-click="predicate=''">unsorted</a> ]
          <table class="friend">
            <tr>
-             <th><a href="" ng-click="predicate = 'name'; reverse=false">Name</a>
-                 (<a href="" ng-click="predicate = '-name'; reverse=false">^</a>)</th>
-             <th><a href="" ng-click="predicate = 'phone'; reverse=!reverse">Phone Number</a></th>
-             <th><a href="" ng-click="predicate = 'age'; reverse=!reverse">Age</a></th>
+             <th>
+               <a href="" ng-click="order('name')">Name</a>
+               <span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span>
+             </th>
+             <th>
+               <a href="" ng-click="order('phone')">Phone Number</a>
+               <span class="sortorder" ng-show="predicate === 'phone'" ng-class="{reverse:reverse}"></span>
+             </th>
+             <th>
+               <a href="" ng-click="order('age')">Age</a>
+               <span class="sortorder" ng-show="predicate === 'age'" ng-class="{reverse:reverse}"></span>
+             </th>
            </tr>
            <tr ng-repeat="friend in friends | orderBy:predicate:reverse">
              <td>{{friend.name}}</td>
@@ -43842,7 +46143,7 @@ var ngFormDirective = formDirectiveFactory(true);
 var ISO_DATE_REGEXP = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/;
 var URL_REGEXP = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/;
 var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-var NUMBER_REGEXP = /^\s*(\-|\+)?(\d+|(\d*(\.\d*)))\s*$/;
+var NUMBER_REGEXP = /^\s*(\-|\+)?(\d+|(\d*(\.\d*)))([eE][+-]?\d+)?\s*$/;
 var DATE_REGEXP = /^(\d{4})-(\d{2})-(\d{2})$/;
 var DATETIMELOCAL_REGEXP = /^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)(?::(\d\d)(\.\d{1,3})?)?$/;
 var WEEK_REGEXP = /^(\d{4})-W(\d\d)$/;
@@ -44440,6 +46741,16 @@ var inputType = {
    * Be aware that a string containing a number is not enough. See the {@link ngModel:numfmt}
    * error docs for more information and an example of how to convert your model if necessary.
    * </div>
+   *
+   * ## Issues with HTML5 constraint validation
+   *
+   * In browsers that follow the
+   * [HTML5 specification](https://html.spec.whatwg.org/multipage/forms.html#number-state-%28type=number%29),
+   * `input[number]` does not work as expected with {@link ngModelOptions `ngModelOptions.allowInvalid`}.
+   * If a non-number is entered in the input, the browser will report the value as an empty string,
+   * which means the view / model values in `ngModel` and subsequently the scope value
+   * will also be an empty string.
+   *
    *
    * @param {string} ngModel Assignable angular expression to data-bind to.
    * @param {string=} name Property name of the form under which the control is published.
@@ -45977,7 +48288,7 @@ function classDirective(name, selector) {
  * @example Example that demonstrates basic bindings via ngClass directive.
    <example>
      <file name="index.html">
-       <p ng-class="{strike: deleted, bold: important, red: error}">Map Syntax Example</p>
+       <p ng-class="{strike: deleted, bold: important, 'has-error': error}">Map Syntax Example</p>
        <label>
           <input type="checkbox" ng-model="deleted">
           deleted (apply "strike" class)
@@ -45988,7 +48299,7 @@ function classDirective(name, selector) {
        </label><br>
        <label>
           <input type="checkbox" ng-model="error">
-          error (apply "red" class)
+          error (apply "has-error" class)
        </label>
        <hr>
        <p ng-class="style">Using String Syntax</p>
@@ -46017,6 +48328,10 @@ function classDirective(name, selector) {
        .red {
            color: red;
        }
+       .has-error {
+           color: red;
+           background-color: yellow;
+       }
        .orange {
            color: orange;
        }
@@ -46027,13 +48342,13 @@ function classDirective(name, selector) {
        it('should let you toggle the class', function() {
 
          expect(ps.first().getAttribute('class')).not.toMatch(/bold/);
-         expect(ps.first().getAttribute('class')).not.toMatch(/red/);
+         expect(ps.first().getAttribute('class')).not.toMatch(/has-error/);
 
          element(by.model('important')).click();
          expect(ps.first().getAttribute('class')).toMatch(/bold/);
 
          element(by.model('error')).click();
-         expect(ps.first().getAttribute('class')).toMatch(/red/);
+         expect(ps.first().getAttribute('class')).toMatch(/has-error/);
        });
 
        it('should let you toggle string example', function() {
@@ -48867,7 +51182,7 @@ var DEFAULT_REGEXP = /(\s+|^)default(\s+|$)/;
  *   - `debounce`: integer value which contains the debounce model update value in milliseconds. A
  *     value of 0 triggers an immediate update. If an object is supplied instead, you can specify a
  *     custom value for each event. For example:
- *     `ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"`
+ *     `ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"`
  *   - `allowInvalid`: boolean value which indicates that the model can be set with values that did
  *     not validate correctly instead of the default behavior of setting the model to undefined.
  *   - `getterSetter`: boolean value which determines whether or not to treat functions bound to
@@ -49117,7 +51432,9 @@ function addSetValidityMethod(context) {
 function isObjectEmpty(obj) {
   if (obj) {
     for (var prop in obj) {
-      return false;
+      if (obj.hasOwnProperty(prop)) {
+        return false;
+      }
     }
   }
   return true;
@@ -49460,6 +51777,7 @@ var ngOptionsDirective = ['$compile', '$parse', function($compile, $parse) {
         values = values || [];
 
         Object.keys(values).forEach(function getWatchable(key) {
+          if (key.charAt(0) === '$') return;
           var locals = getLocals(values[key], key);
           var selectValue = getTrackByValueFn(values[key], locals);
           watchedArray.push(selectValue);
@@ -49863,8 +52181,7 @@ var ngOptionsDirective = ['$compile', '$parse', function($compile, $parse) {
         // Check to see if the value has changed due to the update to the options
         if (!ngModelCtrl.$isEmpty(previousValue)) {
           var nextValue = selectCtrl.readValue();
-          if (ngOptions.trackBy && !equals(previousValue, nextValue) ||
-                previousValue !== nextValue) {
+          if (ngOptions.trackBy ? !equals(previousValue, nextValue) : previousValue !== nextValue) {
             ngModelCtrl.$setViewValue(nextValue);
             ngModelCtrl.$render();
           }
@@ -50212,6 +52529,15 @@ var ngPluralizeDirective = ['$locale', '$interpolate', '$log', function($locale,
  *    </div>
  * ```
  *
+ * <div class="alert alert-warning">
+ * **Note:** `track by` must always be the last expression:
+ * </div>
+ * ```
+ * <div ng-repeat="model in collection | orderBy: 'id' as filtered_result track by model.id">
+ *     {{model.name}}
+ * </div>
+ * ```
+ *
  * # Special repeat start and end points
  * To repeat a series of elements instead of just one parent element, ngRepeat (as well as other ng directives) supports extending
  * the range of the repeater by defining explicit start and end points by using **ng-repeat-start** and **ng-repeat-end** respectively.
@@ -50283,8 +52609,9 @@ var ngPluralizeDirective = ['$locale', '$interpolate', '$log', function($locale,
  *     which can be used to associate the objects in the collection with the DOM elements. If no tracking expression
  *     is specified, ng-repeat associates elements by identity. It is an error to have
  *     more than one tracking expression value resolve to the same key. (This would mean that two distinct objects are
- *     mapped to the same DOM element, which is not possible.)  If filters are used in the expression, they should be
- *     applied before the tracking expression.
+ *     mapped to the same DOM element, which is not possible.)
+ *
+ *     Note that the tracking expression must come last, after any filters, and the alias expression.
  *
  *     For example: `item in items` is equivalent to `item in items track by $id(item)`. This implies that the DOM elements
  *     will be associated by item identity in the array.
@@ -51778,1676 +54105,13 @@ var minlengthDirective = function() {
 })(window, document);
 
 !window.angular.$$csp() && window.angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
-},{}],39:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 require('./angular');
 module.exports = angular;
 
-},{"./angular":38}],40:[function(require,module,exports){
-
-},{}],41:[function(require,module,exports){
-/*!
- * The buffer module from node.js, for the browser.
- *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * @license  MIT
- */
-
-var base64 = require('base64-js')
-var ieee754 = require('ieee754')
-var isArray = require('is-array')
-
-exports.Buffer = Buffer
-exports.SlowBuffer = SlowBuffer
-exports.INSPECT_MAX_BYTES = 50
-Buffer.poolSize = 8192 // not used by this implementation
-
-var kMaxLength = 0x3fffffff
-var rootParent = {}
-
-/**
- * If `Buffer.TYPED_ARRAY_SUPPORT`:
- *   === true    Use Uint8Array implementation (fastest)
- *   === false   Use Object implementation (most compatible, even IE6)
- *
- * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
- * Opera 11.6+, iOS 4.2+.
- *
- * Note:
- *
- * - Implementation must support adding new properties to `Uint8Array` instances.
- *   Firefox 4-29 lacked support, fixed in Firefox 30+.
- *   See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
- *
- *  - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
- *
- *  - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
- *    incorrect length in some situations.
- *
- * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they will
- * get the Object implementation, which is slower but will work correctly.
- */
-Buffer.TYPED_ARRAY_SUPPORT = (function () {
-  try {
-    var buf = new ArrayBuffer(0)
-    var arr = new Uint8Array(buf)
-    arr.foo = function () { return 42 }
-    return arr.foo() === 42 && // typed array instances can be augmented
-        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
-        new Uint8Array(1).subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
-  } catch (e) {
-    return false
-  }
-})()
-
-/**
- * Class: Buffer
- * =============
- *
- * The Buffer constructor returns instances of `Uint8Array` that are augmented
- * with function properties for all the node `Buffer` API functions. We use
- * `Uint8Array` so that square bracket notation works as expected -- it returns
- * a single octet.
- *
- * By augmenting the instances, we can avoid modifying the `Uint8Array`
- * prototype.
- */
-function Buffer (arg) {
-  if (!(this instanceof Buffer)) {
-    // Avoid going through an ArgumentsAdaptorTrampoline in the common case.
-    if (arguments.length > 1) return new Buffer(arg, arguments[1])
-    return new Buffer(arg)
-  }
-
-  this.length = 0
-  this.parent = undefined
-
-  // Common case.
-  if (typeof arg === 'number') {
-    return fromNumber(this, arg)
-  }
-
-  // Slightly less common case.
-  if (typeof arg === 'string') {
-    return fromString(this, arg, arguments.length > 1 ? arguments[1] : 'utf8')
-  }
-
-  // Unusual.
-  return fromObject(this, arg)
-}
-
-function fromNumber (that, length) {
-  that = allocate(that, length < 0 ? 0 : checked(length) | 0)
-  if (!Buffer.TYPED_ARRAY_SUPPORT) {
-    for (var i = 0; i < length; i++) {
-      that[i] = 0
-    }
-  }
-  return that
-}
-
-function fromString (that, string, encoding) {
-  if (typeof encoding !== 'string' || encoding === '') encoding = 'utf8'
-
-  // Assumption: byteLength() return value is always < kMaxLength.
-  var length = byteLength(string, encoding) | 0
-  that = allocate(that, length)
-
-  that.write(string, encoding)
-  return that
-}
-
-function fromObject (that, object) {
-  if (Buffer.isBuffer(object)) return fromBuffer(that, object)
-
-  if (isArray(object)) return fromArray(that, object)
-
-  if (object == null) {
-    throw new TypeError('must start with number, buffer, array or string')
-  }
-
-  if (typeof ArrayBuffer !== 'undefined' && object.buffer instanceof ArrayBuffer) {
-    return fromTypedArray(that, object)
-  }
-
-  if (object.length) return fromArrayLike(that, object)
-
-  return fromJsonObject(that, object)
-}
-
-function fromBuffer (that, buffer) {
-  var length = checked(buffer.length) | 0
-  that = allocate(that, length)
-  buffer.copy(that, 0, 0, length)
-  return that
-}
-
-function fromArray (that, array) {
-  var length = checked(array.length) | 0
-  that = allocate(that, length)
-  for (var i = 0; i < length; i += 1) {
-    that[i] = array[i] & 255
-  }
-  return that
-}
-
-// Duplicate of fromArray() to keep fromArray() monomorphic.
-function fromTypedArray (that, array) {
-  var length = checked(array.length) | 0
-  that = allocate(that, length)
-  // Truncating the elements is probably not what people expect from typed
-  // arrays with BYTES_PER_ELEMENT > 1 but it's compatible with the behavior
-  // of the old Buffer constructor.
-  for (var i = 0; i < length; i += 1) {
-    that[i] = array[i] & 255
-  }
-  return that
-}
-
-function fromArrayLike (that, array) {
-  var length = checked(array.length) | 0
-  that = allocate(that, length)
-  for (var i = 0; i < length; i += 1) {
-    that[i] = array[i] & 255
-  }
-  return that
-}
-
-// Deserialize { type: 'Buffer', data: [1,2,3,...] } into a Buffer object.
-// Returns a zero-length buffer for inputs that don't conform to the spec.
-function fromJsonObject (that, object) {
-  var array
-  var length = 0
-
-  if (object.type === 'Buffer' && isArray(object.data)) {
-    array = object.data
-    length = checked(array.length) | 0
-  }
-  that = allocate(that, length)
-
-  for (var i = 0; i < length; i += 1) {
-    that[i] = array[i] & 255
-  }
-  return that
-}
-
-function allocate (that, length) {
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    // Return an augmented `Uint8Array` instance, for best performance
-    that = Buffer._augment(new Uint8Array(length))
-  } else {
-    // Fallback: Return an object instance of the Buffer class
-    that.length = length
-    that._isBuffer = true
-  }
-
-  var fromPool = length !== 0 && length <= Buffer.poolSize >>> 1
-  if (fromPool) that.parent = rootParent
-
-  return that
-}
-
-function checked (length) {
-  // Note: cannot use `length < kMaxLength` here because that fails when
-  // length is NaN (which is otherwise coerced to zero.)
-  if (length >= kMaxLength) {
-    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-                         'size: 0x' + kMaxLength.toString(16) + ' bytes')
-  }
-  return length | 0
-}
-
-function SlowBuffer (subject, encoding) {
-  if (!(this instanceof SlowBuffer)) return new SlowBuffer(subject, encoding)
-
-  var buf = new Buffer(subject, encoding)
-  delete buf.parent
-  return buf
-}
-
-Buffer.isBuffer = function isBuffer (b) {
-  return !!(b != null && b._isBuffer)
-}
-
-Buffer.compare = function compare (a, b) {
-  if (!Buffer.isBuffer(a) || !Buffer.isBuffer(b)) {
-    throw new TypeError('Arguments must be Buffers')
-  }
-
-  if (a === b) return 0
-
-  var x = a.length
-  var y = b.length
-
-  var i = 0
-  var len = Math.min(x, y)
-  while (i < len) {
-    if (a[i] !== b[i]) break
-
-    ++i
-  }
-
-  if (i !== len) {
-    x = a[i]
-    y = b[i]
-  }
-
-  if (x < y) return -1
-  if (y < x) return 1
-  return 0
-}
-
-Buffer.isEncoding = function isEncoding (encoding) {
-  switch (String(encoding).toLowerCase()) {
-    case 'hex':
-    case 'utf8':
-    case 'utf-8':
-    case 'ascii':
-    case 'binary':
-    case 'base64':
-    case 'raw':
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      return true
-    default:
-      return false
-  }
-}
-
-Buffer.concat = function concat (list, length) {
-  if (!isArray(list)) throw new TypeError('list argument must be an Array of Buffers.')
-
-  if (list.length === 0) {
-    return new Buffer(0)
-  } else if (list.length === 1) {
-    return list[0]
-  }
-
-  var i
-  if (length === undefined) {
-    length = 0
-    for (i = 0; i < list.length; i++) {
-      length += list[i].length
-    }
-  }
-
-  var buf = new Buffer(length)
-  var pos = 0
-  for (i = 0; i < list.length; i++) {
-    var item = list[i]
-    item.copy(buf, pos)
-    pos += item.length
-  }
-  return buf
-}
-
-function byteLength (string, encoding) {
-  if (typeof string !== 'string') string = String(string)
-
-  if (string.length === 0) return 0
-
-  switch (encoding || 'utf8') {
-    case 'ascii':
-    case 'binary':
-    case 'raw':
-      return string.length
-    case 'ucs2':
-    case 'ucs-2':
-    case 'utf16le':
-    case 'utf-16le':
-      return string.length * 2
-    case 'hex':
-      return string.length >>> 1
-    case 'utf8':
-    case 'utf-8':
-      return utf8ToBytes(string).length
-    case 'base64':
-      return base64ToBytes(string).length
-    default:
-      return string.length
-  }
-}
-Buffer.byteLength = byteLength
-
-// pre-set for values that may exist in the future
-Buffer.prototype.length = undefined
-Buffer.prototype.parent = undefined
-
-// toString(encoding, start=0, end=buffer.length)
-Buffer.prototype.toString = function toString (encoding, start, end) {
-  var loweredCase = false
-
-  start = start | 0
-  end = end === undefined || end === Infinity ? this.length : end | 0
-
-  if (!encoding) encoding = 'utf8'
-  if (start < 0) start = 0
-  if (end > this.length) end = this.length
-  if (end <= start) return ''
-
-  while (true) {
-    switch (encoding) {
-      case 'hex':
-        return hexSlice(this, start, end)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Slice(this, start, end)
-
-      case 'ascii':
-        return asciiSlice(this, start, end)
-
-      case 'binary':
-        return binarySlice(this, start, end)
-
-      case 'base64':
-        return base64Slice(this, start, end)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return utf16leSlice(this, start, end)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = (encoding + '').toLowerCase()
-        loweredCase = true
-    }
-  }
-}
-
-Buffer.prototype.equals = function equals (b) {
-  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
-  if (this === b) return true
-  return Buffer.compare(this, b) === 0
-}
-
-Buffer.prototype.inspect = function inspect () {
-  var str = ''
-  var max = exports.INSPECT_MAX_BYTES
-  if (this.length > 0) {
-    str = this.toString('hex', 0, max).match(/.{2}/g).join(' ')
-    if (this.length > max) str += ' ... '
-  }
-  return '<Buffer ' + str + '>'
-}
-
-Buffer.prototype.compare = function compare (b) {
-  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
-  if (this === b) return 0
-  return Buffer.compare(this, b)
-}
-
-Buffer.prototype.indexOf = function indexOf (val, byteOffset) {
-  if (byteOffset > 0x7fffffff) byteOffset = 0x7fffffff
-  else if (byteOffset < -0x80000000) byteOffset = -0x80000000
-  byteOffset >>= 0
-
-  if (this.length === 0) return -1
-  if (byteOffset >= this.length) return -1
-
-  // Negative offsets start from the end of the buffer
-  if (byteOffset < 0) byteOffset = Math.max(this.length + byteOffset, 0)
-
-  if (typeof val === 'string') {
-    if (val.length === 0) return -1 // special case: looking for empty string always fails
-    return String.prototype.indexOf.call(this, val, byteOffset)
-  }
-  if (Buffer.isBuffer(val)) {
-    return arrayIndexOf(this, val, byteOffset)
-  }
-  if (typeof val === 'number') {
-    if (Buffer.TYPED_ARRAY_SUPPORT && Uint8Array.prototype.indexOf === 'function') {
-      return Uint8Array.prototype.indexOf.call(this, val, byteOffset)
-    }
-    return arrayIndexOf(this, [ val ], byteOffset)
-  }
-
-  function arrayIndexOf (arr, val, byteOffset) {
-    var foundIndex = -1
-    for (var i = 0; byteOffset + i < arr.length; i++) {
-      if (arr[byteOffset + i] === val[foundIndex === -1 ? 0 : i - foundIndex]) {
-        if (foundIndex === -1) foundIndex = i
-        if (i - foundIndex + 1 === val.length) return byteOffset + foundIndex
-      } else {
-        foundIndex = -1
-      }
-    }
-    return -1
-  }
-
-  throw new TypeError('val must be string, number or Buffer')
-}
-
-// `get` will be removed in Node 0.13+
-Buffer.prototype.get = function get (offset) {
-  console.log('.get() is deprecated. Access using array indexes instead.')
-  return this.readUInt8(offset)
-}
-
-// `set` will be removed in Node 0.13+
-Buffer.prototype.set = function set (v, offset) {
-  console.log('.set() is deprecated. Access using array indexes instead.')
-  return this.writeUInt8(v, offset)
-}
-
-function hexWrite (buf, string, offset, length) {
-  offset = Number(offset) || 0
-  var remaining = buf.length - offset
-  if (!length) {
-    length = remaining
-  } else {
-    length = Number(length)
-    if (length > remaining) {
-      length = remaining
-    }
-  }
-
-  // must be an even number of digits
-  var strLen = string.length
-  if (strLen % 2 !== 0) throw new Error('Invalid hex string')
-
-  if (length > strLen / 2) {
-    length = strLen / 2
-  }
-  for (var i = 0; i < length; i++) {
-    var parsed = parseInt(string.substr(i * 2, 2), 16)
-    if (isNaN(parsed)) throw new Error('Invalid hex string')
-    buf[offset + i] = parsed
-  }
-  return i
-}
-
-function utf8Write (buf, string, offset, length) {
-  return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length)
-}
-
-function asciiWrite (buf, string, offset, length) {
-  return blitBuffer(asciiToBytes(string), buf, offset, length)
-}
-
-function binaryWrite (buf, string, offset, length) {
-  return asciiWrite(buf, string, offset, length)
-}
-
-function base64Write (buf, string, offset, length) {
-  return blitBuffer(base64ToBytes(string), buf, offset, length)
-}
-
-function ucs2Write (buf, string, offset, length) {
-  return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length)
-}
-
-Buffer.prototype.write = function write (string, offset, length, encoding) {
-  // Buffer#write(string)
-  if (offset === undefined) {
-    encoding = 'utf8'
-    length = this.length
-    offset = 0
-  // Buffer#write(string, encoding)
-  } else if (length === undefined && typeof offset === 'string') {
-    encoding = offset
-    length = this.length
-    offset = 0
-  // Buffer#write(string, offset[, length][, encoding])
-  } else if (isFinite(offset)) {
-    offset = offset | 0
-    if (isFinite(length)) {
-      length = length | 0
-      if (encoding === undefined) encoding = 'utf8'
-    } else {
-      encoding = length
-      length = undefined
-    }
-  // legacy write(string, encoding, offset, length) - remove in v0.13
-  } else {
-    var swap = encoding
-    encoding = offset
-    offset = length | 0
-    length = swap
-  }
-
-  var remaining = this.length - offset
-  if (length === undefined || length > remaining) length = remaining
-
-  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
-    throw new RangeError('attempt to write outside buffer bounds')
-  }
-
-  if (!encoding) encoding = 'utf8'
-
-  var loweredCase = false
-  for (;;) {
-    switch (encoding) {
-      case 'hex':
-        return hexWrite(this, string, offset, length)
-
-      case 'utf8':
-      case 'utf-8':
-        return utf8Write(this, string, offset, length)
-
-      case 'ascii':
-        return asciiWrite(this, string, offset, length)
-
-      case 'binary':
-        return binaryWrite(this, string, offset, length)
-
-      case 'base64':
-        // Warning: maxLength not taken into account in base64Write
-        return base64Write(this, string, offset, length)
-
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return ucs2Write(this, string, offset, length)
-
-      default:
-        if (loweredCase) throw new TypeError('Unknown encoding: ' + encoding)
-        encoding = ('' + encoding).toLowerCase()
-        loweredCase = true
-    }
-  }
-}
-
-Buffer.prototype.toJSON = function toJSON () {
-  return {
-    type: 'Buffer',
-    data: Array.prototype.slice.call(this._arr || this, 0)
-  }
-}
-
-function base64Slice (buf, start, end) {
-  if (start === 0 && end === buf.length) {
-    return base64.fromByteArray(buf)
-  } else {
-    return base64.fromByteArray(buf.slice(start, end))
-  }
-}
-
-function utf8Slice (buf, start, end) {
-  var res = ''
-  var tmp = ''
-  end = Math.min(buf.length, end)
-
-  for (var i = start; i < end; i++) {
-    if (buf[i] <= 0x7F) {
-      res += decodeUtf8Char(tmp) + String.fromCharCode(buf[i])
-      tmp = ''
-    } else {
-      tmp += '%' + buf[i].toString(16)
-    }
-  }
-
-  return res + decodeUtf8Char(tmp)
-}
-
-function asciiSlice (buf, start, end) {
-  var ret = ''
-  end = Math.min(buf.length, end)
-
-  for (var i = start; i < end; i++) {
-    ret += String.fromCharCode(buf[i] & 0x7F)
-  }
-  return ret
-}
-
-function binarySlice (buf, start, end) {
-  var ret = ''
-  end = Math.min(buf.length, end)
-
-  for (var i = start; i < end; i++) {
-    ret += String.fromCharCode(buf[i])
-  }
-  return ret
-}
-
-function hexSlice (buf, start, end) {
-  var len = buf.length
-
-  if (!start || start < 0) start = 0
-  if (!end || end < 0 || end > len) end = len
-
-  var out = ''
-  for (var i = start; i < end; i++) {
-    out += toHex(buf[i])
-  }
-  return out
-}
-
-function utf16leSlice (buf, start, end) {
-  var bytes = buf.slice(start, end)
-  var res = ''
-  for (var i = 0; i < bytes.length; i += 2) {
-    res += String.fromCharCode(bytes[i] + bytes[i + 1] * 256)
-  }
-  return res
-}
-
-Buffer.prototype.slice = function slice (start, end) {
-  var len = this.length
-  start = ~~start
-  end = end === undefined ? len : ~~end
-
-  if (start < 0) {
-    start += len
-    if (start < 0) start = 0
-  } else if (start > len) {
-    start = len
-  }
-
-  if (end < 0) {
-    end += len
-    if (end < 0) end = 0
-  } else if (end > len) {
-    end = len
-  }
-
-  if (end < start) end = start
-
-  var newBuf
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    newBuf = Buffer._augment(this.subarray(start, end))
-  } else {
-    var sliceLen = end - start
-    newBuf = new Buffer(sliceLen, undefined)
-    for (var i = 0; i < sliceLen; i++) {
-      newBuf[i] = this[i + start]
-    }
-  }
-
-  if (newBuf.length) newBuf.parent = this.parent || this
-
-  return newBuf
-}
-
-/*
- * Need to make sure that buffer isn't trying to write out of bounds.
- */
-function checkOffset (offset, ext, length) {
-  if ((offset % 1) !== 0 || offset < 0) throw new RangeError('offset is not uint')
-  if (offset + ext > length) throw new RangeError('Trying to access beyond buffer length')
-}
-
-Buffer.prototype.readUIntLE = function readUIntLE (offset, byteLength, noAssert) {
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) checkOffset(offset, byteLength, this.length)
-
-  var val = this[offset]
-  var mul = 1
-  var i = 0
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul
-  }
-
-  return val
-}
-
-Buffer.prototype.readUIntBE = function readUIntBE (offset, byteLength, noAssert) {
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) {
-    checkOffset(offset, byteLength, this.length)
-  }
-
-  var val = this[offset + --byteLength]
-  var mul = 1
-  while (byteLength > 0 && (mul *= 0x100)) {
-    val += this[offset + --byteLength] * mul
-  }
-
-  return val
-}
-
-Buffer.prototype.readUInt8 = function readUInt8 (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 1, this.length)
-  return this[offset]
-}
-
-Buffer.prototype.readUInt16LE = function readUInt16LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  return this[offset] | (this[offset + 1] << 8)
-}
-
-Buffer.prototype.readUInt16BE = function readUInt16BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  return (this[offset] << 8) | this[offset + 1]
-}
-
-Buffer.prototype.readUInt32LE = function readUInt32LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return ((this[offset]) |
-      (this[offset + 1] << 8) |
-      (this[offset + 2] << 16)) +
-      (this[offset + 3] * 0x1000000)
-}
-
-Buffer.prototype.readUInt32BE = function readUInt32BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return (this[offset] * 0x1000000) +
-    ((this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    this[offset + 3])
-}
-
-Buffer.prototype.readIntLE = function readIntLE (offset, byteLength, noAssert) {
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) checkOffset(offset, byteLength, this.length)
-
-  var val = this[offset]
-  var mul = 1
-  var i = 0
-  while (++i < byteLength && (mul *= 0x100)) {
-    val += this[offset + i] * mul
-  }
-  mul *= 0x80
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
-
-  return val
-}
-
-Buffer.prototype.readIntBE = function readIntBE (offset, byteLength, noAssert) {
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) checkOffset(offset, byteLength, this.length)
-
-  var i = byteLength
-  var mul = 1
-  var val = this[offset + --i]
-  while (i > 0 && (mul *= 0x100)) {
-    val += this[offset + --i] * mul
-  }
-  mul *= 0x80
-
-  if (val >= mul) val -= Math.pow(2, 8 * byteLength)
-
-  return val
-}
-
-Buffer.prototype.readInt8 = function readInt8 (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 1, this.length)
-  if (!(this[offset] & 0x80)) return (this[offset])
-  return ((0xff - this[offset] + 1) * -1)
-}
-
-Buffer.prototype.readInt16LE = function readInt16LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  var val = this[offset] | (this[offset + 1] << 8)
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-}
-
-Buffer.prototype.readInt16BE = function readInt16BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 2, this.length)
-  var val = this[offset + 1] | (this[offset] << 8)
-  return (val & 0x8000) ? val | 0xFFFF0000 : val
-}
-
-Buffer.prototype.readInt32LE = function readInt32LE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return (this[offset]) |
-    (this[offset + 1] << 8) |
-    (this[offset + 2] << 16) |
-    (this[offset + 3] << 24)
-}
-
-Buffer.prototype.readInt32BE = function readInt32BE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-
-  return (this[offset] << 24) |
-    (this[offset + 1] << 16) |
-    (this[offset + 2] << 8) |
-    (this[offset + 3])
-}
-
-Buffer.prototype.readFloatLE = function readFloatLE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-  return ieee754.read(this, offset, true, 23, 4)
-}
-
-Buffer.prototype.readFloatBE = function readFloatBE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 4, this.length)
-  return ieee754.read(this, offset, false, 23, 4)
-}
-
-Buffer.prototype.readDoubleLE = function readDoubleLE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 8, this.length)
-  return ieee754.read(this, offset, true, 52, 8)
-}
-
-Buffer.prototype.readDoubleBE = function readDoubleBE (offset, noAssert) {
-  if (!noAssert) checkOffset(offset, 8, this.length)
-  return ieee754.read(this, offset, false, 52, 8)
-}
-
-function checkInt (buf, value, offset, ext, max, min) {
-  if (!Buffer.isBuffer(buf)) throw new TypeError('buffer must be a Buffer instance')
-  if (value > max || value < min) throw new RangeError('value is out of bounds')
-  if (offset + ext > buf.length) throw new RangeError('index out of range')
-}
-
-Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
-
-  var mul = 1
-  var i = 0
-  this[offset] = value & 0xFF
-  while (++i < byteLength && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeUIntBE = function writeUIntBE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset | 0
-  byteLength = byteLength | 0
-  if (!noAssert) checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
-
-  var i = byteLength - 1
-  var mul = 1
-  this[offset + i] = value & 0xFF
-  while (--i >= 0 && (mul *= 0x100)) {
-    this[offset + i] = (value / mul) & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeUInt8 = function writeUInt8 (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 1, 0xff, 0)
-  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
-  this[offset] = value
-  return offset + 1
-}
-
-function objectWriteUInt16 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffff + value + 1
-  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; i++) {
-    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
-      (littleEndian ? i : 1 - i) * 8
-  }
-}
-
-Buffer.prototype.writeUInt16LE = function writeUInt16LE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
-    this[offset + 1] = (value >>> 8)
-  } else {
-    objectWriteUInt16(this, value, offset, true)
-  }
-  return offset + 2
-}
-
-Buffer.prototype.writeUInt16BE = function writeUInt16BE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0xffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8)
-    this[offset + 1] = value
-  } else {
-    objectWriteUInt16(this, value, offset, false)
-  }
-  return offset + 2
-}
-
-function objectWriteUInt32 (buf, value, offset, littleEndian) {
-  if (value < 0) value = 0xffffffff + value + 1
-  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; i++) {
-    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
-  }
-}
-
-Buffer.prototype.writeUInt32LE = function writeUInt32LE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset + 3] = (value >>> 24)
-    this[offset + 2] = (value >>> 16)
-    this[offset + 1] = (value >>> 8)
-    this[offset] = value
-  } else {
-    objectWriteUInt32(this, value, offset, true)
-  }
-  return offset + 4
-}
-
-Buffer.prototype.writeUInt32BE = function writeUInt32BE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0xffffffff, 0)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24)
-    this[offset + 1] = (value >>> 16)
-    this[offset + 2] = (value >>> 8)
-    this[offset + 3] = value
-  } else {
-    objectWriteUInt32(this, value, offset, false)
-  }
-  return offset + 4
-}
-
-Buffer.prototype.writeIntLE = function writeIntLE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) {
-    var limit = Math.pow(2, 8 * byteLength - 1)
-
-    checkInt(this, value, offset, byteLength, limit - 1, -limit)
-  }
-
-  var i = 0
-  var mul = 1
-  var sub = value < 0 ? 1 : 0
-  this[offset] = value & 0xFF
-  while (++i < byteLength && (mul *= 0x100)) {
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) {
-    var limit = Math.pow(2, 8 * byteLength - 1)
-
-    checkInt(this, value, offset, byteLength, limit - 1, -limit)
-  }
-
-  var i = byteLength - 1
-  var mul = 1
-  var sub = value < 0 ? 1 : 0
-  this[offset + i] = value & 0xFF
-  while (--i >= 0 && (mul *= 0x100)) {
-    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
-  }
-
-  return offset + byteLength
-}
-
-Buffer.prototype.writeInt8 = function writeInt8 (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 1, 0x7f, -0x80)
-  if (!Buffer.TYPED_ARRAY_SUPPORT) value = Math.floor(value)
-  if (value < 0) value = 0xff + value + 1
-  this[offset] = value
-  return offset + 1
-}
-
-Buffer.prototype.writeInt16LE = function writeInt16LE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
-    this[offset + 1] = (value >>> 8)
-  } else {
-    objectWriteUInt16(this, value, offset, true)
-  }
-  return offset + 2
-}
-
-Buffer.prototype.writeInt16BE = function writeInt16BE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 2, 0x7fff, -0x8000)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 8)
-    this[offset + 1] = value
-  } else {
-    objectWriteUInt16(this, value, offset, false)
-  }
-  return offset + 2
-}
-
-Buffer.prototype.writeInt32LE = function writeInt32LE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = value
-    this[offset + 1] = (value >>> 8)
-    this[offset + 2] = (value >>> 16)
-    this[offset + 3] = (value >>> 24)
-  } else {
-    objectWriteUInt32(this, value, offset, true)
-  }
-  return offset + 4
-}
-
-Buffer.prototype.writeInt32BE = function writeInt32BE (value, offset, noAssert) {
-  value = +value
-  offset = offset | 0
-  if (!noAssert) checkInt(this, value, offset, 4, 0x7fffffff, -0x80000000)
-  if (value < 0) value = 0xffffffff + value + 1
-  if (Buffer.TYPED_ARRAY_SUPPORT) {
-    this[offset] = (value >>> 24)
-    this[offset + 1] = (value >>> 16)
-    this[offset + 2] = (value >>> 8)
-    this[offset + 3] = value
-  } else {
-    objectWriteUInt32(this, value, offset, false)
-  }
-  return offset + 4
-}
-
-function checkIEEE754 (buf, value, offset, ext, max, min) {
-  if (value > max || value < min) throw new RangeError('value is out of bounds')
-  if (offset + ext > buf.length) throw new RangeError('index out of range')
-  if (offset < 0) throw new RangeError('index out of range')
-}
-
-function writeFloat (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754(buf, value, offset, 4, 3.4028234663852886e+38, -3.4028234663852886e+38)
-  }
-  ieee754.write(buf, value, offset, littleEndian, 23, 4)
-  return offset + 4
-}
-
-Buffer.prototype.writeFloatLE = function writeFloatLE (value, offset, noAssert) {
-  return writeFloat(this, value, offset, true, noAssert)
-}
-
-Buffer.prototype.writeFloatBE = function writeFloatBE (value, offset, noAssert) {
-  return writeFloat(this, value, offset, false, noAssert)
-}
-
-function writeDouble (buf, value, offset, littleEndian, noAssert) {
-  if (!noAssert) {
-    checkIEEE754(buf, value, offset, 8, 1.7976931348623157E+308, -1.7976931348623157E+308)
-  }
-  ieee754.write(buf, value, offset, littleEndian, 52, 8)
-  return offset + 8
-}
-
-Buffer.prototype.writeDoubleLE = function writeDoubleLE (value, offset, noAssert) {
-  return writeDouble(this, value, offset, true, noAssert)
-}
-
-Buffer.prototype.writeDoubleBE = function writeDoubleBE (value, offset, noAssert) {
-  return writeDouble(this, value, offset, false, noAssert)
-}
-
-// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
-Buffer.prototype.copy = function copy (target, targetStart, start, end) {
-  if (!start) start = 0
-  if (!end && end !== 0) end = this.length
-  if (targetStart >= target.length) targetStart = target.length
-  if (!targetStart) targetStart = 0
-  if (end > 0 && end < start) end = start
-
-  // Copy 0 bytes; we're done
-  if (end === start) return 0
-  if (target.length === 0 || this.length === 0) return 0
-
-  // Fatal error conditions
-  if (targetStart < 0) {
-    throw new RangeError('targetStart out of bounds')
-  }
-  if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds')
-  if (end < 0) throw new RangeError('sourceEnd out of bounds')
-
-  // Are we oob?
-  if (end > this.length) end = this.length
-  if (target.length - targetStart < end - start) {
-    end = target.length - targetStart + start
-  }
-
-  var len = end - start
-
-  if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
-    for (var i = 0; i < len; i++) {
-      target[i + targetStart] = this[i + start]
-    }
-  } else {
-    target._set(this.subarray(start, start + len), targetStart)
-  }
-
-  return len
-}
-
-// fill(value, start=0, end=buffer.length)
-Buffer.prototype.fill = function fill (value, start, end) {
-  if (!value) value = 0
-  if (!start) start = 0
-  if (!end) end = this.length
-
-  if (end < start) throw new RangeError('end < start')
-
-  // Fill 0 bytes; we're done
-  if (end === start) return
-  if (this.length === 0) return
-
-  if (start < 0 || start >= this.length) throw new RangeError('start out of bounds')
-  if (end < 0 || end > this.length) throw new RangeError('end out of bounds')
-
-  var i
-  if (typeof value === 'number') {
-    for (i = start; i < end; i++) {
-      this[i] = value
-    }
-  } else {
-    var bytes = utf8ToBytes(value.toString())
-    var len = bytes.length
-    for (i = start; i < end; i++) {
-      this[i] = bytes[i % len]
-    }
-  }
-
-  return this
-}
-
-/**
- * Creates a new `ArrayBuffer` with the *copied* memory of the buffer instance.
- * Added in Node 0.12. Only available in browsers that support ArrayBuffer.
- */
-Buffer.prototype.toArrayBuffer = function toArrayBuffer () {
-  if (typeof Uint8Array !== 'undefined') {
-    if (Buffer.TYPED_ARRAY_SUPPORT) {
-      return (new Buffer(this)).buffer
-    } else {
-      var buf = new Uint8Array(this.length)
-      for (var i = 0, len = buf.length; i < len; i += 1) {
-        buf[i] = this[i]
-      }
-      return buf.buffer
-    }
-  } else {
-    throw new TypeError('Buffer.toArrayBuffer not supported in this browser')
-  }
-}
-
-// HELPER FUNCTIONS
-// ================
-
-var BP = Buffer.prototype
-
-/**
- * Augment a Uint8Array *instance* (not the Uint8Array class!) with Buffer methods
- */
-Buffer._augment = function _augment (arr) {
-  arr.constructor = Buffer
-  arr._isBuffer = true
-
-  // save reference to original Uint8Array set method before overwriting
-  arr._set = arr.set
-
-  // deprecated, will be removed in node 0.13+
-  arr.get = BP.get
-  arr.set = BP.set
-
-  arr.write = BP.write
-  arr.toString = BP.toString
-  arr.toLocaleString = BP.toString
-  arr.toJSON = BP.toJSON
-  arr.equals = BP.equals
-  arr.compare = BP.compare
-  arr.indexOf = BP.indexOf
-  arr.copy = BP.copy
-  arr.slice = BP.slice
-  arr.readUIntLE = BP.readUIntLE
-  arr.readUIntBE = BP.readUIntBE
-  arr.readUInt8 = BP.readUInt8
-  arr.readUInt16LE = BP.readUInt16LE
-  arr.readUInt16BE = BP.readUInt16BE
-  arr.readUInt32LE = BP.readUInt32LE
-  arr.readUInt32BE = BP.readUInt32BE
-  arr.readIntLE = BP.readIntLE
-  arr.readIntBE = BP.readIntBE
-  arr.readInt8 = BP.readInt8
-  arr.readInt16LE = BP.readInt16LE
-  arr.readInt16BE = BP.readInt16BE
-  arr.readInt32LE = BP.readInt32LE
-  arr.readInt32BE = BP.readInt32BE
-  arr.readFloatLE = BP.readFloatLE
-  arr.readFloatBE = BP.readFloatBE
-  arr.readDoubleLE = BP.readDoubleLE
-  arr.readDoubleBE = BP.readDoubleBE
-  arr.writeUInt8 = BP.writeUInt8
-  arr.writeUIntLE = BP.writeUIntLE
-  arr.writeUIntBE = BP.writeUIntBE
-  arr.writeUInt16LE = BP.writeUInt16LE
-  arr.writeUInt16BE = BP.writeUInt16BE
-  arr.writeUInt32LE = BP.writeUInt32LE
-  arr.writeUInt32BE = BP.writeUInt32BE
-  arr.writeIntLE = BP.writeIntLE
-  arr.writeIntBE = BP.writeIntBE
-  arr.writeInt8 = BP.writeInt8
-  arr.writeInt16LE = BP.writeInt16LE
-  arr.writeInt16BE = BP.writeInt16BE
-  arr.writeInt32LE = BP.writeInt32LE
-  arr.writeInt32BE = BP.writeInt32BE
-  arr.writeFloatLE = BP.writeFloatLE
-  arr.writeFloatBE = BP.writeFloatBE
-  arr.writeDoubleLE = BP.writeDoubleLE
-  arr.writeDoubleBE = BP.writeDoubleBE
-  arr.fill = BP.fill
-  arr.inspect = BP.inspect
-  arr.toArrayBuffer = BP.toArrayBuffer
-
-  return arr
-}
-
-var INVALID_BASE64_RE = /[^+\/0-9A-z\-]/g
-
-function base64clean (str) {
-  // Node strips out invalid characters like \n and \t from the string, base64-js does not
-  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
-  // Node converts strings with length < 2 to ''
-  if (str.length < 2) return ''
-  // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
-  while (str.length % 4 !== 0) {
-    str = str + '='
-  }
-  return str
-}
-
-function stringtrim (str) {
-  if (str.trim) return str.trim()
-  return str.replace(/^\s+|\s+$/g, '')
-}
-
-function toHex (n) {
-  if (n < 16) return '0' + n.toString(16)
-  return n.toString(16)
-}
-
-function utf8ToBytes (string, units) {
-  units = units || Infinity
-  var codePoint
-  var length = string.length
-  var leadSurrogate = null
-  var bytes = []
-  var i = 0
-
-  for (; i < length; i++) {
-    codePoint = string.charCodeAt(i)
-
-    // is surrogate component
-    if (codePoint > 0xD7FF && codePoint < 0xE000) {
-      // last char was a lead
-      if (leadSurrogate) {
-        // 2 leads in a row
-        if (codePoint < 0xDC00) {
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          leadSurrogate = codePoint
-          continue
-        } else {
-          // valid surrogate pair
-          codePoint = leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00 | 0x10000
-          leadSurrogate = null
-        }
-      } else {
-        // no lead yet
-
-        if (codePoint > 0xDBFF) {
-          // unexpected trail
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          continue
-        } else if (i + 1 === length) {
-          // unpaired lead
-          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-          continue
-        } else {
-          // valid lead
-          leadSurrogate = codePoint
-          continue
-        }
-      }
-    } else if (leadSurrogate) {
-      // valid bmp char, but last char was a lead
-      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-      leadSurrogate = null
-    }
-
-    // encode utf8
-    if (codePoint < 0x80) {
-      if ((units -= 1) < 0) break
-      bytes.push(codePoint)
-    } else if (codePoint < 0x800) {
-      if ((units -= 2) < 0) break
-      bytes.push(
-        codePoint >> 0x6 | 0xC0,
-        codePoint & 0x3F | 0x80
-      )
-    } else if (codePoint < 0x10000) {
-      if ((units -= 3) < 0) break
-      bytes.push(
-        codePoint >> 0xC | 0xE0,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      )
-    } else if (codePoint < 0x200000) {
-      if ((units -= 4) < 0) break
-      bytes.push(
-        codePoint >> 0x12 | 0xF0,
-        codePoint >> 0xC & 0x3F | 0x80,
-        codePoint >> 0x6 & 0x3F | 0x80,
-        codePoint & 0x3F | 0x80
-      )
-    } else {
-      throw new Error('Invalid code point')
-    }
-  }
-
-  return bytes
-}
-
-function asciiToBytes (str) {
-  var byteArray = []
-  for (var i = 0; i < str.length; i++) {
-    // Node's code seems to be doing this and not & 0x7F..
-    byteArray.push(str.charCodeAt(i) & 0xFF)
-  }
-  return byteArray
-}
-
-function utf16leToBytes (str, units) {
-  var c, hi, lo
-  var byteArray = []
-  for (var i = 0; i < str.length; i++) {
-    if ((units -= 2) < 0) break
-
-    c = str.charCodeAt(i)
-    hi = c >> 8
-    lo = c % 256
-    byteArray.push(lo)
-    byteArray.push(hi)
-  }
-
-  return byteArray
-}
-
-function base64ToBytes (str) {
-  return base64.toByteArray(base64clean(str))
-}
-
-function blitBuffer (src, dst, offset, length) {
-  for (var i = 0; i < length; i++) {
-    if ((i + offset >= dst.length) || (i >= src.length)) break
-    dst[i + offset] = src[i]
-  }
-  return i
-}
-
-function decodeUtf8Char (str) {
-  try {
-    return decodeURIComponent(str)
-  } catch (err) {
-    return String.fromCharCode(0xFFFD) // UTF 8 invalid char
-  }
-}
-
-},{"base64-js":42,"ieee754":43,"is-array":44}],42:[function(require,module,exports){
-var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-
-;(function (exports) {
-	'use strict';
-
-  var Arr = (typeof Uint8Array !== 'undefined')
-    ? Uint8Array
-    : Array
-
-	var PLUS   = '+'.charCodeAt(0)
-	var SLASH  = '/'.charCodeAt(0)
-	var NUMBER = '0'.charCodeAt(0)
-	var LOWER  = 'a'.charCodeAt(0)
-	var UPPER  = 'A'.charCodeAt(0)
-	var PLUS_URL_SAFE = '-'.charCodeAt(0)
-	var SLASH_URL_SAFE = '_'.charCodeAt(0)
-
-	function decode (elt) {
-		var code = elt.charCodeAt(0)
-		if (code === PLUS ||
-		    code === PLUS_URL_SAFE)
-			return 62 // '+'
-		if (code === SLASH ||
-		    code === SLASH_URL_SAFE)
-			return 63 // '/'
-		if (code < NUMBER)
-			return -1 //no match
-		if (code < NUMBER + 10)
-			return code - NUMBER + 26 + 26
-		if (code < UPPER + 26)
-			return code - UPPER
-		if (code < LOWER + 26)
-			return code - LOWER + 26
-	}
-
-	function b64ToByteArray (b64) {
-		var i, j, l, tmp, placeHolders, arr
-
-		if (b64.length % 4 > 0) {
-			throw new Error('Invalid string. Length must be a multiple of 4')
-		}
-
-		// the number of equal signs (place holders)
-		// if there are two placeholders, than the two characters before it
-		// represent one byte
-		// if there is only one, then the three characters before it represent 2 bytes
-		// this is just a cheap hack to not do indexOf twice
-		var len = b64.length
-		placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0
-
-		// base64 is 4/3 + up to two characters of the original data
-		arr = new Arr(b64.length * 3 / 4 - placeHolders)
-
-		// if there are placeholders, only get up to the last complete 4 chars
-		l = placeHolders > 0 ? b64.length - 4 : b64.length
-
-		var L = 0
-
-		function push (v) {
-			arr[L++] = v
-		}
-
-		for (i = 0, j = 0; i < l; i += 4, j += 3) {
-			tmp = (decode(b64.charAt(i)) << 18) | (decode(b64.charAt(i + 1)) << 12) | (decode(b64.charAt(i + 2)) << 6) | decode(b64.charAt(i + 3))
-			push((tmp & 0xFF0000) >> 16)
-			push((tmp & 0xFF00) >> 8)
-			push(tmp & 0xFF)
-		}
-
-		if (placeHolders === 2) {
-			tmp = (decode(b64.charAt(i)) << 2) | (decode(b64.charAt(i + 1)) >> 4)
-			push(tmp & 0xFF)
-		} else if (placeHolders === 1) {
-			tmp = (decode(b64.charAt(i)) << 10) | (decode(b64.charAt(i + 1)) << 4) | (decode(b64.charAt(i + 2)) >> 2)
-			push((tmp >> 8) & 0xFF)
-			push(tmp & 0xFF)
-		}
-
-		return arr
-	}
-
-	function uint8ToBase64 (uint8) {
-		var i,
-			extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
-			output = "",
-			temp, length
-
-		function encode (num) {
-			return lookup.charAt(num)
-		}
-
-		function tripletToBase64 (num) {
-			return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
-		}
-
-		// go through the array every three bytes, we'll deal with trailing stuff later
-		for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
-			temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-			output += tripletToBase64(temp)
-		}
-
-		// pad the end with zeros, but make sure to not forget the extra bytes
-		switch (extraBytes) {
-			case 1:
-				temp = uint8[uint8.length - 1]
-				output += encode(temp >> 2)
-				output += encode((temp << 4) & 0x3F)
-				output += '=='
-				break
-			case 2:
-				temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1])
-				output += encode(temp >> 10)
-				output += encode((temp >> 4) & 0x3F)
-				output += encode((temp << 2) & 0x3F)
-				output += '='
-				break
-		}
-
-		return output
-	}
-
-	exports.toByteArray = b64ToByteArray
-	exports.fromByteArray = uint8ToBase64
-}(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
-
-},{}],43:[function(require,module,exports){
-exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m,
-      eLen = nBytes * 8 - mLen - 1,
-      eMax = (1 << eLen) - 1,
-      eBias = eMax >> 1,
-      nBits = -7,
-      i = isLE ? (nBytes - 1) : 0,
-      d = isLE ? -1 : 1,
-      s = buffer[offset + i]
-
-  i += d
-
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  if (e === 0) {
-    e = 1 - eBias
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
-  } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
-
-exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c,
-      eLen = nBytes * 8 - mLen - 1,
-      eMax = (1 << eLen) - 1,
-      eBias = eMax >> 1,
-      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
-      i = isLE ? 0 : (nBytes - 1),
-      d = isLE ? 1 : -1,
-      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
-
-  value = Math.abs(value)
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
-    }
-    if (e + eBias >= 1) {
-      value += rt / c
-    } else {
-      value += rt * Math.pow(2, 1 - eBias)
-    }
-    if (value * c >= 2) {
-      e++
-      c /= 2
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
-    } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen)
-      e = e + eBias
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-
-  buffer[offset + i - d] |= s * 128
-}
+},{"./angular":41}],43:[function(require,module,exports){
 
 },{}],44:[function(require,module,exports){
-
-/**
- * isArray
- */
-
-var isArray = Array.isArray;
-
-/**
- * toString
- */
-
-var str = Object.prototype.toString;
-
-/**
- * Whether or not the given `val`
- * is an array.
- *
- * example:
- *
- *        isArray([]);
- *        // > true
- *        isArray(arguments);
- *        // > false
- *        isArray('');
- *        // > false
- *
- * @param {mixed} val
- * @return {bool}
- */
-
-module.exports = isArray || function (val) {
-  return !! val && '[object Array]' == str.call(val);
-};
-
-},{}],45:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -53750,7 +54414,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],46:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -53842,7 +54506,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],47:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 module.exports = function (css, customDocument) {
   var doc = customDocument || document;
   if (doc.createStyleSheet) {
@@ -53881,7 +54545,7 @@ module.exports.byUrl = function(url) {
   }
 };
 
-},{}],48:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -54072,7 +54736,7 @@ if (typeof window !== 'undefined' && window.PouchDB) {
   window.PouchDB.plugin(exports);
 }
 
-},{"./utils":49}],49:[function(require,module,exports){
+},{"./utils":48}],48:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -54166,7 +54830,7 @@ exports.uuid = require('./uuid');
 exports.Promise = Promise;
 
 }).call(this,require('_process'))
-},{"./uuid":50,"_process":46,"inherits":51,"pouchdb-extend":70,"pouchdb/extras/ajax":71,"pouchdb/extras/promise":72}],50:[function(require,module,exports){
+},{"./uuid":49,"_process":45,"inherits":50,"pouchdb-extend":69,"pouchdb/extras/ajax":70,"pouchdb/extras/promise":71}],49:[function(require,module,exports){
 "use strict";
 
 // BEGIN Math.uuid.js
@@ -54251,7 +54915,7 @@ function uuid(len, radix) {
 module.exports = uuid;
 
 
-},{}],51:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -54276,13 +54940,13 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],52:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 'use strict';
 
 module.exports = INTERNAL;
 
 function INTERNAL() {}
-},{}],53:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 'use strict';
 var Promise = require('./promise');
 var reject = require('./reject');
@@ -54326,7 +54990,7 @@ function all(iterable) {
     }
   }
 }
-},{"./INTERNAL":52,"./handlers":54,"./promise":56,"./reject":59,"./resolve":60}],54:[function(require,module,exports){
+},{"./INTERNAL":51,"./handlers":53,"./promise":55,"./reject":58,"./resolve":59}],53:[function(require,module,exports){
 'use strict';
 var tryCatch = require('./tryCatch');
 var resolveThenable = require('./resolveThenable');
@@ -54373,7 +55037,7 @@ function getThen(obj) {
   }
 }
 
-},{"./resolveThenable":61,"./states":62,"./tryCatch":63}],55:[function(require,module,exports){
+},{"./resolveThenable":60,"./states":61,"./tryCatch":62}],54:[function(require,module,exports){
 module.exports = exports = require('./promise');
 
 exports.resolve = require('./resolve');
@@ -54381,7 +55045,7 @@ exports.reject = require('./reject');
 exports.all = require('./all');
 exports.race = require('./race');
 
-},{"./all":53,"./promise":56,"./race":58,"./reject":59,"./resolve":60}],56:[function(require,module,exports){
+},{"./all":52,"./promise":55,"./race":57,"./reject":58,"./resolve":59}],55:[function(require,module,exports){
 'use strict';
 
 var unwrap = require('./unwrap');
@@ -54425,7 +55089,7 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
   return promise;
 };
 
-},{"./INTERNAL":52,"./queueItem":57,"./resolveThenable":61,"./states":62,"./unwrap":64}],57:[function(require,module,exports){
+},{"./INTERNAL":51,"./queueItem":56,"./resolveThenable":60,"./states":61,"./unwrap":63}],56:[function(require,module,exports){
 'use strict';
 var handlers = require('./handlers');
 var unwrap = require('./unwrap');
@@ -54455,7 +55119,7 @@ QueueItem.prototype.otherCallRejected = function (value) {
   unwrap(this.promise, this.onRejected, value);
 };
 
-},{"./handlers":54,"./unwrap":64}],58:[function(require,module,exports){
+},{"./handlers":53,"./unwrap":63}],57:[function(require,module,exports){
 'use strict';
 var Promise = require('./promise');
 var reject = require('./reject');
@@ -54496,7 +55160,7 @@ function race(iterable) {
   }
 }
 
-},{"./INTERNAL":52,"./handlers":54,"./promise":56,"./reject":59,"./resolve":60}],59:[function(require,module,exports){
+},{"./INTERNAL":51,"./handlers":53,"./promise":55,"./reject":58,"./resolve":59}],58:[function(require,module,exports){
 'use strict';
 
 var Promise = require('./promise');
@@ -54508,7 +55172,7 @@ function reject(reason) {
 	var promise = new Promise(INTERNAL);
 	return handlers.reject(promise, reason);
 }
-},{"./INTERNAL":52,"./handlers":54,"./promise":56}],60:[function(require,module,exports){
+},{"./INTERNAL":51,"./handlers":53,"./promise":55}],59:[function(require,module,exports){
 'use strict';
 
 var Promise = require('./promise');
@@ -54543,7 +55207,7 @@ function resolve(value) {
       return EMPTYSTRING;
   }
 }
-},{"./INTERNAL":52,"./handlers":54,"./promise":56}],61:[function(require,module,exports){
+},{"./INTERNAL":51,"./handlers":53,"./promise":55}],60:[function(require,module,exports){
 'use strict';
 var handlers = require('./handlers');
 var tryCatch = require('./tryCatch');
@@ -54576,14 +55240,14 @@ function safelyResolveThenable(self, thenable) {
   }
 }
 exports.safely = safelyResolveThenable;
-},{"./handlers":54,"./tryCatch":63}],62:[function(require,module,exports){
+},{"./handlers":53,"./tryCatch":62}],61:[function(require,module,exports){
 // Lazy man's symbols for states
 
 exports.REJECTED = ['REJECTED'];
 exports.FULFILLED = ['FULFILLED'];
 exports.PENDING = ['PENDING'];
 
-},{}],63:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 'use strict';
 
 module.exports = tryCatch;
@@ -54599,7 +55263,7 @@ function tryCatch(func, value) {
   }
   return out;
 }
-},{}],64:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 'use strict';
 
 var immediate = require('immediate');
@@ -54621,7 +55285,7 @@ function unwrap(promise, func, value) {
     }
   });
 }
-},{"./handlers":54,"immediate":65}],65:[function(require,module,exports){
+},{"./handlers":53,"immediate":64}],64:[function(require,module,exports){
 'use strict';
 var types = [
   require('./nextTick'),
@@ -54663,7 +55327,7 @@ function immediate(task) {
     scheduleDrain();
   }
 }
-},{"./messageChannel":66,"./mutation.js":67,"./nextTick":40,"./stateChange":68,"./timeout":69}],66:[function(require,module,exports){
+},{"./messageChannel":65,"./mutation.js":66,"./nextTick":43,"./stateChange":67,"./timeout":68}],65:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54684,7 +55348,7 @@ exports.install = function (func) {
   };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],67:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 (function (global){
 'use strict';
 //based off rsvp https://github.com/tildeio/rsvp.js
@@ -54709,7 +55373,7 @@ exports.install = function (handle) {
   };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],68:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -54736,7 +55400,7 @@ exports.install = function (handle) {
   };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],69:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 'use strict';
 exports.test = function () {
   return true;
@@ -54747,7 +55411,7 @@ exports.install = function (t) {
     setTimeout(t, 0);
   };
 };
-},{}],70:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 "use strict";
 
 // Extends method
@@ -54928,17 +55592,17 @@ module.exports = extend;
 
 
 
-},{}],71:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 'use strict';
 
 // allow external plugins to require('pouchdb/extras/ajax')
 module.exports = require('../lib/deps/ajax');
-},{"../lib/deps/ajax":73}],72:[function(require,module,exports){
+},{"../lib/deps/ajax":72}],71:[function(require,module,exports){
 'use strict';
 
 // allow external plugins to require('pouchdb/extras/promise')
 module.exports = require('../lib/deps/promise');
-},{"../lib/deps/promise":81}],73:[function(require,module,exports){
+},{"../lib/deps/promise":80}],72:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -55079,7 +55743,7 @@ function ajax(options, adapterCallback) {
 module.exports = ajax;
 
 }).call(this,require('_process'))
-},{"../utils":85,"./buffer":75,"./errors":76,"_process":46,"request":82}],74:[function(require,module,exports){
+},{"../utils":84,"./buffer":74,"./errors":75,"_process":45,"request":81}],73:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -55111,10 +55775,10 @@ module.exports = createBlob;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],75:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 // hey guess what, we don't need this in the browser
 module.exports = {};
-},{}],76:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 "use strict";
 
 var inherits = require('inherits');
@@ -55376,7 +56040,7 @@ exports.generateErrorFromResponse = function (res) {
   return error;
 };
 
-},{"inherits":51}],77:[function(require,module,exports){
+},{"inherits":50}],76:[function(require,module,exports){
 (function (process,global){
 'use strict';
 
@@ -55390,7 +56054,7 @@ function explain404(str) {
 
 module.exports = explain404;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":46}],78:[function(require,module,exports){
+},{"_process":45}],77:[function(require,module,exports){
 (function (process,global){
 'use strict';
 
@@ -55473,7 +56137,7 @@ module.exports = function (data, callback) {
 };
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":46,"crypto":40,"spark-md5":91}],79:[function(require,module,exports){
+},{"_process":45,"crypto":43,"spark-md5":90}],78:[function(require,module,exports){
 'use strict';
 
 var errors = require('./errors');
@@ -55641,7 +56305,7 @@ exports.parseDoc = function (doc, newEdits) {
   }
   return result;
 };
-},{"./errors":76,"./uuid":83}],80:[function(require,module,exports){
+},{"./errors":75,"./uuid":82}],79:[function(require,module,exports){
 'use strict';
 
 // originally parseUri 1.2.2, now patched by us
@@ -55687,7 +56351,7 @@ function parseUri(str) {
 
 
 module.exports = parseUri;
-},{}],81:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 'use strict';
 
 if (typeof Promise === 'function') {
@@ -55695,7 +56359,7 @@ if (typeof Promise === 'function') {
 } else {
   module.exports = require('bluebird');
 }
-},{"bluebird":55}],82:[function(require,module,exports){
+},{"bluebird":54}],81:[function(require,module,exports){
 /* global fetch */
 /* global Headers */
 'use strict';
@@ -55919,9 +56583,9 @@ module.exports = function(options, callback) {
   }
 };
 
-},{"../utils":85,"./blob.js":74}],83:[function(require,module,exports){
-arguments[4][50][0].apply(exports,arguments)
-},{"dup":50}],84:[function(require,module,exports){
+},{"../utils":84,"./blob.js":73}],82:[function(require,module,exports){
+arguments[4][49][0].apply(exports,arguments)
+},{"dup":49}],83:[function(require,module,exports){
 'use strict';
 var extend = require('pouchdb-extend');
 
@@ -56223,7 +56887,7 @@ PouchMerge.rootToLeaf = function (tree) {
 
 module.exports = PouchMerge;
 
-},{"pouchdb-extend":70}],85:[function(require,module,exports){
+},{"pouchdb-extend":69}],84:[function(require,module,exports){
 (function (process){
 /*jshint strict: false */
 /*global chrome */
@@ -57040,7 +57704,7 @@ exports.safeJsonStringify = function safeJsonStringify(json) {
 };
 
 }).call(this,require('_process'))
-},{"./deps/ajax":73,"./deps/blob":74,"./deps/buffer":75,"./deps/errors":76,"./deps/explain404":77,"./deps/md5":78,"./deps/parse-doc":79,"./deps/parse-uri":80,"./deps/promise":81,"./deps/uuid":83,"./merge":84,"_process":46,"argsarray":86,"debug":87,"events":45,"inherits":51,"pouchdb-collections":90,"pouchdb-extend":70,"vuvuzela":92}],86:[function(require,module,exports){
+},{"./deps/ajax":72,"./deps/blob":73,"./deps/buffer":74,"./deps/errors":75,"./deps/explain404":76,"./deps/md5":77,"./deps/parse-doc":78,"./deps/parse-uri":79,"./deps/promise":80,"./deps/uuid":82,"./merge":83,"_process":45,"argsarray":85,"debug":86,"events":44,"inherits":50,"pouchdb-collections":89,"pouchdb-extend":69,"vuvuzela":91}],85:[function(require,module,exports){
 'use strict';
 
 module.exports = argsArray;
@@ -57060,7 +57724,7 @@ function argsArray(fun) {
     }
   };
 }
-},{}],87:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 
 /**
  * This is the web browser implementation of `debug()`.
@@ -57230,7 +57894,7 @@ function localstorage(){
   } catch (e) {}
 }
 
-},{"./debug":88}],88:[function(require,module,exports){
+},{"./debug":87}],87:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -57429,7 +58093,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":89}],89:[function(require,module,exports){
+},{"ms":88}],88:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -57556,7 +58220,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],90:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 'use strict';
 exports.Map = LazyMap; // TODO: use ES6 map
 exports.Set = LazySet; // TODO: use ES6 set
@@ -57628,7 +58292,7 @@ LazySet.prototype.delete = function (key) {
   return this.store.delete(key);
 };
 
-},{}],91:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 /*jshint bitwise:false*/
 /*global unescape*/
 
@@ -58229,7 +58893,7 @@ LazySet.prototype.delete = function (key) {
     return SparkMD5;
 }));
 
-},{}],92:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 'use strict';
 
 /**
@@ -58404,7 +59068,8 @@ exports.parse = function (str) {
   }
 };
 
-},{}],93:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
+(function (process){
 "use strict";
 
 var utils = require('./utils');
@@ -58439,6 +59104,35 @@ function yankError(callback) {
       callback(null, results.length ? results[0]  : results);
     }
   };
+}
+
+// clean docs given to us by the user
+function cleanDocs(docs) {
+  for (var i = 0; i < docs.length; i++) {
+    var doc = docs[i];
+    if (doc._deleted) {
+      delete doc._attachments; // ignore atts for deleted docs
+    } else if (doc._attachments) {
+      // filter out extraneous keys from _attachments
+      var atts = Object.keys(doc._attachments);
+      for (var j = 0; j < atts.length; j++) {
+        var att = atts[j];
+        doc._attachments[att] = utils.pick(doc._attachments[att],
+          ['data', 'digest', 'content_type', 'revpos', 'stub']);
+      }
+    }
+  }
+}
+
+// compare two docs, first by _id then by _rev
+function compareByIdThenRev(a, b) {
+  var idCompare = utils.compare(a._id, b._id);
+  if (idCompare !== 0) {
+    return idCompare;
+  }
+  var aStart = a._revisions ? a._revisions.start : 0;
+  var bStart = b._revisions ? b._revisions.start : 0;
+  return utils.compare(aStart, bStart);
 }
 
 // for every node in a revision tree computes its distance from the closest
@@ -58498,6 +59192,34 @@ function allDocsKeysQuery(api, opts, callback) {
   })).then(function (results) {
     finalResults.rows = results;
     return finalResults;
+  });
+}
+
+// all compaction is done in a queue, to avoid attaching
+// too many listeners at once
+function doNextCompaction(self) {
+  var task = self._compactionQueue[0];
+  var opts = task.opts;
+  var callback = task.callback;
+  self.get('_local/compaction').catch(function () {
+    return false;
+  }).then(function (doc) {
+    if (doc && doc.last_seq) {
+      opts.last_seq = doc.last_seq;
+    }
+    self._compact(opts, function (err, res) {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, res);
+      }
+      process.nextTick(function () {
+        self._compactionQueue.shift();
+        if (self._compactionQueue.length) {
+          doNextCompaction(self);
+        }
+      });
+    });
   });
 }
 
@@ -58771,17 +59493,11 @@ AbstractPouchDB.prototype.compact =
 
   opts = utils.clone(opts || {});
 
-  self.get('_local/compaction').catch(function () {
-    return false;
-  }).then(function (doc) {
-    if (typeof self._compact === 'function') {
-      if (doc && doc.last_seq) {
-        opts.last_seq = doc.last_seq;
-      }
-      return self._compact(opts, callback);
-    }
-
-  });
+  self._compactionQueue = self._compactionQueue || [];
+  self._compactionQueue.push({opts: opts, callback: callback});
+  if (self._compactionQueue.length === 1) {
+    doNextCompaction(self);
+  }
 });
 AbstractPouchDB.prototype._compact = function (opts, callback) {
   var self = this;
@@ -59100,22 +59816,10 @@ AbstractPouchDB.prototype.bulkDocs =
   if (!opts.new_edits && this.type() !== 'http') {
     // ensure revisions of the same doc are sorted, so that
     // the local adapter processes them correctly (#2935)
-    req.docs.sort(function (a, b) {
-      var idCompare = utils.compare(a._id, b._id);
-      if (idCompare !== 0) {
-        return idCompare;
-      }
-      var aStart = a._revisions ? a._revisions.start : 0;
-      var bStart = b._revisions ? b._revisions.start : 0;
-      return utils.compare(aStart, bStart);
-    });
+    req.docs.sort(compareByIdThenRev);
   }
 
-  req.docs.forEach(function (doc) {
-    if (doc._deleted) {
-      delete doc._attachments; // ignore atts for deleted docs
-    }
-  });
+  cleanDocs(req.docs);
 
   return this._bulkDocs(req, opts, function (err, res) {
     if (err) {
@@ -59189,24 +59893,44 @@ AbstractPouchDB.prototype.destroy =
   });
 });
 
-},{"./changes":105,"./deps/errors":111,"./deps/upsert":119,"./merge":124,"./utils":129,"events":45}],94:[function(require,module,exports){
+}).call(this,require('_process'))
+},{"./changes":104,"./deps/errors":115,"./deps/upsert":124,"./merge":129,"./utils":140,"_process":45,"events":44}],93:[function(require,module,exports){
 (function (process){
 "use strict";
 
 var CHANGES_BATCH_SIZE = 25;
 
 // according to http://stackoverflow.com/a/417184/680742,
-// the de factor URL length limit is 2000 characters.
+// the de facto URL length limit is 2000 characters.
 // but since most of our measurements don't take the full
 // URL into account, we fudge it a bit.
 // TODO: we could measure the full URL to enforce exactly 2000 chars
 var MAX_URL_LENGTH = 1800;
 
+var readAsBinaryString = require('../../deps/binary/readAsBinaryString');
+var binaryStringToBlob = require('../../deps/binary/binaryStringToBlob');
 var utils = require('../../utils');
+var Promise = utils.Promise;
+var clone = utils.clone;
+var base64 = require('../../deps/binary/base64');
+var btoa = base64.btoa;
+var atob = base64.atob;
 var errors = require('../../deps/errors');
 var log = require('debug')('pouchdb:http');
 var isBrowser = typeof process === 'undefined' || process.browser;
 var buffer = require('../../deps/buffer');
+var createMultipart = require('../../deps/multipart');
+
+function blobToBase64(blobOrBuffer) {
+  if (!isBrowser) {
+    return Promise.resolve(blobOrBuffer.toString('base64'));
+  }
+  return new Promise(function (resolve) {
+    readAsBinaryString(blobOrBuffer, function (bin) {
+      resolve(btoa(bin));
+    });
+  });
+}
 
 function encodeDocId(id) {
   if (/^_design/.test(id)) {
@@ -59220,22 +59944,15 @@ function encodeDocId(id) {
 
 function preprocessAttachments(doc) {
   if (!doc._attachments || !Object.keys(doc._attachments)) {
-    return utils.Promise.resolve();
+    return Promise.resolve();
   }
 
-  return utils.Promise.all(Object.keys(doc._attachments).map(function (key) {
+  return Promise.all(Object.keys(doc._attachments).map(function (key) {
     var attachment = doc._attachments[key];
     if (attachment.data && typeof attachment.data !== 'string') {
-      if (isBrowser) {
-        return new utils.Promise(function (resolve) {
-          utils.readAsBinaryString(attachment.data, function (binary) {
-            attachment.data = utils.btoa(binary);
-            resolve();
-          });
-        });
-      } else {
-        attachment.data = attachment.data.toString('base64');
-      }
+      return blobToBase64(attachment.data).then(function (b64) {
+        attachment.data = b64;
+      });
     }
   }));
 }
@@ -59268,12 +59985,12 @@ function getHost(name, opts) {
     // except for the database name) with '/'s
     uri.path = parts.join('/');
     opts = opts || {};
-    opts = utils.clone(opts);
+    opts = clone(opts);
     uri.headers = opts.headers || (opts.ajax && opts.ajax.headers) || {};
 
     if (opts.auth || uri.auth) {
       var nAuth = opts.auth || uri.auth;
-      var token = utils.btoa(nAuth.username + ':' + nAuth.password);
+      var token = btoa(nAuth.username + ':' + nAuth.password);
       uri.headers.Authorization = 'Basic ' + token;
     }
 
@@ -59324,23 +60041,38 @@ function HttpPouch(opts, callback) {
   var dbUrl = genDBUrl(host, '');
 
   api.getUrl = function () {return dbUrl; };
-  api.getHeaders = function () {return utils.clone(host.headers); };
+  api.getHeaders = function () {return clone(host.headers); };
 
   var ajaxOpts = opts.ajax || {};
-  opts = utils.clone(opts);
+  opts = clone(opts);
   function ajax(options, callback) {
-    var reqOpts = utils.extend(true, utils.clone(ajaxOpts), options);
+    var reqOpts = utils.extend(true, clone(ajaxOpts), options);
     log(reqOpts.method + ' ' + reqOpts.url);
     return utils.ajax(reqOpts, callback);
   }
 
+  function ajaxPromise(opts) {
+    return new Promise(function (resolve, reject) {
+      ajax(opts, function (err, res) {
+        if (err) {
+          return reject(err);
+        }
+        resolve(res);
+      });
+    });
+  }
+
   // Create a new CouchDB database based on the given opts
   var createDB = function () {
-    ajax({headers: host.headers, method: 'PUT', url: dbUrl}, function (err) {
+    ajax({
+      headers: clone(host.headers),
+      method: 'PUT',
+      url: dbUrl
+    }, function (err) {
       // If we get an "Unauthorized" error
       if (err && err.status === 401) {
         // Test if the database already exists
-        ajax({headers: host.headers, method: 'HEAD', url: dbUrl},
+        ajax({headers: clone(host.headers), method: 'HEAD', url: dbUrl},
              function (err) {
           // If there is still an error
           if (err) {
@@ -59364,7 +60096,11 @@ function HttpPouch(opts, callback) {
   };
 
   if (!opts.skipSetup) {
-    ajax({headers: host.headers, method: 'GET', url: dbUrl}, function (err) {
+    ajax({
+      headers: clone(host.headers),
+      method: 'GET',
+      url: dbUrl
+    }, function (err) {
       //check if the db exists
       if (err) {
         if (err.status === 404) {
@@ -59388,10 +60124,13 @@ function HttpPouch(opts, callback) {
 
   api.id = utils.adapterFun('id', function (callback) {
     ajax({
-      headers: host.headers,
+      headers: clone(host.headers),
       method: 'GET',
       url: genUrl(host, '')
     }, function (err, result) {
+      if (err) {
+        return callback(err);
+      }
       var uuid = (result && result.uuid) ?
         result.uuid + host.db : genDBUrl(host, '');
       callback(null, uuid);
@@ -59411,9 +60150,9 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = utils.clone(opts);
+    opts = clone(opts);
     ajax({
-      headers: host.headers,
+      headers: clone(host.headers),
       url: genDBUrl(host, '_compact'),
       method: 'POST'
     }, function () {
@@ -59438,7 +60177,7 @@ function HttpPouch(opts, callback) {
   //    version: The version of CouchDB it is running
   api._info = function (callback) {
     ajax({
-      headers: host.headers,
+      headers: clone(host.headers),
       method: 'GET',
       url: genDBUrl(host, '')
     }, function (err, res) {
@@ -59460,10 +60199,7 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = utils.clone(opts);
-    if (opts.auto_encode === undefined) {
-      opts.auto_encode = true;
-    }
+    opts = clone(opts);
 
     // List of parameters to add to the GET request
     var params = [];
@@ -59497,13 +60233,6 @@ function HttpPouch(opts, callback) {
       params.push('open_revs=' + opts.open_revs);
     }
 
-    // If it exists, add the opts.attachments value to the list of parameters.
-    // If attachments=true the resulting JSON will include the base64-encoded
-    // contents in the "data" property of each attachment.
-    if (opts.attachments) {
-      params.push('attachments=true');
-    }
-
     // If it exists, add the opts.rev value to the list of parameters.
     // If rev is given a revision number then get the specified revision.
     if (opts.rev) {
@@ -59521,43 +60250,64 @@ function HttpPouch(opts, callback) {
     params = params.join('&');
     params = params === '' ? '' : '?' + params;
 
-    if (opts.auto_encode) {
-      id = encodeDocId(id);
-    }
+    id = encodeDocId(id);
 
     // Set the options for the ajax call
     var options = {
-      headers: host.headers,
+      headers: clone(host.headers),
       method: 'GET',
       url: genDBUrl(host, id + params)
     };
     var getRequestAjaxOpts = opts.ajax || {};
     utils.extend(true, options, getRequestAjaxOpts);
 
-    // If the given id contains at least one '/' and the part before the '/'
-    // is NOT "_design" and is NOT "_local"
-    // OR
-    // If the given id contains at least two '/' and the part before the first
-    // '/' is "_design".
-    // TODO This second condition seems strange since if parts[0] === '_design'
-    // then we already know that parts[0] !== '_local'.
-    var parts = id.split('/');
-    if ((parts.length > 1 && parts[0] !== '_design' && parts[0] !== '_local') ||
-        (parts.length > 2 && parts[0] === '_design' && parts[0] !== '_local')) {
-      // Binary is expected back from the server
-      options.binary = true;
+    function fetchAttachments(doc) {
+      var atts = doc._attachments;
+      var filenames = atts && Object.keys(atts);
+      if (!atts || !filenames.length) {
+        return;
+      }
+      // we fetch these manually in separate XHRs, because
+      // Sync Gateway would normally send it back as multipart/mixed,
+      // which we cannot parse. Also, this is more efficient than
+      // receiving attachments as base64-encoded strings.
+      return Promise.all(filenames.map(function (filename) {
+        var att = atts[filename];
+        var path = encodeDocId(doc._id) + '/' + encodeAttachmentId(filename) +
+          '?rev=' + doc._rev;
+        return ajaxPromise({
+          headers: clone(host.headers),
+          method: 'GET',
+          url: genDBUrl(host, path),
+          binary: true
+        }).then(blobToBase64).then(function (b64) {
+          delete att.stub;
+          delete att.length;
+          att.data = b64;
+        });
+      }));
     }
 
-    // Get the document
-    ajax(options, function (err, doc, xhr) {
-      // If the document does not exist, send an error to the callback
-      if (err) {
-        return callback(err);
+    function fetchAllAttachments(docOrDocs) {
+      if (Array.isArray(docOrDocs)) {
+        return Promise.all(docOrDocs.map(function (doc) {
+          if (doc.ok) {
+            return fetchAttachments(doc.ok);
+          }
+        }));
       }
+      return fetchAttachments(docOrDocs);
+    }
 
-      // Send the document to the callback
-      callback(null, doc, xhr);
-    });
+    ajaxPromise(options).then(function (res) {
+      return Promise.resolve().then(function () {
+        if (opts.attachments) {
+          return fetchAllAttachments(res);
+        }
+      }).then(function () {
+        callback(null, res);
+      });
+    }).catch(callback);
   });
 
   // Delete the document given by doc from the database given by host.
@@ -59590,7 +60340,7 @@ function HttpPouch(opts, callback) {
 
     // Delete the document
     ajax({
-      headers: host.headers,
+      headers: clone(host.headers),
       method: 'DELETE',
       url: genDBUrl(host, encodeDocId(doc._id)) + '?rev=' + rev
     }, callback);
@@ -59608,15 +60358,15 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = utils.clone(opts);
-    if (opts.auto_encode === undefined) {
-      opts.auto_encode = true;
-    }
-    if (opts.auto_encode) {
-      docId = encodeDocId(docId);
-    }
-    opts.auto_encode = false;
-    api.get(docId + '/' + encodeAttachmentId(attachmentId), opts, callback);
+    var params = opts.rev ? ('?rev=' + opts.rev) : '';
+    var url = genDBUrl(host, encodeDocId(docId)) + '/' +
+      encodeAttachmentId(attachmentId) + params;
+    ajax({
+      headers: clone(host.headers),
+      method: 'GET',
+      url: url,
+      binary: true
+    }, callback);
   });
 
   // Remove the attachment given by the id and rev
@@ -59628,7 +60378,7 @@ function HttpPouch(opts, callback) {
       encodeAttachmentId(attachmentId)) + '?rev=' + rev;
 
     ajax({
-      headers: host.headers,
+      headers: clone(host.headers),
       method: 'DELETE',
       url: url
     }, callback);
@@ -59660,21 +60410,21 @@ function HttpPouch(opts, callback) {
     if (typeof blob === 'string') {
       var binary;
       try {
-        binary = utils.atob(blob);
+        binary = atob(blob);
       } catch (err) {
         // it's not base64-encoded, so throw error
         return callback(errors.error(errors.BAD_ARG,
                         'Attachments need to be base64 encoded'));
       }
       if (isBrowser) {
-        blob = utils.createBlob([utils.fixBinary(binary)], {type: type});
+        blob = binaryStringToBlob(binary, type);
       } else {
         blob = binary ? new buffer(binary, 'binary') : '';
       }
     }
 
     var opts = {
-      headers: utils.clone(host.headers),
+      headers: clone(host.headers),
       method: 'PUT',
       url: url,
       processData: false,
@@ -59697,7 +60447,7 @@ function HttpPouch(opts, callback) {
       return callback(errors.error(errors.NOT_AN_OBJECT));
     }
 
-    doc = utils.clone(doc);
+    doc = clone(doc);
 
     preprocessAttachments(doc).then(function () {
       while (true) {
@@ -59709,7 +60459,7 @@ function HttpPouch(opts, callback) {
         } else if (temptype === "string" && id && !('_rev' in doc)) {
           doc._rev = temp;
         } else if (temptype === "object") {
-          opts = utils.clone(temp);
+          opts = clone(temp);
         }
         if (!args.length) {
           break;
@@ -59737,25 +60487,38 @@ function HttpPouch(opts, callback) {
         params = '?' + params;
       }
 
-      // Add the document
-      ajax({
-        headers: host.headers,
+      var ajaxOpts = {
+        headers: clone(host.headers),
         method: 'PUT',
         url: genDBUrl(host, encodeDocId(doc._id)) + params,
         body: doc
-      }, function (err, res) {
-        if (err) {
-          return callback(err);
+      };
+
+      return Promise.resolve().then(function () {
+        var hasNonStubAttachments = doc._attachments &&
+          Object.keys(doc._attachments).filter(function (att) {
+            return !doc._attachments[att].stub;
+          }).length;
+        if (hasNonStubAttachments) {
+          // use multipart/related for more efficient attachment uploading
+          var multipart = createMultipart(doc);
+          ajaxOpts.body = multipart.body;
+          ajaxOpts.processData = false;
+          ajaxOpts.headers = utils.extend(ajaxOpts.headers, multipart.headers);
         }
-        res.ok = true;
+      }).catch(function () {
+        throw new Error('Did you forget to base64-encode an attachment?');
+      }).then(function () {
+        return ajaxPromise(ajaxOpts);
+      }).then(function (res) {
+        res.ok = true; // smooths out cloudant not doing this
         callback(null, res);
       });
     }).catch(callback);
-
   }));
 
   // Add the document given by doc (in JSON string format) to the database
-  // given by host. This does not assume that doc is a new document 
+  // given by host. This does not assume that doc is a new document
   // (i.e. does not have a _id or a _rev field.)
   api.post = utils.adapterFun('post', function (doc, opts, callback) {
     // If no options were given, set the callback to be the second parameter
@@ -59763,7 +60526,7 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = utils.clone(opts);
+    opts = clone(opts);
     if (typeof doc !== 'object') {
       return callback(errors.error(errors.NOT_AN_OBJECT));
     }
@@ -59791,10 +60554,10 @@ function HttpPouch(opts, callback) {
       req.new_edits = opts.new_edits;
     }
 
-    utils.Promise.all(req.docs.map(preprocessAttachments)).then(function () {
+    Promise.all(req.docs.map(preprocessAttachments)).then(function () {
       // Update/create the documents
       ajax({
-        headers: host.headers,
+        headers: clone(host.headers),
         method: 'POST',
         url: genDBUrl(host, '_bulk_docs'),
         body: req
@@ -59817,7 +60580,7 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = utils.clone(opts);
+    opts = clone(opts);
     // List of parameters to add to the GET request
     var params = [];
     var body;
@@ -59904,7 +60667,7 @@ function HttpPouch(opts, callback) {
 
     // Get the document listing
     ajax({
-      headers: host.headers,
+      headers: clone(host.headers),
       method: method,
       url: genDBUrl(host, '_all_docs' + params),
       body: body
@@ -59921,7 +60684,7 @@ function HttpPouch(opts, callback) {
     // set of changes to return and attempting to process them at once
     var batchSize = 'batch_size' in opts ? opts.batch_size : CHANGES_BATCH_SIZE;
 
-    opts = utils.clone(opts);
+    opts = clone(opts);
     opts.timeout = opts.timeout || 30 * 1000;
 
     // We give a 5 second buffer for CouchDB changes to respond with
@@ -60035,7 +60798,7 @@ function HttpPouch(opts, callback) {
 
       // Set the options for the ajax call
       var xhrOpts = {
-        headers: host.headers,
+        headers: clone(host.headers),
         method: method,
         url: genDBUrl(host, '_changes' + paramStr),
         // _changes can take a long time to generate, especially when filtered
@@ -60188,7 +60951,7 @@ function HttpPouch(opts, callback) {
       source.close();
       utils.call(opts.complete, err);
     }
-    
+
   };
 
   api._useSSE = false;
@@ -60207,7 +60970,7 @@ function HttpPouch(opts, callback) {
 
     // Get the missing document/revision IDs
     ajax({
-      headers: host.headers,
+      headers: clone(host.headers),
       method: 'POST',
       url: genDBUrl(host, '_revs_diff'),
       body: JSON.stringify(req)
@@ -60222,7 +60985,7 @@ function HttpPouch(opts, callback) {
     ajax({
       url: genDBUrl(host, ''),
       method: 'DELETE',
-      headers: host.headers
+      headers: clone(host.headers)
     }, function (err, resp) {
       if (err) {
         api.emit('error', err);
@@ -60244,7 +61007,7 @@ HttpPouch.valid = function () {
 module.exports = HttpPouch;
 
 }).call(this,require('_process'))
-},{"../../deps/buffer":110,"../../deps/errors":111,"../../utils":129,"_process":46,"debug":132}],95:[function(require,module,exports){
+},{"../../deps/binary/base64":108,"../../deps/binary/binaryStringToBlob":110,"../../deps/binary/readAsBinaryString":113,"../../deps/buffer":114,"../../deps/errors":115,"../../deps/multipart":118,"../../utils":140,"_process":45,"debug":143}],94:[function(require,module,exports){
 'use strict';
 
 var merge = require('../../merge');
@@ -60429,7 +61192,7 @@ function idbAllDocs(opts, api, idb, callback) {
 }
 
 module.exports = idbAllDocs;
-},{"../../deps/errors":111,"../../merge":124,"./idb-constants":98,"./idb-utils":99}],96:[function(require,module,exports){
+},{"../../deps/errors":115,"../../merge":129,"./idb-constants":97,"./idb-utils":98}],95:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -60493,7 +61256,7 @@ function checkBlobSupport(txn, idb) {
 }
 
 module.exports = checkBlobSupport;
-},{"../../utils":129,"./idb-constants":98}],97:[function(require,module,exports){
+},{"../../utils":140,"./idb-constants":97}],96:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -60856,7 +61619,7 @@ function idbBulkDocs(req, opts, api, idb, Changes, callback) {
 }
 
 module.exports = idbBulkDocs;
-},{"../../deps/errors":111,"../../utils":129,"./idb-constants":98,"./idb-utils":99}],98:[function(require,module,exports){
+},{"../../deps/errors":115,"../../utils":140,"./idb-constants":97,"./idb-utils":98}],97:[function(require,module,exports){
 'use strict';
 
 // IndexedDB requires a versioned database structure, so we use the
@@ -60883,13 +61646,19 @@ exports.META_STORE = 'meta-store';
 exports.LOCAL_STORE = 'local-store';
 // Where we detect blob support
 exports.DETECT_BLOB_SUPPORT_STORE = 'detect-blob-support';
-},{}],99:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 (function (process){
 'use strict';
 
 var errors = require('../../deps/errors');
 var utils = require('../../utils');
+var base64 = require('../../deps/binary/base64');
+var atob = base64.atob;
+var btoa = base64.btoa;
 var constants = require('./idb-constants');
+var readAsBinaryString = require('../../deps/binary/readAsBinaryString');
+var binaryStringToArrayBuffer =
+  require('../../deps/binary/binaryStringToArrayBuffer');
 
 function tryCode(fun, that, args) {
   try {
@@ -60976,8 +61745,8 @@ exports.readBlobData = function (body, type, encode, callback) {
     if (!body) {
       callback('');
     } else if (typeof body !== 'string') { // we have blob support
-      utils.readAsBinaryString(body, function (binary) {
-        callback(utils.btoa(binary));
+      readAsBinaryString(body, function (binary) {
+        callback(btoa(binary));
       });
     } else { // no blob support
       callback(body);
@@ -60988,7 +61757,7 @@ exports.readBlobData = function (body, type, encode, callback) {
     } else if (typeof body !== 'string') { // we have blob support
       callback(body);
     } else { // no blob support
-      body = utils.fixBinary(atob(body));
+      body = binaryStringToArrayBuffer(atob(body));
       callback(utils.createBlob([body], {type: type}));
     }
   }
@@ -61129,7 +61898,7 @@ exports.openTransactionSafely = function (idb, stores, mode) {
   }
 };
 }).call(this,require('_process'))
-},{"../../deps/errors":111,"../../utils":129,"./idb-constants":98,"_process":46}],100:[function(require,module,exports){
+},{"../../deps/binary/base64":108,"../../deps/binary/binaryStringToArrayBuffer":109,"../../deps/binary/readAsBinaryString":113,"../../deps/errors":115,"../../utils":140,"./idb-constants":97,"_process":45}],99:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -62084,7 +62853,7 @@ IdbPouch.Changes = new utils.Changes();
 module.exports = IdbPouch;
 
 }).call(this,require('_process'))
-},{"../../deps/errors":111,"../../merge":124,"../../utils":129,"./idb-all-docs":95,"./idb-blob-support":96,"./idb-bulk-docs":97,"./idb-constants":98,"./idb-utils":99,"_process":46}],101:[function(require,module,exports){
+},{"../../deps/errors":115,"../../merge":129,"../../utils":140,"./idb-all-docs":94,"./idb-blob-support":95,"./idb-bulk-docs":96,"./idb-constants":97,"./idb-utils":98,"_process":45}],100:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -62409,7 +63178,7 @@ function websqlBulkDocs(req, opts, api, db, Changes, callback) {
 
 module.exports = websqlBulkDocs;
 
-},{"../../deps/errors":111,"../../utils":129,"./websql-constants":102,"./websql-utils":103}],102:[function(require,module,exports){
+},{"../../deps/errors":115,"../../utils":140,"./websql-constants":101,"./websql-utils":102}],101:[function(require,module,exports){
 'use strict';
 
 function quote(str) {
@@ -62433,7 +63202,7 @@ exports.META_STORE = quote('metadata-store');
 exports.ATTACH_AND_SEQ_STORE = quote('attach-seq-store');
 
 
-},{}],103:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
@@ -62662,13 +63431,14 @@ module.exports = {
   openDB: openDB,
   valid: valid
 };
-},{"../../deps/errors":111,"../../utils":129,"./websql-constants":102}],104:[function(require,module,exports){
+},{"../../deps/errors":115,"../../utils":140,"./websql-constants":101}],103:[function(require,module,exports){
 'use strict';
 
 var utils = require('../../utils');
 var merge = require('../../merge');
 var errors = require('../../deps/errors');
 var parseHexString = require('../../deps/parse-hex');
+var binaryStringToBlob = require('../../deps/binary/binaryStringToBlob');
 
 var websqlConstants = require('./websql-constants');
 var websqlUtils = require('./websql-utils');
@@ -62770,7 +63540,8 @@ function WebSqlPouch(opts, callback) {
     description: api._name,
     size: size,
     location: opts.location,
-    createFromLocation: opts.createFromLocation
+    createFromLocation: opts.createFromLocation,
+    androidDatabaseImplementation: opts.androidDatabaseImplementation
   });
   if (!db) {
     return callback(errors.error(errors.UNKNOWN_ERROR));
@@ -63507,10 +64278,9 @@ function WebSqlPouch(opts, callback) {
       var data = item.escaped ? websqlUtils.unescapeBlob(item.body) :
         parseHexString(item.body, encoding);
       if (opts.encode) {
-        res = btoa(data);
+        res = utils.btoa(data);
       } else {
-        data = utils.fixBinary(data);
-        res = utils.createBlob([data], {type: type});
+        res = binaryStringToBlob(data, type);
       }
       callback(null, res);
     });
@@ -63671,7 +64441,7 @@ WebSqlPouch.Changes = new utils.Changes();
 
 module.exports = WebSqlPouch;
 
-},{"../../deps/errors":111,"../../deps/parse-hex":115,"../../merge":124,"../../utils":129,"./websql-bulk-docs":101,"./websql-constants":102,"./websql-utils":103}],105:[function(require,module,exports){
+},{"../../deps/binary/binaryStringToBlob":110,"../../deps/errors":115,"../../deps/parse-hex":120,"../../merge":129,"../../utils":140,"./websql-bulk-docs":100,"./websql-constants":101,"./websql-utils":102}],104:[function(require,module,exports){
 'use strict';
 var utils = require('./utils');
 var merge = require('./merge');
@@ -63746,6 +64516,7 @@ function Changes(db, opts, callback) {
     if (oldOnChange) {
       self.removeListener('change', oldOnChange);
     }
+    db.removeListener('destroyed', onDestroy);
     opts.complete(null, {status: 'cancelled'});
   });
   this.then = promise.then.bind(promise);
@@ -63927,110 +64698,7 @@ Changes.prototype.filterChanges = function (opts) {
     });
   }
 };
-},{"./deps/errors":111,"./evalFilter":121,"./evalView":122,"./merge":124,"./utils":129,"events":45}],106:[function(require,module,exports){
-'use strict';
-
-var Promise = require('./deps/promise');
-var explain404 = require('./deps/explain404');
-var pouchCollate = require('pouchdb-collate');
-var collate = pouchCollate.collate;
-
-function updateCheckpoint(db, id, checkpoint, returnValue) {
-  return db.get(id).catch(function (err) {
-    if (err.status === 404) {
-      if (db.type() === 'http') {
-        explain404(
-          'PouchDB is just checking if a remote checkpoint exists.');
-      }
-      return {_id: id};
-    }
-    throw err;
-  }).then(function (doc) {
-    if (returnValue.cancelled) {
-      return;
-    }
-    doc.last_seq = checkpoint;
-    return db.put(doc).catch(function (err) {
-      if (err.status === 409) {
-        // retry; someone is trying to write a checkpoint simultaneously
-        return updateCheckpoint(db, id, checkpoint, returnValue);
-      }
-      throw err;
-    });
-  });
-}
-
-function Checkpointer(src, target, id, returnValue) {
-  this.src = src;
-  this.target = target;
-  this.id = id;
-  this.returnValue = returnValue;
-}
-
-Checkpointer.prototype.writeCheckpoint = function (checkpoint) {
-  var self = this;
-  return this.updateTarget(checkpoint).then(function () {
-    return self.updateSource(checkpoint);
-  });
-};
-
-Checkpointer.prototype.updateTarget = function (checkpoint) {
-  return updateCheckpoint(this.target, this.id, checkpoint, this.returnValue);
-};
-
-Checkpointer.prototype.updateSource = function (checkpoint) {
-  var self = this;
-  if (this.readOnlySource) {
-    return Promise.resolve(true);
-  }
-  return updateCheckpoint(this.src, this.id, checkpoint, this.returnValue)
-    .catch(function (err) {
-      var isForbidden = typeof err.status === 'number' &&
-        Math.floor(err.status / 100) === 4;
-      if (isForbidden) {
-        self.readOnlySource = true;
-        return true;
-      }
-      throw err;
-    });
-};
-
-Checkpointer.prototype.getCheckpoint = function () {
-  var self = this;
-  return self.target.get(self.id).then(function (targetDoc) {
-    return self.src.get(self.id).then(function (sourceDoc) {
-      if (collate(targetDoc.last_seq, sourceDoc.last_seq) === 0) {
-        return sourceDoc.last_seq;
-      }
-      return 0;
-    }, function (err) {
-      if (err.status === 404 && targetDoc.last_seq) {
-        return self.src.put({
-          _id: self.id,
-          last_seq: 0
-        }).then(function () {
-          return 0;
-        }, function (err) {
-          if (err.status === 401) {
-            self.readOnlySource = true;
-            return targetDoc.last_seq;
-          }
-          return 0;
-        });
-      }
-      throw err;
-    });
-  }).catch(function (err) {
-    if (err.status !== 404) {
-      throw err;
-    }
-    return 0;
-  });
-};
-
-module.exports = Checkpointer;
-
-},{"./deps/explain404":112,"./deps/promise":117,"pouchdb-collate":154}],107:[function(require,module,exports){
+},{"./deps/errors":115,"./evalFilter":126,"./evalView":127,"./merge":129,"./utils":140,"events":44}],105:[function(require,module,exports){
 (function (process,global){
 /*globals cordova */
 "use strict";
@@ -64194,21 +64862,314 @@ PouchDB.debug = require('debug');
 module.exports = PouchDB;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./adapter":93,"./taskqueue":128,"./utils":129,"_process":46,"debug":132}],108:[function(require,module,exports){
-arguments[4][73][0].apply(exports,arguments)
-},{"../utils":129,"./buffer":110,"./errors":111,"_process":46,"dup":73,"request":118}],109:[function(require,module,exports){
+},{"./adapter":92,"./taskqueue":139,"./utils":140,"_process":45,"debug":143}],106:[function(require,module,exports){
+arguments[4][72][0].apply(exports,arguments)
+},{"../utils":140,"./buffer":114,"./errors":115,"_process":45,"dup":72,"request":123}],107:[function(require,module,exports){
+'use strict';
+
+//Can't find original post, but this is close
+//http://stackoverflow.com/questions/6965107/ (continues on next line)
+//converting-between-strings-and-arraybuffers
+module.exports = function (buffer) {
+  var binary = '';
+  var bytes = new Uint8Array(buffer);
+  var length = bytes.byteLength;
+  for (var i = 0; i < length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return binary;
+};
+},{}],108:[function(require,module,exports){
+'use strict';
+
+var buffer = require('./../buffer');
+
+if (typeof atob === 'function') {
+  exports.atob = function (str) {
+    /* global atob */
+    return atob(str);
+  };
+} else {
+  exports.atob = function (str) {
+    var base64 = new buffer(str, 'base64');
+    // Node.js will just skip the characters it can't encode instead of
+    // throwing and exception
+    if (base64.toString('base64') !== str) {
+      throw ("Cannot base64 encode full string");
+    }
+    return base64.toString('binary');
+  };
+}
+
+if (typeof btoa === 'function') {
+  exports.btoa = function (str) {
+    /* global btoa */
+    return btoa(str);
+  };
+} else {
+  exports.btoa = function (str) {
+    return new buffer(str, 'binary').toString('base64');
+  };
+}
+},{"./../buffer":114}],109:[function(require,module,exports){
+'use strict';
+
+// From http://stackoverflow.com/questions/14967647/ (continues on next line)
+// encode-decode-image-with-base64-breaks-image (2013-04-21)
+module.exports = function (bin) {
+  var length = bin.length;
+  var buf = new ArrayBuffer(length);
+  var arr = new Uint8Array(buf);
+  for (var i = 0; i < length; i++) {
+    arr[i] = bin.charCodeAt(i);
+  }
+  return buf;
+};
+},{}],110:[function(require,module,exports){
+'use strict';
+
+var createBlob = require('./blob');
+var binaryStringToArrayBuffer = require('./binaryStringToArrayBuffer');
+
+module.exports = function binaryStringToBlob(binString, type) {
+  return createBlob([binaryStringToArrayBuffer(binString)], {type: type});
+};
+},{"./binaryStringToArrayBuffer":109,"./blob":111}],111:[function(require,module,exports){
+(function (global){
+"use strict";
+
+// Abstracts constructing a Blob object, so it also works in older
+// browsers that don't support the native Blob constructor (e.g.
+// old QtWebKit versions, Android < 4.4).
+function createBlob(parts, properties) {
+  parts = parts || [];
+  properties = properties || {};
+  try {
+    return new Blob(parts, properties);
+  } catch (e) {
+    if (e.name !== "TypeError") {
+      throw e;
+    }
+    var BlobBuilder = global.BlobBuilder ||
+                      global.MSBlobBuilder ||
+                      global.MozBlobBuilder ||
+                      global.WebKitBlobBuilder;
+    var builder = new BlobBuilder();
+    for (var i = 0; i < parts.length; i += 1) {
+      builder.append(parts[i]);
+    }
+    return builder.getBlob(properties.type);
+  }
+}
+
+module.exports = createBlob;
+
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],112:[function(require,module,exports){
+'use strict';
+
+// simplified API. universal browser support is assumed
+module.exports = function (blob, callback) {
+  var reader = new FileReader();
+  reader.onloadend = function (e) {
+    var result = e.target.result || new ArrayBuffer(0);
+    callback(result);
+  };
+  reader.readAsArrayBuffer(blob);
+};
+},{}],113:[function(require,module,exports){
+'use strict';
+
+var arrayBufferToBinaryString = require('./arrayBufferToBinaryString');
+
+// shim for browsers that don't support it
+module.exports = function (blob, callback) {
+  var reader = new FileReader();
+  var hasBinaryString = typeof reader.readAsBinaryString === 'function';
+  reader.onloadend = function (e) {
+    var result = e.target.result || '';
+    if (hasBinaryString) {
+      return callback(result);
+    }
+    callback(arrayBufferToBinaryString(result));
+  };
+  if (hasBinaryString) {
+    reader.readAsBinaryString(blob);
+  } else {
+    reader.readAsArrayBuffer(blob);
+  }
+};
+},{"./arrayBufferToBinaryString":107}],114:[function(require,module,exports){
 arguments[4][74][0].apply(exports,arguments)
-},{"dup":74}],110:[function(require,module,exports){
+},{"dup":74}],115:[function(require,module,exports){
 arguments[4][75][0].apply(exports,arguments)
-},{"dup":75}],111:[function(require,module,exports){
+},{"dup":75,"inherits":146}],116:[function(require,module,exports){
 arguments[4][76][0].apply(exports,arguments)
-},{"dup":76,"inherits":135}],112:[function(require,module,exports){
-arguments[4][77][0].apply(exports,arguments)
-},{"_process":46,"dup":77}],113:[function(require,module,exports){
+},{"_process":45,"dup":76}],117:[function(require,module,exports){
+(function (process,global){
+'use strict';
+
+var base64 = require('./binary/base64');
+var crypto = require('crypto');
+var Md5 = require('spark-md5');
+var setImmediateShim = global.setImmediate || global.setTimeout;
+var MD5_CHUNK_SIZE = 32768;
+
+// convert a 64-bit int to a binary string
+function intToString(int) {
+  return String.fromCharCode(int & 0xff) +
+    String.fromCharCode((int >>> 8) & 0xff) +
+    String.fromCharCode((int >>> 16) & 0xff) +
+    String.fromCharCode((int >>> 24) & 0xff);
+}
+
+// convert an array of 64-bit ints into
+// a base64-encoded string
+function rawToBase64(raw) {
+  var res = '';
+  for (var i = 0, len = raw.length; i < len; i++) {
+    res += intToString(raw[i]);
+  }
+  return base64.btoa(res);
+}
+
+function appendBuffer(buffer, data, start, end) {
+  if (start > 0 || end < data.byteLength) {
+    // only create a subarray if we really need to
+    data = new Uint8Array(data, start,
+      Math.min(end, data.byteLength) - start);
+  }
+  buffer.append(data);
+}
+
+function appendString(buffer, data, start, end) {
+  if (start > 0 || end < data.length) {
+    // only create a substring if we really need to
+    data = data.substring(start, end);
+  }
+  buffer.appendBinary(data);
+}
+
+module.exports = function (data, callback) {
+  if (!process.browser) {
+    var base64 = crypto.createHash('md5').update(data).digest('base64');
+    callback(null, base64);
+    return;
+  }
+  var inputIsString = typeof data === 'string';
+  var len = inputIsString ? data.length : data.byteLength;
+  var chunkSize = Math.min(MD5_CHUNK_SIZE, len);
+  var chunks = Math.ceil(len / chunkSize);
+  var currentChunk = 0;
+  var buffer = inputIsString ? new Md5() : new Md5.ArrayBuffer();
+
+  var append = inputIsString ? appendString : appendBuffer;
+
+  function loadNextChunk() {
+    var start = currentChunk * chunkSize;
+    var end = start + chunkSize;
+    currentChunk++;
+    if (currentChunk < chunks) {
+      append(buffer, data, start, end);
+      setImmediateShim(loadNextChunk);
+    } else {
+      append(buffer, data, start, end);
+      var raw = buffer.end(true);
+      var base64 = rawToBase64(raw);
+      callback(null, base64);
+      buffer.destroy();
+    }
+  }
+  loadNextChunk();
+};
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./binary/base64":108,"_process":45,"crypto":43,"spark-md5":219}],118:[function(require,module,exports){
+(function (process){
+'use strict';
+
+// Create a multipart/related stream out of a document,
+// so we can upload documents in that format when
+// attachments are large. This is shamefully stolen from
+// https://github.com/sballesteros/couch-multipart-stream/
+// and https://github.com/npm/npm-fullfat-registry
+
+var base64 = require('./binary/base64');
+var atob = base64.atob;
+var uuid = require('./uuid');
+var createBlob = require('./binary/blob');
+var binaryStringToArrayBuffer = require('./binary/binaryStringToArrayBuffer');
+var utils = require('../utils');
+var clone = utils.clone;
+var isBrowser = typeof process === 'undefined' || process.browser;
+var buffer = require('./buffer');
+
+function createBlobOrBuffer(parts, type) {
+  if (isBrowser) {
+    return createBlob(parts, {type: type});
+  }
+  return buffer.concat(parts.map(function (part) {
+    return new buffer(part, 'binary');
+  }));
+}
+
+function createMultipart(doc) {
+  doc = clone(doc);
+
+  var boundary = uuid();
+
+  var nonStubAttachments = {};
+
+  Object.keys(doc._attachments).forEach(function (filename) {
+    var att = doc._attachments[filename];
+    if (att.stub) {
+      return;
+    }
+    var binData = atob(att.data);
+    nonStubAttachments[filename] = {type: att.content_type, data: binData};
+    att.length = binData.length;
+    att.follows = true;
+    delete att.digest;
+    delete att.data;
+  });
+
+  var preamble = '--' + boundary +
+    '\r\nContent-Type: application/json\r\n\r\n';
+
+  var parts = [preamble, JSON.stringify(doc)];
+
+  Object.keys(nonStubAttachments).forEach(function (filename) {
+    var att = nonStubAttachments[filename];
+    var preamble = '\r\n--' + boundary +
+      '\r\nContent-Disposition: attachment; filename=' +
+        JSON.stringify(filename) +
+      '\r\nContent-Type: ' + att.type +
+      '\r\nContent-Length: ' + att.data.length +
+      '\r\n\r\n';
+    parts.push(preamble);
+    parts.push(isBrowser ? binaryStringToArrayBuffer(att.data) : att.data);
+  });
+
+  parts.push('\r\n--' + boundary + '--');
+
+  var type = 'multipart/related; boundary=' + boundary;
+  var body = createBlobOrBuffer(parts, type);
+
+  return {
+    headers: {
+      'Content-Type': type
+    },
+    body: body
+  };
+}
+
+module.exports = createMultipart;
+
+}).call(this,require('_process'))
+},{"../utils":140,"./binary/base64":108,"./binary/binaryStringToArrayBuffer":109,"./binary/blob":111,"./buffer":114,"./uuid":125,"_process":45}],119:[function(require,module,exports){
 arguments[4][78][0].apply(exports,arguments)
-},{"_process":46,"crypto":40,"dup":78,"spark-md5":165}],114:[function(require,module,exports){
-arguments[4][79][0].apply(exports,arguments)
-},{"./errors":111,"./uuid":120,"dup":79}],115:[function(require,module,exports){
+},{"./errors":115,"./uuid":125,"dup":78}],120:[function(require,module,exports){
 'use strict';
 
 //
@@ -64276,13 +65237,245 @@ function parseHexString(str, encoding) {
 }
 
 module.exports = parseHexString;
-},{}],116:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
+arguments[4][79][0].apply(exports,arguments)
+},{"dup":79}],122:[function(require,module,exports){
 arguments[4][80][0].apply(exports,arguments)
-},{"dup":80}],117:[function(require,module,exports){
-arguments[4][81][0].apply(exports,arguments)
-},{"bluebird":139,"dup":81}],118:[function(require,module,exports){
-arguments[4][82][0].apply(exports,arguments)
-},{"../utils":129,"./blob.js":109,"dup":82}],119:[function(require,module,exports){
+},{"bluebird":150,"dup":80}],123:[function(require,module,exports){
+/* global fetch */
+/* global Headers */
+'use strict';
+
+var createBlob = require('./binary/blob.js');
+var utils = require('../utils');
+var readAsArrayBuffer = require('./binary/readAsArrayBuffer');
+
+function wrappedFetch() {
+  var wrappedPromise = {};
+
+  var promise = new utils.Promise(function(resolve, reject) {
+    wrappedPromise.resolve = resolve;
+    wrappedPromise.reject = reject;
+  });
+
+  var args = new Array(arguments.length);
+
+  for (var i = 0; i < args.length; i++) {
+    args[i] = arguments[i];
+  }
+
+  wrappedPromise.promise = promise;
+
+  utils.Promise.resolve().then(function () {
+    return fetch.apply(null, args);
+  }).then(function(response) {
+    wrappedPromise.resolve(response);
+  }).catch(function(error) {
+    wrappedPromise.reject(error);
+  });
+
+  return wrappedPromise;
+}
+
+function fetchRequest(options, callback) {
+  var wrappedPromise, timer, response;
+
+  var headers = new Headers();
+
+  var fetchOptions = {
+    method: options.method,
+    credentials: 'include',
+    headers: headers
+  };
+
+  if (options.json) {
+    headers.set('Accept', 'application/json');
+    headers.set('Content-Type', options.headers['Content-Type'] ||
+      'application/json');
+  }
+
+  if (options.body && (options.body instanceof Blob)) {
+    readAsArrayBuffer(options.body, function (arrayBuffer) {
+      fetchOptions.body = arrayBuffer;
+    });
+  } else if (options.body &&
+             options.processData &&
+             typeof options.body !== 'string') {
+    fetchOptions.body = JSON.stringify(options.body);
+  } else if ('body' in options) {
+    fetchOptions.body = options.body;
+  } else {
+    fetchOptions.body = null;
+  }
+
+  Object.keys(options.headers).forEach(function(key) {
+    if (options.headers.hasOwnProperty(key)) {
+      headers.set(key, options.headers[key]);
+    }
+  });
+
+  wrappedPromise = wrappedFetch(options.url, fetchOptions);
+
+  if (options.timeout > 0) {
+    timer = setTimeout(function() {
+      wrappedPromise.reject(new Error('Load timeout for resource: ' +
+        options.url));
+    }, options.timeout);
+  }
+
+  wrappedPromise.promise.then(function(fetchResponse) {
+    response = {
+      statusCode: fetchResponse.status
+    };
+
+    if (options.timeout > 0) {
+      clearTimeout(timer);
+    }
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return options.binary ? fetchResponse.blob() : fetchResponse.text();
+    }
+
+    return fetchResponse.json();
+  }).then(function(result) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      callback(null, response, result);
+    } else {
+      callback(result, response);
+    }
+  }).catch(function(error) {
+    callback(error, response);
+  });
+
+  return {abort: wrappedPromise.reject};
+}
+
+function xhRequest(options, callback) {
+
+  var xhr, timer, hasUpload;
+
+  var abortReq = function () {
+    xhr.abort();
+  };
+
+  if (options.xhr) {
+    xhr = new options.xhr();
+  } else {
+    xhr = new XMLHttpRequest();
+  }
+
+  // cache-buster, specifically designed to work around IE's aggressive caching
+  // see http://www.dashbay.com/2011/05/internet-explorer-caches-ajax/
+  if (options.method === 'GET' && !options.cache) {
+    var hasArgs = options.url.indexOf('?') !== -1;
+    options.url += (hasArgs ? '&' : '?') + '_nonce=' + Date.now();
+  }
+
+  xhr.open(options.method, options.url);
+  xhr.withCredentials = true;
+
+  if (options.method === 'GET') {
+    delete options.headers['Content-Type'];
+  } else if (options.json) {
+    options.headers.Accept = 'application/json';
+    options.headers['Content-Type'] = options.headers['Content-Type'] ||
+      'application/json';
+    if (options.body &&
+        options.processData &&
+        typeof options.body !== "string") {
+      options.body = JSON.stringify(options.body);
+    }
+  }
+
+  if (options.binary) {
+    xhr.responseType = 'arraybuffer';
+  }
+
+  if (!('body' in options)) {
+    options.body = null;
+  }
+
+  for (var key in options.headers) {
+    if (options.headers.hasOwnProperty(key)) {
+      xhr.setRequestHeader(key, options.headers[key]);
+    }
+  }
+
+  if (options.timeout > 0) {
+    timer = setTimeout(abortReq, options.timeout);
+    xhr.onprogress = function () {
+      clearTimeout(timer);
+      timer = setTimeout(abortReq, options.timeout);
+    };
+    if (typeof hasUpload === 'undefined') {
+      // IE throws an error if you try to access it directly
+      hasUpload = Object.keys(xhr).indexOf('upload') !== -1 &&
+                  typeof xhr.upload !== 'undefined';
+    }
+    if (hasUpload) { // does not exist in ie9
+      xhr.upload.onprogress = xhr.onprogress;
+    }
+  }
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState !== 4) {
+      return;
+    }
+
+    var response = {
+      statusCode: xhr.status
+    };
+
+    if (xhr.status >= 200 && xhr.status < 300) {
+      var data;
+      if (options.binary) {
+        data = createBlob([xhr.response || ''], {
+          type: xhr.getResponseHeader('Content-Type')
+        });
+      } else {
+        data = xhr.responseText;
+      }
+      callback(null, response, data);
+    } else {
+      var err = {};
+      try {
+        err = JSON.parse(xhr.response);
+      } catch(e) {}
+      callback(err, response);
+    }
+  };
+
+  if (options.body && (options.body instanceof Blob)) {
+    readAsArrayBuffer(options.body, function (arrayBuffer) {
+      xhr.send(arrayBuffer);
+    });
+  } else {
+    xhr.send(options.body);
+  }
+
+  return {abort: abortReq};
+}
+
+function testXhr() {
+  try {
+    new XMLHttpRequest();
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+var hasXhr = testXhr();
+
+module.exports = function(options, callback) {
+  if (hasXhr || options.xhr) {
+    return xhRequest(options, callback);
+  } else {
+    return fetchRequest(options, callback);
+  }
+};
+
+},{"../utils":140,"./binary/blob.js":111,"./binary/readAsArrayBuffer":112}],124:[function(require,module,exports){
 'use strict';
 
 var upsert = require('pouchdb-upsert').upsert;
@@ -64291,9 +65484,9 @@ module.exports = function (db, doc, diffFun, cb) {
   return upsert.call(db, doc, diffFun, cb);
 };
 
-},{"pouchdb-upsert":164}],120:[function(require,module,exports){
-arguments[4][50][0].apply(exports,arguments)
-},{"dup":50}],121:[function(require,module,exports){
+},{"pouchdb-upsert":200}],125:[function(require,module,exports){
+arguments[4][49][0].apply(exports,arguments)
+},{"dup":49}],126:[function(require,module,exports){
 'use strict';
 
 module.exports = evalFilter;
@@ -64305,7 +65498,7 @@ function evalFilter(input) {
     ' })()'
   ].join(''));
 }
-},{}],122:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 'use strict';
 
 module.exports = evalView;
@@ -64327,7 +65520,7 @@ function evalView(input) {
     '})()'
   ].join('\n'));
 }
-},{}],123:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -64355,17 +65548,12 @@ if (!process.browser) {
 }
 
 }).call(this,require('_process'))
-},{"./adapters/http/http":94,"./adapters/idb/idb":100,"./adapters/leveldb/leveldb":40,"./adapters/websql/websql":104,"./deps/ajax":108,"./deps/errors":111,"./replicate":125,"./setup":126,"./sync":127,"./utils":129,"./version":130,"_process":46,"pouchdb-mapreduce":160}],124:[function(require,module,exports){
-arguments[4][84][0].apply(exports,arguments)
-},{"dup":84,"pouchdb-extend":157}],125:[function(require,module,exports){
+},{"./adapters/http/http":93,"./adapters/idb/idb":99,"./adapters/leveldb/leveldb":43,"./adapters/websql/websql":103,"./deps/ajax":106,"./deps/errors":115,"./replicate":134,"./setup":137,"./sync":138,"./utils":140,"./version":141,"_process":45,"pouchdb-mapreduce":171}],129:[function(require,module,exports){
+arguments[4][83][0].apply(exports,arguments)
+},{"dup":83,"pouchdb-extend":168}],130:[function(require,module,exports){
 'use strict';
 
-var utils = require('./utils');
-var EE = require('events').EventEmitter;
-var Checkpointer = require('./checkpointer');
-
-var MAX_SIMULTANEOUS_REVS = 50;
-var RETRY_DEFAULT = false;
+var STARTING_BACK_OFF = 0;
 
 function randomNumber(min, max) {
   min = parseInt(min, 10);
@@ -64392,83 +65580,136 @@ function defaultBackOff(min) {
   return randomNumber(min, max);
 }
 
-function backOff(repId, src, target, opts, returnValue, result, error) {
+function backOff(opts, returnValue, error, callback) {
   if (opts.retry === false) {
     returnValue.emit('error', error);
     returnValue.removeAllListeners();
     return;
   }
-  opts.default_back_off = opts.default_back_off || 0;
-  opts.retries = opts.retries || 0;
   if (typeof opts.back_off_function !== 'function') {
     opts.back_off_function = defaultBackOff;
-  }
-  opts.retries++;
-  if (opts.max_retries && opts.retries > opts.max_retries) {
-    returnValue.emit('error', new Error('tried ' +
-      opts.retries + ' times but replication failed'));
-    returnValue.removeAllListeners();
-    return;
   }
   returnValue.emit('requestError', error);
   if (returnValue.state === 'active') {
     returnValue.emit('paused', error);
     returnValue.state = 'stopped';
     returnValue.once('active', function () {
-      opts.current_back_off = opts.default_back_off;
+      opts.current_back_off = STARTING_BACK_OFF;
     });
   }
 
-  opts.current_back_off = opts.current_back_off || opts.default_back_off;
+  opts.current_back_off = opts.current_back_off || STARTING_BACK_OFF;
   opts.current_back_off = opts.back_off_function(opts.current_back_off);
-  setTimeout(function () {
-    replicate(repId, src, target, opts, returnValue);
-  }, opts.current_back_off);
+  setTimeout(callback, opts.current_back_off);
 }
 
-// We create a basic promise so the caller can cancel the replication possibly
-// before we have actually started listening to changes etc
-utils.inherits(Replication, EE);
-function Replication() {
-  EE.call(this);
-  this.cancelled = false;
-  this.state = 'pending';
-  var self = this;
-  var promise = new utils.Promise(function (fulfill, reject) {
-    self.once('complete', fulfill);
-    self.once('error', reject);
+module.exports = backOff;
+},{}],131:[function(require,module,exports){
+'use strict';
+
+var Promise = require('./../deps/promise');
+var explain404 = require('./../deps/explain404');
+var pouchCollate = require('pouchdb-collate');
+var collate = pouchCollate.collate;
+
+function updateCheckpoint(db, id, checkpoint, returnValue) {
+  return db.get(id).catch(function (err) {
+    if (err.status === 404) {
+      if (db.type() === 'http') {
+        explain404('PouchDB is just checking if a remote checkpoint exists.');
+      }
+      return {_id: id};
+    }
+    throw err;
+  }).then(function (doc) {
+    if (returnValue.cancelled) {
+      return;
+    }
+    doc.last_seq = checkpoint;
+    return db.put(doc).catch(function (err) {
+      if (err.status === 409) {
+        // retry; someone is trying to write a checkpoint simultaneously
+        return updateCheckpoint(db, id, checkpoint, returnValue);
+      }
+      throw err;
+    });
   });
-  self.then = function (resolve, reject) {
-    return promise.then(resolve, reject);
-  };
-  self.catch = function (reject) {
-    return promise.catch(reject);
-  };
-  // As we allow error handling via "error" event as well,
-  // put a stub in here so that rejecting never throws UnhandledError.
-  self.catch(function () {});
 }
 
-Replication.prototype.cancel = function () {
-  this.cancelled = true;
-  this.state = 'cancelled';
-  this.emit('cancel');
-};
+function Checkpointer(src, target, id, returnValue) {
+  this.src = src;
+  this.target = target;
+  this.id = id;
+  this.returnValue = returnValue;
+}
 
-Replication.prototype.ready = function (src, target) {
+Checkpointer.prototype.writeCheckpoint = function (checkpoint) {
   var self = this;
-  function onDestroy() {
-    self.cancel();
-  }
-  src.once('destroyed', onDestroy);
-  target.once('destroyed', onDestroy);
-  function cleanup() {
-    src.removeListener('destroyed', onDestroy);
-    target.removeListener('destroyed', onDestroy);
-  }
-  this.then(cleanup, cleanup);
+  return this.updateTarget(checkpoint).then(function () {
+    return self.updateSource(checkpoint);
+  });
 };
 
+Checkpointer.prototype.updateTarget = function (checkpoint) {
+  return updateCheckpoint(this.target, this.id, checkpoint, this.returnValue);
+};
+
+Checkpointer.prototype.updateSource = function (checkpoint) {
+  var self = this;
+  if (this.readOnlySource) {
+    return Promise.resolve(true);
+  }
+  return updateCheckpoint(this.src, this.id, checkpoint, this.returnValue)
+    .catch(function (err) {
+      var isForbidden = typeof err.status === 'number' &&
+        Math.floor(err.status / 100) === 4;
+      if (isForbidden) {
+        self.readOnlySource = true;
+        return true;
+      }
+      throw err;
+    });
+};
+
+Checkpointer.prototype.getCheckpoint = function () {
+  var self = this;
+  return self.target.get(self.id).then(function (targetDoc) {
+    return self.src.get(self.id).then(function (sourceDoc) {
+      if (collate(targetDoc.last_seq, sourceDoc.last_seq) === 0) {
+        return sourceDoc.last_seq;
+      }
+      return 0;
+    }, function (err) {
+      if (err.status === 404 && targetDoc.last_seq) {
+        return self.src.put({
+          _id: self.id,
+          last_seq: 0
+        }).then(function () {
+          return 0;
+        }, function (err) {
+          if (err.status === 401) {
+            self.readOnlySource = true;
+            return targetDoc.last_seq;
+          }
+          return 0;
+        });
+      }
+      throw err;
+    });
+  }).catch(function (err) {
+    if (err.status !== 404) {
+      throw err;
+    }
+    return 0;
+  });
+};
+
+module.exports = Checkpointer;
+
+},{"./../deps/explain404":116,"./../deps/promise":122,"pouchdb-collate":165}],132:[function(require,module,exports){
+'use strict';
+
+var utils = require('../utils');
 
 // TODO: check CouchDB's replication id generation
 // Generate a unique id particular to this replication
@@ -64489,7 +65730,173 @@ function genReplicationId(src, target, opts) {
   });
 }
 
-function replicate(repId, src, target, opts, returnValue, result) {
+module.exports = genReplicationId;
+},{"../utils":140}],133:[function(require,module,exports){
+'use strict';
+
+var utils = require('./../utils');
+var clone = utils.clone;
+var Promise = utils.Promise;
+
+var MAX_SIMULTANEOUS_REVS = 50;
+
+function isGenOne(rev) {
+  return /^1-/.test(rev);
+}
+
+//
+// Fetch all the documents from the src as described in the "diffs",
+// which is a mapping of docs IDs to revisions. If the state ever
+// changes to "cancelled", then the returned promise will be rejected.
+// Else it will be resolved with a list of fetched documents.
+//
+function getDocs(src, diffs, state) {
+  diffs = clone(diffs); // we do not need to modify this
+
+  var resultDocs = [];
+
+  function fetchMissingRevs(id, missingRevs) {
+    var opts = {
+      revs: true,
+      open_revs: missingRevs,
+      attachments: true
+    };
+    return src.get(id, opts).then(function (docs) {
+      if (state.cancelled) {
+        throw new Error('cancelled');
+      }
+      docs.forEach(function (doc) {
+        if (doc.ok) {
+          resultDocs.push(doc.ok);
+        }
+      });
+    });
+  }
+
+  function processDiffDoc(id) {
+    var missing = diffs[id].missing;
+    // avoid url too long error by batching
+    var missingBatches = [];
+    for (var i = 0; i < missing.length; i += MAX_SIMULTANEOUS_REVS) {
+      var missingBatch = missing.slice(i,
+        Math.min(missing.length, i + MAX_SIMULTANEOUS_REVS));
+      missingBatches.push(missingBatch);
+    }
+
+    return Promise.all(missingBatches.map(function (missingRevs) {
+      return fetchMissingRevs(id, missingRevs);
+    }));
+  }
+
+  function getAllDocs() {
+    var diffKeys = Object.keys(diffs);
+    return Promise.all(diffKeys.map(processDiffDoc));
+  }
+
+  function hasAttachments(doc) {
+    return doc._attachments && Object.keys(doc._attachments).length > 0;
+  }
+
+  function fetchRevisionOneDocs(ids) {
+    // Optimization: fetch gen-1 docs and attachments in
+    // a single request using _all_docs
+    return src.allDocs({
+      keys: ids,
+      include_docs: true
+    }).then(function (res) {
+      if (state.cancelled) {
+        throw new Error('cancelled');
+      }
+      res.rows.forEach(function (row) {
+        if (row.deleted || !row.doc || !isGenOne(row.value.rev) ||
+            hasAttachments(row.doc)) {
+          // if any of these conditions apply, we need to fetch using get()
+          return;
+        }
+
+        // the doc we got back from allDocs() is sufficient
+        resultDocs.push(row.doc);
+        delete diffs[row.id];
+      });
+    });
+  }
+
+  function getRevisionOneDocs() {
+    // filter out the generation 1 docs and get them
+    // leaving the non-generation one docs to be got otherwise
+    var ids = Object.keys(diffs).filter(function (id) {
+      var missing = diffs[id].missing;
+      return missing.length === 1 && isGenOne(missing[0]);
+    });
+    if (ids.length > 0) {
+      return fetchRevisionOneDocs(ids);
+    }
+  }
+
+  function returnDocs() {
+    return resultDocs;
+  }
+
+  return Promise.resolve()
+    .then(getRevisionOneDocs)
+    .then(getAllDocs)
+    .then(returnDocs);
+}
+
+module.exports = getDocs;
+},{"./../utils":140}],134:[function(require,module,exports){
+'use strict';
+
+var utils = require('../utils');
+var replicate = require('./replicate');
+var Replication = require('./replication');
+
+function toPouch(db, opts) {
+  var PouchConstructor = opts.PouchConstructor;
+  if (typeof db === 'string') {
+    return new PouchConstructor(db, opts);
+  } else {
+    return db;
+  }
+}
+
+function replicateWrapper(src, target, opts, callback) {
+  if (typeof opts === 'function') {
+    callback = opts;
+    opts = {};
+  }
+  if (typeof opts === 'undefined') {
+    opts = {};
+  }
+  if (!opts.complete) {
+    opts.complete = callback || function () {};
+  }
+  opts = utils.clone(opts);
+  opts.continuous = opts.continuous || opts.live;
+  opts.retry = ('retry' in opts) ? opts.retry : false;
+  /*jshint validthis:true */
+  opts.PouchConstructor = opts.PouchConstructor || this;
+  var replicateRet = new Replication(opts);
+  var srcPouch = toPouch(src, opts);
+  var targetPouch = toPouch(target, opts);
+  replicate(srcPouch, targetPouch, opts, replicateRet);
+  return replicateRet;
+}
+
+module.exports = {
+  replicate : replicateWrapper,
+  toPouch: toPouch
+};
+},{"../utils":140,"./replicate":135,"./replication":136}],135:[function(require,module,exports){
+'use strict';
+
+var utils = require('./../utils');
+var Checkpointer = require('./checkpointer');
+var backOff = require('./backoff');
+var genReplicationId = require('./gen-replication-id');
+var getDocs = require('./get-docs');
+
+function replicate(src, target, opts, returnValue, result) {
   var batches = [];               // list of batches to be processed
   var currentBatch;               // the batch currently being processed
   var pendingBatch = {
@@ -64509,7 +65916,8 @@ function replicate(repId, src, target, opts, returnValue, result) {
   var state = {
     cancelled: false
   };
-  var checkpointer = new Checkpointer(src, target, repId, state);
+  var repId;
+  var checkpointer;
   var allErrors = [];
   var changedDocs = [];
 
@@ -64524,6 +65932,16 @@ function replicate(repId, src, target, opts, returnValue, result) {
 
   var changesOpts = {};
   returnValue.ready(src, target);
+
+  function initCheckpointer() {
+    if (checkpointer) {
+      return utils.Promise.resolve();
+    }
+    return genReplicationId(src, target, opts).then(function (res) {
+      repId = res;
+      checkpointer = new Checkpointer(src, target, repId, state);
+    });
+  }
 
   function writeDocs() {
     if (currentBatch.docs.length === 0) {
@@ -64572,82 +65990,6 @@ function replicate(repId, src, target, opts, returnValue, result) {
     });
   }
 
-  function processDiffDoc(id) {
-    var diffs = currentBatch.diffs;
-    var allMissing = diffs[id].missing;
-    // avoid url too long error by batching
-    var missingBatches = [];
-    for (var i = 0; i < allMissing.length; i += MAX_SIMULTANEOUS_REVS) {
-      missingBatches.push(allMissing.slice(i, Math.min(allMissing.length,
-        i + MAX_SIMULTANEOUS_REVS)));
-    }
-
-    return utils.Promise.all(missingBatches.map(function (missing) {
-      var opts = {
-        revs: true,
-        open_revs: missing,
-        attachments: true
-      };
-      return src.get(id, opts).then(function (docs) {
-        docs.forEach(function (doc) {
-          if (state.cancelled) {
-            return completeReplication();
-          }
-          if (doc.ok) {
-            result.docs_read++;
-            currentBatch.pendingRevs++;
-            currentBatch.docs.push(doc.ok);
-          }
-        });
-        delete diffs[id];
-      });
-    }));
-  }
-
-  function getAllDocs() {
-    var diffKeys = Object.keys(currentBatch.diffs);
-    return utils.Promise.all(diffKeys.map(processDiffDoc));
-  }
-
-
-  function getRevisionOneDocs() {
-    // filter out the generation 1 docs and get them
-    // leaving the non-generation one docs to be got otherwise
-    var ids = Object.keys(currentBatch.diffs).filter(function (id) {
-      var missing = currentBatch.diffs[id].missing;
-      return missing.length === 1 && missing[0].slice(0, 2) === '1-';
-    });
-    if (!ids.length) { // nothing to fetch
-      return utils.Promise.resolve();
-    }
-    return src.allDocs({
-      keys: ids,
-      include_docs: true
-    }).then(function (res) {
-      if (state.cancelled) {
-        completeReplication();
-        throw (new Error('cancelled'));
-      }
-      res.rows.forEach(function (row) {
-        if (row.doc && !row.deleted &&
-          row.value.rev.slice(0, 2) === '1-' && (
-            !row.doc._attachments ||
-            Object.keys(row.doc._attachments).length === 0
-          )
-        ) {
-          result.docs_read++;
-          currentBatch.pendingRevs++;
-          currentBatch.docs.push(row.doc);
-          delete currentBatch.diffs[row.id];
-        }
-      });
-    });
-  }
-
-  function getDocs() {
-    return getRevisionOneDocs().then(getAllDocs);
-  }
-
   function finishBatch() {
     writingCheckpoint = true;
     return checkpointer.writeCheckpoint(currentBatch.seq).then(function () {
@@ -64687,7 +66029,16 @@ function replicate(repId, src, target, opts, returnValue, result) {
       }
       // currentBatch.diffs elements are deleted as the documents are written
       currentBatch.diffs = diffs;
-      currentBatch.pendingRevs = 0;
+    });
+  }
+
+  function getBatchDocs() {
+    return getDocs(src, currentBatch.diffs, state).then(function (docs) {
+      docs.forEach(function (doc) {
+        delete currentBatch.diffs[doc._id];
+        result.docs_read++;
+        currentBatch.docs.push(doc);
+      });
     });
   }
 
@@ -64701,7 +66052,7 @@ function replicate(repId, src, target, opts, returnValue, result) {
     }
     currentBatch = batches.shift();
     getDiffs()
-      .then(getDocs)
+      .then(getBatchDocs)
       .then(writeDocs)
       .then(finishBatch)
       .then(startNextBatch)
@@ -64789,7 +66140,9 @@ function replicate(repId, src, target, opts, returnValue, result) {
         error.other_errors = allErrors;
       }
       error.result = result;
-      backOff(repId, src, target, opts, returnValue, result, error);
+      backOff(opts, returnValue, error, function () {
+        replicate(src, target, opts, returnValue);
+      });
     } else {
       result.errors = allErrors;
       returnValue.emit('complete', result);
@@ -64805,13 +66158,6 @@ function replicate(repId, src, target, opts, returnValue, result) {
     var filter = utils.filterChange(opts)(change);
     if (!filter) {
       return;
-    }
-    if (
-      pendingBatch.changes.length === 0 &&
-      batches.length === 0 &&
-      !currentBatch
-    ) {
-      returnValue.emit('outofdate', result);
     }
     pendingBatch.seq = change.seq;
     pendingBatch.changes.push(change);
@@ -64856,7 +66202,7 @@ function replicate(repId, src, target, opts, returnValue, result) {
       !changesPending &&
       !changesCompleted &&
       batches.length < batches_limit
-    )) {
+      )) {
       return;
     }
     changesPending = true;
@@ -64866,41 +66212,59 @@ function replicate(repId, src, target, opts, returnValue, result) {
     function removeListener() {
       returnValue.removeListener('cancel', abortChanges);
     }
+
+    if (returnValue._changes) { // remove old changes() and listeners
+      returnValue.removeListener('cancel', returnValue._abortChanges);
+      returnValue._changes.cancel();
+    }
     returnValue.once('cancel', abortChanges);
+
     var changes = src.changes(changesOpts)
-    .on('change', onChange);
+      .on('change', onChange);
     changes.then(removeListener, removeListener);
     changes.then(onChangesComplete)
-    .catch(onChangesError);
+      .catch(onChangesError);
+
+    if (opts.retry) {
+      // save for later so we can cancel if necessary
+      returnValue._changes = changes;
+      returnValue._abortChanges = abortChanges;
+    }
   }
 
 
   function startChanges() {
-    checkpointer.getCheckpoint().then(function (checkpoint) {
-      last_seq = checkpoint;
-      changesOpts = {
-        since: last_seq,
-        limit: batch_size,
-        batch_size: batch_size,
-        style: 'all_docs',
-        doc_ids: doc_ids,
-        returnDocs: true // required so we know when we're done
-      };
-      if (opts.filter) {
-        if (typeof opts.filter !== 'string') {
-          // required for the client-side filter in onChange
-          changesOpts.include_docs = true;
-        } else { // ddoc filter
-          changesOpts.filter = opts.filter;
+    initCheckpointer().then(function () {
+      if (state.cancelled) {
+        completeReplication();
+        return;
+      }
+      return checkpointer.getCheckpoint().then(function (checkpoint) {
+        last_seq = checkpoint;
+        changesOpts = {
+          since: last_seq,
+          limit: batch_size,
+          batch_size: batch_size,
+          style: 'all_docs',
+          doc_ids: doc_ids,
+          returnDocs: true // required so we know when we're done
+        };
+        if (opts.filter) {
+          if (typeof opts.filter !== 'string') {
+            // required for the client-side filter in onChange
+            changesOpts.include_docs = true;
+          } else { // ddoc filter
+            changesOpts.filter = opts.filter;
+          }
         }
-      }
-      if (opts.query_params) {
-        changesOpts.query_params = opts.query_params;
-      }
-      if (opts.view) {
-        changesOpts.view = opts.view;
-      }
-      getChanges();
+        if (opts.query_params) {
+          changesOpts.query_params = opts.query_params;
+        }
+        if (opts.view) {
+          changesOpts.view = opts.view;
+        }
+        getChanges();
+      });
     }).catch(function (err) {
       abortReplication('getCheckpoint rejected with ', err);
     });
@@ -64911,24 +66275,29 @@ function replicate(repId, src, target, opts, returnValue, result) {
     return;
   }
 
-  returnValue.once('cancel', completeReplication);
+  if (!returnValue._addedListeners) {
+    returnValue.once('cancel', completeReplication);
 
-  if (typeof opts.onChange === 'function') {
-    returnValue.on('change', opts.onChange);
-  }
+    if (typeof opts.onChange === 'function') {
+      returnValue.on('change', opts.onChange);
+    }
 
-  if (typeof opts.complete === 'function') {
-    returnValue.once('error', opts.complete);
-    returnValue.once('complete', function (result) {
-      opts.complete(null, result);
-    });
+    if (typeof opts.complete === 'function') {
+      returnValue.once('error', opts.complete);
+      returnValue.once('complete', function (result) {
+        opts.complete(null, result);
+      });
+    }
+    returnValue._addedListeners = true;
   }
 
   if (typeof opts.since === 'undefined') {
     startChanges();
   } else {
-    writingCheckpoint = true;
-    checkpointer.writeCheckpoint(opts.since).then(function () {
+    initCheckpointer().then(function () {
+      writingCheckpoint = true;
+      return checkpointer.writeCheckpoint(opts.since);
+    }).then(function () {
       writingCheckpoint = false;
       if (state.cancelled) {
         completeReplication();
@@ -64944,51 +66313,64 @@ function replicate(repId, src, target, opts, returnValue, result) {
   }
 }
 
-exports.toPouch = toPouch;
-function toPouch(db, opts) {
-  var PouchConstructor = opts.PouchConstructor;
-  if (typeof db === 'string') {
-    return new PouchConstructor(db, opts);
-  } else if (db.then) {
-    return db;
-  } else {
-    return utils.Promise.resolve(db);
-  }
-}
+module.exports = replicate;
+},{"./../utils":140,"./backoff":130,"./checkpointer":131,"./gen-replication-id":132,"./get-docs":133}],136:[function(require,module,exports){
+'use strict';
 
+var utils = require('./../utils');
+var EE = require('events').EventEmitter;
+var Promise = utils.Promise;
 
-exports.replicate = replicateWrapper;
-function replicateWrapper(src, target, opts, callback) {
-  if (typeof opts === 'function') {
-    callback = opts;
-    opts = {};
-  }
-  if (typeof opts === 'undefined') {
-    opts = {};
-  }
-  if (!opts.complete) {
-    opts.complete = callback || function () {};
-  }
-  opts = utils.clone(opts);
-  opts.continuous = opts.continuous || opts.live;
-  opts.retry = ('retry' in opts) ? opts.retry : RETRY_DEFAULT;
-  /*jshint validthis:true */
-  opts.PouchConstructor = opts.PouchConstructor || this;
-  var replicateRet = new Replication(opts);
-  toPouch(src, opts).then(function (src) {
-    return toPouch(target, opts).then(function (target) {
-      return genReplicationId(src, target, opts).then(function (repId) {
-        replicate(repId, src, target, opts, replicateRet);
-      });
-    });
-  }).catch(function (err) {
-    replicateRet.emit('error', err);
-    opts.complete(err);
+// We create a basic promise so the caller can cancel the replication possibly
+// before we have actually started listening to changes etc
+utils.inherits(Replication, EE);
+function Replication() {
+  EE.call(this);
+  this.cancelled = false;
+  this.state = 'pending';
+  var self = this;
+  var promise = new Promise(function (fulfill, reject) {
+    self.once('complete', fulfill);
+    self.once('error', reject);
   });
-  return replicateRet;
+  self.then = function (resolve, reject) {
+    return promise.then(resolve, reject);
+  };
+  self.catch = function (reject) {
+    return promise.catch(reject);
+  };
+  // As we allow error handling via "error" event as well,
+  // put a stub in here so that rejecting never throws UnhandledError.
+  self.catch(function () {});
 }
 
-},{"./checkpointer":106,"./utils":129,"events":45}],126:[function(require,module,exports){
+Replication.prototype.cancel = function () {
+  this.cancelled = true;
+  this.state = 'cancelled';
+  this.emit('cancel');
+};
+
+Replication.prototype.ready = function (src, target) {
+  var self = this;
+  if (self._readyCalled) {
+    return;
+  }
+  self._readyCalled = true;
+
+  function onDestroy() {
+    self.cancel();
+  }
+  src.once('destroyed', onDestroy);
+  target.once('destroyed', onDestroy);
+  function cleanup() {
+    src.removeListener('destroyed', onDestroy);
+    target.removeListener('destroyed', onDestroy);
+  }
+  self.once('complete', cleanup);
+};
+
+module.exports = Replication;
+},{"./../utils":140,"events":44}],137:[function(require,module,exports){
 "use strict";
 
 var PouchDB = require("./constructor");
@@ -65136,7 +66518,7 @@ PouchDB.defaults = function (defaultOpts) {
   eventEmitterMethods.forEach(function (method) {
     PouchAlt[method] = eventEmitter[method].bind(eventEmitter);
   });
-  PouchAlt.setMaxListeners(0);
+  PouchAlt.setMaxListeners(10);
 
   PouchAlt.preferredAdapters = PouchDB.preferredAdapters.slice();
   Object.keys(PouchDB).forEach(function (key) {
@@ -65150,7 +66532,7 @@ PouchDB.defaults = function (defaultOpts) {
 
 module.exports = PouchDB;
 
-},{"./constructor":107,"./utils":129,"events":45}],127:[function(require,module,exports){
+},{"./constructor":105,"./utils":140,"events":44}],138:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -65336,7 +66718,7 @@ Sync.prototype.cancel = function () {
   }
 };
 
-},{"./replicate":125,"./utils":129,"events":45}],128:[function(require,module,exports){
+},{"./replicate":134,"./utils":140,"events":44}],139:[function(require,module,exports){
 'use strict';
 
 module.exports = TaskQueue;
@@ -65406,58 +66788,801 @@ TaskQueue.prototype.addTask = function (name, parameters) {
   }
 };
 
-},{}],129:[function(require,module,exports){
-arguments[4][85][0].apply(exports,arguments)
-},{"./deps/ajax":108,"./deps/blob":109,"./deps/buffer":110,"./deps/errors":111,"./deps/explain404":112,"./deps/md5":113,"./deps/parse-doc":114,"./deps/parse-uri":116,"./deps/promise":117,"./deps/uuid":120,"./merge":124,"_process":46,"argsarray":131,"debug":132,"dup":85,"events":45,"inherits":135,"pouchdb-collections":156,"pouchdb-extend":157,"vuvuzela":166}],130:[function(require,module,exports){
-module.exports = "3.5.0";
+},{}],140:[function(require,module,exports){
+(function (process){
+/*jshint strict: false */
+/*global chrome */
+var merge = require('./merge');
+exports.extend = require('pouchdb-extend');
+exports.ajax = require('./deps/ajax');
+exports.createBlob = require('./deps/binary/blob');
+exports.uuid = require('./deps/uuid');
+exports.getArguments = require('argsarray');
+var errors = require('./deps/errors');
+var EventEmitter = require('events').EventEmitter;
+var collections = require('pouchdb-collections');
+exports.Map = collections.Map;
+exports.Set = collections.Set;
+var parseDoc = require('./deps/parse-doc');
 
-},{}],131:[function(require,module,exports){
+var Promise = require('./deps/promise');
+exports.Promise = Promise;
+
+var base64 = require('./deps/binary/base64');
+
+// TODO: don't export these
+exports.atob = base64.atob;
+exports.btoa = base64.btoa;
+
+var binaryStringToBlob = require('./deps/binary/binaryStringToBlob');
+var arrayBufferToBinaryString =
+  require('./deps/binary/arrayBufferToBinaryString');
+var readAsArrayBuffer = require('./deps/binary/readAsArrayBuffer');
+
+// TODO: only used by the integration tests
+exports.binaryStringToBlob = binaryStringToBlob;
+
+exports.lastIndexOf = function (str, char) {
+  for (var i = str.length - 1; i >= 0; i--) {
+    if (str.charAt(i) === char) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+exports.clone = function (obj) {
+  return exports.extend(true, {}, obj);
+};
+
+// like underscore/lodash _.pick()
+exports.pick = function (obj, arr) {
+  var res = {};
+  for (var i = 0, len = arr.length; i < len; i++) {
+    var prop = arr[i];
+    res[prop] = obj[prop];
+  }
+  return res;
+};
+
+exports.inherits = require('inherits');
+
+function isChromeApp() {
+  return (typeof chrome !== "undefined" &&
+          typeof chrome.storage !== "undefined" &&
+          typeof chrome.storage.local !== "undefined");
+}
+
+// Pretty dumb name for a function, just wraps callback calls so we dont
+// to if (callback) callback() everywhere
+exports.call = exports.getArguments(function (args) {
+  if (!args.length) {
+    return;
+  }
+  var fun = args.shift();
+  if (typeof fun === 'function') {
+    fun.apply(this, args);
+  }
+});
+
+exports.isLocalId = function (id) {
+  return (/^_local/).test(id);
+};
+
+// check if a specific revision of a doc has been deleted
+//  - metadata: the metadata object from the doc store
+//  - rev: (optional) the revision to check. defaults to winning revision
+exports.isDeleted = function (metadata, rev) {
+  if (!rev) {
+    rev = merge.winningRev(metadata);
+  }
+  var dashIndex = rev.indexOf('-');
+  if (dashIndex !== -1) {
+    rev = rev.substring(dashIndex + 1);
+  }
+  var deleted = false;
+  merge.traverseRevTree(metadata.rev_tree,
+  function (isLeaf, pos, id, acc, opts) {
+    if (id === rev) {
+      deleted = !!opts.deleted;
+    }
+  });
+
+  return deleted;
+};
+
+exports.revExists = function (metadata, rev) {
+  var found = false;
+  merge.traverseRevTree(metadata.rev_tree, function (leaf, pos, id) {
+    if ((pos + '-' + id) === rev) {
+      found = true;
+    }
+  });
+  return found;
+};
+
+exports.filterChange = function filterChange(opts) {
+  var req = {};
+  var hasFilter = opts.filter && typeof opts.filter === 'function';
+  req.query = opts.query_params;
+
+  return function filter(change) {
+    if (!change.doc) {
+      // CSG sends events on the changes feed that don't have documents,
+      // this hack makes a whole lot of existing code robust.
+      change.doc = {};
+    }
+    if (opts.filter && hasFilter && !opts.filter.call(this, change.doc, req)) {
+      return false;
+    }
+    if (!opts.include_docs) {
+      delete change.doc;
+    } else if (!opts.attachments) {
+      for (var att in change.doc._attachments) {
+        if (change.doc._attachments.hasOwnProperty(att)) {
+          change.doc._attachments[att].stub = true;
+        }
+      }
+    }
+    return true;
+  };
+};
+
+exports.parseDoc = parseDoc.parseDoc;
+exports.invalidIdError = parseDoc.invalidIdError;
+
+exports.isCordova = function () {
+  return (typeof cordova !== "undefined" ||
+          typeof PhoneGap !== "undefined" ||
+          typeof phonegap !== "undefined");
+};
+
+exports.hasLocalStorage = function () {
+  if (isChromeApp()) {
+    return false;
+  }
+  try {
+    return localStorage;
+  } catch (e) {
+    return false;
+  }
+};
+exports.Changes = Changes;
+exports.inherits(Changes, EventEmitter);
+function Changes() {
+  if (!(this instanceof Changes)) {
+    return new Changes();
+  }
+  var self = this;
+  EventEmitter.call(this);
+  this.isChrome = isChromeApp();
+  this._listeners = {};
+  this.hasLocal = false;
+  if (!this.isChrome) {
+    this.hasLocal = exports.hasLocalStorage();
+  }
+  if (this.isChrome) {
+    chrome.storage.onChanged.addListener(function (e) {
+      // make sure it's event addressed to us
+      if (e.db_name != null) {
+        //object only has oldValue, newValue members
+        self.emit(e.dbName.newValue);
+      }
+    });
+  } else if (this.hasLocal) {
+    if (typeof addEventListener !== 'undefined') {
+      addEventListener("storage", function (e) {
+        self.emit(e.key);
+      });
+    } else { // old IE
+      window.attachEvent("storage", function (e) {
+        self.emit(e.key);
+      });
+    }
+  }
+
+}
+Changes.prototype.addListener = function (dbName, id, db, opts) {
+  if (this._listeners[id]) {
+    return;
+  }
+  var self = this;
+  var inprogress = false;
+  function eventFunction() {
+    if (!self._listeners[id]) {
+      return;
+    }
+    if (inprogress) {
+      inprogress = 'waiting';
+      return;
+    }
+    inprogress = true;
+    db.changes({
+      style: opts.style,
+      include_docs: opts.include_docs,
+      attachments: opts.attachments,
+      conflicts: opts.conflicts,
+      continuous: false,
+      descending: false,
+      filter: opts.filter,
+      doc_ids: opts.doc_ids,
+      view: opts.view,
+      since: opts.since,
+      query_params: opts.query_params
+    }).on('change', function (c) {
+      if (c.seq > opts.since && !opts.cancelled) {
+        opts.since = c.seq;
+        exports.call(opts.onChange, c);
+      }
+    }).on('complete', function () {
+      if (inprogress === 'waiting') {
+        process.nextTick(function () {
+          self.notify(dbName);
+        });
+      }
+      inprogress = false;
+    }).on('error', function () {
+      inprogress = false;
+    });
+  }
+  this._listeners[id] = eventFunction;
+  this.on(dbName, eventFunction);
+};
+
+Changes.prototype.removeListener = function (dbName, id) {
+  if (!(id in this._listeners)) {
+    return;
+  }
+  EventEmitter.prototype.removeListener.call(this, dbName,
+    this._listeners[id]);
+};
+
+
+Changes.prototype.notifyLocalWindows = function (dbName) {
+  //do a useless change on a storage thing
+  //in order to get other windows's listeners to activate
+  if (this.isChrome) {
+    chrome.storage.local.set({dbName: dbName});
+  } else if (this.hasLocal) {
+    localStorage[dbName] = (localStorage[dbName] === "a") ? "b" : "a";
+  }
+};
+
+Changes.prototype.notify = function (dbName) {
+  this.emit(dbName);
+  this.notifyLocalWindows(dbName);
+};
+
+exports.once = function (fun) {
+  var called = false;
+  return exports.getArguments(function (args) {
+    if (called) {
+      throw new Error('once called  more than once');
+    } else {
+      called = true;
+      fun.apply(this, args);
+    }
+  });
+};
+
+exports.toPromise = function (func) {
+  //create the function we will be returning
+  return exports.getArguments(function (args) {
+    var self = this;
+    var tempCB =
+      (typeof args[args.length - 1] === 'function') ? args.pop() : false;
+    // if the last argument is a function, assume its a callback
+    var usedCB;
+    if (tempCB) {
+      // if it was a callback, create a new callback which calls it,
+      // but do so async so we don't trap any errors
+      usedCB = function (err, resp) {
+        process.nextTick(function () {
+          tempCB(err, resp);
+        });
+      };
+    }
+    var promise = new Promise(function (fulfill, reject) {
+      var resp;
+      try {
+        var callback = exports.once(function (err, mesg) {
+          if (err) {
+            reject(err);
+          } else {
+            fulfill(mesg);
+          }
+        });
+        // create a callback for this invocation
+        // apply the function in the orig context
+        args.push(callback);
+        resp = func.apply(self, args);
+        if (resp && typeof resp.then === 'function') {
+          fulfill(resp);
+        }
+      } catch (e) {
+        reject(e);
+      }
+    });
+    // if there is a callback, call it back
+    if (usedCB) {
+      promise.then(function (result) {
+        usedCB(null, result);
+      }, usedCB);
+    }
+    promise.cancel = function () {
+      return this;
+    };
+    return promise;
+  });
+};
+
+exports.adapterFun = function (name, callback) {
+  var log = require('debug')('pouchdb:api');
+
+  function logApiCall(self, name, args) {
+    if (!log.enabled) {
+      return;
+    }
+    var logArgs = [self._db_name, name];
+    for (var i = 0; i < args.length - 1; i++) {
+      logArgs.push(args[i]);
+    }
+    log.apply(null, logArgs);
+
+    // override the callback itself to log the response
+    var origCallback = args[args.length - 1];
+    args[args.length - 1] = function (err, res) {
+      var responseArgs = [self._db_name, name];
+      responseArgs = responseArgs.concat(
+        err ? ['error', err] : ['success', res]
+      );
+      log.apply(null, responseArgs);
+      origCallback(err, res);
+    };
+  }
+
+
+  return exports.toPromise(exports.getArguments(function (args) {
+    if (this._closed) {
+      return Promise.reject(new Error('database is closed'));
+    }
+    var self = this;
+    logApiCall(self, name, args);
+    if (!this.taskqueue.isReady) {
+      return new Promise(function (fulfill, reject) {
+        self.taskqueue.addTask(function (failed) {
+          if (failed) {
+            reject(failed);
+          } else {
+            fulfill(self[name].apply(self, args));
+          }
+        });
+      });
+    }
+    return callback.apply(this, args);
+  }));
+};
+
+exports.cancellableFun = function (fun, self, opts) {
+
+  opts = opts ? exports.clone(true, {}, opts) : {};
+
+  var emitter = new EventEmitter();
+  var oldComplete = opts.complete || function () { };
+  var complete = opts.complete = exports.once(function (err, resp) {
+    if (err) {
+      oldComplete(err);
+    } else {
+      emitter.emit('end', resp);
+      oldComplete(null, resp);
+    }
+    emitter.removeAllListeners();
+  });
+  var oldOnChange = opts.onChange || function () {};
+  var lastChange = 0;
+  self.on('destroyed', function () {
+    emitter.removeAllListeners();
+  });
+  opts.onChange = function (change) {
+    oldOnChange(change);
+    if (change.seq <= lastChange) {
+      return;
+    }
+    lastChange = change.seq;
+    emitter.emit('change', change);
+    if (change.deleted) {
+      emitter.emit('delete', change);
+    } else if (change.changes.length === 1 &&
+      change.changes[0].rev.slice(0, 1) === '1-') {
+      emitter.emit('create', change);
+    } else {
+      emitter.emit('update', change);
+    }
+  };
+  var promise = new Promise(function (fulfill, reject) {
+    opts.complete = function (err, res) {
+      if (err) {
+        reject(err);
+      } else {
+        fulfill(res);
+      }
+    };
+  });
+
+  promise.then(function (result) {
+    complete(null, result);
+  }, complete);
+
+  // this needs to be overwridden by caller, dont fire complete until
+  // the task is ready
+  promise.cancel = function () {
+    promise.isCancelled = true;
+    if (self.taskqueue.isReady) {
+      opts.complete(null, {status: 'cancelled'});
+    }
+  };
+
+  if (!self.taskqueue.isReady) {
+    self.taskqueue.addTask(function () {
+      if (promise.isCancelled) {
+        opts.complete(null, {status: 'cancelled'});
+      } else {
+        fun(self, opts, promise);
+      }
+    });
+  } else {
+    fun(self, opts, promise);
+  }
+  promise.on = emitter.on.bind(emitter);
+  promise.once = emitter.once.bind(emitter);
+  promise.addListener = emitter.addListener.bind(emitter);
+  promise.removeListener = emitter.removeListener.bind(emitter);
+  promise.removeAllListeners = emitter.removeAllListeners.bind(emitter);
+  promise.setMaxListeners = emitter.setMaxListeners.bind(emitter);
+  promise.listeners = emitter.listeners.bind(emitter);
+  promise.emit = emitter.emit.bind(emitter);
+  return promise;
+};
+
+exports.MD5 = exports.toPromise(require('./deps/md5'));
+
+exports.explain404 = require('./deps/explain404');
+
+exports.info = function (str) {
+  if (typeof console !== 'undefined' && 'info' in console) {
+    console.info(str);
+  }
+};
+
+exports.parseUri = require('./deps/parse-uri');
+
+exports.compare = function (left, right) {
+  return left < right ? -1 : left > right ? 1 : 0;
+};
+
+exports.updateDoc = function updateDoc(prev, docInfo, results,
+                                       i, cb, writeDoc, newEdits) {
+
+  if (exports.revExists(prev, docInfo.metadata.rev)) {
+    results[i] = docInfo;
+    return cb();
+  }
+
+  // TODO: some of these can be pre-calculated, but it's safer to just
+  // call merge.winningRev() and exports.isDeleted() all over again
+  var previousWinningRev = merge.winningRev(prev);
+  var previouslyDeleted = exports.isDeleted(prev, previousWinningRev);
+  var deleted = exports.isDeleted(docInfo.metadata);
+  var isRoot = /^1-/.test(docInfo.metadata.rev);
+
+  if (previouslyDeleted && !deleted && newEdits && isRoot) {
+    var newDoc = docInfo.data;
+    newDoc._rev = previousWinningRev;
+    newDoc._id = docInfo.metadata.id;
+    docInfo = exports.parseDoc(newDoc, newEdits);
+  }
+
+  var merged = merge.merge(prev.rev_tree, docInfo.metadata.rev_tree[0], 1000);
+
+  var inConflict = newEdits && (((previouslyDeleted && deleted) ||
+    (!previouslyDeleted && merged.conflicts !== 'new_leaf') ||
+    (previouslyDeleted && !deleted && merged.conflicts === 'new_branch')));
+
+  if (inConflict) {
+    var err = errors.error(errors.REV_CONFLICT);
+    results[i] = err;
+    return cb();
+  }
+
+  var newRev = docInfo.metadata.rev;
+  docInfo.metadata.rev_tree = merged.tree;
+  if (prev.rev_map) {
+    docInfo.metadata.rev_map = prev.rev_map; // used by leveldb
+  }
+
+  // recalculate
+  var winningRev = merge.winningRev(docInfo.metadata);
+  var winningRevIsDeleted = exports.isDeleted(docInfo.metadata, winningRev);
+
+  // calculate the total number of documents that were added/removed,
+  // from the perspective of total_rows/doc_count
+  var delta = (previouslyDeleted === winningRevIsDeleted) ? 0 :
+      previouslyDeleted < winningRevIsDeleted ? -1 : 1;
+
+  var newRevIsDeleted = exports.isDeleted(docInfo.metadata, newRev);
+
+  writeDoc(docInfo, winningRev, winningRevIsDeleted, newRevIsDeleted,
+    true, delta, i, cb);
+};
+
+exports.processDocs = function processDocs(docInfos, api, fetchedDocs,
+                                           tx, results, writeDoc, opts,
+                                           overallCallback) {
+
+  if (!docInfos.length) {
+    return;
+  }
+
+  function insertDoc(docInfo, resultsIdx, callback) {
+    // Cant insert new deleted documents
+    var winningRev = merge.winningRev(docInfo.metadata);
+    var deleted = exports.isDeleted(docInfo.metadata, winningRev);
+    if ('was_delete' in opts && deleted) {
+      results[resultsIdx] = errors.error(errors.MISSING_DOC, 'deleted');
+      return callback();
+    }
+
+    var delta = deleted ? 0 : 1;
+
+    writeDoc(docInfo, winningRev, deleted, deleted, false,
+      delta, resultsIdx, callback);
+  }
+
+  var newEdits = opts.new_edits;
+  var idsToDocs = new exports.Map();
+
+  var docsDone = 0;
+  var docsToDo = docInfos.length;
+
+  function checkAllDocsDone() {
+    if (++docsDone === docsToDo && overallCallback) {
+      overallCallback();
+    }
+  }
+
+  docInfos.forEach(function (currentDoc, resultsIdx) {
+
+    if (currentDoc._id && exports.isLocalId(currentDoc._id)) {
+      api[currentDoc._deleted ? '_removeLocal' : '_putLocal'](
+        currentDoc, {ctx: tx}, function (err) {
+          if (err) {
+            results[resultsIdx] = err;
+          } else {
+            results[resultsIdx] = {ok: true};
+          }
+          checkAllDocsDone();
+        });
+      return;
+    }
+
+    var id = currentDoc.metadata.id;
+    if (idsToDocs.has(id)) {
+      docsToDo--; // duplicate
+      idsToDocs.get(id).push([currentDoc, resultsIdx]);
+    } else {
+      idsToDocs.set(id, [[currentDoc, resultsIdx]]);
+    }
+  });
+
+  // in the case of new_edits, the user can provide multiple docs
+  // with the same id. these need to be processed sequentially
+  idsToDocs.forEach(function (docs, id) {
+    var numDone = 0;
+
+    function docWritten() {
+      if (++numDone < docs.length) {
+        nextDoc();
+      } else {
+        checkAllDocsDone();
+      }
+    }
+    function nextDoc() {
+      var value = docs[numDone];
+      var currentDoc = value[0];
+      var resultsIdx = value[1];
+
+      if (fetchedDocs.has(id)) {
+        exports.updateDoc(fetchedDocs.get(id), currentDoc, results,
+          resultsIdx, docWritten, writeDoc, newEdits);
+      } else {
+        insertDoc(currentDoc, resultsIdx, docWritten);
+      }
+    }
+    nextDoc();
+  });
+};
+
+exports.preprocessAttachments = function preprocessAttachments(
+    docInfos, blobType, callback) {
+
+  if (!docInfos.length) {
+    return callback();
+  }
+
+  var docv = 0;
+
+  function parseBase64(data) {
+    try {
+      return base64.atob(data);
+    } catch (e) {
+      var err = errors.error(errors.BAD_ARG,
+                             'Attachments need to be base64 encoded');
+      return {error: err};
+    }
+  }
+
+  function preprocessAttachment(att, callback) {
+    if (att.stub) {
+      return callback();
+    }
+    if (typeof att.data === 'string') {
+      // input is a base64 string
+
+      var asBinary = parseBase64(att.data);
+      if (asBinary.error) {
+        return callback(asBinary.error);
+      }
+
+      att.length = asBinary.length;
+      if (blobType === 'blob') {
+        att.data = binaryStringToBlob(asBinary, att.content_type);
+      } else if (blobType === 'base64') {
+        att.data = base64.btoa(asBinary);
+      } else { // binary
+        att.data = asBinary;
+      }
+      exports.MD5(asBinary).then(function (result) {
+        att.digest = 'md5-' + result;
+        callback();
+      });
+    } else { // input is a blob
+      readAsArrayBuffer(att.data, function (buff) {
+        if (blobType === 'binary') {
+          att.data = arrayBufferToBinaryString(buff);
+        } else if (blobType === 'base64') {
+          att.data = base64.btoa(arrayBufferToBinaryString(buff));
+        }
+        exports.MD5(buff).then(function (result) {
+          att.digest = 'md5-' + result;
+          att.length = buff.byteLength;
+          callback();
+        });
+      });
+    }
+  }
+
+  var overallErr;
+
+  docInfos.forEach(function (docInfo) {
+    var attachments = docInfo.data && docInfo.data._attachments ?
+      Object.keys(docInfo.data._attachments) : [];
+    var recv = 0;
+
+    if (!attachments.length) {
+      return done();
+    }
+
+    function processedAttachment(err) {
+      overallErr = err;
+      recv++;
+      if (recv === attachments.length) {
+        done();
+      }
+    }
+
+    for (var key in docInfo.data._attachments) {
+      if (docInfo.data._attachments.hasOwnProperty(key)) {
+        preprocessAttachment(docInfo.data._attachments[key],
+          processedAttachment);
+      }
+    }
+  });
+
+  function done() {
+    docv++;
+    if (docInfos.length === docv) {
+      if (overallErr) {
+        callback(overallErr);
+      } else {
+        callback();
+      }
+    }
+  }
+};
+
+// compact a tree by marking its non-leafs as missing,
+// and return a list of revs to delete
+exports.compactTree = function compactTree(metadata) {
+  var revs = [];
+  merge.traverseRevTree(metadata.rev_tree, function (isLeaf, pos,
+                                                     revHash, ctx, opts) {
+    if (opts.status === 'available' && !isLeaf) {
+      revs.push(pos + '-' + revHash);
+      opts.status = 'missing';
+    }
+  });
+  return revs;
+};
+
+var vuvuzela = require('vuvuzela');
+
+exports.safeJsonParse = function safeJsonParse(str) {
+  try {
+    return JSON.parse(str);
+  } catch (e) {
+    return vuvuzela.parse(str);
+  }
+};
+
+exports.safeJsonStringify = function safeJsonStringify(json) {
+  try {
+    return JSON.stringify(json);
+  } catch (e) {
+    return vuvuzela.stringify(json);
+  }
+};
+
+}).call(this,require('_process'))
+},{"./deps/ajax":106,"./deps/binary/arrayBufferToBinaryString":107,"./deps/binary/base64":108,"./deps/binary/binaryStringToBlob":110,"./deps/binary/blob":111,"./deps/binary/readAsArrayBuffer":112,"./deps/errors":115,"./deps/explain404":116,"./deps/md5":117,"./deps/parse-doc":119,"./deps/parse-uri":121,"./deps/promise":122,"./deps/uuid":125,"./merge":129,"_process":45,"argsarray":142,"debug":143,"events":44,"inherits":146,"pouchdb-collections":167,"pouchdb-extend":168,"vuvuzela":220}],141:[function(require,module,exports){
+module.exports = "3.6.0";
+
+},{}],142:[function(require,module,exports){
+arguments[4][85][0].apply(exports,arguments)
+},{"dup":85}],143:[function(require,module,exports){
 arguments[4][86][0].apply(exports,arguments)
-},{"dup":86}],132:[function(require,module,exports){
+},{"./debug":144,"dup":86}],144:[function(require,module,exports){
 arguments[4][87][0].apply(exports,arguments)
-},{"./debug":133,"dup":87}],133:[function(require,module,exports){
+},{"dup":87,"ms":145}],145:[function(require,module,exports){
 arguments[4][88][0].apply(exports,arguments)
-},{"dup":88,"ms":134}],134:[function(require,module,exports){
-arguments[4][89][0].apply(exports,arguments)
-},{"dup":89}],135:[function(require,module,exports){
+},{"dup":88}],146:[function(require,module,exports){
+arguments[4][50][0].apply(exports,arguments)
+},{"dup":50}],147:[function(require,module,exports){
 arguments[4][51][0].apply(exports,arguments)
-},{"dup":51}],136:[function(require,module,exports){
+},{"dup":51}],148:[function(require,module,exports){
 arguments[4][52][0].apply(exports,arguments)
-},{"dup":52}],137:[function(require,module,exports){
+},{"./INTERNAL":147,"./handlers":149,"./promise":151,"./reject":154,"./resolve":155,"dup":52}],149:[function(require,module,exports){
 arguments[4][53][0].apply(exports,arguments)
-},{"./INTERNAL":136,"./handlers":138,"./promise":140,"./reject":143,"./resolve":144,"dup":53}],138:[function(require,module,exports){
+},{"./resolveThenable":156,"./states":157,"./tryCatch":158,"dup":53}],150:[function(require,module,exports){
 arguments[4][54][0].apply(exports,arguments)
-},{"./resolveThenable":145,"./states":146,"./tryCatch":147,"dup":54}],139:[function(require,module,exports){
+},{"./all":148,"./promise":151,"./race":153,"./reject":154,"./resolve":155,"dup":54}],151:[function(require,module,exports){
 arguments[4][55][0].apply(exports,arguments)
-},{"./all":137,"./promise":140,"./race":142,"./reject":143,"./resolve":144,"dup":55}],140:[function(require,module,exports){
+},{"./INTERNAL":147,"./queueItem":152,"./resolveThenable":156,"./states":157,"./unwrap":159,"dup":55}],152:[function(require,module,exports){
 arguments[4][56][0].apply(exports,arguments)
-},{"./INTERNAL":136,"./queueItem":141,"./resolveThenable":145,"./states":146,"./unwrap":148,"dup":56}],141:[function(require,module,exports){
+},{"./handlers":149,"./unwrap":159,"dup":56}],153:[function(require,module,exports){
 arguments[4][57][0].apply(exports,arguments)
-},{"./handlers":138,"./unwrap":148,"dup":57}],142:[function(require,module,exports){
+},{"./INTERNAL":147,"./handlers":149,"./promise":151,"./reject":154,"./resolve":155,"dup":57}],154:[function(require,module,exports){
 arguments[4][58][0].apply(exports,arguments)
-},{"./INTERNAL":136,"./handlers":138,"./promise":140,"./reject":143,"./resolve":144,"dup":58}],143:[function(require,module,exports){
+},{"./INTERNAL":147,"./handlers":149,"./promise":151,"dup":58}],155:[function(require,module,exports){
 arguments[4][59][0].apply(exports,arguments)
-},{"./INTERNAL":136,"./handlers":138,"./promise":140,"dup":59}],144:[function(require,module,exports){
+},{"./INTERNAL":147,"./handlers":149,"./promise":151,"dup":59}],156:[function(require,module,exports){
 arguments[4][60][0].apply(exports,arguments)
-},{"./INTERNAL":136,"./handlers":138,"./promise":140,"dup":60}],145:[function(require,module,exports){
+},{"./handlers":149,"./tryCatch":158,"dup":60}],157:[function(require,module,exports){
 arguments[4][61][0].apply(exports,arguments)
-},{"./handlers":138,"./tryCatch":147,"dup":61}],146:[function(require,module,exports){
+},{"dup":61}],158:[function(require,module,exports){
 arguments[4][62][0].apply(exports,arguments)
-},{"dup":62}],147:[function(require,module,exports){
+},{"dup":62}],159:[function(require,module,exports){
 arguments[4][63][0].apply(exports,arguments)
-},{"dup":63}],148:[function(require,module,exports){
+},{"./handlers":149,"dup":63,"immediate":160}],160:[function(require,module,exports){
 arguments[4][64][0].apply(exports,arguments)
-},{"./handlers":138,"dup":64,"immediate":149}],149:[function(require,module,exports){
+},{"./messageChannel":161,"./mutation.js":162,"./nextTick":43,"./stateChange":163,"./timeout":164,"dup":64}],161:[function(require,module,exports){
 arguments[4][65][0].apply(exports,arguments)
-},{"./messageChannel":150,"./mutation.js":151,"./nextTick":40,"./stateChange":152,"./timeout":153,"dup":65}],150:[function(require,module,exports){
+},{"dup":65}],162:[function(require,module,exports){
 arguments[4][66][0].apply(exports,arguments)
-},{"dup":66}],151:[function(require,module,exports){
+},{"dup":66}],163:[function(require,module,exports){
 arguments[4][67][0].apply(exports,arguments)
-},{"dup":67}],152:[function(require,module,exports){
+},{"dup":67}],164:[function(require,module,exports){
 arguments[4][68][0].apply(exports,arguments)
-},{"dup":68}],153:[function(require,module,exports){
-arguments[4][69][0].apply(exports,arguments)
-},{"dup":69}],154:[function(require,module,exports){
+},{"dup":68}],165:[function(require,module,exports){
 'use strict';
 
 var MIN_MAGNITUDE = -324; // verified by -Number.MIN_VALUE
@@ -65812,7 +67937,7 @@ function numToIndexableString(num) {
   return result;
 }
 
-},{"./utils":155}],155:[function(require,module,exports){
+},{"./utils":166}],166:[function(require,module,exports){
 'use strict';
 
 function pad(str, padWith, upToLength) {
@@ -65883,11 +68008,11 @@ exports.intToDecimalForm = function (int) {
 
   return result;
 };
-},{}],156:[function(require,module,exports){
-arguments[4][90][0].apply(exports,arguments)
-},{"dup":90}],157:[function(require,module,exports){
-arguments[4][70][0].apply(exports,arguments)
-},{"dup":70}],158:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
+arguments[4][89][0].apply(exports,arguments)
+},{"dup":89}],168:[function(require,module,exports){
+arguments[4][69][0].apply(exports,arguments)
+},{"dup":69}],169:[function(require,module,exports){
 'use strict';
 
 var upsert = require('./upsert');
@@ -65966,7 +68091,7 @@ module.exports = function (opts) {
   });
 };
 
-},{"./upsert":162,"./utils":163}],159:[function(require,module,exports){
+},{"./upsert":198,"./utils":199}],170:[function(require,module,exports){
 'use strict';
 
 module.exports = function (func, emit, sum, log, isArray, toJSON) {
@@ -65974,7 +68099,7 @@ module.exports = function (func, emit, sum, log, isArray, toJSON) {
   return eval("'use strict'; (" + func.replace(/;\s*$/, "") + ");");
 };
 
-},{}],160:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -66848,7 +68973,162 @@ function BuiltInError(message) {
 
 utils.inherits(BuiltInError, Error);
 }).call(this,require('_process'))
-},{"./create-view":158,"./evalfunc":159,"./taskqueue":161,"./utils":163,"_process":46,"pouchdb-collate":154}],161:[function(require,module,exports){
+},{"./create-view":169,"./evalfunc":170,"./taskqueue":197,"./utils":199,"_process":45,"pouchdb-collate":192}],172:[function(require,module,exports){
+arguments[4][85][0].apply(exports,arguments)
+},{"dup":85}],173:[function(require,module,exports){
+arguments[4][50][0].apply(exports,arguments)
+},{"dup":50}],174:[function(require,module,exports){
+arguments[4][51][0].apply(exports,arguments)
+},{"dup":51}],175:[function(require,module,exports){
+arguments[4][52][0].apply(exports,arguments)
+},{"./INTERNAL":174,"./handlers":176,"./promise":178,"./reject":181,"./resolve":182,"dup":52}],176:[function(require,module,exports){
+arguments[4][53][0].apply(exports,arguments)
+},{"./resolveThenable":183,"./states":184,"./tryCatch":185,"dup":53}],177:[function(require,module,exports){
+arguments[4][54][0].apply(exports,arguments)
+},{"./all":175,"./promise":178,"./race":180,"./reject":181,"./resolve":182,"dup":54}],178:[function(require,module,exports){
+arguments[4][55][0].apply(exports,arguments)
+},{"./INTERNAL":174,"./queueItem":179,"./resolveThenable":183,"./states":184,"./unwrap":186,"dup":55}],179:[function(require,module,exports){
+arguments[4][56][0].apply(exports,arguments)
+},{"./handlers":176,"./unwrap":186,"dup":56}],180:[function(require,module,exports){
+arguments[4][57][0].apply(exports,arguments)
+},{"./INTERNAL":174,"./handlers":176,"./promise":178,"./reject":181,"./resolve":182,"dup":57}],181:[function(require,module,exports){
+arguments[4][58][0].apply(exports,arguments)
+},{"./INTERNAL":174,"./handlers":176,"./promise":178,"dup":58}],182:[function(require,module,exports){
+arguments[4][59][0].apply(exports,arguments)
+},{"./INTERNAL":174,"./handlers":176,"./promise":178,"dup":59}],183:[function(require,module,exports){
+arguments[4][60][0].apply(exports,arguments)
+},{"./handlers":176,"./tryCatch":185,"dup":60}],184:[function(require,module,exports){
+arguments[4][61][0].apply(exports,arguments)
+},{"dup":61}],185:[function(require,module,exports){
+arguments[4][62][0].apply(exports,arguments)
+},{"dup":62}],186:[function(require,module,exports){
+arguments[4][63][0].apply(exports,arguments)
+},{"./handlers":176,"dup":63,"immediate":187}],187:[function(require,module,exports){
+arguments[4][64][0].apply(exports,arguments)
+},{"./messageChannel":188,"./mutation.js":189,"./nextTick":43,"./stateChange":190,"./timeout":191,"dup":64}],188:[function(require,module,exports){
+arguments[4][65][0].apply(exports,arguments)
+},{"dup":65}],189:[function(require,module,exports){
+arguments[4][66][0].apply(exports,arguments)
+},{"dup":66}],190:[function(require,module,exports){
+arguments[4][67][0].apply(exports,arguments)
+},{"dup":67}],191:[function(require,module,exports){
+arguments[4][68][0].apply(exports,arguments)
+},{"dup":68}],192:[function(require,module,exports){
+arguments[4][165][0].apply(exports,arguments)
+},{"./utils":193,"dup":165}],193:[function(require,module,exports){
+arguments[4][166][0].apply(exports,arguments)
+},{"dup":166}],194:[function(require,module,exports){
+arguments[4][69][0].apply(exports,arguments)
+},{"dup":69}],195:[function(require,module,exports){
+(function (global){
+'use strict';
+
+var PouchPromise;
+/* istanbul ignore next */
+if (typeof window !== 'undefined' && window.PouchDB) {
+  PouchPromise = window.PouchDB.utils.Promise;
+} else {
+  PouchPromise = typeof global.Promise === 'function' ? global.Promise : require('lie');
+}
+
+// this is essentially the "update sugar" function from daleharvey/pouchdb#1388
+// the diffFun tells us what delta to apply to the doc.  it either returns
+// the doc, or false if it doesn't need to do an update after all
+function upsertInner(db, docId, diffFun) {
+  return new PouchPromise(function (fulfill, reject) {
+    if (typeof docId !== 'string') {
+      return reject(new Error('doc id is required'));
+    }
+
+    db.get(docId, function (err, doc) {
+      if (err) {
+        /* istanbul ignore next */
+        if (err.status !== 404) {
+          return reject(err);
+        }
+        doc = {};
+      }
+
+      // the user might change the _rev, so save it for posterity
+      var docRev = doc._rev;
+      var newDoc = diffFun(doc);
+
+      if (!newDoc) {
+        // if the diffFun returns falsy, we short-circuit as
+        // an optimization
+        return fulfill({updated: false, rev: docRev});
+      }
+
+      // users aren't allowed to modify these values,
+      // so reset them here
+      newDoc._id = docId;
+      newDoc._rev = docRev;
+      fulfill(tryAndPut(db, newDoc, diffFun));
+    });
+  });
+}
+
+function tryAndPut(db, doc, diffFun) {
+  return db.put(doc).then(function (res) {
+    return {
+      updated: true,
+      rev: res.rev
+    };
+  }, function (err) {
+    /* istanbul ignore next */
+    if (err.status !== 409) {
+      throw err;
+    }
+    return upsertInner(db, doc._id, diffFun);
+  });
+}
+
+exports.upsert = function upsert(docId, diffFun, cb) {
+  var db = this;
+  var promise = upsertInner(db, docId, diffFun);
+  if (typeof cb !== 'function') {
+    return promise;
+  }
+  promise.then(function (resp) {
+    cb(null, resp);
+  }, cb);
+};
+
+exports.putIfNotExists = function putIfNotExists(docId, doc, cb) {
+  var db = this;
+
+  if (typeof docId !== 'string') {
+    cb = doc;
+    doc = docId;
+    docId = doc._id;
+  }
+
+  var diffFun = function (existingDoc) {
+    if (existingDoc._rev) {
+      return false; // do nothing
+    }
+    return doc;
+  };
+
+  var promise = upsertInner(db, docId, diffFun);
+  if (typeof cb !== 'function') {
+    return promise;
+  }
+  promise.then(function (resp) {
+    cb(null, resp);
+  }, cb);
+};
+
+
+/* istanbul ignore next */
+if (typeof window !== 'undefined' && window.PouchDB) {
+  window.PouchDB.plugin(exports);
+}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"lie":177}],196:[function(require,module,exports){
+arguments[4][90][0].apply(exports,arguments)
+},{"dup":90}],197:[function(require,module,exports){
 'use strict';
 /*
  * Simple task queue to sequentialize actions. Assumes callbacks will eventually fire (once).
@@ -66873,7 +69153,7 @@ TaskQueue.prototype.finish = function () {
 
 module.exports = TaskQueue;
 
-},{"./utils":163}],162:[function(require,module,exports){
+},{"./utils":199}],198:[function(require,module,exports){
 'use strict';
 
 var upsert = require('pouchdb-upsert').upsert;
@@ -66881,7 +69161,7 @@ var upsert = require('pouchdb-upsert').upsert;
 module.exports = function (db, doc, diffFun) {
   return upsert.apply(db, [doc, diffFun]);
 };
-},{"pouchdb-upsert":164}],163:[function(require,module,exports){
+},{"pouchdb-upsert":195}],199:[function(require,module,exports){
 (function (process,global){
 'use strict';
 /* istanbul ignore if */
@@ -66990,172 +69270,46 @@ exports.MD5 = function (string) {
   }
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":46,"argsarray":131,"crypto":40,"inherits":135,"lie":139,"pouchdb-extend":157,"spark-md5":165}],164:[function(require,module,exports){
-(function (global){
-'use strict';
-
-var PouchPromise;
-/* istanbul ignore next */
-if (typeof window !== 'undefined' && window.PouchDB) {
-  PouchPromise = window.PouchDB.utils.Promise;
-} else {
-  PouchPromise = typeof global.Promise === 'function' ? global.Promise : require('lie');
-}
-
-// this is essentially the "update sugar" function from daleharvey/pouchdb#1388
-// the diffFun tells us what delta to apply to the doc.  it either returns
-// the doc, or false if it doesn't need to do an update after all
-function upsertInner(db, docId, diffFun) {
-  return new PouchPromise(function (fulfill, reject) {
-    if (typeof docId !== 'string') {
-      return reject(new Error('doc id is required'));
-    }
-
-    db.get(docId, function (err, doc) {
-      if (err) {
-        /* istanbul ignore next */
-        if (err.status !== 404) {
-          return reject(err);
-        }
-        doc = {};
-      }
-
-      // the user might change the _rev, so save it for posterity
-      var docRev = doc._rev;
-      var newDoc = diffFun(doc);
-
-      if (!newDoc) {
-        // if the diffFun returns falsy, we short-circuit as
-        // an optimization
-        return fulfill({updated: false, rev: docRev});
-      }
-
-      // users aren't allowed to modify these values,
-      // so reset them here
-      newDoc._id = docId;
-      newDoc._rev = docRev;
-      fulfill(tryAndPut(db, newDoc, diffFun));
-    });
-  });
-}
-
-function tryAndPut(db, doc, diffFun) {
-  return db.put(doc).then(function (res) {
-    return {
-      updated: true,
-      rev: res.rev
-    };
-  }, function (err) {
-    /* istanbul ignore next */
-    if (err.status !== 409) {
-      throw err;
-    }
-    return upsertInner(db, doc._id, diffFun);
-  });
-}
-
-exports.upsert = function upsert(docId, diffFun, cb) {
-  var db = this;
-  var promise = upsertInner(db, docId, diffFun);
-  if (typeof cb !== 'function') {
-    return promise;
-  }
-  promise.then(function (resp) {
-    cb(null, resp);
-  }, cb);
-};
-
-exports.putIfNotExists = function putIfNotExists(docId, doc, cb) {
-  var db = this;
-
-  if (typeof docId !== 'string') {
-    cb = doc;
-    doc = docId;
-    docId = doc._id;
-  }
-
-  var diffFun = function (existingDoc) {
-    if (existingDoc._rev) {
-      return false; // do nothing
-    }
-    return doc;
-  };
-
-  var promise = upsertInner(db, docId, diffFun);
-  if (typeof cb !== 'function') {
-    return promise;
-  }
-  promise.then(function (resp) {
-    cb(null, resp);
-  }, cb);
-};
-
-
-/* istanbul ignore next */
-if (typeof window !== 'undefined' && window.PouchDB) {
-  window.PouchDB.plugin(exports);
-}
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"lie":139}],165:[function(require,module,exports){
+},{"_process":45,"argsarray":172,"crypto":43,"inherits":173,"lie":177,"pouchdb-extend":194,"spark-md5":196}],200:[function(require,module,exports){
+arguments[4][195][0].apply(exports,arguments)
+},{"dup":195,"lie":204}],201:[function(require,module,exports){
+arguments[4][51][0].apply(exports,arguments)
+},{"dup":51}],202:[function(require,module,exports){
+arguments[4][52][0].apply(exports,arguments)
+},{"./INTERNAL":201,"./handlers":203,"./promise":205,"./reject":208,"./resolve":209,"dup":52}],203:[function(require,module,exports){
+arguments[4][53][0].apply(exports,arguments)
+},{"./resolveThenable":210,"./states":211,"./tryCatch":212,"dup":53}],204:[function(require,module,exports){
+arguments[4][54][0].apply(exports,arguments)
+},{"./all":202,"./promise":205,"./race":207,"./reject":208,"./resolve":209,"dup":54}],205:[function(require,module,exports){
+arguments[4][55][0].apply(exports,arguments)
+},{"./INTERNAL":201,"./queueItem":206,"./resolveThenable":210,"./states":211,"./unwrap":213,"dup":55}],206:[function(require,module,exports){
+arguments[4][56][0].apply(exports,arguments)
+},{"./handlers":203,"./unwrap":213,"dup":56}],207:[function(require,module,exports){
+arguments[4][57][0].apply(exports,arguments)
+},{"./INTERNAL":201,"./handlers":203,"./promise":205,"./reject":208,"./resolve":209,"dup":57}],208:[function(require,module,exports){
+arguments[4][58][0].apply(exports,arguments)
+},{"./INTERNAL":201,"./handlers":203,"./promise":205,"dup":58}],209:[function(require,module,exports){
+arguments[4][59][0].apply(exports,arguments)
+},{"./INTERNAL":201,"./handlers":203,"./promise":205,"dup":59}],210:[function(require,module,exports){
+arguments[4][60][0].apply(exports,arguments)
+},{"./handlers":203,"./tryCatch":212,"dup":60}],211:[function(require,module,exports){
+arguments[4][61][0].apply(exports,arguments)
+},{"dup":61}],212:[function(require,module,exports){
+arguments[4][62][0].apply(exports,arguments)
+},{"dup":62}],213:[function(require,module,exports){
+arguments[4][63][0].apply(exports,arguments)
+},{"./handlers":203,"dup":63,"immediate":214}],214:[function(require,module,exports){
+arguments[4][64][0].apply(exports,arguments)
+},{"./messageChannel":215,"./mutation.js":216,"./nextTick":43,"./stateChange":217,"./timeout":218,"dup":64}],215:[function(require,module,exports){
+arguments[4][65][0].apply(exports,arguments)
+},{"dup":65}],216:[function(require,module,exports){
+arguments[4][66][0].apply(exports,arguments)
+},{"dup":66}],217:[function(require,module,exports){
+arguments[4][67][0].apply(exports,arguments)
+},{"dup":67}],218:[function(require,module,exports){
+arguments[4][68][0].apply(exports,arguments)
+},{"dup":68}],219:[function(require,module,exports){
+arguments[4][90][0].apply(exports,arguments)
+},{"dup":90}],220:[function(require,module,exports){
 arguments[4][91][0].apply(exports,arguments)
-},{"dup":91}],166:[function(require,module,exports){
-arguments[4][92][0].apply(exports,arguments)
-},{"dup":92}],167:[function(require,module,exports){
-'use strict'
-
-var cssify = require('cssify')
- 
-cssify.byUrl('//cdn.rawgit.com/angular/bower-material/master/angular-material.css')
-cssify.byUrl('/main.css')
-
-
-window.PouchDB = require('pouchdb')
-window.PouchDB.plugin(require('pouchdb-authentication'))
-
-require('angular').module('app', [
-  require('angular-animate'),
-  require('angular-aria'),
-  require('angular-material'),
-  require('./ng-icons'),
-  require('angular-ui-router'),
-  require('angular-messages'),
-  require('./classrooms'),
-  require('./articles'),
-  require('./users')
-])
-.config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', function ($stateProvider, $urlRouterProvider, $mdThemingProvider) {
-  $urlRouterProvider.otherwise('/')
-  $stateProvider
-    .state('home', require('./components/home'))
-    .state('about', require('./components/about'))
-    .state('contact', require('./components/contact'))
-
-  $mdThemingProvider.theme('default')
-  .primaryPalette('indigo', {
-    'default': '500', // by default use shade 500 from the palette for primary intentions
-    'hue-1': '100', // use shade 100 for the <code>md-hue-1</code> class
-    'hue-2': '500', // use shade 500 for the <code>md-hue-2</code> class
-    'hue-3': '700' // use shade 700 for the <code>md-hue-3</code> class
-  })
-  // If you specify less than all of the keys, it will inherit from the
-  // default shades
-  .accentPalette('pink', {
-    'default': 'A200' // use shade A200 for default, and keep all other shades the same
-  });
-
-}])
-.directive('appNav', ['users', require('./components/app-nav')])
-.controller('AppController', ['$scope', 'users', AppController])
-.constant('dbName', 'https://bivit-dev.iriscouch.com/bivit')
-.constant('remoteUserDbName', 'https://bivit-dev.iriscouch.com/_users')
-//.factory('classrooms', ['pouchDb', require('./services/classrooms')])
-
-function AppController ($scope, users) {
-  $scope.showMenu = true;
-  $scope.toggle = function () {
-    $scope.showMenu = !$scope.showMenu;
-  }
-}
-
-},{"./articles":5,"./classrooms":12,"./components/about":15,"./components/app-nav":16,"./components/contact":17,"./components/home":18,"./ng-icons":19,"./users":24,"angular":39,"angular-animate":28,"angular-aria":30,"angular-material":33,"angular-messages":35,"angular-ui-router":37,"cssify":47,"pouchdb":123,"pouchdb-authentication":48}]},{},[167]);
+},{"dup":91}]},{},[21]);
