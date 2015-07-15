@@ -22,7 +22,7 @@
     <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
     <p class="classroomDiscriptionShow" ng-bind="classroom.description"></p>
 
-    <div ng-if='articles && articles[0] != null'>
+    <div ng-if="articles">
         <div class="pageTitle classroomsArticleTitle">Articles</div>
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
 
@@ -40,7 +40,7 @@
             </md-grid-list>
         </div>
     </div>
-    <div ng-if="!articles || articles[0] == null">
+    <div ng-if="!articles">
         <div class="pageTitle classroomsArticleTitle">Articles</div>
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider> 
         <div class="classroomsAddArticles">
