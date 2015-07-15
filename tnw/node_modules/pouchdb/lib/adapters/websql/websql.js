@@ -4,7 +4,6 @@ var utils = require('../../utils');
 var merge = require('../../merge');
 var errors = require('../../deps/errors');
 var parseHexString = require('../../deps/parse-hex');
-var binaryStringToBlob = require('../../deps/binary/binaryStringToBlob');
 
 var websqlConstants = require('./websql-constants');
 var websqlUtils = require('./websql-utils');
@@ -106,8 +105,7 @@ function WebSqlPouch(opts, callback) {
     description: api._name,
     size: size,
     location: opts.location,
-    createFromLocation: opts.createFromLocation,
-    androidDatabaseImplementation: opts.androidDatabaseImplementation
+    createFromLocation: opts.createFromLocation
   });
   if (!db) {
     return callback(errors.error(errors.UNKNOWN_ERROR));
@@ -844,9 +842,10 @@ function WebSqlPouch(opts, callback) {
       var data = item.escaped ? websqlUtils.unescapeBlob(item.body) :
         parseHexString(item.body, encoding);
       if (opts.encode) {
-        res = utils.btoa(data);
+        res = btoa(data);
       } else {
-        res = binaryStringToBlob(data, type);
+        data = utils.fixBinary(data);
+        res = utils.createBlob([data], {type: type});
       }
       callback(null, res);
     });

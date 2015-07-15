@@ -34,35 +34,6 @@ function yankError(callback) {
   };
 }
 
-// clean docs given to us by the user
-function cleanDocs(docs) {
-  for (var i = 0; i < docs.length; i++) {
-    var doc = docs[i];
-    if (doc._deleted) {
-      delete doc._attachments; // ignore atts for deleted docs
-    } else if (doc._attachments) {
-      // filter out extraneous keys from _attachments
-      var atts = Object.keys(doc._attachments);
-      for (var j = 0; j < atts.length; j++) {
-        var att = atts[j];
-        doc._attachments[att] = utils.pick(doc._attachments[att],
-          ['data', 'digest', 'content_type', 'revpos', 'stub']);
-      }
-    }
-  }
-}
-
-// compare two docs, first by _id then by _rev
-function compareByIdThenRev(a, b) {
-  var idCompare = utils.compare(a._id, b._id);
-  if (idCompare !== 0) {
-    return idCompare;
-  }
-  var aStart = a._revisions ? a._revisions.start : 0;
-  var bStart = b._revisions ? b._revisions.start : 0;
-  return utils.compare(aStart, bStart);
-}
-
 // for every node in a revision tree computes its distance from the closest
 // leaf
 function computeHeight(revs) {
@@ -120,34 +91,6 @@ function allDocsKeysQuery(api, opts, callback) {
   })).then(function (results) {
     finalResults.rows = results;
     return finalResults;
-  });
-}
-
-// all compaction is done in a queue, to avoid attaching
-// too many listeners at once
-function doNextCompaction(self) {
-  var task = self._compactionQueue[0];
-  var opts = task.opts;
-  var callback = task.callback;
-  self.get('_local/compaction').catch(function () {
-    return false;
-  }).then(function (doc) {
-    if (doc && doc.last_seq) {
-      opts.last_seq = doc.last_seq;
-    }
-    self._compact(opts, function (err, res) {
-      if (err) {
-        callback(err);
-      } else {
-        callback(null, res);
-      }
-      process.nextTick(function () {
-        self._compactionQueue.shift();
-        if (self._compactionQueue.length) {
-          doNextCompaction(self);
-        }
-      });
-    });
   });
 }
 
@@ -421,11 +364,17 @@ AbstractPouchDB.prototype.compact =
 
   opts = utils.clone(opts || {});
 
-  self._compactionQueue = self._compactionQueue || [];
-  self._compactionQueue.push({opts: opts, callback: callback});
-  if (self._compactionQueue.length === 1) {
-    doNextCompaction(self);
-  }
+  self.get('_local/compaction').catch(function () {
+    return false;
+  }).then(function (doc) {
+    if (typeof self._compact === 'function') {
+      if (doc && doc.last_seq) {
+        opts.last_seq = doc.last_seq;
+      }
+      return self._compact(opts, callback);
+    }
+
+  });
 });
 AbstractPouchDB.prototype._compact = function (opts, callback) {
   var self = this;
@@ -744,10 +693,22 @@ AbstractPouchDB.prototype.bulkDocs =
   if (!opts.new_edits && this.type() !== 'http') {
     // ensure revisions of the same doc are sorted, so that
     // the local adapter processes them correctly (#2935)
-    req.docs.sort(compareByIdThenRev);
+    req.docs.sort(function (a, b) {
+      var idCompare = utils.compare(a._id, b._id);
+      if (idCompare !== 0) {
+        return idCompare;
+      }
+      var aStart = a._revisions ? a._revisions.start : 0;
+      var bStart = b._revisions ? b._revisions.start : 0;
+      return utils.compare(aStart, bStart);
+    });
   }
 
-  cleanDocs(req.docs);
+  req.docs.forEach(function (doc) {
+    if (doc._deleted) {
+      delete doc._attachments; // ignore atts for deleted docs
+    }
+  });
 
   return this._bulkDocs(req, opts, function (err, res) {
     if (err) {

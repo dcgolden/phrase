@@ -72,7 +72,6 @@ function Changes(db, opts, callback) {
     if (oldOnChange) {
       self.removeListener('change', oldOnChange);
     }
-    db.removeListener('destroyed', onDestroy);
     opts.complete(null, {status: 'cancelled'});
   });
   this.then = promise.then.bind(promise);

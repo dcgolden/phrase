@@ -20,9 +20,6 @@ var utils = require('../../utils');
 var migrate = require('../../deps/migrate');
 var Deque = require("double-ended-queue");
 
-var readAsBinaryString = require('../../deps/binary/readAsBinaryString');
-var binaryStringToBlob = require('../../deps/binary/binaryStringToBlob');
-
 var LevelTransaction = require('./leveldb-transaction');
 
 var DOC_STORE = 'document-store';
@@ -356,7 +353,8 @@ function LevelPouch(opts, callback) {
         if (opts.encode) {
           data = utils.btoa(attach);
         } else {
-          data = binaryStringToBlob(attach, attachment.content_type);
+          data = utils.createBlob([utils.fixBinary(attach)],
+            {type: attachment.content_type});
         }
       } else {
         data = opts.encode ? utils.btoa(attach) : attach;
@@ -567,7 +565,7 @@ function LevelPouch(opts, callback) {
         } else if (!process.browser) {
           data = att.data;
         } else { // browser
-          readAsBinaryString(att.data,
+          utils.readAsBinaryString(att.data,
             onLoadEnd(docInfo, key, attachmentSaved));
           continue;
         }

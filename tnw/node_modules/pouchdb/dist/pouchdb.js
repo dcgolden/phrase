@@ -1,18 +1,17 @@
-//    PouchDB 3.6.0
+//    PouchDB 3.5.0
 //    
 //    (c) 2012-2015 Dale Harvey and the PouchDB team
 //    PouchDB may be freely distributed under the Apache license, version 2.0.
 //    For all details and documentation:
 //    http://pouchdb.com
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.PouchDB = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-(function (process){
 "use strict";
 
-var utils = _dereq_(48);
-var merge = _dereq_(37);
-var errors = _dereq_(24);
-var EventEmitter = _dereq_(52).EventEmitter;
-var upsert = _dereq_(33);
+var utils = _dereq_(36);
+var merge = _dereq_(31);
+var errors = _dereq_(19);
+var EventEmitter = _dereq_(40).EventEmitter;
+var upsert = _dereq_(27);
 var Changes = _dereq_(13);
 var Promise = utils.Promise;
 
@@ -40,35 +39,6 @@ function yankError(callback) {
       callback(null, results.length ? results[0]  : results);
     }
   };
-}
-
-// clean docs given to us by the user
-function cleanDocs(docs) {
-  for (var i = 0; i < docs.length; i++) {
-    var doc = docs[i];
-    if (doc._deleted) {
-      delete doc._attachments; // ignore atts for deleted docs
-    } else if (doc._attachments) {
-      // filter out extraneous keys from _attachments
-      var atts = Object.keys(doc._attachments);
-      for (var j = 0; j < atts.length; j++) {
-        var att = atts[j];
-        doc._attachments[att] = utils.pick(doc._attachments[att],
-          ['data', 'digest', 'content_type', 'revpos', 'stub']);
-      }
-    }
-  }
-}
-
-// compare two docs, first by _id then by _rev
-function compareByIdThenRev(a, b) {
-  var idCompare = utils.compare(a._id, b._id);
-  if (idCompare !== 0) {
-    return idCompare;
-  }
-  var aStart = a._revisions ? a._revisions.start : 0;
-  var bStart = b._revisions ? b._revisions.start : 0;
-  return utils.compare(aStart, bStart);
 }
 
 // for every node in a revision tree computes its distance from the closest
@@ -128,34 +98,6 @@ function allDocsKeysQuery(api, opts, callback) {
   })).then(function (results) {
     finalResults.rows = results;
     return finalResults;
-  });
-}
-
-// all compaction is done in a queue, to avoid attaching
-// too many listeners at once
-function doNextCompaction(self) {
-  var task = self._compactionQueue[0];
-  var opts = task.opts;
-  var callback = task.callback;
-  self.get('_local/compaction')["catch"](function () {
-    return false;
-  }).then(function (doc) {
-    if (doc && doc.last_seq) {
-      opts.last_seq = doc.last_seq;
-    }
-    self._compact(opts, function (err, res) {
-      if (err) {
-        callback(err);
-      } else {
-        callback(null, res);
-      }
-      process.nextTick(function () {
-        self._compactionQueue.shift();
-        if (self._compactionQueue.length) {
-          doNextCompaction(self);
-        }
-      });
-    });
   });
 }
 
@@ -429,11 +371,17 @@ AbstractPouchDB.prototype.compact =
 
   opts = utils.clone(opts || {});
 
-  self._compactionQueue = self._compactionQueue || [];
-  self._compactionQueue.push({opts: opts, callback: callback});
-  if (self._compactionQueue.length === 1) {
-    doNextCompaction(self);
-  }
+  self.get('_local/compaction')["catch"](function () {
+    return false;
+  }).then(function (doc) {
+    if (typeof self._compact === 'function') {
+      if (doc && doc.last_seq) {
+        opts.last_seq = doc.last_seq;
+      }
+      return self._compact(opts, callback);
+    }
+
+  });
 });
 AbstractPouchDB.prototype._compact = function (opts, callback) {
   var self = this;
@@ -752,10 +700,22 @@ AbstractPouchDB.prototype.bulkDocs =
   if (!opts.new_edits && this.type() !== 'http') {
     // ensure revisions of the same doc are sorted, so that
     // the local adapter processes them correctly (#2935)
-    req.docs.sort(compareByIdThenRev);
+    req.docs.sort(function (a, b) {
+      var idCompare = utils.compare(a._id, b._id);
+      if (idCompare !== 0) {
+        return idCompare;
+      }
+      var aStart = a._revisions ? a._revisions.start : 0;
+      var bStart = b._revisions ? b._revisions.start : 0;
+      return utils.compare(aStart, bStart);
+    });
   }
 
-  cleanDocs(req.docs);
+  req.docs.forEach(function (doc) {
+    if (doc._deleted) {
+      delete doc._attachments; // ignore atts for deleted docs
+    }
+  });
 
   return this._bulkDocs(req, opts, function (err, res) {
     if (err) {
@@ -829,44 +789,24 @@ AbstractPouchDB.prototype.destroy =
   });
 });
 
-}).call(this,_dereq_(53))
-},{"13":13,"24":24,"33":33,"37":37,"48":48,"52":52,"53":53}],2:[function(_dereq_,module,exports){
+},{"13":13,"19":19,"27":27,"31":31,"36":36,"40":40}],2:[function(_dereq_,module,exports){
 (function (process){
 "use strict";
 
 var CHANGES_BATCH_SIZE = 25;
 
 // according to http://stackoverflow.com/a/417184/680742,
-// the de facto URL length limit is 2000 characters.
+// the de factor URL length limit is 2000 characters.
 // but since most of our measurements don't take the full
 // URL into account, we fudge it a bit.
 // TODO: we could measure the full URL to enforce exactly 2000 chars
 var MAX_URL_LENGTH = 1800;
 
-var readAsBinaryString = _dereq_(22);
-var binaryStringToBlob = _dereq_(19);
-var utils = _dereq_(48);
-var Promise = utils.Promise;
-var clone = utils.clone;
-var base64 = _dereq_(17);
-var btoa = base64.btoa;
-var atob = base64.atob;
-var errors = _dereq_(24);
-var log = _dereq_(54)('pouchdb:http');
+var utils = _dereq_(36);
+var errors = _dereq_(19);
+var log = _dereq_(42)('pouchdb:http');
 var isBrowser = typeof process === 'undefined' || process.browser;
-var buffer = _dereq_(23);
-var createMultipart = _dereq_(27);
-
-function blobToBase64(blobOrBuffer) {
-  if (!isBrowser) {
-    return Promise.resolve(blobOrBuffer.toString('base64'));
-  }
-  return new Promise(function (resolve) {
-    readAsBinaryString(blobOrBuffer, function (bin) {
-      resolve(btoa(bin));
-    });
-  });
-}
+var buffer = _dereq_(18);
 
 function encodeDocId(id) {
   if (/^_design/.test(id)) {
@@ -880,15 +820,22 @@ function encodeDocId(id) {
 
 function preprocessAttachments(doc) {
   if (!doc._attachments || !Object.keys(doc._attachments)) {
-    return Promise.resolve();
+    return utils.Promise.resolve();
   }
 
-  return Promise.all(Object.keys(doc._attachments).map(function (key) {
+  return utils.Promise.all(Object.keys(doc._attachments).map(function (key) {
     var attachment = doc._attachments[key];
     if (attachment.data && typeof attachment.data !== 'string') {
-      return blobToBase64(attachment.data).then(function (b64) {
-        attachment.data = b64;
-      });
+      if (isBrowser) {
+        return new utils.Promise(function (resolve) {
+          utils.readAsBinaryString(attachment.data, function (binary) {
+            attachment.data = utils.btoa(binary);
+            resolve();
+          });
+        });
+      } else {
+        attachment.data = attachment.data.toString('base64');
+      }
     }
   }));
 }
@@ -921,12 +868,12 @@ function getHost(name, opts) {
     // except for the database name) with '/'s
     uri.path = parts.join('/');
     opts = opts || {};
-    opts = clone(opts);
+    opts = utils.clone(opts);
     uri.headers = opts.headers || (opts.ajax && opts.ajax.headers) || {};
 
     if (opts.auth || uri.auth) {
       var nAuth = opts.auth || uri.auth;
-      var token = btoa(nAuth.username + ':' + nAuth.password);
+      var token = utils.btoa(nAuth.username + ':' + nAuth.password);
       uri.headers.Authorization = 'Basic ' + token;
     }
 
@@ -977,38 +924,23 @@ function HttpPouch(opts, callback) {
   var dbUrl = genDBUrl(host, '');
 
   api.getUrl = function () {return dbUrl; };
-  api.getHeaders = function () {return clone(host.headers); };
+  api.getHeaders = function () {return utils.clone(host.headers); };
 
   var ajaxOpts = opts.ajax || {};
-  opts = clone(opts);
+  opts = utils.clone(opts);
   function ajax(options, callback) {
-    var reqOpts = utils.extend(true, clone(ajaxOpts), options);
+    var reqOpts = utils.extend(true, utils.clone(ajaxOpts), options);
     log(reqOpts.method + ' ' + reqOpts.url);
     return utils.ajax(reqOpts, callback);
   }
 
-  function ajaxPromise(opts) {
-    return new Promise(function (resolve, reject) {
-      ajax(opts, function (err, res) {
-        if (err) {
-          return reject(err);
-        }
-        resolve(res);
-      });
-    });
-  }
-
   // Create a new CouchDB database based on the given opts
   var createDB = function () {
-    ajax({
-      headers: clone(host.headers),
-      method: 'PUT',
-      url: dbUrl
-    }, function (err) {
+    ajax({headers: host.headers, method: 'PUT', url: dbUrl}, function (err) {
       // If we get an "Unauthorized" error
       if (err && err.status === 401) {
         // Test if the database already exists
-        ajax({headers: clone(host.headers), method: 'HEAD', url: dbUrl},
+        ajax({headers: host.headers, method: 'HEAD', url: dbUrl},
              function (err) {
           // If there is still an error
           if (err) {
@@ -1032,11 +964,7 @@ function HttpPouch(opts, callback) {
   };
 
   if (!opts.skipSetup) {
-    ajax({
-      headers: clone(host.headers),
-      method: 'GET',
-      url: dbUrl
-    }, function (err) {
+    ajax({headers: host.headers, method: 'GET', url: dbUrl}, function (err) {
       //check if the db exists
       if (err) {
         if (err.status === 404) {
@@ -1060,13 +988,10 @@ function HttpPouch(opts, callback) {
 
   api.id = utils.adapterFun('id', function (callback) {
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'GET',
       url: genUrl(host, '')
     }, function (err, result) {
-      if (err) {
-        return callback(err);
-      }
       var uuid = (result && result.uuid) ?
         result.uuid + host.db : genDBUrl(host, '');
       callback(null, uuid);
@@ -1086,9 +1011,9 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = clone(opts);
+    opts = utils.clone(opts);
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       url: genDBUrl(host, '_compact'),
       method: 'POST'
     }, function () {
@@ -1113,7 +1038,7 @@ function HttpPouch(opts, callback) {
   //    version: The version of CouchDB it is running
   api._info = function (callback) {
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'GET',
       url: genDBUrl(host, '')
     }, function (err, res) {
@@ -1135,7 +1060,10 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = clone(opts);
+    opts = utils.clone(opts);
+    if (opts.auto_encode === undefined) {
+      opts.auto_encode = true;
+    }
 
     // List of parameters to add to the GET request
     var params = [];
@@ -1169,6 +1097,13 @@ function HttpPouch(opts, callback) {
       params.push('open_revs=' + opts.open_revs);
     }
 
+    // If it exists, add the opts.attachments value to the list of parameters.
+    // If attachments=true the resulting JSON will include the base64-encoded
+    // contents in the "data" property of each attachment.
+    if (opts.attachments) {
+      params.push('attachments=true');
+    }
+
     // If it exists, add the opts.rev value to the list of parameters.
     // If rev is given a revision number then get the specified revision.
     if (opts.rev) {
@@ -1186,64 +1121,43 @@ function HttpPouch(opts, callback) {
     params = params.join('&');
     params = params === '' ? '' : '?' + params;
 
-    id = encodeDocId(id);
+    if (opts.auto_encode) {
+      id = encodeDocId(id);
+    }
 
     // Set the options for the ajax call
     var options = {
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'GET',
       url: genDBUrl(host, id + params)
     };
     var getRequestAjaxOpts = opts.ajax || {};
     utils.extend(true, options, getRequestAjaxOpts);
 
-    function fetchAttachments(doc) {
-      var atts = doc._attachments;
-      var filenames = atts && Object.keys(atts);
-      if (!atts || !filenames.length) {
-        return;
-      }
-      // we fetch these manually in separate XHRs, because
-      // Sync Gateway would normally send it back as multipart/mixed,
-      // which we cannot parse. Also, this is more efficient than
-      // receiving attachments as base64-encoded strings.
-      return Promise.all(filenames.map(function (filename) {
-        var att = atts[filename];
-        var path = encodeDocId(doc._id) + '/' + encodeAttachmentId(filename) +
-          '?rev=' + doc._rev;
-        return ajaxPromise({
-          headers: clone(host.headers),
-          method: 'GET',
-          url: genDBUrl(host, path),
-          binary: true
-        }).then(blobToBase64).then(function (b64) {
-          delete att.stub;
-          delete att.length;
-          att.data = b64;
-        });
-      }));
+    // If the given id contains at least one '/' and the part before the '/'
+    // is NOT "_design" and is NOT "_local"
+    // OR
+    // If the given id contains at least two '/' and the part before the first
+    // '/' is "_design".
+    // TODO This second condition seems strange since if parts[0] === '_design'
+    // then we already know that parts[0] !== '_local'.
+    var parts = id.split('/');
+    if ((parts.length > 1 && parts[0] !== '_design' && parts[0] !== '_local') ||
+        (parts.length > 2 && parts[0] === '_design' && parts[0] !== '_local')) {
+      // Binary is expected back from the server
+      options.binary = true;
     }
 
-    function fetchAllAttachments(docOrDocs) {
-      if (Array.isArray(docOrDocs)) {
-        return Promise.all(docOrDocs.map(function (doc) {
-          if (doc.ok) {
-            return fetchAttachments(doc.ok);
-          }
-        }));
+    // Get the document
+    ajax(options, function (err, doc, xhr) {
+      // If the document does not exist, send an error to the callback
+      if (err) {
+        return callback(err);
       }
-      return fetchAttachments(docOrDocs);
-    }
 
-    ajaxPromise(options).then(function (res) {
-      return Promise.resolve().then(function () {
-        if (opts.attachments) {
-          return fetchAllAttachments(res);
-        }
-      }).then(function () {
-        callback(null, res);
-      });
-    })["catch"](callback);
+      // Send the document to the callback
+      callback(null, doc, xhr);
+    });
   });
 
   // Delete the document given by doc from the database given by host.
@@ -1276,7 +1190,7 @@ function HttpPouch(opts, callback) {
 
     // Delete the document
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'DELETE',
       url: genDBUrl(host, encodeDocId(doc._id)) + '?rev=' + rev
     }, callback);
@@ -1294,15 +1208,15 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    var params = opts.rev ? ('?rev=' + opts.rev) : '';
-    var url = genDBUrl(host, encodeDocId(docId)) + '/' +
-      encodeAttachmentId(attachmentId) + params;
-    ajax({
-      headers: clone(host.headers),
-      method: 'GET',
-      url: url,
-      binary: true
-    }, callback);
+    opts = utils.clone(opts);
+    if (opts.auto_encode === undefined) {
+      opts.auto_encode = true;
+    }
+    if (opts.auto_encode) {
+      docId = encodeDocId(docId);
+    }
+    opts.auto_encode = false;
+    api.get(docId + '/' + encodeAttachmentId(attachmentId), opts, callback);
   });
 
   // Remove the attachment given by the id and rev
@@ -1314,7 +1228,7 @@ function HttpPouch(opts, callback) {
       encodeAttachmentId(attachmentId)) + '?rev=' + rev;
 
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'DELETE',
       url: url
     }, callback);
@@ -1346,21 +1260,21 @@ function HttpPouch(opts, callback) {
     if (typeof blob === 'string') {
       var binary;
       try {
-        binary = atob(blob);
+        binary = utils.atob(blob);
       } catch (err) {
         // it's not base64-encoded, so throw error
         return callback(errors.error(errors.BAD_ARG,
                         'Attachments need to be base64 encoded'));
       }
       if (isBrowser) {
-        blob = binaryStringToBlob(binary, type);
+        blob = utils.createBlob([utils.fixBinary(binary)], {type: type});
       } else {
         blob = binary ? new buffer(binary, 'binary') : '';
       }
     }
 
     var opts = {
-      headers: clone(host.headers),
+      headers: utils.clone(host.headers),
       method: 'PUT',
       url: url,
       processData: false,
@@ -1383,7 +1297,7 @@ function HttpPouch(opts, callback) {
       return callback(errors.error(errors.NOT_AN_OBJECT));
     }
 
-    doc = clone(doc);
+    doc = utils.clone(doc);
 
     preprocessAttachments(doc).then(function () {
       while (true) {
@@ -1395,7 +1309,7 @@ function HttpPouch(opts, callback) {
         } else if (temptype === "string" && id && !('_rev' in doc)) {
           doc._rev = temp;
         } else if (temptype === "object") {
-          opts = clone(temp);
+          opts = utils.clone(temp);
         }
         if (!args.length) {
           break;
@@ -1423,38 +1337,25 @@ function HttpPouch(opts, callback) {
         params = '?' + params;
       }
 
-      var ajaxOpts = {
-        headers: clone(host.headers),
+      // Add the document
+      ajax({
+        headers: host.headers,
         method: 'PUT',
         url: genDBUrl(host, encodeDocId(doc._id)) + params,
         body: doc
-      };
-
-      return Promise.resolve().then(function () {
-        var hasNonStubAttachments = doc._attachments &&
-          Object.keys(doc._attachments).filter(function (att) {
-            return !doc._attachments[att].stub;
-          }).length;
-        if (hasNonStubAttachments) {
-          // use multipart/related for more efficient attachment uploading
-          var multipart = createMultipart(doc);
-          ajaxOpts.body = multipart.body;
-          ajaxOpts.processData = false;
-          ajaxOpts.headers = utils.extend(ajaxOpts.headers, multipart.headers);
+      }, function (err, res) {
+        if (err) {
+          return callback(err);
         }
-      })["catch"](function () {
-        throw new Error('Did you forget to base64-encode an attachment?');
-      }).then(function () {
-        return ajaxPromise(ajaxOpts);
-      }).then(function (res) {
-        res.ok = true; // smooths out cloudant not doing this
+        res.ok = true;
         callback(null, res);
       });
     })["catch"](callback);
+
   }));
 
   // Add the document given by doc (in JSON string format) to the database
-  // given by host. This does not assume that doc is a new document
+  // given by host. This does not assume that doc is a new document 
   // (i.e. does not have a _id or a _rev field.)
   api.post = utils.adapterFun('post', function (doc, opts, callback) {
     // If no options were given, set the callback to be the second parameter
@@ -1462,7 +1363,7 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = clone(opts);
+    opts = utils.clone(opts);
     if (typeof doc !== 'object') {
       return callback(errors.error(errors.NOT_AN_OBJECT));
     }
@@ -1490,10 +1391,10 @@ function HttpPouch(opts, callback) {
       req.new_edits = opts.new_edits;
     }
 
-    Promise.all(req.docs.map(preprocessAttachments)).then(function () {
+    utils.Promise.all(req.docs.map(preprocessAttachments)).then(function () {
       // Update/create the documents
       ajax({
-        headers: clone(host.headers),
+        headers: host.headers,
         method: 'POST',
         url: genDBUrl(host, '_bulk_docs'),
         body: req
@@ -1516,7 +1417,7 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = clone(opts);
+    opts = utils.clone(opts);
     // List of parameters to add to the GET request
     var params = [];
     var body;
@@ -1603,7 +1504,7 @@ function HttpPouch(opts, callback) {
 
     // Get the document listing
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: method,
       url: genDBUrl(host, '_all_docs' + params),
       body: body
@@ -1620,7 +1521,7 @@ function HttpPouch(opts, callback) {
     // set of changes to return and attempting to process them at once
     var batchSize = 'batch_size' in opts ? opts.batch_size : CHANGES_BATCH_SIZE;
 
-    opts = clone(opts);
+    opts = utils.clone(opts);
     opts.timeout = opts.timeout || 30 * 1000;
 
     // We give a 5 second buffer for CouchDB changes to respond with
@@ -1734,7 +1635,7 @@ function HttpPouch(opts, callback) {
 
       // Set the options for the ajax call
       var xhrOpts = {
-        headers: clone(host.headers),
+        headers: host.headers,
         method: method,
         url: genDBUrl(host, '_changes' + paramStr),
         // _changes can take a long time to generate, especially when filtered
@@ -1887,7 +1788,7 @@ function HttpPouch(opts, callback) {
       source.close();
       utils.call(opts.complete, err);
     }
-
+    
   };
 
   api._useSSE = false;
@@ -1906,7 +1807,7 @@ function HttpPouch(opts, callback) {
 
     // Get the missing document/revision IDs
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'POST',
       url: genDBUrl(host, '_revs_diff'),
       body: JSON.stringify(req)
@@ -1921,7 +1822,7 @@ function HttpPouch(opts, callback) {
     ajax({
       url: genDBUrl(host, ''),
       method: 'DELETE',
-      headers: clone(host.headers)
+      headers: host.headers
     }, function (err, resp) {
       if (err) {
         api.emit('error', err);
@@ -1942,12 +1843,12 @@ HttpPouch.valid = function () {
 
 module.exports = HttpPouch;
 
-}).call(this,_dereq_(53))
-},{"17":17,"19":19,"22":22,"23":23,"24":24,"27":27,"48":48,"53":53,"54":54}],3:[function(_dereq_,module,exports){
+}).call(this,_dereq_(41))
+},{"18":18,"19":19,"36":36,"41":41,"42":42}],3:[function(_dereq_,module,exports){
 'use strict';
 
-var merge = _dereq_(37);
-var errors = _dereq_(24);
+var merge = _dereq_(31);
+var errors = _dereq_(19);
 var idbUtils = _dereq_(7);
 var idbConstants = _dereq_(6);
 
@@ -2128,10 +2029,10 @@ function idbAllDocs(opts, api, idb, callback) {
 }
 
 module.exports = idbAllDocs;
-},{"24":24,"37":37,"6":6,"7":7}],4:[function(_dereq_,module,exports){
+},{"19":19,"31":31,"6":6,"7":7}],4:[function(_dereq_,module,exports){
 'use strict';
 
-var utils = _dereq_(48);
+var utils = _dereq_(36);
 var idbConstants = _dereq_(6);
 var DETECT_BLOB_SUPPORT_STORE = idbConstants.DETECT_BLOB_SUPPORT_STORE;
 
@@ -2192,11 +2093,11 @@ function checkBlobSupport(txn, idb) {
 }
 
 module.exports = checkBlobSupport;
-},{"48":48,"6":6}],5:[function(_dereq_,module,exports){
+},{"36":36,"6":6}],5:[function(_dereq_,module,exports){
 'use strict';
 
-var utils = _dereq_(48);
-var errors = _dereq_(24);
+var utils = _dereq_(36);
+var errors = _dereq_(19);
 var idbUtils = _dereq_(7);
 var idbConstants = _dereq_(6);
 
@@ -2555,7 +2456,7 @@ function idbBulkDocs(req, opts, api, idb, Changes, callback) {
 }
 
 module.exports = idbBulkDocs;
-},{"24":24,"48":48,"6":6,"7":7}],6:[function(_dereq_,module,exports){
+},{"19":19,"36":36,"6":6,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 // IndexedDB requires a versioned database structure, so we use the
@@ -2586,15 +2487,9 @@ exports.DETECT_BLOB_SUPPORT_STORE = 'detect-blob-support';
 (function (process){
 'use strict';
 
-var errors = _dereq_(24);
-var utils = _dereq_(48);
-var base64 = _dereq_(17);
-var atob = base64.atob;
-var btoa = base64.btoa;
+var errors = _dereq_(19);
+var utils = _dereq_(36);
 var constants = _dereq_(6);
-var readAsBinaryString = _dereq_(22);
-var binaryStringToArrayBuffer =
-  _dereq_(18);
 
 function tryCode(fun, that, args) {
   try {
@@ -2681,8 +2576,8 @@ exports.readBlobData = function (body, type, encode, callback) {
     if (!body) {
       callback('');
     } else if (typeof body !== 'string') { // we have blob support
-      readAsBinaryString(body, function (binary) {
-        callback(btoa(binary));
+      utils.readAsBinaryString(body, function (binary) {
+        callback(utils.btoa(binary));
       });
     } else { // no blob support
       callback(body);
@@ -2693,7 +2588,7 @@ exports.readBlobData = function (body, type, encode, callback) {
     } else if (typeof body !== 'string') { // we have blob support
       callback(body);
     } else { // no blob support
-      body = binaryStringToArrayBuffer(atob(body));
+      body = utils.fixBinary(atob(body));
       callback(utils.createBlob([body], {type: type}));
     }
   }
@@ -2833,14 +2728,14 @@ exports.openTransactionSafely = function (idb, stores, mode) {
     };
   }
 };
-}).call(this,_dereq_(53))
-},{"17":17,"18":18,"22":22,"24":24,"48":48,"53":53,"6":6}],8:[function(_dereq_,module,exports){
+}).call(this,_dereq_(41))
+},{"19":19,"36":36,"41":41,"6":6}],8:[function(_dereq_,module,exports){
 (function (process){
 'use strict';
 
-var utils = _dereq_(48);
-var merge = _dereq_(37);
-var errors = _dereq_(24);
+var utils = _dereq_(36);
+var merge = _dereq_(31);
+var errors = _dereq_(19);
 var idbUtils = _dereq_(7);
 var idbConstants = _dereq_(6);
 var idbBulkDocs = _dereq_(5);
@@ -3788,12 +3683,12 @@ IdbPouch.Changes = new utils.Changes();
 
 module.exports = IdbPouch;
 
-}).call(this,_dereq_(53))
-},{"24":24,"3":3,"37":37,"4":4,"48":48,"5":5,"53":53,"6":6,"7":7}],9:[function(_dereq_,module,exports){
+}).call(this,_dereq_(41))
+},{"19":19,"3":3,"31":31,"36":36,"4":4,"41":41,"5":5,"6":6,"7":7}],9:[function(_dereq_,module,exports){
 'use strict';
 
-var utils = _dereq_(48);
-var errors = _dereq_(24);
+var utils = _dereq_(36);
+var errors = _dereq_(19);
 
 var websqlUtils = _dereq_(11);
 var websqlConstants = _dereq_(10);
@@ -4114,7 +4009,7 @@ function websqlBulkDocs(req, opts, api, db, Changes, callback) {
 
 module.exports = websqlBulkDocs;
 
-},{"10":10,"11":11,"24":24,"48":48}],10:[function(_dereq_,module,exports){
+},{"10":10,"11":11,"19":19,"36":36}],10:[function(_dereq_,module,exports){
 'use strict';
 
 function quote(str) {
@@ -4141,8 +4036,8 @@ exports.ATTACH_AND_SEQ_STORE = quote('attach-seq-store');
 },{}],11:[function(_dereq_,module,exports){
 'use strict';
 
-var utils = _dereq_(48);
-var errors = _dereq_(24);
+var utils = _dereq_(36);
+var errors = _dereq_(19);
 
 var websqlConstants = _dereq_(10);
 
@@ -4367,14 +4262,13 @@ module.exports = {
   openDB: openDB,
   valid: valid
 };
-},{"10":10,"24":24,"48":48}],12:[function(_dereq_,module,exports){
+},{"10":10,"19":19,"36":36}],12:[function(_dereq_,module,exports){
 'use strict';
 
-var utils = _dereq_(48);
-var merge = _dereq_(37);
-var errors = _dereq_(24);
-var parseHexString = _dereq_(29);
-var binaryStringToBlob = _dereq_(19);
+var utils = _dereq_(36);
+var merge = _dereq_(31);
+var errors = _dereq_(19);
+var parseHexString = _dereq_(23);
 
 var websqlConstants = _dereq_(10);
 var websqlUtils = _dereq_(11);
@@ -4476,8 +4370,7 @@ function WebSqlPouch(opts, callback) {
     description: api._name,
     size: size,
     location: opts.location,
-    createFromLocation: opts.createFromLocation,
-    androidDatabaseImplementation: opts.androidDatabaseImplementation
+    createFromLocation: opts.createFromLocation
   });
   if (!db) {
     return callback(errors.error(errors.UNKNOWN_ERROR));
@@ -5214,9 +5107,10 @@ function WebSqlPouch(opts, callback) {
       var data = item.escaped ? websqlUtils.unescapeBlob(item.body) :
         parseHexString(item.body, encoding);
       if (opts.encode) {
-        res = utils.btoa(data);
+        res = btoa(data);
       } else {
-        res = binaryStringToBlob(data, type);
+        data = utils.fixBinary(data);
+        res = utils.createBlob([data], {type: type});
       }
       callback(null, res);
     });
@@ -5377,14 +5271,14 @@ WebSqlPouch.Changes = new utils.Changes();
 
 module.exports = WebSqlPouch;
 
-},{"10":10,"11":11,"19":19,"24":24,"29":29,"37":37,"48":48,"9":9}],13:[function(_dereq_,module,exports){
+},{"10":10,"11":11,"19":19,"23":23,"31":31,"36":36,"9":9}],13:[function(_dereq_,module,exports){
 'use strict';
-var utils = _dereq_(48);
-var merge = _dereq_(37);
-var errors = _dereq_(24);
-var EE = _dereq_(52).EventEmitter;
-var evalFilter = _dereq_(35);
-var evalView = _dereq_(36);
+var utils = _dereq_(36);
+var merge = _dereq_(31);
+var errors = _dereq_(19);
+var EE = _dereq_(40).EventEmitter;
+var evalFilter = _dereq_(29);
+var evalView = _dereq_(30);
 module.exports = Changes;
 utils.inherits(Changes, EE);
 
@@ -5452,7 +5346,6 @@ function Changes(db, opts, callback) {
     if (oldOnChange) {
       self.removeListener('change', oldOnChange);
     }
-    db.removeListener('destroyed', onDestroy);
     opts.complete(null, {status: 'cancelled'});
   });
   this.then = promise.then.bind(promise);
@@ -5634,14 +5527,117 @@ Changes.prototype.filterChanges = function (opts) {
     });
   }
 };
-},{"24":24,"35":35,"36":36,"37":37,"48":48,"52":52}],14:[function(_dereq_,module,exports){
+},{"19":19,"29":29,"30":30,"31":31,"36":36,"40":40}],14:[function(_dereq_,module,exports){
+'use strict';
+
+var Promise = _dereq_(25);
+var explain404 = _dereq_(20);
+var pouchCollate = _dereq_(64);
+var collate = pouchCollate.collate;
+
+function updateCheckpoint(db, id, checkpoint, returnValue) {
+  return db.get(id)["catch"](function (err) {
+    if (err.status === 404) {
+      if (db.type() === 'http') {
+        explain404(
+          'PouchDB is just checking if a remote checkpoint exists.');
+      }
+      return {_id: id};
+    }
+    throw err;
+  }).then(function (doc) {
+    if (returnValue.cancelled) {
+      return;
+    }
+    doc.last_seq = checkpoint;
+    return db.put(doc)["catch"](function (err) {
+      if (err.status === 409) {
+        // retry; someone is trying to write a checkpoint simultaneously
+        return updateCheckpoint(db, id, checkpoint, returnValue);
+      }
+      throw err;
+    });
+  });
+}
+
+function Checkpointer(src, target, id, returnValue) {
+  this.src = src;
+  this.target = target;
+  this.id = id;
+  this.returnValue = returnValue;
+}
+
+Checkpointer.prototype.writeCheckpoint = function (checkpoint) {
+  var self = this;
+  return this.updateTarget(checkpoint).then(function () {
+    return self.updateSource(checkpoint);
+  });
+};
+
+Checkpointer.prototype.updateTarget = function (checkpoint) {
+  return updateCheckpoint(this.target, this.id, checkpoint, this.returnValue);
+};
+
+Checkpointer.prototype.updateSource = function (checkpoint) {
+  var self = this;
+  if (this.readOnlySource) {
+    return Promise.resolve(true);
+  }
+  return updateCheckpoint(this.src, this.id, checkpoint, this.returnValue)[
+    "catch"](function (err) {
+      var isForbidden = typeof err.status === 'number' &&
+        Math.floor(err.status / 100) === 4;
+      if (isForbidden) {
+        self.readOnlySource = true;
+        return true;
+      }
+      throw err;
+    });
+};
+
+Checkpointer.prototype.getCheckpoint = function () {
+  var self = this;
+  return self.target.get(self.id).then(function (targetDoc) {
+    return self.src.get(self.id).then(function (sourceDoc) {
+      if (collate(targetDoc.last_seq, sourceDoc.last_seq) === 0) {
+        return sourceDoc.last_seq;
+      }
+      return 0;
+    }, function (err) {
+      if (err.status === 404 && targetDoc.last_seq) {
+        return self.src.put({
+          _id: self.id,
+          last_seq: 0
+        }).then(function () {
+          return 0;
+        }, function (err) {
+          if (err.status === 401) {
+            self.readOnlySource = true;
+            return targetDoc.last_seq;
+          }
+          return 0;
+        });
+      }
+      throw err;
+    });
+  })["catch"](function (err) {
+    if (err.status !== 404) {
+      throw err;
+    }
+    return 0;
+  });
+};
+
+module.exports = Checkpointer;
+
+},{"20":20,"25":25,"64":64}],15:[function(_dereq_,module,exports){
 (function (process,global){
 /*globals cordova */
 "use strict";
 
 var Adapter = _dereq_(1);
-var utils = _dereq_(48);
-var TaskQueue = _dereq_(47);
+var utils = _dereq_(36);
+var TaskQueue = _dereq_(35);
 var Promise = utils.Promise;
 
 function defaultCallback(err) {
@@ -5793,20 +5789,20 @@ function PouchDB(name, opts, callback) {
   self["catch"] = promise["catch"].bind(promise);
 }
 
-PouchDB.debug = _dereq_(54);
+PouchDB.debug = _dereq_(42);
 
 module.exports = PouchDB;
 
-}).call(this,_dereq_(53),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"1":1,"47":47,"48":48,"53":53,"54":54}],15:[function(_dereq_,module,exports){
+}).call(this,_dereq_(41),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"1":1,"35":35,"36":36,"41":41,"42":42}],16:[function(_dereq_,module,exports){
 (function (process){
 "use strict";
 
-var request = _dereq_(32);
+var request = _dereq_(26);
 
-var buffer = _dereq_(23);
-var errors = _dereq_(24);
-var utils = _dereq_(48);
+var buffer = _dereq_(18);
+var errors = _dereq_(19);
+var utils = _dereq_(36);
 
 function ajax(options, adapterCallback) {
 
@@ -5938,84 +5934,14 @@ function ajax(options, adapterCallback) {
 
 module.exports = ajax;
 
-}).call(this,_dereq_(53))
-},{"23":23,"24":24,"32":32,"48":48,"53":53}],16:[function(_dereq_,module,exports){
-'use strict';
-
-//Can't find original post, but this is close
-//http://stackoverflow.com/questions/6965107/ (continues on next line)
-//converting-between-strings-and-arraybuffers
-module.exports = function (buffer) {
-  var binary = '';
-  var bytes = new Uint8Array(buffer);
-  var length = bytes.byteLength;
-  for (var i = 0; i < length; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return binary;
-};
-},{}],17:[function(_dereq_,module,exports){
-'use strict';
-
-var buffer = _dereq_(23);
-
-if (typeof atob === 'function') {
-  exports.atob = function (str) {
-    /* global atob */
-    return atob(str);
-  };
-} else {
-  exports.atob = function (str) {
-    var base64 = new buffer(str, 'base64');
-    // Node.js will just skip the characters it can't encode instead of
-    // throwing and exception
-    if (base64.toString('base64') !== str) {
-      throw ("Cannot base64 encode full string");
-    }
-    return base64.toString('binary');
-  };
-}
-
-if (typeof btoa === 'function') {
-  exports.btoa = function (str) {
-    /* global btoa */
-    return btoa(str);
-  };
-} else {
-  exports.btoa = function (str) {
-    return new buffer(str, 'binary').toString('base64');
-  };
-}
-},{"23":23}],18:[function(_dereq_,module,exports){
-'use strict';
-
-// From http://stackoverflow.com/questions/14967647/ (continues on next line)
-// encode-decode-image-with-base64-breaks-image (2013-04-21)
-module.exports = function (bin) {
-  var length = bin.length;
-  var buf = new ArrayBuffer(length);
-  var arr = new Uint8Array(buf);
-  for (var i = 0; i < length; i++) {
-    arr[i] = bin.charCodeAt(i);
-  }
-  return buf;
-};
-},{}],19:[function(_dereq_,module,exports){
-'use strict';
-
-var createBlob = _dereq_(20);
-var binaryStringToArrayBuffer = _dereq_(18);
-
-module.exports = function binaryStringToBlob(binString, type) {
-  return createBlob([binaryStringToArrayBuffer(binString)], {type: type});
-};
-},{"18":18,"20":20}],20:[function(_dereq_,module,exports){
+}).call(this,_dereq_(41))
+},{"18":18,"19":19,"26":26,"36":36,"41":41}],17:[function(_dereq_,module,exports){
 (function (global){
 "use strict";
 
-// Abstracts constructing a Blob object, so it also works in older
-// browsers that don't support the native Blob constructor (e.g.
-// old QtWebKit versions, Android < 4.4).
+//Abstracts constructing a Blob object, so it also works in older
+//browsers that don't support the native Blob constructor. (i.e.
+//old QtWebKit versions, at least).
 function createBlob(parts, properties) {
   parts = parts || [];
   properties = properties || {};
@@ -6041,47 +5967,13 @@ module.exports = createBlob;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],21:[function(_dereq_,module,exports){
-'use strict';
-
-// simplified API. universal browser support is assumed
-module.exports = function (blob, callback) {
-  var reader = new FileReader();
-  reader.onloadend = function (e) {
-    var result = e.target.result || new ArrayBuffer(0);
-    callback(result);
-  };
-  reader.readAsArrayBuffer(blob);
-};
-},{}],22:[function(_dereq_,module,exports){
-'use strict';
-
-var arrayBufferToBinaryString = _dereq_(16);
-
-// shim for browsers that don't support it
-module.exports = function (blob, callback) {
-  var reader = new FileReader();
-  var hasBinaryString = typeof reader.readAsBinaryString === 'function';
-  reader.onloadend = function (e) {
-    var result = e.target.result || '';
-    if (hasBinaryString) {
-      return callback(result);
-    }
-    callback(arrayBufferToBinaryString(result));
-  };
-  if (hasBinaryString) {
-    reader.readAsBinaryString(blob);
-  } else {
-    reader.readAsArrayBuffer(blob);
-  }
-};
-},{"16":16}],23:[function(_dereq_,module,exports){
+},{}],18:[function(_dereq_,module,exports){
 // hey guess what, we don't need this in the browser
 module.exports = {};
-},{}],24:[function(_dereq_,module,exports){
+},{}],19:[function(_dereq_,module,exports){
 "use strict";
 
-var inherits = _dereq_(57);
+var inherits = _dereq_(45);
 inherits(PouchError, Error);
 
 function PouchError(opts) {
@@ -6340,7 +6232,7 @@ exports.generateErrorFromResponse = function (res) {
   return error;
 };
 
-},{"57":57}],25:[function(_dereq_,module,exports){
+},{"45":45}],20:[function(_dereq_,module,exports){
 (function (process,global){
 'use strict';
 
@@ -6353,33 +6245,37 @@ function explain404(str) {
 }
 
 module.exports = explain404;
-}).call(this,_dereq_(53),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"53":53}],26:[function(_dereq_,module,exports){
+}).call(this,_dereq_(41),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"41":41}],21:[function(_dereq_,module,exports){
 (function (process,global){
 'use strict';
 
-var base64 = _dereq_(17);
-var crypto = _dereq_(51);
-var Md5 = _dereq_(87);
+var crypto = _dereq_(39);
+var Md5 = _dereq_(75);
 var setImmediateShim = global.setImmediate || global.setTimeout;
 var MD5_CHUNK_SIZE = 32768;
 
 // convert a 64-bit int to a binary string
 function intToString(int) {
-  return String.fromCharCode(int & 0xff) +
-    String.fromCharCode((int >>> 8) & 0xff) +
-    String.fromCharCode((int >>> 16) & 0xff) +
-    String.fromCharCode((int >>> 24) & 0xff);
+  var bytes = [
+    (int & 0xff),
+    ((int >>> 8) & 0xff),
+    ((int >>> 16) & 0xff),
+    ((int >>> 24) & 0xff)
+  ];
+  return bytes.map(function (byte) {
+    return String.fromCharCode(byte);
+  }).join('');
 }
 
 // convert an array of 64-bit ints into
 // a base64-encoded string
 function rawToBase64(raw) {
   var res = '';
-  for (var i = 0, len = raw.length; i < len; i++) {
+  for (var i = 0; i < raw.length; i++) {
     res += intToString(raw[i]);
   }
-  return base64.btoa(res);
+  return btoa(res);
 }
 
 function appendBuffer(buffer, data, start, end) {
@@ -6432,94 +6328,12 @@ module.exports = function (data, callback) {
   loadNextChunk();
 };
 
-}).call(this,_dereq_(53),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"17":17,"51":51,"53":53,"87":87}],27:[function(_dereq_,module,exports){
-(function (process){
+}).call(this,_dereq_(41),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"39":39,"41":41,"75":75}],22:[function(_dereq_,module,exports){
 'use strict';
 
-// Create a multipart/related stream out of a document,
-// so we can upload documents in that format when
-// attachments are large. This is shamefully stolen from
-// https://github.com/sballesteros/couch-multipart-stream/
-// and https://github.com/npm/npm-fullfat-registry
-
-var base64 = _dereq_(17);
-var atob = base64.atob;
-var uuid = _dereq_(34);
-var createBlob = _dereq_(20);
-var binaryStringToArrayBuffer = _dereq_(18);
-var utils = _dereq_(48);
-var clone = utils.clone;
-var isBrowser = typeof process === 'undefined' || process.browser;
-var buffer = _dereq_(23);
-
-function createBlobOrBuffer(parts, type) {
-  if (isBrowser) {
-    return createBlob(parts, {type: type});
-  }
-  return buffer.concat(parts.map(function (part) {
-    return new buffer(part, 'binary');
-  }));
-}
-
-function createMultipart(doc) {
-  doc = clone(doc);
-
-  var boundary = uuid();
-
-  var nonStubAttachments = {};
-
-  Object.keys(doc._attachments).forEach(function (filename) {
-    var att = doc._attachments[filename];
-    if (att.stub) {
-      return;
-    }
-    var binData = atob(att.data);
-    nonStubAttachments[filename] = {type: att.content_type, data: binData};
-    att.length = binData.length;
-    att.follows = true;
-    delete att.digest;
-    delete att.data;
-  });
-
-  var preamble = '--' + boundary +
-    '\r\nContent-Type: application/json\r\n\r\n';
-
-  var parts = [preamble, JSON.stringify(doc)];
-
-  Object.keys(nonStubAttachments).forEach(function (filename) {
-    var att = nonStubAttachments[filename];
-    var preamble = '\r\n--' + boundary +
-      '\r\nContent-Disposition: attachment; filename=' +
-        JSON.stringify(filename) +
-      '\r\nContent-Type: ' + att.type +
-      '\r\nContent-Length: ' + att.data.length +
-      '\r\n\r\n';
-    parts.push(preamble);
-    parts.push(isBrowser ? binaryStringToArrayBuffer(att.data) : att.data);
-  });
-
-  parts.push('\r\n--' + boundary + '--');
-
-  var type = 'multipart/related; boundary=' + boundary;
-  var body = createBlobOrBuffer(parts, type);
-
-  return {
-    headers: {
-      'Content-Type': type
-    },
-    body: body
-  };
-}
-
-module.exports = createMultipart;
-
-}).call(this,_dereq_(53))
-},{"17":17,"18":18,"20":20,"23":23,"34":34,"48":48,"53":53}],28:[function(_dereq_,module,exports){
-'use strict';
-
-var errors = _dereq_(24);
-var uuid = _dereq_(34);
+var errors = _dereq_(19);
+var uuid = _dereq_(28);
 
 function toObject(array) {
   return array.reduce(function (obj, item) {
@@ -6683,7 +6497,7 @@ exports.parseDoc = function (doc, newEdits) {
   }
   return result;
 };
-},{"24":24,"34":34}],29:[function(_dereq_,module,exports){
+},{"19":19,"28":28}],23:[function(_dereq_,module,exports){
 'use strict';
 
 //
@@ -6751,7 +6565,7 @@ function parseHexString(str, encoding) {
 }
 
 module.exports = parseHexString;
-},{}],30:[function(_dereq_,module,exports){
+},{}],24:[function(_dereq_,module,exports){
 'use strict';
 
 // originally parseUri 1.2.2, now patched by us
@@ -6797,22 +6611,21 @@ function parseUri(str) {
 
 
 module.exports = parseUri;
-},{}],31:[function(_dereq_,module,exports){
+},{}],25:[function(_dereq_,module,exports){
 'use strict';
 
 if (typeof Promise === 'function') {
   module.exports = Promise;
 } else {
-  module.exports = _dereq_(61);
+  module.exports = _dereq_(49);
 }
-},{"61":61}],32:[function(_dereq_,module,exports){
+},{"49":49}],26:[function(_dereq_,module,exports){
 /* global fetch */
 /* global Headers */
 'use strict';
 
-var createBlob = _dereq_(20);
-var utils = _dereq_(48);
-var readAsArrayBuffer = _dereq_(21);
+var createBlob = _dereq_(17);
+var utils = _dereq_(36);
 
 function wrappedFetch() {
   var wrappedPromise = {};
@@ -6828,21 +6641,23 @@ function wrappedFetch() {
     args[i] = arguments[i];
   }
 
+  wrappedPromise.then = promise.then.bind(promise);
+  wrappedPromise["catch"] = promise["catch"].bind(promise);
   wrappedPromise.promise = promise;
 
-  utils.Promise.resolve().then(function () {
-    return fetch.apply(null, args);
-  }).then(function(response) {
+  fetch.apply(null, args).then(function(response) {
     wrappedPromise.resolve(response);
-  })["catch"](function(error) {
+  }, function(error) {
     wrappedPromise.reject(error);
+  })["catch"](function(error) {
+    wrappedPromise["catch"](error);
   });
 
   return wrappedPromise;
 }
 
 function fetchRequest(options, callback) {
-  var wrappedPromise, timer, response;
+  var wrappedPromise, timer, fetchResponse;
 
   var headers = new Headers();
 
@@ -6859,8 +6674,8 @@ function fetchRequest(options, callback) {
   }
 
   if (options.body && (options.body instanceof Blob)) {
-    readAsArrayBuffer(options.body, function (arrayBuffer) {
-      fetchOptions.body = arrayBuffer;
+    utils.readAsBinaryString(options.body, function(binary) {
+      fetchOptions.body = utils.fixBinary(binary);
     });
   } else if (options.body &&
              options.processData &&
@@ -6887,28 +6702,28 @@ function fetchRequest(options, callback) {
     }, options.timeout);
   }
 
-  wrappedPromise.promise.then(function(fetchResponse) {
-    response = {
-      statusCode: fetchResponse.status
-    };
+  wrappedPromise.promise.then(function(response) {
+    var result;
+
+    fetchResponse = response;
 
     if (options.timeout > 0) {
       clearTimeout(timer);
     }
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return options.binary ? fetchResponse.blob() : fetchResponse.text();
+    if (response.status >= 200 && response.status < 300) {
+      return options.binary ? response.blob() : response.text();
     }
 
-    return fetchResponse.json();
+    return result.json();
   }).then(function(result) {
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      callback(null, response, result);
+    if (fetchResponse.status >= 200 && fetchResponse.status < 300) {
+      callback(null, fetchResponse, result);
     } else {
-      callback(result, response);
+      callback(result, fetchResponse);
     }
   })["catch"](function(error) {
-    callback(error, response);
+    callback(error, fetchResponse);
   });
 
   return {abort: wrappedPromise.reject};
@@ -7010,8 +6825,8 @@ function xhRequest(options, callback) {
   };
 
   if (options.body && (options.body instanceof Blob)) {
-    readAsArrayBuffer(options.body, function (arrayBuffer) {
-      xhr.send(arrayBuffer);
+    utils.readAsBinaryString(options.body, function (binary) {
+      xhr.send(utils.fixBinary(binary));
     });
   } else {
     xhr.send(options.body);
@@ -7020,35 +6835,24 @@ function xhRequest(options, callback) {
   return {abort: abortReq};
 }
 
-function testXhr() {
-  try {
-    new XMLHttpRequest();
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
-
-var hasXhr = testXhr();
-
 module.exports = function(options, callback) {
-  if (hasXhr || options.xhr) {
-    return xhRequest(options, callback);
-  } else {
+  if (typeof XMLHttpRequest === 'undefined' && !options.xhr) {
     return fetchRequest(options, callback);
+  } else {
+    return xhRequest(options, callback);
   }
 };
 
-},{"20":20,"21":21,"48":48}],33:[function(_dereq_,module,exports){
+},{"17":17,"36":36}],27:[function(_dereq_,module,exports){
 'use strict';
 
-var upsert = _dereq_(86).upsert;
+var upsert = _dereq_(74).upsert;
 
 module.exports = function (db, doc, diffFun, cb) {
   return upsert.call(db, doc, diffFun, cb);
 };
 
-},{"86":86}],34:[function(_dereq_,module,exports){
+},{"74":74}],28:[function(_dereq_,module,exports){
 "use strict";
 
 // BEGIN Math.uuid.js
@@ -7133,7 +6937,7 @@ function uuid(len, radix) {
 module.exports = uuid;
 
 
-},{}],35:[function(_dereq_,module,exports){
+},{}],29:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = evalFilter;
@@ -7145,7 +6949,7 @@ function evalFilter(input) {
     ' })()'
   ].join(''));
 }
-},{}],36:[function(_dereq_,module,exports){
+},{}],30:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = evalView;
@@ -7167,9 +6971,9 @@ function evalView(input) {
     '})()'
   ].join('\n'));
 }
-},{}],37:[function(_dereq_,module,exports){
+},{}],31:[function(_dereq_,module,exports){
 'use strict';
-var extend = _dereq_(79);
+var extend = _dereq_(67);
 
 
 // for a better overview of what this is doing, read:
@@ -7469,10 +7273,15 @@ PouchMerge.rootToLeaf = function (tree) {
 
 module.exports = PouchMerge;
 
-},{"79":79}],38:[function(_dereq_,module,exports){
+},{"67":67}],32:[function(_dereq_,module,exports){
 'use strict';
 
-var STARTING_BACK_OFF = 0;
+var utils = _dereq_(36);
+var EE = _dereq_(40).EventEmitter;
+var Checkpointer = _dereq_(14);
+
+var MAX_SIMULTANEOUS_REVS = 50;
+var RETRY_DEFAULT = false;
 
 function randomNumber(min, max) {
   min = parseInt(min, 10);
@@ -7499,136 +7308,83 @@ function defaultBackOff(min) {
   return randomNumber(min, max);
 }
 
-function backOff(opts, returnValue, error, callback) {
+function backOff(repId, src, target, opts, returnValue, result, error) {
   if (opts.retry === false) {
     returnValue.emit('error', error);
     returnValue.removeAllListeners();
     return;
   }
+  opts.default_back_off = opts.default_back_off || 0;
+  opts.retries = opts.retries || 0;
   if (typeof opts.back_off_function !== 'function') {
     opts.back_off_function = defaultBackOff;
+  }
+  opts.retries++;
+  if (opts.max_retries && opts.retries > opts.max_retries) {
+    returnValue.emit('error', new Error('tried ' +
+      opts.retries + ' times but replication failed'));
+    returnValue.removeAllListeners();
+    return;
   }
   returnValue.emit('requestError', error);
   if (returnValue.state === 'active') {
     returnValue.emit('paused', error);
     returnValue.state = 'stopped';
     returnValue.once('active', function () {
-      opts.current_back_off = STARTING_BACK_OFF;
+      opts.current_back_off = opts.default_back_off;
     });
   }
 
-  opts.current_back_off = opts.current_back_off || STARTING_BACK_OFF;
+  opts.current_back_off = opts.current_back_off || opts.default_back_off;
   opts.current_back_off = opts.back_off_function(opts.current_back_off);
-  setTimeout(callback, opts.current_back_off);
+  setTimeout(function () {
+    replicate(repId, src, target, opts, returnValue);
+  }, opts.current_back_off);
 }
 
-module.exports = backOff;
-},{}],39:[function(_dereq_,module,exports){
-'use strict';
-
-var Promise = _dereq_(31);
-var explain404 = _dereq_(25);
-var pouchCollate = _dereq_(76);
-var collate = pouchCollate.collate;
-
-function updateCheckpoint(db, id, checkpoint, returnValue) {
-  return db.get(id)["catch"](function (err) {
-    if (err.status === 404) {
-      if (db.type() === 'http') {
-        explain404('PouchDB is just checking if a remote checkpoint exists.');
-      }
-      return {_id: id};
-    }
-    throw err;
-  }).then(function (doc) {
-    if (returnValue.cancelled) {
-      return;
-    }
-    doc.last_seq = checkpoint;
-    return db.put(doc)["catch"](function (err) {
-      if (err.status === 409) {
-        // retry; someone is trying to write a checkpoint simultaneously
-        return updateCheckpoint(db, id, checkpoint, returnValue);
-      }
-      throw err;
-    });
-  });
-}
-
-function Checkpointer(src, target, id, returnValue) {
-  this.src = src;
-  this.target = target;
-  this.id = id;
-  this.returnValue = returnValue;
-}
-
-Checkpointer.prototype.writeCheckpoint = function (checkpoint) {
+// We create a basic promise so the caller can cancel the replication possibly
+// before we have actually started listening to changes etc
+utils.inherits(Replication, EE);
+function Replication() {
+  EE.call(this);
+  this.cancelled = false;
+  this.state = 'pending';
   var self = this;
-  return this.updateTarget(checkpoint).then(function () {
-    return self.updateSource(checkpoint);
+  var promise = new utils.Promise(function (fulfill, reject) {
+    self.once('complete', fulfill);
+    self.once('error', reject);
   });
+  self.then = function (resolve, reject) {
+    return promise.then(resolve, reject);
+  };
+  self["catch"] = function (reject) {
+    return promise["catch"](reject);
+  };
+  // As we allow error handling via "error" event as well,
+  // put a stub in here so that rejecting never throws UnhandledError.
+  self["catch"](function () {});
+}
+
+Replication.prototype.cancel = function () {
+  this.cancelled = true;
+  this.state = 'cancelled';
+  this.emit('cancel');
 };
 
-Checkpointer.prototype.updateTarget = function (checkpoint) {
-  return updateCheckpoint(this.target, this.id, checkpoint, this.returnValue);
-};
-
-Checkpointer.prototype.updateSource = function (checkpoint) {
+Replication.prototype.ready = function (src, target) {
   var self = this;
-  if (this.readOnlySource) {
-    return Promise.resolve(true);
+  function onDestroy() {
+    self.cancel();
   }
-  return updateCheckpoint(this.src, this.id, checkpoint, this.returnValue)[
-    "catch"](function (err) {
-      var isForbidden = typeof err.status === 'number' &&
-        Math.floor(err.status / 100) === 4;
-      if (isForbidden) {
-        self.readOnlySource = true;
-        return true;
-      }
-      throw err;
-    });
+  src.once('destroyed', onDestroy);
+  target.once('destroyed', onDestroy);
+  function cleanup() {
+    src.removeListener('destroyed', onDestroy);
+    target.removeListener('destroyed', onDestroy);
+  }
+  this.then(cleanup, cleanup);
 };
 
-Checkpointer.prototype.getCheckpoint = function () {
-  var self = this;
-  return self.target.get(self.id).then(function (targetDoc) {
-    return self.src.get(self.id).then(function (sourceDoc) {
-      if (collate(targetDoc.last_seq, sourceDoc.last_seq) === 0) {
-        return sourceDoc.last_seq;
-      }
-      return 0;
-    }, function (err) {
-      if (err.status === 404 && targetDoc.last_seq) {
-        return self.src.put({
-          _id: self.id,
-          last_seq: 0
-        }).then(function () {
-          return 0;
-        }, function (err) {
-          if (err.status === 401) {
-            self.readOnlySource = true;
-            return targetDoc.last_seq;
-          }
-          return 0;
-        });
-      }
-      throw err;
-    });
-  })["catch"](function (err) {
-    if (err.status !== 404) {
-      throw err;
-    }
-    return 0;
-  });
-};
-
-module.exports = Checkpointer;
-
-},{"25":25,"31":31,"76":76}],40:[function(_dereq_,module,exports){
-'use strict';
-
-var utils = _dereq_(48);
 
 // TODO: check CouchDB's replication id generation
 // Generate a unique id particular to this replication
@@ -7649,173 +7405,7 @@ function genReplicationId(src, target, opts) {
   });
 }
 
-module.exports = genReplicationId;
-},{"48":48}],41:[function(_dereq_,module,exports){
-'use strict';
-
-var utils = _dereq_(48);
-var clone = utils.clone;
-var Promise = utils.Promise;
-
-var MAX_SIMULTANEOUS_REVS = 50;
-
-function isGenOne(rev) {
-  return /^1-/.test(rev);
-}
-
-//
-// Fetch all the documents from the src as described in the "diffs",
-// which is a mapping of docs IDs to revisions. If the state ever
-// changes to "cancelled", then the returned promise will be rejected.
-// Else it will be resolved with a list of fetched documents.
-//
-function getDocs(src, diffs, state) {
-  diffs = clone(diffs); // we do not need to modify this
-
-  var resultDocs = [];
-
-  function fetchMissingRevs(id, missingRevs) {
-    var opts = {
-      revs: true,
-      open_revs: missingRevs,
-      attachments: true
-    };
-    return src.get(id, opts).then(function (docs) {
-      if (state.cancelled) {
-        throw new Error('cancelled');
-      }
-      docs.forEach(function (doc) {
-        if (doc.ok) {
-          resultDocs.push(doc.ok);
-        }
-      });
-    });
-  }
-
-  function processDiffDoc(id) {
-    var missing = diffs[id].missing;
-    // avoid url too long error by batching
-    var missingBatches = [];
-    for (var i = 0; i < missing.length; i += MAX_SIMULTANEOUS_REVS) {
-      var missingBatch = missing.slice(i,
-        Math.min(missing.length, i + MAX_SIMULTANEOUS_REVS));
-      missingBatches.push(missingBatch);
-    }
-
-    return Promise.all(missingBatches.map(function (missingRevs) {
-      return fetchMissingRevs(id, missingRevs);
-    }));
-  }
-
-  function getAllDocs() {
-    var diffKeys = Object.keys(diffs);
-    return Promise.all(diffKeys.map(processDiffDoc));
-  }
-
-  function hasAttachments(doc) {
-    return doc._attachments && Object.keys(doc._attachments).length > 0;
-  }
-
-  function fetchRevisionOneDocs(ids) {
-    // Optimization: fetch gen-1 docs and attachments in
-    // a single request using _all_docs
-    return src.allDocs({
-      keys: ids,
-      include_docs: true
-    }).then(function (res) {
-      if (state.cancelled) {
-        throw new Error('cancelled');
-      }
-      res.rows.forEach(function (row) {
-        if (row.deleted || !row.doc || !isGenOne(row.value.rev) ||
-            hasAttachments(row.doc)) {
-          // if any of these conditions apply, we need to fetch using get()
-          return;
-        }
-
-        // the doc we got back from allDocs() is sufficient
-        resultDocs.push(row.doc);
-        delete diffs[row.id];
-      });
-    });
-  }
-
-  function getRevisionOneDocs() {
-    // filter out the generation 1 docs and get them
-    // leaving the non-generation one docs to be got otherwise
-    var ids = Object.keys(diffs).filter(function (id) {
-      var missing = diffs[id].missing;
-      return missing.length === 1 && isGenOne(missing[0]);
-    });
-    if (ids.length > 0) {
-      return fetchRevisionOneDocs(ids);
-    }
-  }
-
-  function returnDocs() {
-    return resultDocs;
-  }
-
-  return Promise.resolve()
-    .then(getRevisionOneDocs)
-    .then(getAllDocs)
-    .then(returnDocs);
-}
-
-module.exports = getDocs;
-},{"48":48}],42:[function(_dereq_,module,exports){
-'use strict';
-
-var utils = _dereq_(48);
-var replicate = _dereq_(43);
-var Replication = _dereq_(44);
-
-function toPouch(db, opts) {
-  var PouchConstructor = opts.PouchConstructor;
-  if (typeof db === 'string') {
-    return new PouchConstructor(db, opts);
-  } else {
-    return db;
-  }
-}
-
-function replicateWrapper(src, target, opts, callback) {
-  if (typeof opts === 'function') {
-    callback = opts;
-    opts = {};
-  }
-  if (typeof opts === 'undefined') {
-    opts = {};
-  }
-  if (!opts.complete) {
-    opts.complete = callback || function () {};
-  }
-  opts = utils.clone(opts);
-  opts.continuous = opts.continuous || opts.live;
-  opts.retry = ('retry' in opts) ? opts.retry : false;
-  /*jshint validthis:true */
-  opts.PouchConstructor = opts.PouchConstructor || this;
-  var replicateRet = new Replication(opts);
-  var srcPouch = toPouch(src, opts);
-  var targetPouch = toPouch(target, opts);
-  replicate(srcPouch, targetPouch, opts, replicateRet);
-  return replicateRet;
-}
-
-module.exports = {
-  replicate : replicateWrapper,
-  toPouch: toPouch
-};
-},{"43":43,"44":44,"48":48}],43:[function(_dereq_,module,exports){
-'use strict';
-
-var utils = _dereq_(48);
-var Checkpointer = _dereq_(39);
-var backOff = _dereq_(38);
-var genReplicationId = _dereq_(40);
-var getDocs = _dereq_(41);
-
-function replicate(src, target, opts, returnValue, result) {
+function replicate(repId, src, target, opts, returnValue, result) {
   var batches = [];               // list of batches to be processed
   var currentBatch;               // the batch currently being processed
   var pendingBatch = {
@@ -7835,8 +7425,7 @@ function replicate(src, target, opts, returnValue, result) {
   var state = {
     cancelled: false
   };
-  var repId;
-  var checkpointer;
+  var checkpointer = new Checkpointer(src, target, repId, state);
   var allErrors = [];
   var changedDocs = [];
 
@@ -7851,16 +7440,6 @@ function replicate(src, target, opts, returnValue, result) {
 
   var changesOpts = {};
   returnValue.ready(src, target);
-
-  function initCheckpointer() {
-    if (checkpointer) {
-      return utils.Promise.resolve();
-    }
-    return genReplicationId(src, target, opts).then(function (res) {
-      repId = res;
-      checkpointer = new Checkpointer(src, target, repId, state);
-    });
-  }
 
   function writeDocs() {
     if (currentBatch.docs.length === 0) {
@@ -7909,6 +7488,82 @@ function replicate(src, target, opts, returnValue, result) {
     });
   }
 
+  function processDiffDoc(id) {
+    var diffs = currentBatch.diffs;
+    var allMissing = diffs[id].missing;
+    // avoid url too long error by batching
+    var missingBatches = [];
+    for (var i = 0; i < allMissing.length; i += MAX_SIMULTANEOUS_REVS) {
+      missingBatches.push(allMissing.slice(i, Math.min(allMissing.length,
+        i + MAX_SIMULTANEOUS_REVS)));
+    }
+
+    return utils.Promise.all(missingBatches.map(function (missing) {
+      var opts = {
+        revs: true,
+        open_revs: missing,
+        attachments: true
+      };
+      return src.get(id, opts).then(function (docs) {
+        docs.forEach(function (doc) {
+          if (state.cancelled) {
+            return completeReplication();
+          }
+          if (doc.ok) {
+            result.docs_read++;
+            currentBatch.pendingRevs++;
+            currentBatch.docs.push(doc.ok);
+          }
+        });
+        delete diffs[id];
+      });
+    }));
+  }
+
+  function getAllDocs() {
+    var diffKeys = Object.keys(currentBatch.diffs);
+    return utils.Promise.all(diffKeys.map(processDiffDoc));
+  }
+
+
+  function getRevisionOneDocs() {
+    // filter out the generation 1 docs and get them
+    // leaving the non-generation one docs to be got otherwise
+    var ids = Object.keys(currentBatch.diffs).filter(function (id) {
+      var missing = currentBatch.diffs[id].missing;
+      return missing.length === 1 && missing[0].slice(0, 2) === '1-';
+    });
+    if (!ids.length) { // nothing to fetch
+      return utils.Promise.resolve();
+    }
+    return src.allDocs({
+      keys: ids,
+      include_docs: true
+    }).then(function (res) {
+      if (state.cancelled) {
+        completeReplication();
+        throw (new Error('cancelled'));
+      }
+      res.rows.forEach(function (row) {
+        if (row.doc && !row.deleted &&
+          row.value.rev.slice(0, 2) === '1-' && (
+            !row.doc._attachments ||
+            Object.keys(row.doc._attachments).length === 0
+          )
+        ) {
+          result.docs_read++;
+          currentBatch.pendingRevs++;
+          currentBatch.docs.push(row.doc);
+          delete currentBatch.diffs[row.id];
+        }
+      });
+    });
+  }
+
+  function getDocs() {
+    return getRevisionOneDocs().then(getAllDocs);
+  }
+
   function finishBatch() {
     writingCheckpoint = true;
     return checkpointer.writeCheckpoint(currentBatch.seq).then(function () {
@@ -7948,16 +7603,7 @@ function replicate(src, target, opts, returnValue, result) {
       }
       // currentBatch.diffs elements are deleted as the documents are written
       currentBatch.diffs = diffs;
-    });
-  }
-
-  function getBatchDocs() {
-    return getDocs(src, currentBatch.diffs, state).then(function (docs) {
-      docs.forEach(function (doc) {
-        delete currentBatch.diffs[doc._id];
-        result.docs_read++;
-        currentBatch.docs.push(doc);
-      });
+      currentBatch.pendingRevs = 0;
     });
   }
 
@@ -7971,7 +7617,7 @@ function replicate(src, target, opts, returnValue, result) {
     }
     currentBatch = batches.shift();
     getDiffs()
-      .then(getBatchDocs)
+      .then(getDocs)
       .then(writeDocs)
       .then(finishBatch)
       .then(startNextBatch)[
@@ -8059,9 +7705,7 @@ function replicate(src, target, opts, returnValue, result) {
         error.other_errors = allErrors;
       }
       error.result = result;
-      backOff(opts, returnValue, error, function () {
-        replicate(src, target, opts, returnValue);
-      });
+      backOff(repId, src, target, opts, returnValue, result, error);
     } else {
       result.errors = allErrors;
       returnValue.emit('complete', result);
@@ -8077,6 +7721,13 @@ function replicate(src, target, opts, returnValue, result) {
     var filter = utils.filterChange(opts)(change);
     if (!filter) {
       return;
+    }
+    if (
+      pendingBatch.changes.length === 0 &&
+      batches.length === 0 &&
+      !currentBatch
+    ) {
+      returnValue.emit('outofdate', result);
     }
     pendingBatch.seq = change.seq;
     pendingBatch.changes.push(change);
@@ -8121,7 +7772,7 @@ function replicate(src, target, opts, returnValue, result) {
       !changesPending &&
       !changesCompleted &&
       batches.length < batches_limit
-      )) {
+    )) {
       return;
     }
     changesPending = true;
@@ -8131,59 +7782,41 @@ function replicate(src, target, opts, returnValue, result) {
     function removeListener() {
       returnValue.removeListener('cancel', abortChanges);
     }
-
-    if (returnValue._changes) { // remove old changes() and listeners
-      returnValue.removeListener('cancel', returnValue._abortChanges);
-      returnValue._changes.cancel();
-    }
     returnValue.once('cancel', abortChanges);
-
     var changes = src.changes(changesOpts)
-      .on('change', onChange);
+    .on('change', onChange);
     changes.then(removeListener, removeListener);
     changes.then(onChangesComplete)[
-      "catch"](onChangesError);
-
-    if (opts.retry) {
-      // save for later so we can cancel if necessary
-      returnValue._changes = changes;
-      returnValue._abortChanges = abortChanges;
-    }
+    "catch"](onChangesError);
   }
 
 
   function startChanges() {
-    initCheckpointer().then(function () {
-      if (state.cancelled) {
-        completeReplication();
-        return;
+    checkpointer.getCheckpoint().then(function (checkpoint) {
+      last_seq = checkpoint;
+      changesOpts = {
+        since: last_seq,
+        limit: batch_size,
+        batch_size: batch_size,
+        style: 'all_docs',
+        doc_ids: doc_ids,
+        returnDocs: true // required so we know when we're done
+      };
+      if (opts.filter) {
+        if (typeof opts.filter !== 'string') {
+          // required for the client-side filter in onChange
+          changesOpts.include_docs = true;
+        } else { // ddoc filter
+          changesOpts.filter = opts.filter;
+        }
       }
-      return checkpointer.getCheckpoint().then(function (checkpoint) {
-        last_seq = checkpoint;
-        changesOpts = {
-          since: last_seq,
-          limit: batch_size,
-          batch_size: batch_size,
-          style: 'all_docs',
-          doc_ids: doc_ids,
-          returnDocs: true // required so we know when we're done
-        };
-        if (opts.filter) {
-          if (typeof opts.filter !== 'string') {
-            // required for the client-side filter in onChange
-            changesOpts.include_docs = true;
-          } else { // ddoc filter
-            changesOpts.filter = opts.filter;
-          }
-        }
-        if (opts.query_params) {
-          changesOpts.query_params = opts.query_params;
-        }
-        if (opts.view) {
-          changesOpts.view = opts.view;
-        }
-        getChanges();
-      });
+      if (opts.query_params) {
+        changesOpts.query_params = opts.query_params;
+      }
+      if (opts.view) {
+        changesOpts.view = opts.view;
+      }
+      getChanges();
     })["catch"](function (err) {
       abortReplication('getCheckpoint rejected with ', err);
     });
@@ -8194,29 +7827,24 @@ function replicate(src, target, opts, returnValue, result) {
     return;
   }
 
-  if (!returnValue._addedListeners) {
-    returnValue.once('cancel', completeReplication);
+  returnValue.once('cancel', completeReplication);
 
-    if (typeof opts.onChange === 'function') {
-      returnValue.on('change', opts.onChange);
-    }
+  if (typeof opts.onChange === 'function') {
+    returnValue.on('change', opts.onChange);
+  }
 
-    if (typeof opts.complete === 'function') {
-      returnValue.once('error', opts.complete);
-      returnValue.once('complete', function (result) {
-        opts.complete(null, result);
-      });
-    }
-    returnValue._addedListeners = true;
+  if (typeof opts.complete === 'function') {
+    returnValue.once('error', opts.complete);
+    returnValue.once('complete', function (result) {
+      opts.complete(null, result);
+    });
   }
 
   if (typeof opts.since === 'undefined') {
     startChanges();
   } else {
-    initCheckpointer().then(function () {
-      writingCheckpoint = true;
-      return checkpointer.writeCheckpoint(opts.since);
-    }).then(function () {
+    writingCheckpoint = true;
+    checkpointer.writeCheckpoint(opts.since).then(function () {
       writingCheckpoint = false;
       if (state.cancelled) {
         completeReplication();
@@ -8232,69 +7860,56 @@ function replicate(src, target, opts, returnValue, result) {
   }
 }
 
-module.exports = replicate;
-},{"38":38,"39":39,"40":40,"41":41,"48":48}],44:[function(_dereq_,module,exports){
-'use strict';
-
-var utils = _dereq_(48);
-var EE = _dereq_(52).EventEmitter;
-var Promise = utils.Promise;
-
-// We create a basic promise so the caller can cancel the replication possibly
-// before we have actually started listening to changes etc
-utils.inherits(Replication, EE);
-function Replication() {
-  EE.call(this);
-  this.cancelled = false;
-  this.state = 'pending';
-  var self = this;
-  var promise = new Promise(function (fulfill, reject) {
-    self.once('complete', fulfill);
-    self.once('error', reject);
-  });
-  self.then = function (resolve, reject) {
-    return promise.then(resolve, reject);
-  };
-  self["catch"] = function (reject) {
-    return promise["catch"](reject);
-  };
-  // As we allow error handling via "error" event as well,
-  // put a stub in here so that rejecting never throws UnhandledError.
-  self["catch"](function () {});
+exports.toPouch = toPouch;
+function toPouch(db, opts) {
+  var PouchConstructor = opts.PouchConstructor;
+  if (typeof db === 'string') {
+    return new PouchConstructor(db, opts);
+  } else if (db.then) {
+    return db;
+  } else {
+    return utils.Promise.resolve(db);
+  }
 }
 
-Replication.prototype.cancel = function () {
-  this.cancelled = true;
-  this.state = 'cancelled';
-  this.emit('cancel');
-};
 
-Replication.prototype.ready = function (src, target) {
-  var self = this;
-  if (self._readyCalled) {
-    return;
+exports.replicate = replicateWrapper;
+function replicateWrapper(src, target, opts, callback) {
+  if (typeof opts === 'function') {
+    callback = opts;
+    opts = {};
   }
-  self._readyCalled = true;
+  if (typeof opts === 'undefined') {
+    opts = {};
+  }
+  if (!opts.complete) {
+    opts.complete = callback || function () {};
+  }
+  opts = utils.clone(opts);
+  opts.continuous = opts.continuous || opts.live;
+  opts.retry = ('retry' in opts) ? opts.retry : RETRY_DEFAULT;
+  /*jshint validthis:true */
+  opts.PouchConstructor = opts.PouchConstructor || this;
+  var replicateRet = new Replication(opts);
+  toPouch(src, opts).then(function (src) {
+    return toPouch(target, opts).then(function (target) {
+      return genReplicationId(src, target, opts).then(function (repId) {
+        replicate(repId, src, target, opts, replicateRet);
+      });
+    });
+  })["catch"](function (err) {
+    replicateRet.emit('error', err);
+    opts.complete(err);
+  });
+  return replicateRet;
+}
 
-  function onDestroy() {
-    self.cancel();
-  }
-  src.once('destroyed', onDestroy);
-  target.once('destroyed', onDestroy);
-  function cleanup() {
-    src.removeListener('destroyed', onDestroy);
-    target.removeListener('destroyed', onDestroy);
-  }
-  self.once('complete', cleanup);
-};
-
-module.exports = Replication;
-},{"48":48,"52":52}],45:[function(_dereq_,module,exports){
+},{"14":14,"36":36,"40":40}],33:[function(_dereq_,module,exports){
 "use strict";
 
-var PouchDB = _dereq_(14);
-var utils = _dereq_(48);
-var EventEmitter = _dereq_(52).EventEmitter;
+var PouchDB = _dereq_(15);
+var utils = _dereq_(36);
+var EventEmitter = _dereq_(40).EventEmitter;
 PouchDB.adapters = {};
 PouchDB.preferredAdapters = [];
 
@@ -8437,7 +8052,7 @@ PouchDB.defaults = function (defaultOpts) {
   eventEmitterMethods.forEach(function (method) {
     PouchAlt[method] = eventEmitter[method].bind(eventEmitter);
   });
-  PouchAlt.setMaxListeners(10);
+  PouchAlt.setMaxListeners(0);
 
   PouchAlt.preferredAdapters = PouchDB.preferredAdapters.slice();
   Object.keys(PouchDB).forEach(function (key) {
@@ -8451,13 +8066,13 @@ PouchDB.defaults = function (defaultOpts) {
 
 module.exports = PouchDB;
 
-},{"14":14,"48":48,"52":52}],46:[function(_dereq_,module,exports){
+},{"15":15,"36":36,"40":40}],34:[function(_dereq_,module,exports){
 'use strict';
 
-var utils = _dereq_(48);
-var replication = _dereq_(42);
+var utils = _dereq_(36);
+var replication = _dereq_(32);
 var replicate = replication.replicate;
-var EE = _dereq_(52).EventEmitter;
+var EE = _dereq_(40).EventEmitter;
 
 utils.inherits(Sync, EE);
 module.exports = sync;
@@ -8637,7 +8252,7 @@ Sync.prototype.cancel = function () {
   }
 };
 
-},{"42":42,"48":48,"52":52}],47:[function(_dereq_,module,exports){
+},{"32":32,"36":36,"40":40}],35:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = TaskQueue;
@@ -8707,39 +8322,26 @@ TaskQueue.prototype.addTask = function (name, parameters) {
   }
 };
 
-},{}],48:[function(_dereq_,module,exports){
+},{}],36:[function(_dereq_,module,exports){
 (function (process){
 /*jshint strict: false */
 /*global chrome */
-var merge = _dereq_(37);
-exports.extend = _dereq_(79);
-exports.ajax = _dereq_(15);
-exports.createBlob = _dereq_(20);
-exports.uuid = _dereq_(34);
-exports.getArguments = _dereq_(50);
-var errors = _dereq_(24);
-var EventEmitter = _dereq_(52).EventEmitter;
-var collections = _dereq_(78);
+var merge = _dereq_(31);
+exports.extend = _dereq_(67);
+exports.ajax = _dereq_(16);
+exports.createBlob = _dereq_(17);
+exports.uuid = _dereq_(28);
+exports.getArguments = _dereq_(38);
+var buffer = _dereq_(18);
+var errors = _dereq_(19);
+var EventEmitter = _dereq_(40).EventEmitter;
+var collections = _dereq_(66);
 exports.Map = collections.Map;
 exports.Set = collections.Set;
-var parseDoc = _dereq_(28);
+var parseDoc = _dereq_(22);
 
-var Promise = _dereq_(31);
+var Promise = _dereq_(25);
 exports.Promise = Promise;
-
-var base64 = _dereq_(17);
-
-// TODO: don't export these
-exports.atob = base64.atob;
-exports.btoa = base64.btoa;
-
-var binaryStringToBlob = _dereq_(19);
-var arrayBufferToBinaryString =
-  _dereq_(16);
-var readAsArrayBuffer = _dereq_(21);
-
-// TODO: only used by the integration tests
-exports.binaryStringToBlob = binaryStringToBlob;
 
 exports.lastIndexOf = function (str, char) {
   for (var i = str.length - 1; i >= 0; i--) {
@@ -8764,7 +8366,7 @@ exports.pick = function (obj, arr) {
   return res;
 };
 
-exports.inherits = _dereq_(57);
+exports.inherits = _dereq_(45);
 
 function isChromeApp() {
   return (typeof chrome !== "undefined" &&
@@ -8875,7 +8477,7 @@ function Changes() {
   var self = this;
   EventEmitter.call(this);
   this.isChrome = isChromeApp();
-  this._listeners = {};
+  this.listeners = {};
   this.hasLocal = false;
   if (!this.isChrome) {
     this.hasLocal = exports.hasLocalStorage();
@@ -8902,13 +8504,13 @@ function Changes() {
 
 }
 Changes.prototype.addListener = function (dbName, id, db, opts) {
-  if (this._listeners[id]) {
+  if (this.listeners[id]) {
     return;
   }
   var self = this;
   var inprogress = false;
   function eventFunction() {
-    if (!self._listeners[id]) {
+    if (!self.listeners[id]) {
       return;
     }
     if (inprogress) {
@@ -8944,16 +8546,16 @@ Changes.prototype.addListener = function (dbName, id, db, opts) {
       inprogress = false;
     });
   }
-  this._listeners[id] = eventFunction;
+  this.listeners[id] = eventFunction;
   this.on(dbName, eventFunction);
 };
 
 Changes.prototype.removeListener = function (dbName, id) {
-  if (!(id in this._listeners)) {
+  if (!(id in this.listeners)) {
     return;
   }
   EventEmitter.prototype.removeListener.call(this, dbName,
-    this._listeners[id]);
+    this.listeners[id]);
 };
 
 
@@ -8970,6 +8572,77 @@ Changes.prototype.notifyLocalWindows = function (dbName) {
 Changes.prototype.notify = function (dbName) {
   this.emit(dbName);
   this.notifyLocalWindows(dbName);
+};
+
+if (typeof atob === 'function') {
+  exports.atob = function (str) {
+    return atob(str);
+  };
+} else {
+  exports.atob = function (str) {
+    var base64 = new buffer(str, 'base64');
+    // Node.js will just skip the characters it can't encode instead of
+    // throwing and exception
+    if (base64.toString('base64') !== str) {
+      throw ("Cannot base64 encode full string");
+    }
+    return base64.toString('binary');
+  };
+}
+
+if (typeof btoa === 'function') {
+  exports.btoa = function (str) {
+    return btoa(str);
+  };
+} else {
+  exports.btoa = function (str) {
+    return new buffer(str, 'binary').toString('base64');
+  };
+}
+
+// From http://stackoverflow.com/questions/14967647/ (continues on next line)
+// encode-decode-image-with-base64-breaks-image (2013-04-21)
+exports.fixBinary = function (bin) {
+  if (!process.browser) {
+    // don't need to do this in Node
+    return bin;
+  }
+
+  var length = bin.length;
+  var buf = new ArrayBuffer(length);
+  var arr = new Uint8Array(buf);
+  for (var i = 0; i < length; i++) {
+    arr[i] = bin.charCodeAt(i);
+  }
+  return buf;
+};
+
+// shim for browsers that don't support it
+exports.readAsBinaryString = function (blob, callback) {
+  var reader = new FileReader();
+  var hasBinaryString = typeof reader.readAsBinaryString === 'function';
+  reader.onloadend = function (e) {
+    var result = e.target.result || '';
+    if (hasBinaryString) {
+      return callback(result);
+    }
+    callback(exports.arrayBufferToBinaryString(result));
+  };
+  if (hasBinaryString) {
+    reader.readAsBinaryString(blob);
+  } else {
+    reader.readAsArrayBuffer(blob);
+  }
+};
+
+// simplified API. universal browser support is assumed
+exports.readAsArrayBuffer = function (blob, callback) {
+  var reader = new FileReader();
+  reader.onloadend = function (e) {
+    var result = e.target.result || new ArrayBuffer(0);
+    callback(result);
+  };
+  reader.readAsArrayBuffer(blob);
 };
 
 exports.once = function (fun) {
@@ -9036,7 +8709,7 @@ exports.toPromise = function (func) {
 };
 
 exports.adapterFun = function (name, callback) {
-  var log = _dereq_(54)('pouchdb:api');
+  var log = _dereq_(42)('pouchdb:api');
 
   function logApiCall(self, name, args) {
     if (!log.enabled) {
@@ -9080,6 +8753,19 @@ exports.adapterFun = function (name, callback) {
     }
     return callback.apply(this, args);
   }));
+};
+
+//Can't find original post, but this is close
+//http://stackoverflow.com/questions/6965107/ (continues on next line)
+//converting-between-strings-and-arraybuffers
+exports.arrayBufferToBinaryString = function (buffer) {
+  var binary = "";
+  var bytes = new Uint8Array(buffer);
+  var length = bytes.byteLength;
+  for (var i = 0; i < length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return binary;
 };
 
 exports.cancellableFun = function (fun, self, opts) {
@@ -9163,9 +8849,9 @@ exports.cancellableFun = function (fun, self, opts) {
   return promise;
 };
 
-exports.MD5 = exports.toPromise(_dereq_(26));
+exports.MD5 = exports.toPromise(_dereq_(21));
 
-exports.explain404 = _dereq_(25);
+exports.explain404 = _dereq_(20);
 
 exports.info = function (str) {
   if (typeof console !== 'undefined' && 'info' in console) {
@@ -9173,7 +8859,7 @@ exports.info = function (str) {
   }
 };
 
-exports.parseUri = _dereq_(30);
+exports.parseUri = _dereq_(24);
 
 exports.compare = function (left, right) {
   return left < right ? -1 : left > right ? 1 : 0;
@@ -9332,7 +9018,7 @@ exports.preprocessAttachments = function preprocessAttachments(
 
   function parseBase64(data) {
     try {
-      return base64.atob(data);
+      return exports.atob(data);
     } catch (e) {
       var err = errors.error(errors.BAD_ARG,
                              'Attachments need to be base64 encoded');
@@ -9354,9 +9040,10 @@ exports.preprocessAttachments = function preprocessAttachments(
 
       att.length = asBinary.length;
       if (blobType === 'blob') {
-        att.data = binaryStringToBlob(asBinary, att.content_type);
+        att.data = exports.createBlob([exports.fixBinary(asBinary)],
+          {type: att.content_type});
       } else if (blobType === 'base64') {
-        att.data = base64.btoa(asBinary);
+        att.data = exports.btoa(asBinary);
       } else { // binary
         att.data = asBinary;
       }
@@ -9365,11 +9052,11 @@ exports.preprocessAttachments = function preprocessAttachments(
         callback();
       });
     } else { // input is a blob
-      readAsArrayBuffer(att.data, function (buff) {
+      exports.readAsArrayBuffer(att.data, function (buff) {
         if (blobType === 'binary') {
-          att.data = arrayBufferToBinaryString(buff);
+          att.data = exports.arrayBufferToBinaryString(buff);
         } else if (blobType === 'base64') {
-          att.data = base64.btoa(arrayBufferToBinaryString(buff));
+          att.data = exports.btoa(exports.arrayBufferToBinaryString(buff));
         }
         exports.MD5(buff).then(function (result) {
           att.digest = 'md5-' + result;
@@ -9433,7 +9120,7 @@ exports.compactTree = function compactTree(metadata) {
   return revs;
 };
 
-var vuvuzela = _dereq_(88);
+var vuvuzela = _dereq_(76);
 
 exports.safeJsonParse = function safeJsonParse(str) {
   try {
@@ -9451,11 +9138,11 @@ exports.safeJsonStringify = function safeJsonStringify(json) {
   }
 };
 
-}).call(this,_dereq_(53))
-},{"15":15,"16":16,"17":17,"19":19,"20":20,"21":21,"24":24,"25":25,"26":26,"28":28,"30":30,"31":31,"34":34,"37":37,"50":50,"52":52,"53":53,"54":54,"57":57,"78":78,"79":79,"88":88}],49:[function(_dereq_,module,exports){
-module.exports = "3.6.0";
+}).call(this,_dereq_(41))
+},{"16":16,"17":17,"18":18,"19":19,"20":20,"21":21,"22":22,"24":24,"25":25,"28":28,"31":31,"38":38,"40":40,"41":41,"42":42,"45":45,"66":66,"67":67,"76":76}],37:[function(_dereq_,module,exports){
+module.exports = "3.5.0";
 
-},{}],50:[function(_dereq_,module,exports){
+},{}],38:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = argsArray;
@@ -9475,9 +9162,9 @@ function argsArray(fun) {
     }
   };
 }
-},{}],51:[function(_dereq_,module,exports){
+},{}],39:[function(_dereq_,module,exports){
 
-},{}],52:[function(_dereq_,module,exports){
+},{}],40:[function(_dereq_,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9780,7 +9467,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],53:[function(_dereq_,module,exports){
+},{}],41:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -9840,7 +9527,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],54:[function(_dereq_,module,exports){
+},{}],42:[function(_dereq_,module,exports){
 
 /**
  * This is the web browser implementation of `debug()`.
@@ -9848,16 +9535,23 @@ process.umask = function() { return 0; };
  * Expose `debug()` as the module.
  */
 
-exports = module.exports = _dereq_(55);
+exports = module.exports = _dereq_(43);
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
-exports.storage = 'undefined' != typeof chrome
-               && 'undefined' != typeof chrome.storage
-                  ? chrome.storage.local
-                  : localstorage();
+
+/**
+ * Use chrome.storage.local if we are in an app
+ */
+
+var storage;
+
+if (typeof chrome !== 'undefined' && typeof chrome.storage !== 'undefined')
+  storage = chrome.storage.local;
+else
+  storage = localstorage();
 
 /**
  * Colors.
@@ -9965,9 +9659,9 @@ function log() {
 function save(namespaces) {
   try {
     if (null == namespaces) {
-      exports.storage.removeItem('debug');
+      storage.removeItem('debug');
     } else {
-      exports.storage.debug = namespaces;
+      storage.debug = namespaces;
     }
   } catch(e) {}
 }
@@ -9982,7 +9676,7 @@ function save(namespaces) {
 function load() {
   var r;
   try {
-    r = exports.storage.debug;
+    r = storage.debug;
   } catch(e) {}
   return r;
 }
@@ -10010,7 +9704,7 @@ function localstorage(){
   } catch (e) {}
 }
 
-},{"55":55}],55:[function(_dereq_,module,exports){
+},{"43":43}],43:[function(_dereq_,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -10024,7 +9718,7 @@ exports.coerce = coerce;
 exports.disable = disable;
 exports.enable = enable;
 exports.enabled = enabled;
-exports.humanize = _dereq_(56);
+exports.humanize = _dereq_(44);
 
 /**
  * The currently active debug mode names, and names to skip.
@@ -10209,7 +9903,7 @@ function coerce(val) {
   return val;
 }
 
-},{"56":56}],56:[function(_dereq_,module,exports){
+},{"44":44}],44:[function(_dereq_,module,exports){
 /**
  * Helpers.
  */
@@ -10250,8 +9944,6 @@ module.exports = function(val, options){
  */
 
 function parse(str) {
-  str = '' + str;
-  if (str.length > 10000) return;
   var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
   if (!match) return;
   var n = parseFloat(match[1]);
@@ -10336,7 +10028,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],57:[function(_dereq_,module,exports){
+},{}],45:[function(_dereq_,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -10361,19 +10053,19 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],58:[function(_dereq_,module,exports){
+},{}],46:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = INTERNAL;
 
 function INTERNAL() {}
-},{}],59:[function(_dereq_,module,exports){
+},{}],47:[function(_dereq_,module,exports){
 'use strict';
-var Promise = _dereq_(62);
-var reject = _dereq_(65);
-var resolve = _dereq_(66);
-var INTERNAL = _dereq_(58);
-var handlers = _dereq_(60);
+var Promise = _dereq_(50);
+var reject = _dereq_(53);
+var resolve = _dereq_(54);
+var INTERNAL = _dereq_(46);
+var handlers = _dereq_(48);
 module.exports = all;
 function all(iterable) {
   if (Object.prototype.toString.call(iterable) !== '[object Array]') {
@@ -10411,11 +10103,11 @@ function all(iterable) {
     }
   }
 }
-},{"58":58,"60":60,"62":62,"65":65,"66":66}],60:[function(_dereq_,module,exports){
+},{"46":46,"48":48,"50":50,"53":53,"54":54}],48:[function(_dereq_,module,exports){
 'use strict';
-var tryCatch = _dereq_(69);
-var resolveThenable = _dereq_(67);
-var states = _dereq_(68);
+var tryCatch = _dereq_(57);
+var resolveThenable = _dereq_(55);
+var states = _dereq_(56);
 
 exports.resolve = function (self, value) {
   var result = tryCatch(getThen, value);
@@ -10457,23 +10149,21 @@ function getThen(obj) {
     };
   }
 }
+},{"55":55,"56":56,"57":57}],49:[function(_dereq_,module,exports){
+module.exports = exports = _dereq_(50);
 
-},{"67":67,"68":68,"69":69}],61:[function(_dereq_,module,exports){
-module.exports = exports = _dereq_(62);
-
-exports.resolve = _dereq_(66);
-exports.reject = _dereq_(65);
-exports.all = _dereq_(59);
-exports.race = _dereq_(64);
-
-},{"59":59,"62":62,"64":64,"65":65,"66":66}],62:[function(_dereq_,module,exports){
+exports.resolve = _dereq_(54);
+exports.reject = _dereq_(53);
+exports.all = _dereq_(47);
+exports.race = _dereq_(52);
+},{"47":47,"50":50,"52":52,"53":53,"54":54}],50:[function(_dereq_,module,exports){
 'use strict';
 
-var unwrap = _dereq_(70);
-var INTERNAL = _dereq_(58);
-var resolveThenable = _dereq_(67);
-var states = _dereq_(68);
-var QueueItem = _dereq_(63);
+var unwrap = _dereq_(58);
+var INTERNAL = _dereq_(46);
+var resolveThenable = _dereq_(55);
+var states = _dereq_(56);
+var QueueItem = _dereq_(51);
 
 module.exports = Promise;
 function Promise(resolver) {
@@ -10500,8 +10190,10 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
     return this;
   }
   var promise = new Promise(INTERNAL);
+
+  
   if (this.state !== states.PENDING) {
-    var resolver = this.state === states.FULFILLED ? onFulfilled : onRejected;
+    var resolver = this.state === states.FULFILLED ? onFulfilled: onRejected;
     unwrap(promise, resolver, this.outcome);
   } else {
     this.queue.push(new QueueItem(promise, onFulfilled, onRejected));
@@ -10510,10 +10202,10 @@ Promise.prototype.then = function (onFulfilled, onRejected) {
   return promise;
 };
 
-},{"58":58,"63":63,"67":67,"68":68,"70":70}],63:[function(_dereq_,module,exports){
+},{"46":46,"51":51,"55":55,"56":56,"58":58}],51:[function(_dereq_,module,exports){
 'use strict';
-var handlers = _dereq_(60);
-var unwrap = _dereq_(70);
+var handlers = _dereq_(48);
+var unwrap = _dereq_(58);
 
 module.exports = QueueItem;
 function QueueItem(promise, onFulfilled, onRejected) {
@@ -10539,14 +10231,13 @@ QueueItem.prototype.callRejected = function (value) {
 QueueItem.prototype.otherCallRejected = function (value) {
   unwrap(this.promise, this.onRejected, value);
 };
-
-},{"60":60,"70":70}],64:[function(_dereq_,module,exports){
+},{"48":48,"58":58}],52:[function(_dereq_,module,exports){
 'use strict';
-var Promise = _dereq_(62);
-var reject = _dereq_(65);
-var resolve = _dereq_(66);
-var INTERNAL = _dereq_(58);
-var handlers = _dereq_(60);
+var Promise = _dereq_(50);
+var reject = _dereq_(53);
+var resolve = _dereq_(54);
+var INTERNAL = _dereq_(46);
+var handlers = _dereq_(48);
 module.exports = race;
 function race(iterable) {
   if (Object.prototype.toString.call(iterable) !== '[object Array]') {
@@ -10559,9 +10250,10 @@ function race(iterable) {
     return resolve([]);
   }
 
+  var resolved = 0;
   var i = -1;
   var promise = new Promise(INTERNAL);
-
+  
   while (++i < len) {
     resolver(iterable[i]);
   }
@@ -10580,25 +10272,24 @@ function race(iterable) {
     });
   }
 }
-
-},{"58":58,"60":60,"62":62,"65":65,"66":66}],65:[function(_dereq_,module,exports){
+},{"46":46,"48":48,"50":50,"53":53,"54":54}],53:[function(_dereq_,module,exports){
 'use strict';
 
-var Promise = _dereq_(62);
-var INTERNAL = _dereq_(58);
-var handlers = _dereq_(60);
+var Promise = _dereq_(50);
+var INTERNAL = _dereq_(46);
+var handlers = _dereq_(48);
 module.exports = reject;
 
 function reject(reason) {
 	var promise = new Promise(INTERNAL);
 	return handlers.reject(promise, reason);
 }
-},{"58":58,"60":60,"62":62}],66:[function(_dereq_,module,exports){
+},{"46":46,"48":48,"50":50}],54:[function(_dereq_,module,exports){
 'use strict';
 
-var Promise = _dereq_(62);
-var INTERNAL = _dereq_(58);
-var handlers = _dereq_(60);
+var Promise = _dereq_(50);
+var INTERNAL = _dereq_(46);
+var handlers = _dereq_(48);
 module.exports = resolve;
 
 var FALSE = handlers.resolve(new Promise(INTERNAL), false);
@@ -10628,10 +10319,10 @@ function resolve(value) {
       return EMPTYSTRING;
   }
 }
-},{"58":58,"60":60,"62":62}],67:[function(_dereq_,module,exports){
+},{"46":46,"48":48,"50":50}],55:[function(_dereq_,module,exports){
 'use strict';
-var handlers = _dereq_(60);
-var tryCatch = _dereq_(69);
+var handlers = _dereq_(48);
+var tryCatch = _dereq_(57);
 function safelyResolveThenable(self, thenable) {
   // Either fulfill, reject or reject with error
   var called = false;
@@ -10661,14 +10352,13 @@ function safelyResolveThenable(self, thenable) {
   }
 }
 exports.safely = safelyResolveThenable;
-},{"60":60,"69":69}],68:[function(_dereq_,module,exports){
+},{"48":48,"57":57}],56:[function(_dereq_,module,exports){
 // Lazy man's symbols for states
 
 exports.REJECTED = ['REJECTED'];
 exports.FULFILLED = ['FULFILLED'];
 exports.PENDING = ['PENDING'];
-
-},{}],69:[function(_dereq_,module,exports){
+},{}],57:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = tryCatch;
@@ -10684,11 +10374,11 @@ function tryCatch(func, value) {
   }
   return out;
 }
-},{}],70:[function(_dereq_,module,exports){
+},{}],58:[function(_dereq_,module,exports){
 'use strict';
 
-var immediate = _dereq_(71);
-var handlers = _dereq_(60);
+var immediate = _dereq_(59);
+var handlers = _dereq_(48);
 module.exports = unwrap;
 
 function unwrap(promise, func, value) {
@@ -10706,32 +10396,48 @@ function unwrap(promise, func, value) {
     }
   });
 }
-},{"60":60,"71":71}],71:[function(_dereq_,module,exports){
+},{"48":48,"59":59}],59:[function(_dereq_,module,exports){
 'use strict';
 var types = [
-  _dereq_(51),
-  _dereq_(73),
-  _dereq_(72),
-  _dereq_(74),
-  _dereq_(75)
+  _dereq_(39),
+  _dereq_(61),
+  _dereq_(60),
+  _dereq_(62),
+  _dereq_(63)
 ];
 var draining;
+var currentQueue;
+var queueIndex = -1;
 var queue = [];
+function cleanUpNextTick() {
+    draining = false;
+    if (currentQueue && currentQueue.length) {
+      queue = currentQueue.concat(queue);
+    } else {
+      queueIndex = -1;
+    }
+    if (queue.length) {
+      nextTick();
+    }
+}
+
 //named nextTick for less confusing stack traces
 function nextTick() {
   draining = true;
-  var i, oldQueue;
   var len = queue.length;
+  var timeout = setTimeout(cleanUpNextTick);
   while (len) {
-    oldQueue = queue;
+    currentQueue = queue;
     queue = [];
-    i = -1;
-    while (++i < len) {
-      oldQueue[i]();
+    while (++queueIndex < len) {
+      currentQueue[queueIndex]();
     }
+    queueIndex = -1;
     len = queue.length;
   }
+  queueIndex = -1;
   draining = false;
+  clearTimeout(timeout);
 }
 var scheduleDrain;
 var i = -1;
@@ -10748,7 +10454,7 @@ function immediate(task) {
     scheduleDrain();
   }
 }
-},{"51":51,"72":72,"73":73,"74":74,"75":75}],72:[function(_dereq_,module,exports){
+},{"39":39,"60":60,"61":61,"62":62,"63":63}],60:[function(_dereq_,module,exports){
 (function (global){
 'use strict';
 
@@ -10769,7 +10475,7 @@ exports.install = function (func) {
   };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],73:[function(_dereq_,module,exports){
+},{}],61:[function(_dereq_,module,exports){
 (function (global){
 'use strict';
 //based off rsvp https://github.com/tildeio/rsvp.js
@@ -10794,7 +10500,7 @@ exports.install = function (handle) {
   };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],74:[function(_dereq_,module,exports){
+},{}],62:[function(_dereq_,module,exports){
 (function (global){
 'use strict';
 
@@ -10821,7 +10527,7 @@ exports.install = function (handle) {
   };
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],75:[function(_dereq_,module,exports){
+},{}],63:[function(_dereq_,module,exports){
 'use strict';
 exports.test = function () {
   return true;
@@ -10832,14 +10538,14 @@ exports.install = function (t) {
     setTimeout(t, 0);
   };
 };
-},{}],76:[function(_dereq_,module,exports){
+},{}],64:[function(_dereq_,module,exports){
 'use strict';
 
 var MIN_MAGNITUDE = -324; // verified by -Number.MIN_VALUE
 var MAGNITUDE_DIGITS = 3; // ditto
 var SEP = ''; // set to '_' for easier debugging 
 
-var utils = _dereq_(77);
+var utils = _dereq_(65);
 
 exports.collate = function (a, b) {
 
@@ -11187,7 +10893,7 @@ function numToIndexableString(num) {
   return result;
 }
 
-},{"77":77}],77:[function(_dereq_,module,exports){
+},{"65":65}],65:[function(_dereq_,module,exports){
 'use strict';
 
 function pad(str, padWith, upToLength) {
@@ -11258,7 +10964,7 @@ exports.intToDecimalForm = function (int) {
 
   return result;
 };
-},{}],78:[function(_dereq_,module,exports){
+},{}],66:[function(_dereq_,module,exports){
 'use strict';
 exports.Map = LazyMap; // TODO: use ES6 map
 exports.Set = LazySet; // TODO: use ES6 set
@@ -11330,7 +11036,7 @@ LazySet.prototype["delete"] = function (key) {
   return this.store["delete"](key);
 };
 
-},{}],79:[function(_dereq_,module,exports){
+},{}],67:[function(_dereq_,module,exports){
 "use strict";
 
 // Extends method
@@ -11511,11 +11217,11 @@ module.exports = extend;
 
 
 
-},{}],80:[function(_dereq_,module,exports){
+},{}],68:[function(_dereq_,module,exports){
 'use strict';
 
-var upsert = _dereq_(84);
-var utils = _dereq_(85);
+var upsert = _dereq_(72);
+var utils = _dereq_(73);
 var Promise = utils.Promise;
 
 module.exports = function (opts) {
@@ -11590,7 +11296,7 @@ module.exports = function (opts) {
   });
 };
 
-},{"84":84,"85":85}],81:[function(_dereq_,module,exports){
+},{"72":72,"73":73}],69:[function(_dereq_,module,exports){
 'use strict';
 
 module.exports = function (func, emit, sum, log, isArray, toJSON) {
@@ -11598,17 +11304,17 @@ module.exports = function (func, emit, sum, log, isArray, toJSON) {
   return eval("'use strict'; (" + func.replace(/;\s*$/, "") + ");");
 };
 
-},{}],82:[function(_dereq_,module,exports){
+},{}],70:[function(_dereq_,module,exports){
 (function (process){
 'use strict';
 
-var pouchCollate = _dereq_(76);
-var TaskQueue = _dereq_(83);
+var pouchCollate = _dereq_(64);
+var TaskQueue = _dereq_(71);
 var collate = pouchCollate.collate;
 var toIndexableString = pouchCollate.toIndexableString;
 var normalizeKey = pouchCollate.normalizeKey;
-var createView = _dereq_(80);
-var evalFunc = _dereq_(81);
+var createView = _dereq_(68);
+var evalFunc = _dereq_(69);
 var log; 
 /* istanbul ignore else */
 if ((typeof console !== 'undefined') && (typeof console.log === 'function')) {
@@ -11616,7 +11322,7 @@ if ((typeof console !== 'undefined') && (typeof console.log === 'function')) {
 } else {
   log = function () {};
 }
-var utils = _dereq_(85);
+var utils = _dereq_(73);
 var Promise = utils.Promise;
 var persistentQueues = {};
 var tempViewQueue = new TaskQueue();
@@ -12471,14 +12177,14 @@ function BuiltInError(message) {
 }
 
 utils.inherits(BuiltInError, Error);
-}).call(this,_dereq_(53))
-},{"53":53,"76":76,"80":80,"81":81,"83":83,"85":85}],83:[function(_dereq_,module,exports){
+}).call(this,_dereq_(41))
+},{"41":41,"64":64,"68":68,"69":69,"71":71,"73":73}],71:[function(_dereq_,module,exports){
 'use strict';
 /*
  * Simple task queue to sequentialize actions. Assumes callbacks will eventually fire (once).
  */
 
-var Promise = _dereq_(85).Promise;
+var Promise = _dereq_(73).Promise;
 
 function TaskQueue() {
   this.promise = new Promise(function (fulfill) {fulfill(); });
@@ -12497,27 +12203,27 @@ TaskQueue.prototype.finish = function () {
 
 module.exports = TaskQueue;
 
-},{"85":85}],84:[function(_dereq_,module,exports){
+},{"73":73}],72:[function(_dereq_,module,exports){
 'use strict';
 
-var upsert = _dereq_(86).upsert;
+var upsert = _dereq_(74).upsert;
 
 module.exports = function (db, doc, diffFun) {
   return upsert.apply(db, [doc, diffFun]);
 };
-},{"86":86}],85:[function(_dereq_,module,exports){
+},{"74":74}],73:[function(_dereq_,module,exports){
 (function (process,global){
 'use strict';
 /* istanbul ignore if */
 if (typeof global.Promise === 'function') {
   exports.Promise = global.Promise;
 } else {
-  exports.Promise = _dereq_(61);
+  exports.Promise = _dereq_(49);
 }
 
-exports.inherits = _dereq_(57);
-exports.extend = _dereq_(79);
-var argsarray = _dereq_(50);
+exports.inherits = _dereq_(45);
+exports.extend = _dereq_(67);
+var argsarray = _dereq_(38);
 
 exports.promisedCallback = function (promise, callback) {
   if (callback) {
@@ -12602,8 +12308,8 @@ exports.uniq = function (arr) {
   return output;
 };
 
-var crypto = _dereq_(51);
-var Md5 = _dereq_(87);
+var crypto = _dereq_(39);
+var Md5 = _dereq_(75);
 
 exports.MD5 = function (string) {
   /* istanbul ignore else */
@@ -12613,8 +12319,8 @@ exports.MD5 = function (string) {
     return Md5.hash(string);
   }
 };
-}).call(this,_dereq_(53),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"50":50,"51":51,"53":53,"57":57,"61":61,"79":79,"87":87}],86:[function(_dereq_,module,exports){
+}).call(this,_dereq_(41),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"38":38,"39":39,"41":41,"45":45,"49":49,"67":67,"75":75}],74:[function(_dereq_,module,exports){
 (function (global){
 'use strict';
 
@@ -12623,7 +12329,7 @@ var PouchPromise;
 if (typeof window !== 'undefined' && window.PouchDB) {
   PouchPromise = window.PouchDB.utils.Promise;
 } else {
-  PouchPromise = typeof global.Promise === 'function' ? global.Promise : _dereq_(61);
+  PouchPromise = typeof global.Promise === 'function' ? global.Promise : _dereq_(49);
 }
 
 // this is essentially the "update sugar" function from daleharvey/pouchdb#1388
@@ -12721,7 +12427,7 @@ if (typeof window !== 'undefined' && window.PouchDB) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"61":61}],87:[function(_dereq_,module,exports){
+},{"49":49}],75:[function(_dereq_,module,exports){
 /*jshint bitwise:false*/
 /*global unescape*/
 
@@ -13322,7 +13028,7 @@ if (typeof window !== 'undefined' && window.PouchDB) {
     return SparkMD5;
 }));
 
-},{}],88:[function(_dereq_,module,exports){
+},{}],76:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -13497,33 +13203,33 @@ exports.parse = function (str) {
   }
 };
 
-},{}],89:[function(_dereq_,module,exports){
+},{}],77:[function(_dereq_,module,exports){
 (function (process){
 "use strict";
 
-var PouchDB = _dereq_(45);
+var PouchDB = _dereq_(33);
 
 module.exports = PouchDB;
 
-PouchDB.ajax = _dereq_(15);
-PouchDB.utils = _dereq_(48);
-PouchDB.Errors = _dereq_(24);
-PouchDB.replicate = _dereq_(42).replicate;
-PouchDB.sync = _dereq_(46);
-PouchDB.version = _dereq_(49);
+PouchDB.ajax = _dereq_(16);
+PouchDB.utils = _dereq_(36);
+PouchDB.Errors = _dereq_(19);
+PouchDB.replicate = _dereq_(32).replicate;
+PouchDB.sync = _dereq_(34);
+PouchDB.version = _dereq_(37);
 var httpAdapter = _dereq_(2);
 PouchDB.adapter('http', httpAdapter);
 PouchDB.adapter('https', httpAdapter);
 
 PouchDB.adapter('idb', _dereq_(8), true);
 PouchDB.adapter('websql', _dereq_(12), true);
-PouchDB.plugin(_dereq_(82));
+PouchDB.plugin(_dereq_(70));
 
 if (!process.browser) {
-  var ldbAdapter = _dereq_(51);
+  var ldbAdapter = _dereq_(39);
   PouchDB.adapter('leveldb', ldbAdapter, true);
 }
 
-}).call(this,_dereq_(53))
-},{"12":12,"15":15,"2":2,"24":24,"42":42,"45":45,"46":46,"48":48,"49":49,"51":51,"53":53,"8":8,"82":82}]},{},[89])(89)
+}).call(this,_dereq_(41))
+},{"12":12,"16":16,"19":19,"2":2,"32":32,"33":33,"34":34,"36":36,"37":37,"39":39,"41":41,"70":70,"8":8}]},{},[77])(77)
 });

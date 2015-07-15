@@ -2,13 +2,7 @@
 
 var errors = require('../../deps/errors');
 var utils = require('../../utils');
-var base64 = require('../../deps/binary/base64');
-var atob = base64.atob;
-var btoa = base64.btoa;
 var constants = require('./idb-constants');
-var readAsBinaryString = require('../../deps/binary/readAsBinaryString');
-var binaryStringToArrayBuffer =
-  require('../../deps/binary/binaryStringToArrayBuffer');
 
 function tryCode(fun, that, args) {
   try {
@@ -95,8 +89,8 @@ exports.readBlobData = function (body, type, encode, callback) {
     if (!body) {
       callback('');
     } else if (typeof body !== 'string') { // we have blob support
-      readAsBinaryString(body, function (binary) {
-        callback(btoa(binary));
+      utils.readAsBinaryString(body, function (binary) {
+        callback(utils.btoa(binary));
       });
     } else { // no blob support
       callback(body);
@@ -107,7 +101,7 @@ exports.readBlobData = function (body, type, encode, callback) {
     } else if (typeof body !== 'string') { // we have blob support
       callback(body);
     } else { // no blob support
-      body = binaryStringToArrayBuffer(atob(body));
+      body = utils.fixBinary(atob(body));
       callback(utils.createBlob([body], {type: type}));
     }
   }

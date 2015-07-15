@@ -3,9 +3,10 @@
 var merge = require('./merge');
 exports.extend = require('pouchdb-extend');
 exports.ajax = require('./deps/ajax');
-exports.createBlob = require('./deps/binary/blob');
+exports.createBlob = require('./deps/blob');
 exports.uuid = require('./deps/uuid');
 exports.getArguments = require('argsarray');
+var buffer = require('./deps/buffer');
 var errors = require('./deps/errors');
 var EventEmitter = require('events').EventEmitter;
 var collections = require('pouchdb-collections');
@@ -15,20 +16,6 @@ var parseDoc = require('./deps/parse-doc');
 
 var Promise = require('./deps/promise');
 exports.Promise = Promise;
-
-var base64 = require('./deps/binary/base64');
-
-// TODO: don't export these
-exports.atob = base64.atob;
-exports.btoa = base64.btoa;
-
-var binaryStringToBlob = require('./deps/binary/binaryStringToBlob');
-var arrayBufferToBinaryString =
-  require('./deps/binary/arrayBufferToBinaryString');
-var readAsArrayBuffer = require('./deps/binary/readAsArrayBuffer');
-
-// TODO: only used by the integration tests
-exports.binaryStringToBlob = binaryStringToBlob;
 
 exports.lastIndexOf = function (str, char) {
   for (var i = str.length - 1; i >= 0; i--) {
@@ -164,7 +151,7 @@ function Changes() {
   var self = this;
   EventEmitter.call(this);
   this.isChrome = isChromeApp();
-  this._listeners = {};
+  this.listeners = {};
   this.hasLocal = false;
   if (!this.isChrome) {
     this.hasLocal = exports.hasLocalStorage();
@@ -191,13 +178,13 @@ function Changes() {
 
 }
 Changes.prototype.addListener = function (dbName, id, db, opts) {
-  if (this._listeners[id]) {
+  if (this.listeners[id]) {
     return;
   }
   var self = this;
   var inprogress = false;
   function eventFunction() {
-    if (!self._listeners[id]) {
+    if (!self.listeners[id]) {
       return;
     }
     if (inprogress) {
@@ -233,16 +220,16 @@ Changes.prototype.addListener = function (dbName, id, db, opts) {
       inprogress = false;
     });
   }
-  this._listeners[id] = eventFunction;
+  this.listeners[id] = eventFunction;
   this.on(dbName, eventFunction);
 };
 
 Changes.prototype.removeListener = function (dbName, id) {
-  if (!(id in this._listeners)) {
+  if (!(id in this.listeners)) {
     return;
   }
   EventEmitter.prototype.removeListener.call(this, dbName,
-    this._listeners[id]);
+    this.listeners[id]);
 };
 
 
@@ -259,6 +246,77 @@ Changes.prototype.notifyLocalWindows = function (dbName) {
 Changes.prototype.notify = function (dbName) {
   this.emit(dbName);
   this.notifyLocalWindows(dbName);
+};
+
+if (typeof atob === 'function') {
+  exports.atob = function (str) {
+    return atob(str);
+  };
+} else {
+  exports.atob = function (str) {
+    var base64 = new buffer(str, 'base64');
+    // Node.js will just skip the characters it can't encode instead of
+    // throwing and exception
+    if (base64.toString('base64') !== str) {
+      throw ("Cannot base64 encode full string");
+    }
+    return base64.toString('binary');
+  };
+}
+
+if (typeof btoa === 'function') {
+  exports.btoa = function (str) {
+    return btoa(str);
+  };
+} else {
+  exports.btoa = function (str) {
+    return new buffer(str, 'binary').toString('base64');
+  };
+}
+
+// From http://stackoverflow.com/questions/14967647/ (continues on next line)
+// encode-decode-image-with-base64-breaks-image (2013-04-21)
+exports.fixBinary = function (bin) {
+  if (!process.browser) {
+    // don't need to do this in Node
+    return bin;
+  }
+
+  var length = bin.length;
+  var buf = new ArrayBuffer(length);
+  var arr = new Uint8Array(buf);
+  for (var i = 0; i < length; i++) {
+    arr[i] = bin.charCodeAt(i);
+  }
+  return buf;
+};
+
+// shim for browsers that don't support it
+exports.readAsBinaryString = function (blob, callback) {
+  var reader = new FileReader();
+  var hasBinaryString = typeof reader.readAsBinaryString === 'function';
+  reader.onloadend = function (e) {
+    var result = e.target.result || '';
+    if (hasBinaryString) {
+      return callback(result);
+    }
+    callback(exports.arrayBufferToBinaryString(result));
+  };
+  if (hasBinaryString) {
+    reader.readAsBinaryString(blob);
+  } else {
+    reader.readAsArrayBuffer(blob);
+  }
+};
+
+// simplified API. universal browser support is assumed
+exports.readAsArrayBuffer = function (blob, callback) {
+  var reader = new FileReader();
+  reader.onloadend = function (e) {
+    var result = e.target.result || new ArrayBuffer(0);
+    callback(result);
+  };
+  reader.readAsArrayBuffer(blob);
 };
 
 exports.once = function (fun) {
@@ -369,6 +427,19 @@ exports.adapterFun = function (name, callback) {
     }
     return callback.apply(this, args);
   }));
+};
+
+//Can't find original post, but this is close
+//http://stackoverflow.com/questions/6965107/ (continues on next line)
+//converting-between-strings-and-arraybuffers
+exports.arrayBufferToBinaryString = function (buffer) {
+  var binary = "";
+  var bytes = new Uint8Array(buffer);
+  var length = bytes.byteLength;
+  for (var i = 0; i < length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return binary;
 };
 
 exports.cancellableFun = function (fun, self, opts) {
@@ -621,7 +692,7 @@ exports.preprocessAttachments = function preprocessAttachments(
 
   function parseBase64(data) {
     try {
-      return base64.atob(data);
+      return exports.atob(data);
     } catch (e) {
       var err = errors.error(errors.BAD_ARG,
                              'Attachments need to be base64 encoded');
@@ -643,9 +714,10 @@ exports.preprocessAttachments = function preprocessAttachments(
 
       att.length = asBinary.length;
       if (blobType === 'blob') {
-        att.data = binaryStringToBlob(asBinary, att.content_type);
+        att.data = exports.createBlob([exports.fixBinary(asBinary)],
+          {type: att.content_type});
       } else if (blobType === 'base64') {
-        att.data = base64.btoa(asBinary);
+        att.data = exports.btoa(asBinary);
       } else { // binary
         att.data = asBinary;
       }
@@ -654,11 +726,11 @@ exports.preprocessAttachments = function preprocessAttachments(
         callback();
       });
     } else { // input is a blob
-      readAsArrayBuffer(att.data, function (buff) {
+      exports.readAsArrayBuffer(att.data, function (buff) {
         if (blobType === 'binary') {
-          att.data = arrayBufferToBinaryString(buff);
+          att.data = exports.arrayBufferToBinaryString(buff);
         } else if (blobType === 'base64') {
-          att.data = base64.btoa(arrayBufferToBinaryString(buff));
+          att.data = exports.btoa(exports.arrayBufferToBinaryString(buff));
         }
         exports.MD5(buff).then(function (result) {
           att.digest = 'md5-' + result;

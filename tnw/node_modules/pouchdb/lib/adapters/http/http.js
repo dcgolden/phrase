@@ -3,36 +3,17 @@
 var CHANGES_BATCH_SIZE = 25;
 
 // according to http://stackoverflow.com/a/417184/680742,
-// the de facto URL length limit is 2000 characters.
+// the de factor URL length limit is 2000 characters.
 // but since most of our measurements don't take the full
 // URL into account, we fudge it a bit.
 // TODO: we could measure the full URL to enforce exactly 2000 chars
 var MAX_URL_LENGTH = 1800;
 
-var readAsBinaryString = require('../../deps/binary/readAsBinaryString');
-var binaryStringToBlob = require('../../deps/binary/binaryStringToBlob');
 var utils = require('../../utils');
-var Promise = utils.Promise;
-var clone = utils.clone;
-var base64 = require('../../deps/binary/base64');
-var btoa = base64.btoa;
-var atob = base64.atob;
 var errors = require('../../deps/errors');
 var log = require('debug')('pouchdb:http');
 var isBrowser = typeof process === 'undefined' || process.browser;
 var buffer = require('../../deps/buffer');
-var createMultipart = require('../../deps/multipart');
-
-function blobToBase64(blobOrBuffer) {
-  if (!isBrowser) {
-    return Promise.resolve(blobOrBuffer.toString('base64'));
-  }
-  return new Promise(function (resolve) {
-    readAsBinaryString(blobOrBuffer, function (bin) {
-      resolve(btoa(bin));
-    });
-  });
-}
 
 function encodeDocId(id) {
   if (/^_design/.test(id)) {
@@ -46,15 +27,22 @@ function encodeDocId(id) {
 
 function preprocessAttachments(doc) {
   if (!doc._attachments || !Object.keys(doc._attachments)) {
-    return Promise.resolve();
+    return utils.Promise.resolve();
   }
 
-  return Promise.all(Object.keys(doc._attachments).map(function (key) {
+  return utils.Promise.all(Object.keys(doc._attachments).map(function (key) {
     var attachment = doc._attachments[key];
     if (attachment.data && typeof attachment.data !== 'string') {
-      return blobToBase64(attachment.data).then(function (b64) {
-        attachment.data = b64;
-      });
+      if (isBrowser) {
+        return new utils.Promise(function (resolve) {
+          utils.readAsBinaryString(attachment.data, function (binary) {
+            attachment.data = utils.btoa(binary);
+            resolve();
+          });
+        });
+      } else {
+        attachment.data = attachment.data.toString('base64');
+      }
     }
   }));
 }
@@ -87,12 +75,12 @@ function getHost(name, opts) {
     // except for the database name) with '/'s
     uri.path = parts.join('/');
     opts = opts || {};
-    opts = clone(opts);
+    opts = utils.clone(opts);
     uri.headers = opts.headers || (opts.ajax && opts.ajax.headers) || {};
 
     if (opts.auth || uri.auth) {
       var nAuth = opts.auth || uri.auth;
-      var token = btoa(nAuth.username + ':' + nAuth.password);
+      var token = utils.btoa(nAuth.username + ':' + nAuth.password);
       uri.headers.Authorization = 'Basic ' + token;
     }
 
@@ -143,38 +131,23 @@ function HttpPouch(opts, callback) {
   var dbUrl = genDBUrl(host, '');
 
   api.getUrl = function () {return dbUrl; };
-  api.getHeaders = function () {return clone(host.headers); };
+  api.getHeaders = function () {return utils.clone(host.headers); };
 
   var ajaxOpts = opts.ajax || {};
-  opts = clone(opts);
+  opts = utils.clone(opts);
   function ajax(options, callback) {
-    var reqOpts = utils.extend(true, clone(ajaxOpts), options);
+    var reqOpts = utils.extend(true, utils.clone(ajaxOpts), options);
     log(reqOpts.method + ' ' + reqOpts.url);
     return utils.ajax(reqOpts, callback);
   }
 
-  function ajaxPromise(opts) {
-    return new Promise(function (resolve, reject) {
-      ajax(opts, function (err, res) {
-        if (err) {
-          return reject(err);
-        }
-        resolve(res);
-      });
-    });
-  }
-
   // Create a new CouchDB database based on the given opts
   var createDB = function () {
-    ajax({
-      headers: clone(host.headers),
-      method: 'PUT',
-      url: dbUrl
-    }, function (err) {
+    ajax({headers: host.headers, method: 'PUT', url: dbUrl}, function (err) {
       // If we get an "Unauthorized" error
       if (err && err.status === 401) {
         // Test if the database already exists
-        ajax({headers: clone(host.headers), method: 'HEAD', url: dbUrl},
+        ajax({headers: host.headers, method: 'HEAD', url: dbUrl},
              function (err) {
           // If there is still an error
           if (err) {
@@ -198,11 +171,7 @@ function HttpPouch(opts, callback) {
   };
 
   if (!opts.skipSetup) {
-    ajax({
-      headers: clone(host.headers),
-      method: 'GET',
-      url: dbUrl
-    }, function (err) {
+    ajax({headers: host.headers, method: 'GET', url: dbUrl}, function (err) {
       //check if the db exists
       if (err) {
         if (err.status === 404) {
@@ -226,13 +195,10 @@ function HttpPouch(opts, callback) {
 
   api.id = utils.adapterFun('id', function (callback) {
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'GET',
       url: genUrl(host, '')
     }, function (err, result) {
-      if (err) {
-        return callback(err);
-      }
       var uuid = (result && result.uuid) ?
         result.uuid + host.db : genDBUrl(host, '');
       callback(null, uuid);
@@ -252,9 +218,9 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = clone(opts);
+    opts = utils.clone(opts);
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       url: genDBUrl(host, '_compact'),
       method: 'POST'
     }, function () {
@@ -279,7 +245,7 @@ function HttpPouch(opts, callback) {
   //    version: The version of CouchDB it is running
   api._info = function (callback) {
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'GET',
       url: genDBUrl(host, '')
     }, function (err, res) {
@@ -301,7 +267,10 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = clone(opts);
+    opts = utils.clone(opts);
+    if (opts.auto_encode === undefined) {
+      opts.auto_encode = true;
+    }
 
     // List of parameters to add to the GET request
     var params = [];
@@ -335,6 +304,13 @@ function HttpPouch(opts, callback) {
       params.push('open_revs=' + opts.open_revs);
     }
 
+    // If it exists, add the opts.attachments value to the list of parameters.
+    // If attachments=true the resulting JSON will include the base64-encoded
+    // contents in the "data" property of each attachment.
+    if (opts.attachments) {
+      params.push('attachments=true');
+    }
+
     // If it exists, add the opts.rev value to the list of parameters.
     // If rev is given a revision number then get the specified revision.
     if (opts.rev) {
@@ -352,64 +328,43 @@ function HttpPouch(opts, callback) {
     params = params.join('&');
     params = params === '' ? '' : '?' + params;
 
-    id = encodeDocId(id);
+    if (opts.auto_encode) {
+      id = encodeDocId(id);
+    }
 
     // Set the options for the ajax call
     var options = {
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'GET',
       url: genDBUrl(host, id + params)
     };
     var getRequestAjaxOpts = opts.ajax || {};
     utils.extend(true, options, getRequestAjaxOpts);
 
-    function fetchAttachments(doc) {
-      var atts = doc._attachments;
-      var filenames = atts && Object.keys(atts);
-      if (!atts || !filenames.length) {
-        return;
-      }
-      // we fetch these manually in separate XHRs, because
-      // Sync Gateway would normally send it back as multipart/mixed,
-      // which we cannot parse. Also, this is more efficient than
-      // receiving attachments as base64-encoded strings.
-      return Promise.all(filenames.map(function (filename) {
-        var att = atts[filename];
-        var path = encodeDocId(doc._id) + '/' + encodeAttachmentId(filename) +
-          '?rev=' + doc._rev;
-        return ajaxPromise({
-          headers: clone(host.headers),
-          method: 'GET',
-          url: genDBUrl(host, path),
-          binary: true
-        }).then(blobToBase64).then(function (b64) {
-          delete att.stub;
-          delete att.length;
-          att.data = b64;
-        });
-      }));
+    // If the given id contains at least one '/' and the part before the '/'
+    // is NOT "_design" and is NOT "_local"
+    // OR
+    // If the given id contains at least two '/' and the part before the first
+    // '/' is "_design".
+    // TODO This second condition seems strange since if parts[0] === '_design'
+    // then we already know that parts[0] !== '_local'.
+    var parts = id.split('/');
+    if ((parts.length > 1 && parts[0] !== '_design' && parts[0] !== '_local') ||
+        (parts.length > 2 && parts[0] === '_design' && parts[0] !== '_local')) {
+      // Binary is expected back from the server
+      options.binary = true;
     }
 
-    function fetchAllAttachments(docOrDocs) {
-      if (Array.isArray(docOrDocs)) {
-        return Promise.all(docOrDocs.map(function (doc) {
-          if (doc.ok) {
-            return fetchAttachments(doc.ok);
-          }
-        }));
+    // Get the document
+    ajax(options, function (err, doc, xhr) {
+      // If the document does not exist, send an error to the callback
+      if (err) {
+        return callback(err);
       }
-      return fetchAttachments(docOrDocs);
-    }
 
-    ajaxPromise(options).then(function (res) {
-      return Promise.resolve().then(function () {
-        if (opts.attachments) {
-          return fetchAllAttachments(res);
-        }
-      }).then(function () {
-        callback(null, res);
-      });
-    }).catch(callback);
+      // Send the document to the callback
+      callback(null, doc, xhr);
+    });
   });
 
   // Delete the document given by doc from the database given by host.
@@ -442,7 +397,7 @@ function HttpPouch(opts, callback) {
 
     // Delete the document
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'DELETE',
       url: genDBUrl(host, encodeDocId(doc._id)) + '?rev=' + rev
     }, callback);
@@ -460,15 +415,15 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    var params = opts.rev ? ('?rev=' + opts.rev) : '';
-    var url = genDBUrl(host, encodeDocId(docId)) + '/' +
-      encodeAttachmentId(attachmentId) + params;
-    ajax({
-      headers: clone(host.headers),
-      method: 'GET',
-      url: url,
-      binary: true
-    }, callback);
+    opts = utils.clone(opts);
+    if (opts.auto_encode === undefined) {
+      opts.auto_encode = true;
+    }
+    if (opts.auto_encode) {
+      docId = encodeDocId(docId);
+    }
+    opts.auto_encode = false;
+    api.get(docId + '/' + encodeAttachmentId(attachmentId), opts, callback);
   });
 
   // Remove the attachment given by the id and rev
@@ -480,7 +435,7 @@ function HttpPouch(opts, callback) {
       encodeAttachmentId(attachmentId)) + '?rev=' + rev;
 
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'DELETE',
       url: url
     }, callback);
@@ -512,21 +467,21 @@ function HttpPouch(opts, callback) {
     if (typeof blob === 'string') {
       var binary;
       try {
-        binary = atob(blob);
+        binary = utils.atob(blob);
       } catch (err) {
         // it's not base64-encoded, so throw error
         return callback(errors.error(errors.BAD_ARG,
                         'Attachments need to be base64 encoded'));
       }
       if (isBrowser) {
-        blob = binaryStringToBlob(binary, type);
+        blob = utils.createBlob([utils.fixBinary(binary)], {type: type});
       } else {
         blob = binary ? new buffer(binary, 'binary') : '';
       }
     }
 
     var opts = {
-      headers: clone(host.headers),
+      headers: utils.clone(host.headers),
       method: 'PUT',
       url: url,
       processData: false,
@@ -549,7 +504,7 @@ function HttpPouch(opts, callback) {
       return callback(errors.error(errors.NOT_AN_OBJECT));
     }
 
-    doc = clone(doc);
+    doc = utils.clone(doc);
 
     preprocessAttachments(doc).then(function () {
       while (true) {
@@ -561,7 +516,7 @@ function HttpPouch(opts, callback) {
         } else if (temptype === "string" && id && !('_rev' in doc)) {
           doc._rev = temp;
         } else if (temptype === "object") {
-          opts = clone(temp);
+          opts = utils.clone(temp);
         }
         if (!args.length) {
           break;
@@ -589,38 +544,25 @@ function HttpPouch(opts, callback) {
         params = '?' + params;
       }
 
-      var ajaxOpts = {
-        headers: clone(host.headers),
+      // Add the document
+      ajax({
+        headers: host.headers,
         method: 'PUT',
         url: genDBUrl(host, encodeDocId(doc._id)) + params,
         body: doc
-      };
-
-      return Promise.resolve().then(function () {
-        var hasNonStubAttachments = doc._attachments &&
-          Object.keys(doc._attachments).filter(function (att) {
-            return !doc._attachments[att].stub;
-          }).length;
-        if (hasNonStubAttachments) {
-          // use multipart/related for more efficient attachment uploading
-          var multipart = createMultipart(doc);
-          ajaxOpts.body = multipart.body;
-          ajaxOpts.processData = false;
-          ajaxOpts.headers = utils.extend(ajaxOpts.headers, multipart.headers);
+      }, function (err, res) {
+        if (err) {
+          return callback(err);
         }
-      }).catch(function () {
-        throw new Error('Did you forget to base64-encode an attachment?');
-      }).then(function () {
-        return ajaxPromise(ajaxOpts);
-      }).then(function (res) {
-        res.ok = true; // smooths out cloudant not doing this
+        res.ok = true;
         callback(null, res);
       });
     }).catch(callback);
+
   }));
 
   // Add the document given by doc (in JSON string format) to the database
-  // given by host. This does not assume that doc is a new document
+  // given by host. This does not assume that doc is a new document 
   // (i.e. does not have a _id or a _rev field.)
   api.post = utils.adapterFun('post', function (doc, opts, callback) {
     // If no options were given, set the callback to be the second parameter
@@ -628,7 +570,7 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = clone(opts);
+    opts = utils.clone(opts);
     if (typeof doc !== 'object') {
       return callback(errors.error(errors.NOT_AN_OBJECT));
     }
@@ -656,10 +598,10 @@ function HttpPouch(opts, callback) {
       req.new_edits = opts.new_edits;
     }
 
-    Promise.all(req.docs.map(preprocessAttachments)).then(function () {
+    utils.Promise.all(req.docs.map(preprocessAttachments)).then(function () {
       // Update/create the documents
       ajax({
-        headers: clone(host.headers),
+        headers: host.headers,
         method: 'POST',
         url: genDBUrl(host, '_bulk_docs'),
         body: req
@@ -682,7 +624,7 @@ function HttpPouch(opts, callback) {
       callback = opts;
       opts = {};
     }
-    opts = clone(opts);
+    opts = utils.clone(opts);
     // List of parameters to add to the GET request
     var params = [];
     var body;
@@ -769,7 +711,7 @@ function HttpPouch(opts, callback) {
 
     // Get the document listing
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: method,
       url: genDBUrl(host, '_all_docs' + params),
       body: body
@@ -786,7 +728,7 @@ function HttpPouch(opts, callback) {
     // set of changes to return and attempting to process them at once
     var batchSize = 'batch_size' in opts ? opts.batch_size : CHANGES_BATCH_SIZE;
 
-    opts = clone(opts);
+    opts = utils.clone(opts);
     opts.timeout = opts.timeout || 30 * 1000;
 
     // We give a 5 second buffer for CouchDB changes to respond with
@@ -900,7 +842,7 @@ function HttpPouch(opts, callback) {
 
       // Set the options for the ajax call
       var xhrOpts = {
-        headers: clone(host.headers),
+        headers: host.headers,
         method: method,
         url: genDBUrl(host, '_changes' + paramStr),
         // _changes can take a long time to generate, especially when filtered
@@ -1053,7 +995,7 @@ function HttpPouch(opts, callback) {
       source.close();
       utils.call(opts.complete, err);
     }
-
+    
   };
 
   api._useSSE = false;
@@ -1072,7 +1014,7 @@ function HttpPouch(opts, callback) {
 
     // Get the missing document/revision IDs
     ajax({
-      headers: clone(host.headers),
+      headers: host.headers,
       method: 'POST',
       url: genDBUrl(host, '_revs_diff'),
       body: JSON.stringify(req)
@@ -1087,7 +1029,7 @@ function HttpPouch(opts, callback) {
     ajax({
       url: genDBUrl(host, ''),
       method: 'DELETE',
-      headers: clone(host.headers)
+      headers: host.headers
     }, function (err, resp) {
       if (err) {
         api.emit('error', err);
