@@ -31,6 +31,12 @@ a {
   clear:both;
 }
 
+.loginPopupLogin{
+  color: rgba(255,255,255,0.87);
+  background-color: rgb(63,81,181);
+
+}
+
 .avatarSmall{
   width: 44px!important;
   height: 44px!important;
