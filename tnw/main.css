@@ -37,8 +37,22 @@ a {
   font-size: 12px;
 }
 
-.loginPopupUsername{
+.loginPopupUsername, 
+.signupPopupUsername, 
+.signupPopupEmail{
   clear:both;
+}
+
+.signupPopupPassword, .signupPopupCPassword{
+  width: 45%;
+}
+
+.signupPopupPassword{
+  float: left;
+}
+
+.signupPopupCPassword{
+  float: right;
 }
 
 .avatarSmall{

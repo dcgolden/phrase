@@ -41,9 +41,9 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
     })
   }
 
-  $scope.$on('users.login.success', getSession)
+  $scope.$on('users.login.success', getSession);
 
-  getSession()
+  getSession();
   
   $scope.logout = function () {
     users.logout().then(function() {
@@ -92,15 +92,28 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
                         '<div>'+
                           '<a class="loginPopupSubheader" href ng-click="LoginDialogTrue()"> Have an account? Login</a>'+
                         '</div>'+
-                        '<form name="Signup" ng-submit="signupButton(user)" method="POST">'+
+                        '<form name="Signup" ng-submit="signupButton(user)">'+
                           '<div>'+
-                            '<md-input-container flex class="loginPopupUsername">'+
+                            '<md-checkbox class="signupPopupType" ng-model="user.typeBox" aria-label="typeCheckbox">'+
+                              '{{user.type}}'+
+                            '</md-checkbox>'+
+                            '<md-input-container flex class="signupPopupUsername">'+
                               '<label>Username</label>'+
                               '<input type="text" name="username" ng-model="user.username">'+
                             '</md-input-container>'+
-                            '<md-input-container class="loginPopupPassword" flex>'+
-                              '<label>Password</label>'+
-                              '<input type="password" name="pass" ng-model="user.password">'+
+                            '<div class="signupPopupPasswordContainer">'+
+                              '<md-input-container class="signupPopupPassword" flex>'+
+                                '<label>Password</label>'+
+                                '<input type="password" name="pass" ng-model="user.password">'+
+                              '</md-input-container>'+
+                              '<md-input-container class="signupPopupCPassword" flex>'+
+                                '<label>Confirm Password</label>'+
+                                '<input type="password" name="cPass" ng-model="user.cPassword">'+
+                              '</md-input-container>'+
+                            '</div>'+
+                            '<md-input-container class="signupPopupEmail" flex>'+
+                              '<label>Email</label>'+
+                              '<input type="email" name="email" ng-model="user.email">'+
                             '</md-input-container>'+
                           '</div>'+
                           '<div class="md-actions" layout="row">'+
