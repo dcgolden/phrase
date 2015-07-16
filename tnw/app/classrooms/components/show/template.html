@@ -45,7 +45,7 @@
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider> 
         <div class="classroomsAddArticles">
             This classroom has no articles. 
-            <a class="classroomsAddArticles" ui-sref="classrooms.edit({id: classroom._id})">Add an Article</a>
+            <md-button class="md-primary" ng-click="addAnArticle()">Add an Article</md-button>
         </div>
     </div>
     <div ng-if="students">

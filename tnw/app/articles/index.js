@@ -1,5 +1,6 @@
+'use strict';
 /* commonjs package manager support (eg componentjs) */
-if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports){
+if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.exports === exports){
   module.exports = 'app.articles';
 }
 
@@ -21,6 +22,6 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
 
      }])
     .factory('classrooms', ['pouchDB', 'dbName', require('../classrooms/services').classrooms])
-    .factory('articles', ['pouchDB', 'dbName', require('./services').articles])
+    .factory('articles', ['pouchDB', 'dbName', require('./services').articles]);
 
-})( window, window.angular)
+})( window, window.angular);

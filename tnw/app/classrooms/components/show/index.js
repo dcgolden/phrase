@@ -4,11 +4,11 @@ var fs = require('fs');
 
 module.exports = {
     url: '/:id',
-    controller: ['$scope', 'classrooms', '$stateParams', controller],
+    controller: ['$scope', 'classrooms', '$state', '$stateParams', controller],
     template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 };
 
-function controller($scope, classrooms, $stateParams) {
+function controller($scope, classrooms, $state, $stateParams) {
     classrooms.get($stateParams.id)
         .then(function(doc) {
             $scope.classroom = doc;
@@ -18,4 +18,10 @@ function controller($scope, classrooms, $stateParams) {
         .then(function(res) {
             $scope.articles = res;
         });
+
+    $scope.addAnArticle = function() {
+        $state.go('articles.new', {
+            classroom: $scope.classroom._id
+        });
+    };
 }
