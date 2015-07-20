@@ -10,7 +10,7 @@
                 <div class="lock-size" layout="row" layout-align="center center">
                     <md-fab-speed-dial md-direction="down" ng-class="md-scale">
                         <md-fab-trigger>
-                            <md-button aria-label="articleCreateSubmit" ng-click="create(article)" class="md-fab md-color-confirm">
+                            <md-button type="submit" ng-disabled="create.$invalid" aria-label="articleCreateSubmit" ng-click="create(article)" class="md-fab md-color-confirm">
                                 <md-tooltip md-direction="donw" md-delay="200" md-autohide="true">
                                     Done!
                                 </md-tooltip>
@@ -28,7 +28,10 @@
                     <div class="articleTitleInput">
                         <md-input-container>
                             <label>Title</label>
-                            <input type="text" name="title" ng-model="article.title">
+                            <input type="text" name="title" ng-model="article.title" required>
+                            <div class="errors" ng-messages="create.title.$error" ng-if="create.$dirty">
+                                <div ng-message="required">Required</div>
+                            </div>
                         </md-input-container>
                     </div>
                     <div class="articleAuthorInput">
@@ -44,14 +47,23 @@
                         </md-input-container>
                     </div>
                     <div class="articleClassroomInput">
-                        <md-select class="classroomPicker" md-on-open="loadClassrooms()" ng-model="article.classroom" placeholder="Which Classroom?">
-                            <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
-                        </md-select>
+                        <md-input-container>
+                            <label>Which Classrooom?</label>
+                            <md-select class="classroomPicker" name="classroom" md-on-open="loadClassrooms()" ng-model="article.classroom" required>
+                                <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
+                            </md-select>
+                            <div class="errors" ng-messages="create.classroom.$error" ng-if="create.$dirty">
+                                <div ng-message="required">Required</div>
+                            </div>
+                        </md-input-container>
                     </div>
                     <div class="articleURLInput">
                         <md-input-container>
                             <label>URL</label>
-                            <input type="text" name="author" ng-model="article.url">
+                            <input type="text" name="url" ng-model="article.url" required>
+                            <div class="errors" ng-messages="create.url.$error" ng-if="create.$dirty">
+                                <div ng-message="required">Required</div>
+                            </div>
                         </md-input-container>
                     </div>
                 </form>
