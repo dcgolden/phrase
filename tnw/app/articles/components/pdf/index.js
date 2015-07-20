@@ -7,7 +7,7 @@ module.exports = {
     template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 };
 
-function controller($scope, articles, $state) {
+function controller($scope, articles, classrooms, $stateParams, $state) {
 
     classrooms.list().then(function(classRes) {
         $scope.classrooms = classRes;

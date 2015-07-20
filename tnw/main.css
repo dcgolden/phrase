@@ -14,8 +14,8 @@ a {
   text-decoration: none;
 }
 
-a:visited {
-    color: inherit;
+a:visited.addArticleFromClassroom {
+    color: blue;
 }
 
 .loginPopup{
