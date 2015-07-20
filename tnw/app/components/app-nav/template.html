@@ -11,8 +11,7 @@
         </div>
       </md-button>
       -->
-      <div class="toolbarCurrentPage"> Phrase
-      </div>
+      <div href class="toolbarCurrentPage" ng-click="goHome()"> <a href> Phrase </a> </div>
       <span flex></span>
       <md-button>Features</md-button>
       <md-button ui-sref="about">About</md-button>
@@ -22,7 +21,7 @@
   </md-toolbar>
 
   <!--SideNav!!-->
-  <div layout="row" flex="" ng-click="toggleLeft()">
+  <!--<div layout="row" flex="" ng-click="toggleLeft()">
     <md-sidenav style="height:500px;" md-component-id="left" class="md-sidenav-left md-whiteframe-z2">
       <md-toolbar class="" ng-click="toggleLeft()">
         <div class="md-toolbar-tools">
@@ -86,7 +85,7 @@
         </md-list>
       </md-content>
     </md-sidenav>
-  </div>
+  </div>-->
 </div>
 
 <div ng-if="activeUser">
@@ -100,7 +99,7 @@
           </ng-md-icon>
         </div>
       </md-button>
-      <div class="toolbarCurrentPage"> Phrase</div>
+      <div href class="toolbarCurrentPage" ng-click="goHome()"> <a href> Phrase </a> </div>      
       <span flex></span>
       <md-button ui-sref="users.show" class="toolbarCurrentUser">{{activeUser}}</md-button>
       <md-button class="md-icon-button hamburgerMenuButton2" aria-label="notifications">

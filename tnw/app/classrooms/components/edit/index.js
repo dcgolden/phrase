@@ -13,7 +13,7 @@ function controller ($scope, classrooms, $state, $stateParams ) {
     .then(function (doc) {
       $scope.classroom = doc
     })
-z
+
   $scope.update = function (classroom) {
     classrooms.update(classroom)
       .then(function (res) {
