@@ -10,7 +10,7 @@
                 <div class="lock-size" layout="row" layout-align="center center">
                     <md-fab-speed-dial md-direction="down" ng-class="md-scale">
                         <md-fab-trigger>
-                            <md-button ng-disabled="create.$invalid" aria-label="articleCreateSubmit" ng-click="create(article)" class="md-fab md-color-confirm">
+                            <md-button ng-disabled="createArticlePdf.$invalid" aria-label="articleCreateSubmit" ng-click="create(article)" class="md-fab md-color-confirm">
                                 <md-tooltip md-direction="donw" md-delay="200" md-autohide="true">
                                     Done!
                                 </md-tooltip>
@@ -24,12 +24,12 @@
         </div>
         <md-content class="articleCardContainer">
             <md-card class="articleCard">
-                <form name="create" ng-submit="create(article)">
+                <form name="createArticlePdf" ng-submit="create(article)">
                     <div class="articleTitleInput">
                         <md-input-container>
                             <label>Title</label>
                             <input type="text" name="title" ng-model="article.title">
-                            <div class="errors" ng-messages="create.title.$error" ng-if="create.$dirty">
+                            <div class="errors" ng-messages="createArticlePdf.title.$error" ng-if="createArticlePdf.$dirty">
                                 <div ng-message="required">Required</div>
                             </div>
                         </md-input-container>
@@ -52,15 +52,15 @@
                             <md-select class="classroomPicker" name="classroom" md-on-open="loadClassrooms()" ng-model="article.classroom" required>
                                 <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
                             </md-select>
-                            <div class="errors" ng-messages="create.classroom.$error" ng-if="create.$dirty">
+                            <div class="errors" ng-messages="createArticlePdf.classroom.$error" ng-if="createArticlePdf.$dirty">
                                 <div ng-message="required">Required</div>
                             </div>
                         </md-input-container>
                     </div>
                     <div class="articlePDFInput">
                         <md-input-container>
-                            <input required type="file" name="pdf" ng-model="PDF" aria-label="pdf">
-                            <div class="errors" ng-messages="create.pdf.$error" ng-if="create.$dirty">
+                            <input required type="file" name="pdf" ng-model="artice.pdf" aria-label="pdf">
+                            <div class="errors" ng-messages="createArticlePdf.pdf.$error" ng-if="createArticlePdf.$dirty">
                                 <div ng-message="required">Required</div>
                             </div>
                         </md-input-container>

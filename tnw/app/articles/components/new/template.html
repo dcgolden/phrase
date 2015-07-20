@@ -10,7 +10,7 @@
                 <div class="lock-size" layout="row" layout-align="center center">
                     <md-fab-speed-dial md-direction="down" ng-class="md-scale">
                         <md-fab-trigger>
-                            <md-button ng-disabled="create.$invalid" aria-label="articleCreateSubmit" ng-click="create(article)" class="md-fab md-color-confirm">
+                            <md-button ng-disabled="createArticle.$invalid" aria-label="articleCreateSubmit" ng-click="create(article)" class="md-fab md-color-confirm">
                                 <md-tooltip md-direction="down" md-delay="200" md-autohide="true">
                                     Done!
                                 </md-tooltip>
@@ -24,12 +24,12 @@
         </div>
         <md-content class="articleCardContainer">
             <md-card class="articleCard">
-                <form name="create" ng-submit="create(article)">
+                <form name="createAritcle" ng-submit="create(article)">
                     <div class="articleTitleInput">
                         <md-input-container>
                             <label>Title</label>
                             <input type="text" name="title" ng-model="article.title">
-                            <div class="errors" ng-messages="create.title.$error" ng-if="create.$dirty">
+                            <div class="errors" ng-messages="createArticle.title.$error" ng-if="createArticle.$dirty">
                                 <div ng-message="required">Required</div>
                             </div>
                         </md-input-container>
@@ -52,7 +52,7 @@
                             <md-select class="classroomPicker" name="classroom" md-on-open="loadClassrooms()" ng-model="article.classroom" required>
                                 <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
                             </md-select>
-                            <div class="errors" ng-messages="create.classroom.$error" ng-if="create.$dirty">
+                            <div class="errors" ng-messages="createArticle.classroom.$error" ng-if="createArticle.$dirty">
                                 <div ng-message="required">Required</div>
                             </div>
                         </md-input-container>
@@ -62,7 +62,7 @@
                             <label>Content</label>
                             <textarea columns="1" rows="15" type="text" name="content" ng-model="article.content" required>
                             </textarea>
-                            <div class="errors" ng-messages="create.content.$error" ng-if="create.$dirty">
+                            <div class="errors" ng-messages="createArticle.content.$error" ng-if="createArticle.$dirty">
                                 <div ng-message="required">Required</div>
                             </div>
                         </md-input-container>

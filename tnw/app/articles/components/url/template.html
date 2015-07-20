@@ -10,7 +10,7 @@
                 <div class="lock-size" layout="row" layout-align="center center">
                     <md-fab-speed-dial md-direction="down" ng-class="md-scale">
                         <md-fab-trigger>
-                            <md-button type="submit" ng-disabled="create.$invalid" aria-label="articleCreateSubmit" ng-click="create(article)" class="md-fab md-color-confirm">
+                            <md-button type="submit" ng-disabled="createArticleUrl.$invalid" aria-label="articleCreateSubmit" ng-click="create(article)" class="md-fab md-color-confirm">
                                 <md-tooltip md-direction="donw" md-delay="200" md-autohide="true">
                                     Done!
                                 </md-tooltip>
@@ -24,12 +24,12 @@
         </div>
         <md-content class="articleCardContainer">
             <md-card class="articleCard">
-                <form name="create" ng-submit="create(article)">
+                <form name="createArticleUrl" ng-submit="create(article)">
                     <div class="articleTitleInput">
                         <md-input-container>
                             <label>Title</label>
                             <input type="text" name="title" ng-model="article.title" required>
-                            <div class="errors" ng-messages="create.title.$error" ng-if="create.$dirty">
+                            <div class="errors" ng-messages="createArticleUrl.title.$error" ng-if="createArticleUrl.$dirty">
                                 <div ng-message="required">Required</div>
                             </div>
                         </md-input-container>
@@ -52,7 +52,7 @@
                             <md-select class="classroomPicker" name="classroom" md-on-open="loadClassrooms()" ng-model="article.classroom" required>
                                 <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
                             </md-select>
-                            <div class="errors" ng-messages="create.classroom.$error" ng-if="create.$dirty">
+                            <div class="errors" ng-messages="createArticleUrl.classroom.$error" ng-if="createArticleUrl.$dirty">
                                 <div ng-message="required">Required</div>
                             </div>
                         </md-input-container>
@@ -61,7 +61,7 @@
                         <md-input-container>
                             <label>URL</label>
                             <input type="text" name="url" ng-model="article.url" required>
-                            <div class="errors" ng-messages="create.url.$error" ng-if="create.$dirty">
+                            <div class="errors" ng-messages="createArticleUrl.url.$error" ng-if="createArticleUrl.$dirty">
                                 <div ng-message="required">Required</div>
                             </div>
                         </md-input-container>
