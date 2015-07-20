@@ -8,7 +8,6 @@
     <meta name="description" content="">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
     <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
-    <link rel="stylesheet" href="http://assets.annotateit.org/annotator/v1.2.5/annotator.min.css">
 </head>
 
 <body>
@@ -19,9 +18,20 @@
         <div class="mainView contentV" flex ui-view></div>
     </div>
     <script src="/app/index.js"></script>
-    <script src="http://assets.annotateit.org/annotator/v1.2.5/annotator-full.min.js"></script>
-    <!--<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>-->
-    
+    <script src="annotator.min.js"></script>
+    <script>
+    'use strict';
+    var app = new annotator.App();
+    app.include(annotator.ui.main);
+    app.include(annotator.storage.http, {
+        prefix: 'http://bivit-dev.iriscouch.com/annotator/_design/annotator/_rewrite'
+    });
+    app
+        .start()
+        .then(function() {
+            app.annotations.load();
+        });
+    </script>
 </body>
 
 </html>
