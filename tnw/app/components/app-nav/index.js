@@ -12,6 +12,10 @@ module.exports = function (users) {
 
 function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog, $rootScope, $stateParams) {
 
+  $scope.goHome = function(){
+    $state.go('home')
+  }
+
   function buildToggler(navID) {
     var debounceFn =  $mdUtil.debounce(function(){
           $mdSidenav(navID)
@@ -72,11 +76,17 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
                           '<div>'+
                             '<md-input-container flex class="loginPopupUsername">'+
                               '<label>Username</label>'+
-                              '<input type="text" ng-model="user.username">'+
+                              '<input type="text" name="username" ng-model="user.username" required>'+
+                              '<div class="errors" ng-messages="Login.username.$error" ng-if="Signup.$dirty">'+
+                                '<div ng-message="required">Required</div>'+
+                              '</div>'+
                             '</md-input-container>'+
                             '<md-input-container class="loginPopupPassword" flex>'+
                               '<label>Password</label>'+
-                              '<input type="password" ng-model="user.password">'+
+                              '<input type="password" name="pass" ng-model="user.password" required>'+
+                              '<div class="errors" ng-messages="Login.pass.$error" ng-if="Signup.$dirty">'+
+                                '<div ng-message="required">Required</div>'+
+                              '</div>'+
                             '</md-input-container>'+
                           '</div>'+
                           '<div class="md-actions" layout="row">'+
@@ -84,7 +94,7 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
                             '<md-button type="button" class="loginPopupCancel" ng-click="cancel()">'+
                               '<span class="pageSubTitle">Cancel</span>'+
                             '</md-button>'+
-                            '<md-button type="submit" class="loginPopupLogin md-raised md-primary" ng-click="loginButton(user)">Login</md-button>'+
+                            '<md-button type="submit" ng-disabled="Login.$invalid" class="loginPopupLogin md-raised md-primary" ng-click="loginButton(user)">Login</md-button>'+
                           '</div>'+
                         '</form>'+
                       '</div>'+
@@ -94,26 +104,45 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
                         '</div>'+
                         '<form name="Signup" ng-submit="signupButton(user)">'+
                           '<div>'+
-                            '<md-checkbox class="signupPopupType" ng-model="user.typeBox" aria-label="typeCheckbox">'+
-                              '{{user.type}}'+
-                            '</md-checkbox>'+
+                            '<md-input-container flex class="signupPopupRole">'+
+                              '<label>Role</label>'+
+                              '<md-select name="role" ng-model="user.role" required>'+
+                                '<md-option value="Student">Student</md-option>'+
+                                '<md-option value="Teacher">Teacher</md-option>'+
+                              '</md-select>'+
+                              '<div class="errors" ng-messages="Signup.role.$error" ng-if="Signup.$dirty">'+
+                                '<div ng-message="required">Required</div>'+
+                              '</div>'+
+                            '</md-input-container>'+
                             '<md-input-container flex class="signupPopupUsername">'+
                               '<label>Username</label>'+
-                              '<input type="text" name="username" ng-model="user.username">'+
+                              '<input type="text" name="username" ng-model="user.username" required>'+
+                              '<div class="errors" ng-messages="Signup.username.$error" ng-if="Signup.$dirty">'+
+                                '<div ng-message="required">Required</div>'+
+                              '</div>'+
                             '</md-input-container>'+
                             '<div class="signupPopupPasswordContainer">'+
                               '<md-input-container class="signupPopupPassword" flex>'+
                                 '<label>Password</label>'+
-                                '<input type="password" name="pass" ng-model="user.password">'+
+                                '<input type="password" name="pass" ng-model="user.password" required>'+
+                                '<div class="errors" ng-messages="Signup.pass.$error" ng-if="Signup.$dirty">'+
+                                  '<div ng-message="required">Required</div>'+
+                                '</div>'+
                               '</md-input-container>'+
                               '<md-input-container class="signupPopupCPassword" flex>'+
                                 '<label>Confirm Password</label>'+
-                                '<input type="password" name="cPass" ng-model="user.cPassword">'+
+                                '<input type="password" name="cPass" ng-model="cPassword" required compare-to="user.password">'+
+                                '<div class="errors" ng-messages="Signup.cPass.$error" ng-if="Signup.$dirty">'+
+                                  '<div ng-message="required">Passwords do not match</div>'+
+                                '</div>'+
                               '</md-input-container>'+
                             '</div>'+
                             '<md-input-container class="signupPopupEmail" flex>'+
                               '<label>Email</label>'+
-                              '<input type="email" name="email" ng-model="user.email">'+
+                              '<input type="email" name="email" ng-model="user.email" required>'+
+                              '<div class="errors" ng-messages="Signup.email.$error" ng-if="Signup.$dirty">'+
+                                '<div ng-message="required">Required</div>'+
+                              '</div>'+
                             '</md-input-container>'+
                           '</div>'+
                           '<div class="md-actions" layout="row">'+
@@ -121,7 +150,7 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
                             '<md-button type="button" class="loginPopupCancel" ng-click="cancel()">'+
                               '<span class="pageSubTitle">Cancel</span>'+
                             '</md-button>'+
-                            '<md-button type="submit" class="loginPopupLogin md-raised md-primary" ng-click="signupButtton(user)"> Signup </md-button>'+
+                            '<md-button type="submit" ng-disabled="Signup.$invalid" class="loginPopupLogin md-raised md-primary" ng-click="signupButtton(user)"> Signup </md-button>'+
                           '</div>'+
                         '</form>'+
                       '</div>'+
@@ -152,10 +181,11 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
   }
 
   $scope.signupButton = function (user) {
-    console.log("signup")
+    console.log(user.username, user.password, user.email, user.role)
     $mdDialog.hide()
-    users.signup(user.username, user.password, user.email)
+    users.signup(user.username, user.password, user.role, user.email)
       .then(function (res) {
+        console.log(user.username, user.password, user.email, user.role)
         $state.go('articles.list')
       })
   };
