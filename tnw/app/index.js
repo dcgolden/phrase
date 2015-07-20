@@ -1,8 +1,6 @@
 'use strict';
 
 var cssify = require('cssify');
-var $ = require('jquery');
-
 cssify.byUrl('//cdn.rawgit.com/angular/bower-material/master/angular-material.css');
 cssify.byUrl('/main.css');
 
