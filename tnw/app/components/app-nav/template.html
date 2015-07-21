@@ -93,11 +93,17 @@
 <!--TOOLBAR!!-->
   <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1 topToolbar mainToolbar">
     <div class="md-toolbar-tools">
-      <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
+      <md-button ng-if="$state.current.name != 'articles.show'" class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
         <div class="hamburgerMenuButton2" flex>
           <ng-md-icon icon='menu' style="fill: white" size="24">
           </ng-md-icon>
         </div>
+      </md-button>
+      <md-button ng-if="$state.current.name == 'articles.show'" class='md-icon-button' aria-label='Settings' ng-click='$state.go("articles.list")' href>
+      <div class="hamburgerMenuButton2" flex>
+        <ng-md-icon icon='chevron_left' style="fill: white" size="24">
+        </ng-md-icon>
+      </div>
       </md-button>
       <div href class="toolbarCurrentPage" ng-click="goHome()"> <a href> Phrase </a> </div>      
       <span flex></span>

@@ -14,8 +14,7 @@ function controller($scope, articles, $stateParams, $state, $mdDialog) {
     articles.get($stateParams.id).then(function(doc) {
         $scope.article = doc;
     });
-
-   
+        console.log($state.current.name)
 
     var remove = function(id) {
 
