@@ -169,14 +169,15 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
   }
 
   $scope.loginButton = function (user) {
-    $mdDialog.hide()
     console.log("login")
     users.login(user.username, user.password)
       .then(function (res) {
         $rootScope.$broadcast('users.login.success')
+        $mdDialog.hide()
       })
       .catch(function (err) {
         console.log(err)
+        alert("incorrect password or username (we honestly don't know)");
       })
   }
 

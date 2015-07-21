@@ -24,7 +24,7 @@
     var app = new annotator.App();
     app.include(annotator.ui.main);
     app.include(annotator.storage.http, {
-        prefix: 'http://127.0.0.1:5000'
+        prefix: 'http://bivit-dev.iriscouch.com/annotator/_design/annotator/_rewrite'
     });
     app
         .start()
