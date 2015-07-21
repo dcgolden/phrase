@@ -94,7 +94,7 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
                             '<md-button type="button" class="loginPopupCancel" ng-click="cancel()">'+
                               '<span class="pageSubTitle">Cancel</span>'+
                             '</md-button>'+
-                            '<md-button type="submit" ng-disabled="Login.$invalid" class="loginPopupLogin md-raised md-primary" ng-click="loginButton(user)">Login</md-button>'+
+                            '<md-button type="submit" ng-disabled="Login.$invalid" class="loginPopupLogin md-raised md-primary">Login</md-button>'+
                           '</div>'+
                         '</form>'+
                       '</div>'+
@@ -107,8 +107,8 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
                             '<md-input-container flex class="signupPopupRole">'+
                               '<label>Role</label>'+
                               '<md-select name="role" ng-model="user.role" required>'+
-                                '<md-option value="Student">Student</md-option>'+
-                                '<md-option value="Teacher">Teacher</md-option>'+
+                                '<md-option value="student">Student</md-option>'+
+                                '<md-option value="teacher">Teacher</md-option>'+
                               '</md-select>'+
                               '<div class="errors" ng-messages="Signup.role.$error" ng-if="Signup.$dirty">'+
                                 '<div ng-message="required">Required</div>'+
@@ -150,7 +150,7 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
                             '<md-button type="button" class="loginPopupCancel" ng-click="cancel()">'+
                               '<span class="pageSubTitle">Cancel</span>'+
                             '</md-button>'+
-                            '<md-button type="submit" ng-disabled="Signup.$invalid" class="loginPopupLogin md-raised md-primary" ng-click="signupButtton(user)"> Signup </md-button>'+
+                            '<md-button type="submit" ng-disabled="Signup.$invalid" class="loginPopupLogin md-raised md-primary"> Signup </md-button>'+
                           '</div>'+
                         '</form>'+
                       '</div>'+
@@ -181,12 +181,12 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
   }
 
   $scope.signupButton = function (user) {
-    console.log(user.username, user.password, user.email, user.role)
     $mdDialog.hide()
-    users.signup(user.username, user.password, user.role, user.email)
+    console.log(user.username, user.password, user.email, user.role)
+    users.signup(user.username, user.password, user.email, user.role)
       .then(function (res) {
         console.log(user.username, user.password, user.email, user.role)
-        $state.go('articles.list')
+        $state.go('home');
       })
   };
   
