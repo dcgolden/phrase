@@ -12,6 +12,9 @@ module.exports = function (users) {
 
 function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog, $rootScope, $stateParams) {
 
+  var user = {};
+  $scope.user.avatar = '<div> </div>'
+
   $scope.goHome = function(){
     $state.go('home')
   }
