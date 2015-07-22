@@ -28,22 +28,29 @@
                     <div class="articleTitleInput">
                         <md-input-container>
                             <label>Title</label>
-                            <input type="text" name="title" ng-model="article.title">
-                            <div class="errors" ng-messages="createArticle.title.$error" ng-if="createArticle.$dirty">
+                            <input type="text" name="title" ng-model="article.title" ng-maxlength="30" required>
+                            <div class="errors" ng-messages="createArticle.title.$error" ng-show="createArticle.title.$touched">
                                 <div ng-message="required">Required</div>
+                                <div ng-message="maxlength">Title is too long</div>
                             </div>
                         </md-input-container>
                     </div>
                     <div class="articleAuthorInput">
                         <md-input-container flex>
                             <label>Author</label>
-                            <input type="text" name="author" ng-model="article.author">
+                            <input type="text" name="author" ng-model="article.author" ng-maxlength="30">
+                            <div class="errors" ng-messages="createArticle.author.$error" ng-show="createArticle.author.$touched">
+                                <div ng-message="maxlength">Author is too long!</div>
+                            </div>
                         </md-input-container>
                     </div>
                     <div class="articleSourceInput">
                         <md-input-container flex>
                             <label>Source</label>
-                            <input type="text" name="source" ng-model="article.source">
+                            <input type="text" name="source" ng-model="article.source" ng-maxlength="264">
+                            <div class="errors" ng-messages="createArticle.source.$error" ng-show="createArticle.source.$touched">
+                                <div ng-message="maxlength">Source is too long!</div>
+                            </div>                        
                         </md-input-container>
                     </div>
                     <div class="articleClassroomInput">

@@ -12,6 +12,8 @@ module.exports = function (users) {
 
 function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog, $rootScope, $stateParams, $window) {
 
+  var shakeIt = false;
+
   $scope.isArticlePage = false;
 
   $scope.$on('isArticlePageBool', function( event, bool ){
@@ -83,19 +85,19 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
                         '<div>'+
                           '<a href class="loginPopupSubheader" ng-click="SignUpDialog()"> New to Phrase? Sign Up</a>'+
                         '</div>'+
-                        '<form name="Login" ng-submit="loginButton(user)">'+
+                        '<form name="Login" ng-submit="loginButton(user)" novalidate>'+
                           '<div>'+
                             '<md-input-container flex class="loginPopupUsername">'+
                               '<label>Username</label>'+
                               '<input type="text" name="username" ng-model="user.username" required>'+
-                              '<div class="errors" ng-messages="Login.username.$error" ng-if="Signup.$dirty">'+
+                              '<div class="errors" ng-messages="Login.username.$error" ng-show="Login.username.$touched">'+
                                 '<div ng-message="required">Required</div>'+
                               '</div>'+
                             '</md-input-container>'+
                             '<md-input-container class="loginPopupPassword" flex>'+
                               '<label>Password</label>'+
                               '<input type="password" name="pass" ng-model="user.password" required>'+
-                              '<div class="errors" ng-messages="Login.pass.$error" ng-if="Signup.$dirty">'+
+                              '<div class="errors" ng-messages="Login.pass.$error" ng-show="Login.password.$touched">'+
                                 '<div ng-message="required">Required</div>'+
                               '</div>'+
                             '</md-input-container>'+
@@ -113,7 +115,7 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
                         '<div>'+
                           '<a class="loginPopupSubheader" href ng-click="LoginDialogTrue()"> Have an account? Login</a>'+
                         '</div>'+
-                        '<form name="Signup" ng-submit="signupButton(user)">'+
+                        '<form name="Signup" ng-submit="signupButton(user)" novalidate>'+
                           '<div>'+
                             '<md-input-container flex class="signupPopupRole">'+
                               '<label>Role</label>'+
@@ -121,38 +123,60 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
                                 '<md-option value="student">Student</md-option>'+
                                 '<md-option value="teacher">Teacher</md-option>'+
                               '</md-select>'+
-                              '<div class="errors" ng-messages="Signup.role.$error" ng-if="Signup.$dirty">'+
+                              '<div class="errors" ng-messages="Signup.role.$error" ng-show="Signup.role.$touched">'+
                                 '<div ng-message="required">Required</div>'+
                               '</div>'+
                             '</md-input-container>'+
+                            '<div class="signupPopupNameContainer">'+
+                              '<md-input-container flex class="signupPopupFirstName">'+
+                                '<label>First Name</label>'+
+                                '<input type="text" name="firstName" ng-model="user.firstName" ng-maxlength="40" required>'+
+                                '<div class="errors" ng-messages="Signup.firstName.$error" ng-show="Signup.firstName.$touched">'+
+                                  '<div ng-message="required">Required</div>'+
+                                  '<div ng-message="maxlenght">First name too long!</div>'+
+                                '</div>'+
+                              '</md-input-container>'+
+                              '<md-input-container flex class="signupPopupLastName">'+
+                                '<label>Last Name</label>'+
+                                '<input type="text" name="lastName" ng-model="user.lastName" ng-maximum="40" required>'+
+                                '<div class="errors" ng-messages="Signup.lastName.$error" ng-show="Signup.lastName.$touched">'+
+                                  '<div ng-message="required">Required</div>'+
+                                  '<div ng-message="maxlenght">Last name too long!</div>'+
+                                '</div>'+
+                              '</md-input-container>'+
+                            '</div>'+
                             '<md-input-container flex class="signupPopupUsername">'+
                               '<label>Username</label>'+
-                              '<input type="text" name="username" ng-model="user.username" required>'+
-                              '<div class="errors" ng-messages="Signup.username.$error" ng-if="Signup.$dirty">'+
+                              '<input type="text" name="username" ng-model="user.username" ng-maxlength="26" required>'+
+                              '<div class="errors" ng-messages="Signup.username.$error" ng-show="Signup.username.$touched">'+
                                 '<div ng-message="required">Required</div>'+
+                                '<div ng-message="maxlength">Username is too long!</div>'+
                               '</div>'+
                             '</md-input-container>'+
                             '<div class="signupPopupPasswordContainer">'+
                               '<md-input-container class="signupPopupPassword" flex>'+
                                 '<label>Password</label>'+
-                                '<input type="password" name="pass" ng-model="user.password" required>'+
-                                '<div class="errors" ng-messages="Signup.pass.$error" ng-if="Signup.$dirty">'+
+                                '<input type="password" name="pass" ng-model="user.password" ng-minlength="6" ng-maxlength="254" required>'+
+                                '<div class="errors" ng-messages="Signup.pass.$error" ng-show="Signup.pass.$touched">'+
                                   '<div ng-message="required">Required</div>'+
+                                  '<div ng-message="maxlength">Password is too long!</div>'+
+                                  '<div ng-message="minlength">Password is too short!</div>'+
                                 '</div>'+
                               '</md-input-container>'+
                               '<md-input-container class="signupPopupCPassword" flex>'+
                                 '<label>Confirm Password</label>'+
-                                '<input type="password" name="cPass" ng-model="cPassword" required compare-to="user.password">'+
-                                '<div class="errors" ng-messages="Signup.cPass.$error" ng-if="Signup.$dirty">'+
+                                '<input type="password" name="cPass" ng-model="cPassword" compare-to="user.password" required>'+
+                                '<div class="errors" ng-messages="Signup.cPass.$error" ng-show="Signup.cPass.$touched">'+
                                   '<div ng-message="required">Passwords do not match</div>'+
                                 '</div>'+
                               '</md-input-container>'+
                             '</div>'+
                             '<md-input-container class="signupPopupEmail" flex>'+
                               '<label>Email</label>'+
-                              '<input type="email" name="email" ng-model="user.email" required>'+
-                              '<div class="errors" ng-messages="Signup.email.$error" ng-if="Signup.$dirty">'+
+                              '<input type="email" name="email" ng-model="user.email" ng-maxlength="100" required>'+
+                              '<div class="errors" ng-messages="Signup.email.$error" ng-show="Signup.email.$touched">'+
                                 '<div ng-message="required">Required</div>'+
+                                '<div ng-message="maxlength">Email is too long!</div>'+
                               '</div>'+
                             '</md-input-container>'+
                           '</div>'+
@@ -188,17 +212,16 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
       })
       .catch(function (err) {
         console.log(err)
-        alert("incorrect password or username (we honestly don't know)");
       })
   }
 
   $scope.signupButton = function (user) {
     $mdDialog.hide()
-    console.log(user.username, user.password, user.email, user.role)
-    users.signup(user.username, user.password, user.email, user.role)
+    users.signup(user.username, user.password, user.email, user.role, user.firstName, user.lastName)
       .then(function (res) {
-        console.log(user.username, user.password, user.email, user.role)
+        console.log("success!")
         $state.go('home');
+        $scope.loginButton(user);
       })
   };
   
