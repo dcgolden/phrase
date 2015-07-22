@@ -45,8 +45,12 @@
         <h2 ng-bind="article.title" class="articleCardTitle"></h2>
         <p ng-bind="article.author" class="articleCardAuthor"></p>
         <md-divider class="navDivider" ng-if="!$last"></md-divider>
-        <p ng-bind="article.content" class="articleCardContent" id="content">
+        <p ng-bind="article.content" class="articleCardContent">
         </p>
         <p ng-bind="article.source" class="articleCardSource"></p>
     </md-card>
+    <div ng-repeat="row in annotations.rows">
+    <p>Quote:<span ng-bind="row.doc.quote"></span></p>
+    <p>Annotation:<span ng-bind="row.doc.text"></span></p>
+    </div>
 </md-content>
