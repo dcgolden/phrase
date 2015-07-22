@@ -9,6 +9,13 @@ module.exports = {
 }
 
 function controller ($scope, classrooms) {
+
+	$scope.$emit('pushChangesToAllNodes', backButtonPlacer());
+
+	    function backButtonPlacer() {
+	        return { name: 'isArticlePageBool', data: false };
+	}
+
   classrooms.list().then(function (res) {
     $scope.classrooms = res
   })

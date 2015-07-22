@@ -10,4 +10,10 @@ module.exports = {
 
 function controller ($scope) {
 
+	$scope.$emit('pushChangesToAllNodes', backButtonPlacer());
+
+    function backButtonPlacer() {
+        return { name: 'isArticlePageBool', data: false };
+    }
+
 }

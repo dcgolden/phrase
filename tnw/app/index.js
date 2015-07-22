@@ -76,7 +76,6 @@ function AppController($scope, users) {
         $scope.showMenu = !$scope.showMenu;
     };
 
-
     $scope.$on('pushChangesToAllNodes', function( event, message ){
       $scope.$broadcast( message.name, message.data );
     });

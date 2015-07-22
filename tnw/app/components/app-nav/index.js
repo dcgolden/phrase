@@ -14,7 +14,6 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
 
   $scope.isArticlePage = false;
 
-
   $scope.$on('isArticlePageBool', function( event, bool ){
     $scope.isArticlePage = bool;
   });

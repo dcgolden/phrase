@@ -9,6 +9,13 @@ module.exports = {
 }
 
 function controller($scope, articles) {
+
+	$scope.$emit('pushChangesToAllNodes', backButtonPlacer());
+
+    function backButtonPlacer() {
+        return { name: 'isArticlePageBool', data: false };
+    }
+
 	$scope.loadingArticles = true;
     articles.list()
         .then(function(docs) {

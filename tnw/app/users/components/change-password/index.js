@@ -9,6 +9,13 @@ module.exports = {
 }
 
 function controller ($scope, users, $state) {
+
+  $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
+
+    function backButtonPlacer() {
+        return { name: 'isArticlePageBool', data: false };
+    }
+
   $scope.user = {}
   users.getSession()
     .then(function (ctx) {

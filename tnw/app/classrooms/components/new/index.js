@@ -18,4 +18,10 @@ function controller ($scope, classrooms, $state) {
         $state.go('classrooms.list')
       })
   }
+
+  $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
+
+    function backButtonPlacer() {
+        return { name: 'isArticlePageBool', data: true };
+    }
 }
