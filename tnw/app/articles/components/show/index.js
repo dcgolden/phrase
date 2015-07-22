@@ -9,6 +9,7 @@ module.exports = {
     template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 };
 
+
 function controller($scope, articles, $stateParams, $state, $mdDialog) {
     articles.get($stateParams.id).then(function(doc) {
         $scope.article = doc;
@@ -28,6 +29,11 @@ function controller($scope, articles, $stateParams, $state, $mdDialog) {
         });
     };
 
+    articles.getAnnotations()
+        .then(function(res) {
+            $scope.annoations = res;
+            console.log(res);
+        });
     $scope.showConfirm = function(id) {
         // Appending dialog to document.body to cover sidenav in docs app
         var confirm = $mdDialog.confirm()
