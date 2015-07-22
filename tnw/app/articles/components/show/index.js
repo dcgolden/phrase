@@ -1,7 +1,6 @@
 'use strict';
 
 var fs = require('fs');
-var $ = require('jquery');
 
 
 module.exports = {
@@ -14,7 +13,13 @@ function controller($scope, articles, $stateParams, $state, $mdDialog) {
     articles.get($stateParams.id).then(function(doc) {
         $scope.article = doc;
     });
-        console.log($state.current.name)
+
+
+    $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
+
+    function backButtonPlacer() {
+        return { name: 'isArticlePageBool', data: true };
+    }
 
     var remove = function(id) {
 

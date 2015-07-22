@@ -5,12 +5,26 @@ var fs = require('fs')
 module.exports = function (users) {
   return {
     restrict: 'E',
-    controller: ['$scope', 'users', '$state', '$mdSidenav', '$mdUtil', '$log', '$mdDialog', '$rootScope', '$stateParams', controller],
+    controller: ['$scope', 'users', '$state', '$mdSidenav', '$mdUtil', '$log', '$mdDialog', '$rootScope', '$stateParams', '$window', controller],
     template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
   }
 }
 
-function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog, $rootScope, $stateParams) {
+function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog, $rootScope, $stateParams, $window) {
+
+  $scope.isArticlePage = false;
+  console.log($scope.isArticlePage)
+
+
+  $scope.$on('isArticlePageBool', function( event, bool ){
+    $scope.isArticlePage = bool;
+    console.log($scope.isArticlePage)
+  });
+
+  $scope.goBack = function(){
+    $window.history.back();
+    $scope.isArticlePage = false;
+  }
 
   $scope.goHome = function(){
     $state.go('home')

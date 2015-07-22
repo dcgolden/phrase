@@ -75,4 +75,10 @@ function AppController($scope, users) {
     $scope.toggle = function() {
         $scope.showMenu = !$scope.showMenu;
     };
+
+
+    $scope.$on('pushChangesToAllNodes', function( event, message ){
+      $scope.$broadcast( message.name, message.data );
+    });
+
 }
