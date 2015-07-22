@@ -13,12 +13,10 @@ module.exports = function (users) {
 function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog, $rootScope, $stateParams, $window) {
 
   $scope.isArticlePage = false;
-  console.log($scope.isArticlePage)
 
 
   $scope.$on('isArticlePageBool', function( event, bool ){
     $scope.isArticlePage = bool;
-    console.log($scope.isArticlePage)
   });
 
   $scope.goBack = function(){

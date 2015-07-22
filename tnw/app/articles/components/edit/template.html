@@ -29,11 +29,14 @@
 
   	<md-card class="articleCard">
 
-		<form ng-submit="update(article)">
+		<form name="edit" ng-submit="update(article)">
 		  	<div class="articleTitleInput">
 	            <md-input-container>
 	                <label>Title</label>
 	                <input type="text" name="title" ng-model="article.title">
+	                <div class="errors" ng-messages="edit.title.$error" ng-if="edit.$dirty">
+	                    <div ng-message="required">Required</div>
+	                </div>
 	            </md-input-container>
 	        </div>
 	        <div class="articleAuthorInput">
@@ -58,6 +61,9 @@
 	                <label>Content</label>
 	                <textarea columns="1" rows="15" type="text" name="content" ng-model="article.content">
 	                </textarea>
+	                <div class="errors" ng-messages="content.title.$error" ng-if="content.$dirty">
+	                    <div ng-message="required">Required</div>
+	                </div>
 	            </md-input-container>
 	        </div>
 
