@@ -22,17 +22,23 @@
 
     <span class="pageTitle">New Classroom</span><span class="pageSubTitle">: {{classroom.name}}</span>
 
-    <form ng-submit="create(classroom)">
+    <form name="createClassroom" ng-submit="create(classroom)">
         <div>
             <md-input-container>
                 <label>Name</label>
-                <input type="text" ng-model="classroom.name">
+                <input type="text" name="name" ng-model="classroom.name" ng-maximum="50" required>
+                <div class="errors" ng-messages="createClassroom.name.$error" ng-show="createClassroom.name.$touched">
+                    <div ng-message="required">Required</div>
+                    <div ng-message="maxlength">Title is too long!</div>
+                </div>
             </md-input-container>
-        </div>
-        <div>
             <md-input-container>
                 <label>Description</label>
-                <textarea ng-model="classroom.description"></textarea>
+                <textarea name="cescription" ng-model="classroom.description" ng-maximum="1000" required></textarea>
+                <div class="errors" ng-messages="createClassroom.description.$error" ng-show="createClassroom.description.$touched">
+                    <div ng-message="required">You must have a course description!</div>
+                    <div ng-message="maxlength">Description is too long!</div>
+                </div>
             </md-input-container>
         <div>
 
