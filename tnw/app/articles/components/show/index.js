@@ -5,12 +5,12 @@ var fs = require('fs');
 
 module.exports = {
     url: '/:id',
-    controller: ['$scope', 'articles', '$stateParams', '$state', '$mdDialog', controller],
+    controller: ['$scope', 'articles', '$stateParams', '$state', '$http', '$mdDialog', controller],
     template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 };
 
 
-function controller($scope, articles, $stateParams, $state, $mdDialog) {
+function controller($scope, articles, $stateParams, $state, $http, $mdDialog) {
     articles.get($stateParams.id).then(function(doc) {
         $scope.article = doc;
     });
@@ -19,7 +19,10 @@ function controller($scope, articles, $stateParams, $state, $mdDialog) {
     $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
     function backButtonPlacer() {
-        return { name: 'isArticlePageBool', data: true };
+        return {
+            name: 'isArticlePageBool',
+            data: true
+        };
     }
 
     var remove = function(id) {
@@ -28,13 +31,19 @@ function controller($scope, articles, $stateParams, $state, $mdDialog) {
             $state.go('articles.list');
         });
     };
+    var url = "http://bivit-dev.iriscouch.com/annotator/_design/annotator/_view/annotations?include_docs=true"
+    console.log(url);
+    $http.get(url)
+        .success(function(data) {
+            $scope.annoations = data;
+            console.log(data);
+        });
 
-
-    articles.dlAnns()
+    /*articles.dlAnns()
         .then(function(res) {
             $scope.annoations = res;
             console.log(res);
-        });
+        });*/
     $scope.showConfirm = function(id) {
         // Appending dialog to document.body to cover sidenav in docs app
         var confirm = $mdDialog.confirm()
