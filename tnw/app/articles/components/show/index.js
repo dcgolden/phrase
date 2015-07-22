@@ -29,7 +29,8 @@ function controller($scope, articles, $stateParams, $state, $mdDialog) {
         });
     };
 
-    articles.getAnnotations()
+
+    articles.dlAnns()
         .then(function(res) {
             $scope.annoations = res;
             console.log(res);

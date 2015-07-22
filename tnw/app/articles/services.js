@@ -26,9 +26,8 @@ module.exports = {
         }
 
         function dlAnns() {
-            var dba = AnnotationDbName;
+            var dba = pouchDB(annotationDbName);
             return dba.query('annotator/annotations', {
-                key: id,
                 include_docs: true
             })
               .then(function(res) {
@@ -36,7 +35,9 @@ module.exports = {
                 return res.rows.map(function(r) {
                     return r.doc;
                 });
+
             });
+          }
 
 
             function get(id) {
@@ -63,5 +64,4 @@ module.exports = {
             });
 
         }
-    }
-};
+    };
