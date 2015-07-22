@@ -51,9 +51,10 @@
     </md-card>
       <div>
         <md-card 
+          class="articleAnnotationCard"
           ng-repeat="row in annotations.rows">
-              <p>Quote:<span ng-bind="row.doc.quote"></span></p> 
-              <p>Annotation:<span ng-bind="row.doc.text"></span></p>
+              <p>Quote: <span ng-bind="row.doc.quote"></span></p> 
+              <p>Annotation: <span ng-bind="row.doc.text"></span></p>
         </md-card>
       </div>
 </md-content>

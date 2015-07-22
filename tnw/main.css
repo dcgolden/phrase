@@ -289,6 +289,13 @@ div.feature a {
   white-space: pre-wrap;
 }
 
+.articleAnnotationCard 
+{
+  width: 9em;
+  float:right;
+  
+}
+
 .articleCardContainer{
   background-color: transparent !important;
 }
