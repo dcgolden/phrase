@@ -33,7 +33,7 @@
 		  	<div class="articleTitleInput">
 	            <md-input-container>
 	                <label>Title</label>
-	                <input type="text" name="title" ng-model="article.title" max-length="30" required>
+	                <input type="text" name="title" ng-model="article.title" max-length="50" required>
 	                <div class="errors" ng-messages="edit.title.$error" ng-show="edit.title.$touched">
 	                    <div ng-message="required">Required</div>
 	                    <div ng-message="maxlength">Title is too long!</div>
@@ -66,10 +66,11 @@
 	        <div>
 	            <md-input-container>
 	                <label>Content</label>
-	                <textarea columns="1" rows="15" type="text" name="content" ng-model="article.content">
+	                <textarea columns="1" rows="15" type="text" name="content" ng-model="article.content" ng-maxlength="100000">
 	                </textarea>
-	                <div class="errors" ng-messages="content.title.$error" ng-if="content.$dirty">
+	                <div class="errors" ng-messages="content.title.$error" ng-show="content.title.$touched">
 	                    <div ng-message="required">Required</div>
+	                    <div ng-message="maxlength">Content is too long!</div>
 	                </div>
 	            </md-input-container>
 	        </div>

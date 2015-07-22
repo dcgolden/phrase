@@ -28,22 +28,29 @@
                     <div class="articleTitleInput">
                         <md-input-container>
                             <label>Title</label>
-                            <input type="text" name="title" ng-model="article.title" required>
-                            <div class="errors" ng-messages="createArticleUrl.title.$error" ng-if="createArticleUrl.$dirty">
+                            <input type="text" name="title" ng-model="article.title" ng-maxlength="50" required>
+                            <div class="errors" ng-messages="createArticleUrl.title.$error" ng-show="createArticleUrl.title.$touched">
                                 <div ng-message="required">Required</div>
+                                <div ng-message="maxlength">Title is too long!</div>
                             </div>
                         </md-input-container>
                     </div>
                     <div class="articleAuthorInput">
                         <md-input-container flex>
                             <label>Author</label>
-                            <input type="text" name="author" ng-model="article.author">
+                            <input type="text" name="author" ng-model="article.author" ng-maxlength="30">
+                            <div class="errors" ng-messages="createArticleUrl.author.$error" ng-show="createArticleUrl.author.$touched">
+                                <div ng-message="maxlength">Author is too long!</div>
+                            </div>
                         </md-input-container>
                     </div>
                     <div class="articleSourceInput">
                         <md-input-container flex>
                             <label>Source</label>
-                            <input type="text" name="source" ng-model="article.source">
+                            <input type="text" name="source" ng-model="article.source" ng-maxlength="264">
+                            <div class="errors" ng-messages="createArticleUrl.source.$error" ng-show="createArticleUrl.source.$touched">
+                                <div ng-message="maxlength">Source is too long!</div>
+                            </div>
                         </md-input-container>
                     </div>
                     <div class="articleClassroomInput">
@@ -60,9 +67,10 @@
                     <div class="articleURLInput">
                         <md-input-container>
                             <label>URL</label>
-                            <input type="text" name="url" ng-model="article.url" required>
-                            <div class="errors" ng-messages="createArticleUrl.url.$error" ng-if="createArticleUrl.$dirty">
+                            <input type="text" name="url" ng-model="article.url" ng-maxlength="264" required>
+                            <div class="errors" ng-messages="createArticleUrl.url.$error" ng-if="createArticleUrl.url.$touched">
                                 <div ng-message="required">Required</div>
+                                <div ng-message="maxlength">Url is too long!</div>
                             </div>
                         </md-input-container>
                     </div>

@@ -19,15 +19,23 @@
 </div>
 <div class="articlesPage">
     <p class="pageTitle">Edit Classroom</p>
-    <form ng-submit="update(classroom)">
+    <form name="edit" ng-submit="update(classroom)">
         <div>
             <md-input-container>
                 <label>Name</label>
-                <input type="text" ng-model="classroom.name">
+                <input type="text" name="name" ng-model="classroom.name" ng-maximum="50" required>
+                <div class="errors" ng-messages="edit.name.$error" ng-show="edit.name.$touched">
+                    <div ng-message="required">Required</div>
+                    <div ng-message="maxlength">Title is too long!</div>
+                </div>
             </md-input-container>
             <md-input-container>
                 <label>Description</label>
-                <textarea ng-model="classroom.description"></textarea>
+                <textarea name="cescription" ng-model="classroom.description" ng-maximum="1000" required></textarea>
+                <div class="errors" ng-messages="edit.description.$error" ng-show="edit.description.$touched">
+                    <div ng-message="required">You must have a course description!</div>
+                    <div ng-message="maxlength">Description is too long!</div>
+                </div>
             </md-input-container>
         </div>
     </form>
