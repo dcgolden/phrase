@@ -291,9 +291,17 @@ div.feature a {
 
 .articleAnnotationCard 
 {
-  width: 9em;
-  float:right;
+  width: 30%;
+  float: left;
+  display: inline-block;
+  clear: both;
+  padding: 0em 1em 0em 1em;
+}
+
+.articleAnnotationCardContainer{
+    margin-top: 4.5em;
   
+    margin-left: 3%;
 }
 
 .articleCardContainer{
@@ -329,27 +337,12 @@ div.feature a {
 }
 
 .articleClassroomInput{
-  float: left;
-  width: 45%;
-}
-
-.articleDateTimeInput{
-  float: right;
-  width: 45%;
-}
-
-.articleAssignmentDescriptionInput{
-  clear:both;
-  width: 164%;
-}
-
-.articleInfoTitle{
+  padding-top: .1em;
   clear: both;
 }
 
 .articleContentInput{
   clear: both;
-  width: 164%;
 } 
 
 .articlePDFInput{
