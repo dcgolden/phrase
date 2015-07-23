@@ -298,6 +298,10 @@ div.feature a {
   padding: 0em 1em 0em 1em;
 }
 
+.articleAnnotationCardDelete{
+  float:right;
+}
+
 .articleAnnotationCardContainer{
     margin-top: 4.5em;
   
