@@ -329,12 +329,27 @@ div.feature a {
 }
 
 .articleClassroomInput{
-  padding-top: .1em;
+  float: left;
+  width: 45%;
+}
+
+.articleDateTimeInput{
+  float: right;
+  width: 45%;
+}
+
+.articleAssignmentDescriptionInput{
+  clear:both;
+  width: 164%;
+}
+
+.articleInfoTitle{
   clear: both;
 }
 
 .articleContentInput{
   clear: both;
+  width: 164%;
 } 
 
 .articlePDFInput{
