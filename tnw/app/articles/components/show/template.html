@@ -27,6 +27,14 @@
                         </md-button>
                     </md-fab-actions>
                     <md-fab-actions>
+                        <md-button aria-label="articleMenuClass" ng-click="showAnnotationsFn()" class="md-fab md-raised md-mini md-primary md-hue-2">
+                            <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
+                                Show Annotations
+                            </md-tooltip>
+                            <ng-md-icon class="articleMenuClass" icon="insert_comment" style="fill: white" size="16"></ng-md-icon>
+                        </md-button>
+                    </md-fab-actions>
+                    <md-fab-actions>
                         <md-button aria-label="articleMenuDelete" ng-click="showConfirm(article._id)" class="md-fab md-raised md-mini md-warn">
                             <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
                                 Delete
@@ -40,6 +48,19 @@
     </div>
 </div>
 <md-content class="articleCardContainer">
+    <div class="articleAnnotationCardContainer">
+        <md-card 
+          ng-show="showAnnotations"
+          class="articleAnnotationCard"
+          ng-repeat="row in annotations.rows">
+              <md-button class="md-icon-button articleAnnotationCardDelete" aria-label="deleteButton" ng-click="deleteAnnotation()">
+                <ng-md-icon icon="delete" style="fill: gray" size="16"></ng-md-icon>
+              </md-button>
+              <div class="articleAnnotationCardQuoteTitle">annotationTitle</div> 
+              <div class="articleAnnotationCardQuote">"{{row.doc.quote}}"</div>
+              <div class="articleAnnotationCardAnnotation" ng-bind="row.doc.text"></div>
+        </md-card>
+    </div>
     <md-card class="articleCard">
         <span class="articleCardClassroom" ng-bind="classroom.classroomName"></span>
         <h2 ng-bind="article.title" class="articleCardTitle"></h2>
@@ -49,12 +70,4 @@
         </p>
         <p ng-bind="article.source" class="articleCardSource"></p>
     </md-card>
-      <div>
-        <md-card 
-          class="articleAnnotationCard"
-          ng-repeat="row in annotations.rows">
-              <p>Quote: <span ng-bind="row.doc.quote"></span></p> 
-              <p>Annotation: <span ng-bind="row.doc.text"></span></p>
-        </md-card>
-      </div>
 </md-content>

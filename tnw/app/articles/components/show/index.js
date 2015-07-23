@@ -15,6 +15,26 @@ function controller($scope, articles, $stateParams, $state, $http, $mdDialog) {
         $scope.article = doc;
     });
 
+    $scope.showAnnotations = false;
+
+    $scope.showAnnotationsFn = function(){
+        var url = "http://bivit-dev.iriscouch.com/annotator/_design/annotator/_view/annotations?include_docs=true&key="
+        var currentURL = JSON.stringify(window.location.href);
+        var escapedCurrentURL = currentURL.replace("#", "\\u0023");
+        var fullURl = url + escapedCurrentURL 
+        console.log(fullURl);
+        $http.get(fullURl)
+            .success(function(data) {
+                $scope.annotations = data;
+                console.log(data);
+            });
+        $http.get(fullURl)
+        .success(function(data) {
+            $scope.annotations = data;
+            console.log(data);
+            $scope.showAnnotations = !$scope.showAnnotations;
+        });  
+    }
 
     $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
@@ -31,17 +51,8 @@ function controller($scope, articles, $stateParams, $state, $http, $mdDialog) {
             $state.go('articles.list');
         });
     };
-    var url = "http://bivit-dev.iriscouch.com/annotator/_design/annotator/_view/annotations?include_docs=true&key="
-    var currentURL = JSON.stringify(window.location.href);
-    var escapedCurrentURL = currentURL.replace("#", "\\u0023");
-    var fullURl = url + escapedCurrentURL 
-    console.log(fullURl);
 
-    $http.get(fullURl)
-        .success(function(data) {
-            $scope.annotations = data;
-            console.log(data);
-        });
+
 
     /*articles.dlAnns()
         .then(function(res) {
