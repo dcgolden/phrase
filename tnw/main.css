@@ -18,6 +18,26 @@ a:visited.addArticleFromClassroom {
     color: blue;
 }
 
+.homeImage1 {
+  content:url(http://i1329.photobucket.com/albums/w558/ktpics4/background3_zpsmplurza1.png);
+  width:100%;
+}
+
+.homeImage2{
+  content: url(http://i1329.photobucket.com/albums/w558/ktpics4/background2_zpsgklndc7q.png);
+  width: 100$;
+}
+
+.homeImage3{
+  content: url(http://i1329.photobucket.com/albums/w558/ktpics4/background1_zps2x9hw2co.png);
+  width:100%;
+}
+
+.homeImage4{
+  content: url(http://i1329.photobucket.com/albums/w558/ktpics4/background4_zpsmqiw8fbd.png);
+  width: 100%;
+}
+
 .loginPopup{
   min-width:24em;
   height: auto;

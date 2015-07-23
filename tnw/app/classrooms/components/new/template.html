@@ -4,7 +4,7 @@
             <div class="lock-size" layout="row" layout-align="center center">
                 <md-fab-speed-dial md-direction="down" ng-class="md-scale">
                     <md-fab-trigger>
-                        <md-button aria-label="add Classroom" ng-click="create(classroom)" class="md-fab">
+                        <md-button aria-label="add Classroom" ng-disabled="createClassroom.$invalid" ng-click="create(classroom)" class="md-fab">
                             <md-tooltip md-direction="down" md-delay="200" md-autohide="true">
                                 Done!
                             </md-tooltip>
@@ -23,7 +23,7 @@
         <div>
             <md-input-container>
                 <label>Name</label>
-                <input type="text" name="name" ng-model="classroom.name" ng-maximum="50" required>
+                <input type="text" name="name" ng-model="classroom.name" ng-maxlength="50" required>
                 <div class="errors" ng-messages="createClassroom.name.$error" ng-show="createClassroom.name.$touched">
                     <div ng-message="required">Required</div>
                     <div ng-message="maxlength">Title is too long!</div>
@@ -31,7 +31,7 @@
             </md-input-container>
             <md-input-container>
                 <label>Description</label>
-                <textarea name="cescription" ng-model="classroom.description" ng-maximum="1000" required></textarea>
+                <textarea name="description" ng-model="classroom.description" ng-maxlength="1000" required></textarea>
                 <div class="errors" ng-messages="createClassroom.description.$error" ng-show="createClassroom.description.$touched">
                     <div ng-message="required">You must have a course description!</div>
                     <div ng-message="maxlength">Description is too long!</div>
