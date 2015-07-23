@@ -21,15 +21,30 @@
     <script src="annotator.min.js"></script>
     <script>
     'use strict';
-    var app = new annotator.App();
-    app.include(annotator.ui.main);
-    app.include(annotator.storage.http, {
-        prefix: 'http://bivit-dev.iriscouch.com/annotator/_design/annotator/_rewrite'
-    });
-    app
-        .start()
+    var pageUri = function() {
+        return {
+            beforeAnnotationCreated: function(ann) {
+                ann.uri = window.location.href;
+            }
+        };
+    };
+
+    var app = new annotator.App()
+        .include(annotator.ui.main, {
+            element: document.querySelector('#articleCardfForAnnotation')
+        })
+        .include(annotator.storage.http, {
+            prefix: 'http://localhost:5000'
+        })
+        .include(pageUri);
+
+    app.start()
         .then(function() {
-            app.annotations.load();
+            setTimeout(function() {
+                app.annotations.load({
+                    uri: window.location.href
+                });
+            }, 1000);
         });
     </script>
 </body>

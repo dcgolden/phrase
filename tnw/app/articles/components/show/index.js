@@ -17,7 +17,7 @@ function controller($scope, articles, $stateParams, $state, $http, $mdDialog) {
 
     $scope.showAnnotations = false;
 
-    $scope.showAnnotationsFn = function(){
+    /*$scope.showAnnotationsFn = function(){
         var url = "http://bivit-dev.iriscouch.com/annotator/_design/annotator/_view/annotations?include_docs=true&key="
         var currentURL = JSON.stringify(window.location.href);
         var escapedCurrentURL = currentURL.replace("#", "\\u0023");
@@ -34,7 +34,7 @@ function controller($scope, articles, $stateParams, $state, $http, $mdDialog) {
             console.log(data);
             $scope.showAnnotations = !$scope.showAnnotations;
         });  
-    }
+    }*/
 
     $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
@@ -54,11 +54,6 @@ function controller($scope, articles, $stateParams, $state, $http, $mdDialog) {
 
 
 
-    /*articles.dlAnns()
-        .then(function(res) {
-            $scope.annoations = res;
-            console.log(res);
-        });*/
     $scope.showConfirm = function(id) {
         // Appending dialog to document.body to cover sidenav in docs app
         var confirm = $mdDialog.confirm()

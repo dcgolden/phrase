@@ -48,7 +48,7 @@
     </div>
 </div>
 <md-content class="articleCardContainer">
-    <div class="articleAnnotationCardContainer">
+    <!--<div class="articleAnnotationCardContainer">
         <md-card 
           ng-show="showAnnotations"
           class="articleAnnotationCard"
@@ -60,8 +60,8 @@
               <div class="articleAnnotationCardQuote">"{{row.doc.quote}}"</div>
               <div class="articleAnnotationCardAnnotation" ng-bind="row.doc.text"></div>
         </md-card>
-    </div>
-    <md-card class="articleCard">
+    </div>-->
+    <md-card id="articleCardForAnnotation" class="articleCard">
         <span class="articleCardClassroom" ng-bind="classroom.classroomName"></span>
         <h2 ng-bind="article.title" class="articleCardTitle"></h2>
         <p ng-bind="article.author" class="articleCardAuthor"></p>
