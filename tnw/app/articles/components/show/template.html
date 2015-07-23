@@ -53,8 +53,9 @@
           ng-show="showAnnotations"
           class="articleAnnotationCard"
           ng-repeat="row in annotations.rows">
-              <p>Quote: <span ng-bind="row.doc.quote"></span></p> 
-              <p>Annotation: <span ng-bind="row.doc.text"></span></p>
+              <div class="articleAnnotationCardQuoteTitle">annotationTitle</div> 
+              <div class="articleAnnotationCardQuote">"{{row.doc.quote}}"</div>
+              <div class="articleAnnotationCardAnnotation" ng-bind="row.doc.text"></div>
         </md-card>
     </div>
     <md-card class="articleCard">
