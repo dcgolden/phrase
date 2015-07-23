@@ -291,9 +291,38 @@ div.feature a {
 
 .articleAnnotationCard 
 {
-  width: 9em;
-  float:right;
+  width: 30%;
+  float: left;
+  display: inline-block;
+  clear: both;
+  padding: 0em 1em 0em 1em;
+}
+
+.articleAnnotationCardContainer{
+    margin-top: 4.5em;
   
+    margin-left: 3%;
+}
+
+.articleAnnotationCardQuoteTitle{
+  margin: .75em;
+  font-size: 20px;
+  font-style:italic
+}
+
+.articleAnnotationCardQuote{
+  color: gray;
+  font-style: italic;
+  font-size: 11px;
+}
+
+.articleAnnotationCardAnnotationTitle{
+  margin: .5em;
+}
+
+.articleAnnotationCardAnnotation{
+  margin: 1em;
+  font-size: 14px;
 }
 
 .articleCardContainer{
@@ -329,12 +358,24 @@ div.feature a {
 }
 
 .articleClassroomInput{
-  padding-top: .1em;
+  clear: both;
+  float: left;
+  width: 45%;
+}
+
+.articleDateTimeInput{
+  float: right;
+  width: 45%;
+}
+
+.articleAssignmentDescriptionInput{
+  width: 164.5%;
   clear: both;
 }
 
 .articleContentInput{
   clear: both;
+  width: 1645%;
 } 
 
 .articlePDFInput{
@@ -400,7 +441,7 @@ div.feature a {
 .fabSpeedDial{
   float: right;
   position:fixed;
-  margin-top: 10em;
+  margin-top: 11.6em;
   z-index: 11 !important;
 }
 

@@ -25,6 +25,38 @@
         <md-content class="articleCardContainer">
             <md-card class="articleCard">
                 <form name="createArticlePdf" ng-submit="create(article)">
+                    <div class="pageTitle">General Info</div>
+                    <md-checkbox ng-model="article.isAssignment" aria-label="Checkbox 1">
+                      Set article as an assignment?
+                    </md-checkbox>
+                    <div class="articleClassroomInput">
+                        <md-input-container>
+                            <label>Which Classrooom?</label>
+                            <md-select class="classroomPicker" name="classroom" md-on-open="loadClassrooms()" ng-model="article.classroom" required>
+                                <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
+                            </md-select>
+                            <div class="errors" ng-messages="createArticlePdf.classroom.$error" ng-show="createArticlePdf.classroom.$touched">
+                                <div ng-message="required">Required</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div class="articleDateTimeInput" ng-show="article.isAssignment">
+                        <md-input-container>
+                            <label>Due Date</label>
+                            <input type="datetime-local" name="dateTime" ng-model="article.assignmentDateTime">
+                        </md-input-container>
+                    </div>
+                    <div class="articleAssignmentDescriptionInput" ng-show="article.isAssignment">
+                        <md-input-container>
+                        <label>Assignment Description</label>
+                            <textarea columns="1" rows="4" type="text" name="assignmentDescription" ng-model="article.assignmentDescription" ng-maxlength="1000">
+                            </textarea>
+                            <div class="errors" ng-messages="createArticlePdf.assignmentDescription.$error">
+                                <div ng-message="maxlength">Content is too long!</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div class="pageTitle articleInfoTitle">Article Info</div>
                     <div class="articleTitleInput">
                         <md-input-container>
                             <label>Title</label>
@@ -50,17 +82,6 @@
                             <input type="text" name="source" ng-model="article.source" ng-maxlength="264">
                             <div class="errors" ng-messages="createArticlePdf.source.$error" ng-show="createArticlePdf.source.$touched">
                                 <div ng-message="maxlength">Source is too long!</div>
-                            </div>
-                        </md-input-container>
-                    </div>
-                    <div class="articleClassroomInput">
-                        <md-input-container>
-                            <label>Which Classrooom?</label>
-                            <md-select class="classroomPicker" name="classroom" md-on-open="loadClassrooms()" ng-model="article.classroom" required>
-                                <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
-                            </md-select>
-                            <div class="errors" ng-messages="createArticlePdf.classroom.$error" ng-if="createArticlePdf.$dirty">
-                                <div ng-message="required">Required</div>
                             </div>
                         </md-input-container>
                     </div>

@@ -9,6 +9,8 @@ module.exports = {
 
 function controller($scope, articles, classrooms, $state, $stateParams, controller) {
 
+    $scope.assignment = false;
+
     $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
     function backButtonPlacer() {
