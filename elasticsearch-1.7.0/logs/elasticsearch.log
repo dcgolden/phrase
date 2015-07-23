@@ -1,0 +1,16 @@
+[2015-07-23 15:19:20,393][INFO ][node                     ] [Rahne Sinclair] version[1.7.0], pid[14020], build[929b973/2015-07-16T14:31:07Z]
+[2015-07-23 15:19:20,394][INFO ][node                     ] [Rahne Sinclair] initializing ...
+[2015-07-23 15:19:20,460][INFO ][plugins                  ] [Rahne Sinclair] loaded [], sites []
+[2015-07-23 15:19:20,488][INFO ][env                      ] [Rahne Sinclair] using [1] data paths, mounts [[/home/david (/home/david/.Private)]], net usable_space [149.9gb], net total_space [196.5gb], types [ecryptfs]
+[2015-07-23 15:19:22,352][INFO ][node                     ] [Rahne Sinclair] initialized
+[2015-07-23 15:19:22,352][INFO ][node                     ] [Rahne Sinclair] starting ...
+[2015-07-23 15:19:22,427][INFO ][transport                ] [Rahne Sinclair] bound_address {inet[/0:0:0:0:0:0:0:0:9300]}, publish_address {inet[/10.10.0.211:9300]}
+[2015-07-23 15:19:22,442][INFO ][discovery                ] [Rahne Sinclair] elasticsearch/DYWBCCJbRIWgeOtCXgVYrA
+[2015-07-23 15:19:26,246][INFO ][cluster.service          ] [Rahne Sinclair] new_master [Rahne Sinclair][DYWBCCJbRIWgeOtCXgVYrA][david-XPS-15-9530][inet[/10.10.0.211:9300]], reason: zen-disco-join (elected_as_master)
+[2015-07-23 15:19:26,264][INFO ][http                     ] [Rahne Sinclair] bound_address {inet[/0:0:0:0:0:0:0:0:9200]}, publish_address {inet[/10.10.0.211:9200]}
+[2015-07-23 15:19:26,265][INFO ][node                     ] [Rahne Sinclair] started
+[2015-07-23 15:19:26,293][INFO ][gateway                  ] [Rahne Sinclair] recovered [1] indices into cluster_state
+[2015-07-23 15:32:45,529][INFO ][node                     ] [Rahne Sinclair] stopping ...
+[2015-07-23 15:32:45,646][INFO ][node                     ] [Rahne Sinclair] stopped
+[2015-07-23 15:32:45,646][INFO ][node                     ] [Rahne Sinclair] closing ...
+[2015-07-23 15:32:45,652][INFO ][node                     ] [Rahne Sinclair] closed
