@@ -2,12 +2,14 @@
 .mainToolbar{
 box-shadow:none;
 }
+html, body{
+  background-color: #fff !important;  /*TNW*/
+}
 </style>
 
 <div class="homePage">
 	<div class="homeFirstBlock">
-		<div class="homeImage3">
-		</div>
+		<img class="homeImage3" src="http://i1329.photobucket.com/albums/w558/ktpics4/background2%20new_zpswkp4hnjp.png" alt="" />
 		
 		<div class="homeLeftDiv">
 			<div class="homePageTitle"></div>
@@ -16,7 +18,7 @@ box-shadow:none;
 
 		<div class="homeRightDiv">
 			<md-card class="homeLoginCard">
-				<md-card-content class="homeLoginCardContent">
+				<md-card-content class="homeLoginCardContent" ng-if="!activeUser">
 					<div class="homeLoginCardTitleContainer">
     					<div class="pageTitle homeLoginCardTitle">Sign Up!</div>
     					<div>Start collaborating now</div>
@@ -96,7 +98,62 @@ box-shadow:none;
                       </div>
                     </form>
 				</md-card-content>
+				<md-card-content class="homeLoginCardContent" ng-if="activeUser">
+					<div class="homeLoginCardTitleContainer">
+    					<div class="pageTitle homeLoginCardTitle">Good to go!</div>
+    					<div>Start collaborating now</div>
+    					<div class="homeLoginCardSpace"></div>
+    					<div href class="homeLoginCardLink" ng-click='goToArticles()'>Your Articles</div>
+    					<div href class="homeLoginCardLink" ng-click='goToClassrooms()'>Your Classrooms</div>
+					</div>
+				</md-card-content>
 			</md-card>
+		</div>
+	</div>
+	<div class="homeSecondBlock">
+		<div class="pageTitle homeSecondPageTitle">The ultimate annotation experience</div>
+		<div class="homeFeaturesContainer">
+			<div class="homeFirstFeature">
+				<div class="homeFeatureImg">
+					<img src="images/iphone.svg" width="128" height="128"/>
+				</div>
+				<div class="homeFeatureTitle">From any device</div>
+				<div class="homeFeatureDesc">Phrase supports on the go annotations using a computer, tablet, or smartphone</div>
+			</div>
+			<div class="homeSecondFeature">
+				<div class="homeFeatureImg">
+					<img src="images/upload.svg" width="128" height="128"/>
+				</div>
+				<div class="homeFeatureTitle">Mulitple ways to publish articles</div>
+				<div class="homeFeatureDesc">Upload your favorate article or assignment via copy and paste, direct url, or pdf</div>
+			</div>
+			<div class="homeThirdFeature">
+				<div class="homeThirdFeatureImg">
+					<img src="images/folder.svg" width="128" height="128"/>
+				</div>
+				<div class="homeFeatureTitle">Organize your articles</div>
+				<div class="homeFeatureDesc">Create classrooms and folders to easily house important articles</div>
+			</div>
+			<div class="homeFourthFeature">
+				<div class="homeFeatureImg">
+					<img src="images/calendar.svg" width="128" height="128"/>
+				</div>
+				<div class="homeFeatureTitle">Set due dates and requirements</div>
+				<div class="homeFeatureDesc">Promp students with due dates and annotation requirements inside of Phrase</div>
+			</div>
+			<div class="homeFifthFeature">
+				<div class="homeFeatureImg">
+					<img src="images/people.svg" width="128" height="128"/>
+				</div>
+				<div class="homeFeatureTitle">Share annotations</div>
+				<div class="homeFeatureDesc">Display the best or most popular annotations to your class or group</div>
+			</div>
+			<div class="homeExplore">
+				<div ng-click="goToFeatures()" class="homeExploreImg">
+					<img src="images/arrow.svg" width="48" height="48"/>
+				</div>
+				<div ng-click="goToFeatures()" class="homeExporeTitle">Explore Features</div>
+			</div>
 		</div>
 	</div>
 </div>

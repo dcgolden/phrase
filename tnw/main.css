@@ -31,9 +31,8 @@ a:visited.addArticleFromClassroom {
 }
 
 .homeImage3{
-  content:url(http://i1329.photobucket.com/albums/w558/ktpics4/background2%20new_zpswkp4hnjp.png);
-  width: 100%;
-  position: absolute;
+  width:100%!important;
+  position:relative;
   -moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
@@ -54,8 +53,12 @@ a:visited.addArticleFromClassroom {
   position: absolute;
 }
 
+.homeFirstBlock{
+  width:100%;
+}
+
 .homeLeftDiv{
-  float: left;
+  top:0px;
   z-index: 2;
   position:absolute;
   color: white;
@@ -76,10 +79,11 @@ a:visited.addArticleFromClassroom {
 }
 
 .homeRightDiv{
-  right: 0;
+  top:50px;
+  right: 0px;
   z-index: 2;
   position: absolute;
-  width: 50%;
+  width: 55%;
 }
 
 .homeLoginCard{
@@ -98,6 +102,109 @@ a:visited.addArticleFromClassroom {
 
 .homeLoginCardTitle{
   margin-bottom: 2em;
+}
+
+.homeLoginCardSpace{
+  margin-top: 3em;
+}
+
+.homeLoginCardLink{
+  margin-top: 2em;
+  font-size: 1.2em;
+}
+
+.homeSecondBlock{
+  margin: 1em;
+}
+
+.homeSecondPageTitle{
+  margin-right:auto;
+  margin-left:auto;
+  width:49%;
+  text-align:center;
+  padding-top:1.4em;
+}
+
+.homeFeaturesContainer{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+  align-content: space-around;
+}
+
+.homeFirstFeature{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeSecondFeature{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeThirdFeature{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeFourthFeature{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeFifthFeature{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeFeatureTitle{
+  font-weight:bold;
+  padding-bottom: 1em
+}
+
+.homeFeatureDesc{
+  font-weight:100;
+  width: 250px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.homeExplore{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeExploreImg{
+  float:right;
+  margin-top:5em;
+  margin-right:33%
+}
+
+.homeExporeTitle{
+  float:right;
+  width: 1em;
+  margin-top:5.3em;
+  margin-right: 2.5em;
 }
 
 .loginPopup{
@@ -665,6 +772,8 @@ textarea {
     margin-right: auto;
 }
 
+/* animations that dont work!
+
 .articleAnnotationCard.ng-hide-add{
   animation:0.5s lightSpeedOut ease;
 }
@@ -708,7 +817,6 @@ textarea {
   }
 }
 
-/* light speed out */
 @keyframes lightSpeedOut {
   0% {
     opacity: 1;
@@ -732,4 +840,4 @@ textarea {
     transform: translate3d(100%, 0, 0) skewX(30deg);
     opacity: 0;
   }
-}
+} */
