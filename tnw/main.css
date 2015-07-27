@@ -125,6 +125,88 @@ a:visited.addArticleFromClassroom {
   padding-top:1.4em;
 }
 
+.homeFeaturesContainer{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+  align-content: space-around;
+}
+
+.homeFirstFeature{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeSecondFeature{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeThirdFeature{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeFourthFeature{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeFifthFeature{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeFeatureTitle{
+  font-weight:bold;
+  padding-bottom: 1em
+}
+
+.homeFeatureDesc{
+  font-weight:100;
+  width: 250px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.homeExplore{
+  width: 400px;
+  height: 200px;
+  padding-top: 5em;
+  margin: auto;
+  text-align: center;
+}
+
+.homeExploreImg{
+  float:right;
+  margin-top:5em;
+  margin-right:33%
+}
+
+.homeExporeTitle{
+  float:right;
+  width: 1em;
+  margin-top:5.3em;
+  margin-right: 2.5em;
+}
+
 .loginPopup{
   min-width:24em;
   height: auto;
