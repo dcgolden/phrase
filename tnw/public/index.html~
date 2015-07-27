@@ -1,0 +1,55 @@
+<!doctype html>
+<html ng-app="app">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Phrase - annotations</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
+</head>
+
+<body>
+    <div ng-controller='AppController'>
+        <div flex ng-show="showMenu">
+            <app-nav></app-nav>
+        </div>
+        <div class="mainView contentV" flex ui-view></div>
+    </div>
+   
+</body>
+<!--<script src="annotator.min.js"></script>-->
+<script>
+'use strict';
+var pageUri = function() {
+    return {
+        beforeAnnotationCreated: function(ann) {
+            ann.uri = window.location.href;
+        }
+    };
+};
+
+var app = new annotator.App()
+    .include(annotator.ui.main, {
+        //element: document.querySelector('#articleCardForAnnotation')
+    })
+    .include(annotator.storage.http, {
+        prefix: 'http://173.255.227.92:5000'
+    })
+    .include(pageUri);
+
+app.start()
+    .then(function() {
+        setTimeout(function() {
+            app.annotations.load({
+                uri: window.location.href
+            });
+        }, 1000);
+    });
+</script>
+<script src="/bundle.js"></script>
+
+</html>
+
+

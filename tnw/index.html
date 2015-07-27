@@ -20,32 +20,7 @@
     <script src="/app/index.js"></script>
     <script src="annotator.min.js"></script>
     <script>
-    'use strict';
-    var pageUri = function() {
-        return {
-            beforeAnnotationCreated: function(ann) {
-                ann.uri = window.location.href;
-            }
-        };
-    };
-
-    var app = new annotator.App()
-        .include(annotator.ui.main, {
-            //element: document.querySelector('#articleCardForAnnotation')
-        })
-        .include(annotator.storage.http, {
-            prefix: 'http://bivit-dev.iriscouch.com/annotator/_design/annotator/_rewrite'
-        })
-        .include(pageUri);
-
-    app.start()
-        .then(function() {
-            setTimeout(function() {
-                app.annotations.load({
-                    uri: window.location.href
-                });
-            }, 1000);
-        });
+    
     </script>
 </body>
 

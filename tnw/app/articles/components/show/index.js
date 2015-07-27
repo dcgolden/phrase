@@ -14,28 +14,33 @@ function controller($scope, articles, $stateParams, $state, $http, $mdDialog) {
     articles.get($stateParams.id).then(function(doc) {
         $scope.article = doc;
     });
+    $scope.$on('$viewContentLoaded', function() {
+        var pageUri = function() {
+            return {
+                beforeAnnotationCreated: function(ann) {
+                    ann.uri = window.location.href;
+                }
+            };
+        };
 
-    $scope.showAnnotations = false;
+        var app = new annotator.App()
+            .include(annotator.ui.main, {
+                //element: document.querySelector('#articleCardForAnnotation')
+            })
+            .include(annotator.storage.http, {
+                prefix: 'http://173.255.227.92:5000'
+            })
+            .include(pageUri);
 
-    /*$scope.showAnnotationsFn = function(){
-        var url = "http://bivit-dev.iriscouch.com/annotator/_design/annotator/_view/annotations?include_docs=true&key="
-        var currentURL = JSON.stringify(window.location.href);
-        var escapedCurrentURL = currentURL.replace("#", "\\u0023");
-        var fullURl = url + escapedCurrentURL 
-        console.log(fullURl);
-        $http.get(fullURl)
-            .success(function(data) {
-                $scope.annotations = data;
-                console.log(data);
+        app.start()
+            .then(function() {
+                setTimeout(function() {
+                    app.annotations.load({
+                        uri: window.location.href
+                    });
+                }, 300);
             });
-        $http.get(fullURl)
-        .success(function(data) {
-            $scope.annotations = data;
-            console.log(data);
-            $scope.showAnnotations = !$scope.showAnnotations;
-        });  
-    }*/
-
+    });
     $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
     function backButtonPlacer() {
