@@ -14,9 +14,43 @@ a {
   text-decoration: none;
 }
 
+a:visited.addArticleFromClassroom {
+    color: blue;
+}
+
+.homeImage1 {
+  content:url(http://i1329.photobucket.com/albums/w558/ktpics4/background3_zpsmplurza1.png);
+  width:100%;
+}
+
+.homeImage2{
+  content: url(http://i1329.photobucket.com/albums/w558/ktpics4/background2_zpsgklndc7q.png);
+  width: 100$;
+}
+
+.homeImage3{
+  content: url(http://i1329.photobucket.com/albums/w558/ktpics4/background1_zps2x9hw2co.png);
+  width:100%;
+}
+
+.homeImage4{
+  content: url(http://i1329.photobucket.com/albums/w558/ktpics4/background4_zpsmqiw8fbd.png);
+  width: 100%;
+}
+
 .loginPopup{
   min-width:24em;
   height: auto;
+}
+
+.signupPopup{
+  min-width:32em;
+  height: auto;
+}
+
+.popupAnimate{
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
 }
 
 .loginPopupSubheader{
@@ -27,14 +61,34 @@ a {
   font-size: 12px;
 }
 
-.loginPopupUsername{
+.loginPopupUsername, 
+.signupPopupNameContainer,
+.signupPopupUsername, 
+.signupPopupEmail{
   clear:both;
 }
 
-.loginPopupLogin{
-  color: rgba(255,255,255,0.87);
-  background-color: rgb(63,81,181);
+.signupPopupPassword, 
+.signupPopupCPassword,
+.signupPopupFirstName,
+.signupPopupLastName{
+  width: 45%;
+}
 
+.signupPopupPassword,
+.signupPopupFirstName{
+  float: left;
+}
+
+.signupPopupCPassword,
+.signupPopupLastName{
+  float: right;
+}
+
+.signupPopupRole{
+  float: right;
+  height:4.5em;
+  width: 40%;
 }
 
 .avatarSmall{
@@ -103,9 +157,6 @@ a {
 }
 
 .classroomPicker{
-  margin-left: auto;
-  margin-right: auto;
-  padding-left:.3em;
 }
 
 .classroomDiscriptionShow{
@@ -258,28 +309,52 @@ div.feature a {
   white-space: pre-wrap;
 }
 
+.articleAnnotationCard 
+{
+  width: 30%;
+  float: left;
+  display: inline-block;
+  clear: both;
+  padding: 0em 1em 0em 1em;
+}
+
+.articleAnnotationCardDelete{
+  float:right;
+}
+
+.articleAnnotationCardContainer{
+    margin-top: 4.5em;
+  
+    margin-left: 3%;
+}
+
+.articleAnnotationCardQuoteTitle{
+  margin: .75em;
+  font-size: 20px;
+  font-style:italic
+}
+
+.articleAnnotationCardQuote{
+  color: gray;
+  font-style: italic;
+  font-size: 11px;
+}
+
+.articleAnnotationCardAnnotationTitle{
+  margin: .5em;
+}
+
+.articleAnnotationCardAnnotation{
+  margin: 1em;
+  font-size: 14px;
+}
+
 .articleCardContainer{
   background-color: transparent !important;
 }
 
 .blueBar{
   height: 12em;
-}
-
-.articleEditSubmit{
-  margin-top: .6em;
-}
-
-.articleMenuEdit{
-  margin-top: .6em;
-}
-
-.articleMenuDelete{
-  margin-top: .2em;
-}
-
-.articleMenuClass{
-  margin-top: .2em;
 }
 
 .positioner{
@@ -307,12 +382,24 @@ div.feature a {
 }
 
 .articleClassroomInput{
-  padding-top: .1em;
+  clear: both;
+  float: left;
+  width: 45%;
+}
+
+.articleDateTimeInput{
+  float: right;
+  width: 45%;
+}
+
+.articleAssignmentDescriptionInput{
+  width: 164.5%;
   clear: both;
 }
 
 .articleContentInput{
   clear: both;
+  width: 1645%;
 } 
 
 .articlePDFInput{
@@ -378,10 +465,13 @@ div.feature a {
 .fabSpeedDial{
   float: right;
   position:fixed;
-  margin-top: 10em;
+  margin-top: 11.6em;
   z-index: 11 !important;
 }
 
+.md-fab{
+    padding-top: .5em;
+}
 
 .fabSpeedDial .md-fab:hover, .fabSpeedDial .md-fab.md-focused, 
 .fabSpeedDial2 .md-fab:hover, .fabSpeedDial2 .md-fab.md-focused, 
@@ -482,6 +572,10 @@ div.feature a {
     margin: 5px;
 }
 
+.md-mini{
+  padding-top: .1em!important;
+}
+
 .text_line {
     clear: both;
     margin-bottom: 2px;
@@ -499,4 +593,73 @@ textarea {
     width: 61%;
     resize: none;
     margin-right: auto;
+}
+
+.articleAnnotationCard.ng-hide-add{
+  animation:0.5s lightSpeedOut ease;
+}
+
+.articleAnnotationCard.ng-hide-remove{
+  animation:0.5s flipInX ease;
+}
+
+@keyframes flipInX {
+  0% {
+    transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+    transition-timing-function: ease-in;
+    opacity: 0;
+  }
+
+  40% {
+    transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+    transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+    transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+    transition-timing-function: ease-in;
+    transition-timing-function: ease-in;
+  }
+
+  60% {
+    transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
+    transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
+    transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
+    opacity: 1;
+  }
+
+  80% {
+    transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
+    transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
+    transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
+  }
+
+  100% {
+    transform: perspective(400px);
+    transform: perspective(400px);
+    transform: perspective(400px);
+  }
+}
+
+/* light speed out */
+@keyframes lightSpeedOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate3d(100%, 0, 0) skewX(30deg);
+    transform: translate3d(100%, 0, 0) skewX(30deg);
+    opacity: 0;
+  }
+}
+
+@keyframes lightSpeedOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate3d(100%, 0, 0) skewX(30deg);
+    transform: translate3d(100%, 0, 0) skewX(30deg);
+    transform: translate3d(100%, 0, 0) skewX(30deg);
+    opacity: 0;
+  }
 }

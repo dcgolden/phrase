@@ -31,10 +31,10 @@
 
     var app = new annotator.App()
         .include(annotator.ui.main, {
-            element: document.querySelector('#articleCardfForAnnotation')
+            //element: document.querySelector('#articleCardForAnnotation')
         })
         .include(annotator.storage.http, {
-            prefix: 'http://localhost:5000'
+            prefix: 'http://bivit-dev.iriscouch.com/annotator/_design/annotator/_rewrite'
         })
         .include(pageUri);
 
