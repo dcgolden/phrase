@@ -32,6 +32,7 @@ a:visited.addArticleFromClassroom {
 
 .homeImage3{
   width:100%!important;
+  position:relative;
   -moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
@@ -113,11 +114,15 @@ a:visited.addArticleFromClassroom {
 }
 
 .homeSecondBlock{
-
+  margin: 1em;
 }
 
-.homeSeondPageTitle{
-
+.homeSecondPageTitle{
+  margin-right:auto;
+  margin-left:auto;
+  width:49%;
+  text-align:center;
+  padding-top:1.4em;
 }
 
 .loginPopup{
@@ -685,6 +690,8 @@ textarea {
     margin-right: auto;
 }
 
+/* animations that dont work!
+
 .articleAnnotationCard.ng-hide-add{
   animation:0.5s lightSpeedOut ease;
 }
@@ -728,7 +735,6 @@ textarea {
   }
 }
 
-/* light speed out */
 @keyframes lightSpeedOut {
   0% {
     opacity: 1;
@@ -752,4 +758,4 @@ textarea {
     transform: translate3d(100%, 0, 0) skewX(30deg);
     opacity: 0;
   }
-}
+} */
