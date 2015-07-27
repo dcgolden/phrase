@@ -89,7 +89,15 @@ a:visited.addArticleFromClassroom {
 }
 
 .homeLoginCardContent{
-  
+  padding: 1em;
+}
+
+.homeLoginCardTitleContainer{
+  float: left;
+}
+
+.homeLoginCardTitle{
+  margin-bottom: 2em;
 }
 
 .loginPopup{
