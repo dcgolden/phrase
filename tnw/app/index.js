@@ -40,6 +40,7 @@ require('angular').module('app', [
 
     }])
     .directive('appNav', ['users', require('./components/app-nav')])
+    .directive('footerBar', ['users', require('./components/footer-bar')])
     .directive('userAvatar', function() {
         return {
             replace: true,

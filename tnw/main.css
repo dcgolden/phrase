@@ -115,6 +115,7 @@ a:visited.addArticleFromClassroom {
 
 .homeSecondBlock{
   margin: 1em;
+  margin-bottom: 5em;
 }
 
 .homeSecondPageTitle{
@@ -770,6 +771,11 @@ textarea {
     width: 61%;
     resize: none;
     margin-right: auto;
+}
+
+.footerBar{
+  position: relative;
+bottom: -100%;
 }
 
 /* animations that dont work!
