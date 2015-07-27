@@ -220,7 +220,7 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
     users.signup(user.username, user.password, user.email, user.role, user.firstName, user.lastName)
       .then(function (res) {
         console.log("success!")
-        $state.go('articles.list');
+        $state.go('home');
         $scope.loginButton(user);
       })
   };

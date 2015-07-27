@@ -31,9 +31,6 @@ a:visited.addArticleFromClassroom {
 }
 
 .homeImage3{
-  content:url(http://i1329.photobucket.com/albums/w558/ktpics4/background2%20new_zpswkp4hnjp.png);
-  width: 100%;
-  position: absolute;
   -moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
@@ -52,6 +49,10 @@ a:visited.addArticleFromClassroom {
   background-image:url(http://i1329.photobucket.com/albums/w558/ktpics4/background4%20new_zps2c79eikf.png);
   width: 100%;
   position: absolute;
+}
+
+.homeFirstBlock{
+
 }
 
 .homeLeftDiv{
@@ -98,6 +99,23 @@ a:visited.addArticleFromClassroom {
 
 .homeLoginCardTitle{
   margin-bottom: 2em;
+}
+
+.homeLoginCardSpace{
+  margin-top: 3em;
+}
+
+.homeLoginCardLink{
+  margin-top: 2em;
+  font-size: 1.2em;
+}
+
+.homeSecondBlock{
+
+}
+
+.homeSeondPageTitle{
+
 }
 
 .loginPopup{
