@@ -18,24 +18,78 @@ a:visited.addArticleFromClassroom {
     color: blue;
 }
 
-.homeImage1 {
-  content:url(http://i1329.photobucket.com/albums/w558/ktpics4/background3_zpsmplurza1.png);
-  width:100%;
+.homeImage1{
+  background-image:url(http://i1329.photobucket.com/albums/w558/ktpics4/background1%20new_zpszg9qauyo.png);
+  width: 100%;
+  position: absolute;
 }
 
 .homeImage2{
-  content: url(http://i1329.photobucket.com/albums/w558/ktpics4/background2_zpsgklndc7q.png);
-  width: 100$;
+  background-image:url(http://i1329.photobucket.com/albums/w558/ktpics4/background6%20new_zpso77kzzqh.png);
+  width: 100%;
+  position: absolute;
 }
 
 .homeImage3{
-  content: url(http://i1329.photobucket.com/albums/w558/ktpics4/background1_zps2x9hw2co.png);
-  width:100%;
+  content:url(http://i1329.photobucket.com/albums/w558/ktpics4/background2%20new_zpswkp4hnjp.png);
+  width: 100%;
+  position: absolute;
+  -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
 }
 
 .homeImage4{
-  content: url(http://i1329.photobucket.com/albums/w558/ktpics4/background4_zpsmqiw8fbd.png);
+  background-image:url(http://i1329.photobucket.com/albums/w558/ktpics4/background3%20new_zpskukurjg1.png);
   width: 100%;
+  position: absolute;
+}
+
+.homeImage5{
+  background-image:url(http://i1329.photobucket.com/albums/w558/ktpics4/background4%20new_zps2c79eikf.png);
+  width: 100%;
+  position: absolute;
+}
+
+.homeLeftDiv{
+  float: left;
+  z-index: 2;
+  position:absolute;
+  color: white;
+  margin-top: 3em;
+  width:50%;
+}
+
+.homePageTitle{
+  content: url(images/Logo2.png);
+  width: 36em;
+}
+
+.homeSubTitle{
+  font-size: 1.8em;
+  margin-left: 2.5em;
+  margin-top: -.3em;
+
+}
+
+.homeRightDiv{
+  right: 0;
+  z-index: 2;
+  position: absolute;
+  width: 50%;
+}
+
+.homeLoginCard{
+  margin-top:3em;
+  margin-left: 4em;
+  margin-right:4em;
+}
+
+.homeLoginCardContent{
+  
 }
 
 .loginPopup{
@@ -113,6 +167,11 @@ a:visited.addArticleFromClassroom {
 .navbarText{
   text-decoration: none;
   color: black;
+}
+
+.phraseIcon{
+  content: url(images/icon.png);
+  width: 3em;
 }
 
 .searchBar{
@@ -309,8 +368,7 @@ div.feature a {
   white-space: pre-wrap;
 }
 
-.articleAnnotationCard 
-{
+.articleAnnotationCard{
   width: 30%;
   float: left;
   display: inline-block;
@@ -424,6 +482,10 @@ div.feature a {
 .pageTitle{
   font-size: 30px;
   margin-bottom: 0px;
+}
+
+.articleInfoTitle{
+  clear: both;
 }
 
 .pageSubTitle{
