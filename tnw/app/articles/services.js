@@ -7,9 +7,11 @@ module.exports = {
         /*Returns the list of all articles on database*/
         function list() {
             return db.allDocs({
+                    /*This tells the server to get all docs that start with article*/
                     startkey: 'article',
                     endkey: 'article{}',
                     inclusive_end: true,
+                    /*Include not just the key but all fields*/
                     include_docs: true
                 })
                 .then(function(res) {

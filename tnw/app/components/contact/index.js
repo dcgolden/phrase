@@ -1,7 +1,7 @@
 'use strict'
-
+/*This section requires the node module fs to read the template html*/
 var fs = require('fs')
-
+/*This part exposes this module to rest of app*/
 module.exports = {
   url: '/contact',
   controller: ['$scope', controller],
