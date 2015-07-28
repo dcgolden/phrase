@@ -17,10 +17,10 @@ html, body{
 		</div>
 
 		<div class="homeRightDiv">
-			<md-card class="homeLoginCard">
-				<md-card-content class="homeLoginCardContent" ng-if="!activeUser">
-					<div class="homeLoginCardTitleContainer">
-    					<div class="pageTitle homeLoginCardTitle">Sign Up!</div>
+			<md-card class="homeSignupCard">
+				<md-card-content class="homeSignupCardContent" ng-if="!activeUser">
+					<div class="homeSignupCardTitleContainer">
+    					<div class="pageTitle homeSignupCardTitle">Sign Up!</div>
     					<div>Start collaborating now</div>
 					</div>
 
@@ -98,13 +98,13 @@ html, body{
                       </div>
                     </form>
 				</md-card-content>
-				<md-card-content class="homeLoginCardContent" ng-if="activeUser">
-					<div class="homeLoginCardTitleContainer">
-    					<div class="pageTitle homeLoginCardTitle">Good to go!</div>
+				<md-card-content class="homeSignupCardContent" ng-if="activeUser">
+					<div class="homeSignupCardTitleContainer">
+    					<div class="pageTitle homeSignupCardTitle">Good to go!</div>
     					<div>Start collaborating now</div>
-    					<div class="homeLoginCardSpace"></div>
-    					<div href class="homeLoginCardLink" ng-click='goToArticles()'>Your Articles</div>
-    					<div href class="homeLoginCardLink" ng-click='goToClassrooms()'>Your Classrooms</div>
+    					<div class="homeSignupCardSpace"></div>
+    					<div href class="homeSignupCardLink" ng-click='goToArticles()'>Your Articles</div>
+    					<div href class="homeSignupCardLink" ng-click='goToClassrooms()'>Your Classrooms</div>
 					</div>
 				</md-card-content>
 			</md-card>

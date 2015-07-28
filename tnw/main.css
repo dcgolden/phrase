@@ -1,9 +1,9 @@
 html, body{
-  background-color: #eee !important;  /*TNW*/
+  background-color: #eee !important; /*sets background of entire app to a greyish color*/
 }
 
 html::-webkit-scrollbar{
-  display: none;
+  display: none; /*removes scrollbar from entire app*/
 }
 
 body {
@@ -11,29 +11,29 @@ body {
 }
 
 a {
-  text-decoration: none;
+  text-decoration: none; /*<a> links no longer have underlines*/
 }
 
 a:visited.addArticleFromClassroom {
-    color: blue;
+    color: blue; /*<a> links that are visited still appear blue instead of purple*/
 }
 
-.homeImage1{
+.homeImage1{ /*pulls an image from photobucket for use in homepage !!not used!!*/
   background-image:url(http://i1329.photobucket.com/albums/w558/ktpics4/background1%20new_zpszg9qauyo.png);
   width: 100%;
   position: absolute;
 }
 
-.homeImage2{
+.homeImage2{ /*pulls an image from photobucket for use in homepage !!not used!!*/
   background-image:url(http://i1329.photobucket.com/albums/w558/ktpics4/background6%20new_zpso77kzzqh.png);
   width: 100%;
   position: absolute;
 }
 
-.homeImage3{
+.homeImage3{ /*class for homepage image. all other homeImage# classes should be changed to this*/
   width:100%!important;
   position:relative;
-  -moz-transform: scaleX(-1);
+  -moz-transform: scaleX(-1); /*flips the images*/
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
@@ -41,23 +41,23 @@ a:visited.addArticleFromClassroom {
     -ms-filter: "FlipH";
 }
 
-.homeImage4{
+.homeImage4{ /*pulls an image from photobucket for use in homepage !!not used!!*/
   background-image:url(http://i1329.photobucket.com/albums/w558/ktpics4/background3%20new_zpskukurjg1.png);
   width: 100%;
   position: absolute;
 }
 
-.homeImage5{
+.homeImage5{ /*pulls an image from photobucket for use in homepage !!not used!!*/
   background-image:url(http://i1329.photobucket.com/albums/w558/ktpics4/background4%20new_zps2c79eikf.png);
   width: 100%;
   position: absolute;
 }
 
-.homeFirstBlock{
+.homeFirstBlock{ /*first 'block' of the homepage*/
   width:100%;
 }
 
-.homeLeftDiv{
+.homeLeftDiv{ /*Phrase logo and slogan on first 'block'*/
   top:0px;
   z-index: 2;
   position:absolute;
@@ -66,19 +66,19 @@ a:visited.addArticleFromClassroom {
   width:50%;
 }
 
-.homePageTitle{
+.homePageTitle{ /*logo in left div on first 'block'*/
   content: url(images/Logo2.png);
   width: 36em;
 }
 
-.homeSubTitle{
+.homeSubTitle{ /*slogan in left div on first 'block'*/
   font-size: 1.8em;
   margin-left: 2.5em;
   margin-top: -.3em;
 
 }
 
-.homeRightDiv{
+.homeRightDiv{ /*Signup container on first 'block'*/
   top:50px;
   right: 0px;
   z-index: 2;
@@ -86,39 +86,39 @@ a:visited.addArticleFromClassroom {
   width: 55%;
 }
 
-.homeLoginCard{
+.homeSignupCard{ /*Signup card on first 'block'*/
   margin-top:3em;
   margin-left: 4em;
   margin-right:4em;
 }
 
-.homeLoginCardContent{
+.homeSignupCardContent{ /*gives the Signup card some padding*/
   padding: 1em;
 }
 
-.homeLoginCardTitleContainer{
+.homeSignupCardTitleContainer{ /*aligns the title and subitile in the homepage signup card to the left*/
   float: left;
 }
 
-.homeLoginCardTitle{
+.homeSignupCardTitle{ /*pads the title from the subtitle in the homepage signup card*/
   margin-bottom: 2em;
 }
 
-.homeLoginCardSpace{
+.homeSingupCardSpace{ /*spaces out the links in the homepage signup card post login*/
   margin-top: 3em;
 }
 
-.homeLoginCardLink{
+.homeSignupCardLink{ /*pads the links in the homepage signup card post login*/
   margin-top: 2em;
   font-size: 1.2em;
 }
 
-.homeSecondBlock{
+.homeSecondBlock{ /*the second 'block' on the homepage*/
   margin: 1em;
   margin-bottom: 5em;
 }
 
-.homeSecondPageTitle{
+.homeSecondPageTitle{ /*the header in the second 'block'*/
   margin-right:auto;
   margin-left:auto;
   width:49%;
@@ -126,16 +126,16 @@ a:visited.addArticleFromClassroom {
   padding-top:1.4em;
 }
 
-.homeFeaturesContainer{
+.homeFeaturesContainer{ /*a flexbox for the features list in the second 'block'*/
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: flex-start;
-  align-content: space-around;
+  align-content: space-around; /*to understand flexboxes : 'https://css-tricks.com/snippets/css/a-guide-to-flexbox/' */
 }
 
-.homeFirstFeature{
+.homeFirstFeature{ /*the first feature in the flexbox... maybe consolidate them into one class*/
   width: 400px;
   height: 200px;
   padding-top: 5em;
@@ -143,7 +143,7 @@ a:visited.addArticleFromClassroom {
   text-align: center;
 }
 
-.homeSecondFeature{
+.homeSecondFeature{ /*second feature*/
   width: 400px;
   height: 200px;
   padding-top: 5em;
@@ -151,7 +151,7 @@ a:visited.addArticleFromClassroom {
   text-align: center;
 }
 
-.homeThirdFeature{
+.homeThirdFeature{ /*third*/
   width: 400px;
   height: 200px;
   padding-top: 5em;
@@ -159,7 +159,7 @@ a:visited.addArticleFromClassroom {
   text-align: center;
 }
 
-.homeFourthFeature{
+.homeFourthFeature{/*fourth*/
   width: 400px;
   height: 200px;
   padding-top: 5em;
@@ -167,7 +167,7 @@ a:visited.addArticleFromClassroom {
   text-align: center;
 }
 
-.homeFifthFeature{
+.homeFifthFeature{/*fifth*/
   width: 400px;
   height: 200px;
   padding-top: 5em;
@@ -175,19 +175,19 @@ a:visited.addArticleFromClassroom {
   text-align: center;
 }
 
-.homeFeatureTitle{
+.homeFeatureTitle{ /*the titles of all the features in the flexbox*/
   font-weight:bold;
   padding-bottom: 1em
 }
 
-.homeFeatureDesc{
+.homeFeatureDesc{ /*the descriptions of all the features in the flexbox*/
   font-weight:100;
   width: 250px;
   margin-left:auto;
   margin-right:auto;
 }
 
-.homeExplore{
+.homeExplore{ /*the '6th feature' explore button*/
   width: 400px;
   height: 200px;
   padding-top: 5em;
@@ -195,35 +195,35 @@ a:visited.addArticleFromClassroom {
   text-align: center;
 }
 
-.homeExploreImg{
+.homeExploreImg{ /*the image for the explore feature*/
   float:right;
   margin-top:5em;
   margin-right:33%
 }
 
-.homeExporeTitle{
+.homeExporeTitle{ /*the text for the explore feature*/
   float:right;
   width: 1em;
   margin-top:5.3em;
   margin-right: 2.5em;
 }
 
-.loginPopup{
+.loginPopup{ /*sets the width of the mdDialog when set to login*/
   min-width:24em;
   height: auto;
 }
 
-.signupPopup{
+.signupPopup{ /*sets the width of the mdDialog when set to signup*/
   min-width:32em;
   height: auto;
 }
 
-.popupAnimate{
+.popupAnimate{ /*animates the mdDiaog for login and signup. not sure if working*/
   -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
 }
 
-.loginPopupSubheader{
+.loginPopupSubheader{ /*subheader for login*/
   padding-top: 1em;
   padding-bottom:1em;
   float: left;
@@ -234,70 +234,75 @@ a:visited.addArticleFromClassroom {
 .loginPopupUsername, 
 .signupPopupNameContainer,
 .signupPopupUsername, 
-.signupPopupEmail{
+.signupPopupEmail{ /*allows text fields in login dialog to clear floated fields*/
   clear:both;
 }
 
 .signupPopupPassword, 
 .signupPopupCPassword,
 .signupPopupFirstName,
-.signupPopupLastName{
+.signupPopupLastName{ /*gives half a line of width to some fields*/
   width: 45%;
 }
 
 .signupPopupPassword,
-.signupPopupFirstName{
+.signupPopupFirstName{ /*floates some half line fields to the left*/
   float: left;
 }
 
 .signupPopupCPassword,
-.signupPopupLastName{
+.signupPopupLastName{ /*floates other half line fields to the right*/
   float: right;
 }
 
-.signupPopupRole{
+.signupPopupRole{ /*floates the role selection field to the right and gives it sizing*/
   float: right;
   height:4.5em;
   width: 40%;
 }
 
-.avatarSmall{
+.avatarSmall{ /*sizes the avatar in the nav bar*/
   width: 44px!important;
   height: 44px!important;
 }
 
-.progressCircular{
+.progressCircular{ /*positions the progressCircular when loading articles page*/
   margin-top: 14em;
   margin-left: auto;
   margin-right: auto;
 }
 
-.mainToolbar{
+.mainToolbar{ /*forces nav bar to be above everything*/
   z-index: 4;
 }
 
-.loginButton{
+.loginButton{ /*gives margin to login button !!not used (i think)!!*/
   margin-right: 1em;
 }
 
-.navbarText{
+.navbarText{ /*colors and removes underline from links in the hamburger menu on nav bar*/
   text-decoration: none;
   color: black;
 }
 
-.phraseIcon{
+.phraseIcon{ /*pulls in phrase icon and sizes it !!not used!!*/
   content: url(images/icon.png);
   width: 3em;
 }
 
-.searchBar{
+.searchBar{ /*positions and sizes the search bar in the articles.list(?) page*/
   float: left;
   margin-left: 14em;
   position: absolute;
   margin-top: -1.2em;
 }
 
-.classroomCard {
+.classroomCardContainer{ /*the container that holds each classroom card in classrooms.*/
+  padding-top: 3em;
+  padding-bottom: 3em; 
+}
+
+.classroomCard { /*sizes and pads each classroom card **needs improvement** */
   width: 80%;
   height: 8em;
   margin-left: 3em;
@@ -305,18 +310,13 @@ a:visited.addArticleFromClassroom {
   padding: .8rem;
 }
 
-.classroomCardContainer{
-  padding-top: 3em;
-  padding-bottom: 3em; 
-}
-
-.classroomCardATag{
+.classroomCardATag{ /*makes entire div an a tag **use this on explore features on homepage as well** */
   text-decoration: none;
   width: 100%;
   height: 100%;
 }
 
-.classroomCardClassroom{
+.classroomCardClassroom{ /* sets the size and positioning of the name of the classroom in the card*/
   margin: 0px;
   font-size: 18px;
   text-transform: uppercase;
@@ -324,125 +324,98 @@ a:visited.addArticleFromClassroom {
   text-decoration: none;
 }
 
-.searchBarClassrooms{
+.searchBarClassrooms{ /*aligns and sizes the search bar in the classrooms.list view*/
   float: left;
   margin-left: 14em;
   position: absolute;
   margin-top: -3.41em;
 }
 
-.classroomPicker{
+.classroomPicker{ /*class for the classroom selector !!not used!! */
 }
 
-.classroomDiscriptionShow{
+.classroomDiscriptionShow{ /*sets a width for the classroom description in classroom.show view*/
   width: 90%;
 }
 
-a.classroomsAddArticles, a.classroomsAddStudents{
+a.classroomsAddArticles, a.classroomsAddStudents{ /*sets color of <a> in classroom.show*/
   color:blue!important;
 }
 
-.classroomsAddArticles, .classroomsAddStudents {
+.classroomsAddArticles, .classroomsAddStudents { /*styles the font if no students or articles in a classroom in classroom.show view*/
   text-decoration: none;
   color: gray;
   font-size: 14px;
 }
 
-.classroomsArticleTitle{
+.classroomsArticleTitle{ /*the title in classrooms.show that reads 'articles'*/
   padding-top: 1em;
 }
 
-.active{
+.active{ /*supposed to change the color of the active link in the nav bar hamburger menu !!not working!!*/
   font-weight: bold !important;
   color: #3F51B5;                 /* change this color to match theme */
   fill: #3F51B5 !important;       /* change this color to match theme */
 }
 
-.navDivider{
+.navDivider{ /*gives the dividers margins in the nar bar hamburger menu*/
   margin-top: .3em;
   margin-bottom: .3em;
 }
 
-.navDividerHalfWidth{
+.navDividerHalfWidth{ /*gives nav divider width of half a page in classrooms.show*/
   width: 45%;
   margin-left: -5em; 
 }
 
-.searchIcon{
+.searchIcon{ /* aligns the icon for the search bar in articles.list and in classrooms.list*/
   margin-top: .1em;
   margin-right: .2em;
   float: left;
 }
 
-.articlesContainer{
+.articlesContainer{ /*a container fot the articles in articles.list*/
   padding-top: 3em;
   padding-bottom: 3em;
 }
 
-.navDividerMainPg{
-  margin-bottom: .5em;
-}
-
-.articlesContainerMainPg{
-  padding-top: 0em;
-  padding-bottom: 1em;
-}
-
-.classroomMainPg{
-  margin-bottom: .4em;
-  margin-left: .25em;
-  font-size: 1.25em;
-  font-weight: bold;
-  color: #333;
-  text-decoration: none;
-  width: auto;
-}
-
-a.navbarText{
-  text-decoration: none;
-}
-
-a.classroomMainPg:hover{
-  color: #777;
-}
-
-.toolbarCurrentPage{
+.toolbarCurrentPage{ /*positions the word 'phrase' in the nav bar*/
   margin-top: .2em !important;
   margin-left: .6em;
 }
 
-.navbarCurrentPage{
+.navbarCurrentPage{ /*positions the current page in the nav bar !!not used but in HTML(app-nav/template.html)!!*/
   margin-top: .2em !important;
   margin-left: .6em;
   font-weight: bold;
 }
 
-.Views{
+.Views{ /*gives paddind to all views*/
   padding-left: 60px;
   padding-right: 60px;
 }
 
-.floatingActionButton { 
+.floatingActionButton { /*positions *ALL* fabs*/
   float: right;
   margin-top: -3.5em;
   margin-right: 5em;
   z-index: 100 !important;
 }
 
-.hamburgerMenuButton2{
+.hamburgerMenuButton2{ /*positions lots of icons.. hamburer menu and SOME fabs*/
   padding-top: .6em !important;
 }
 
-.hamburgerMenuButton3{
+.hamburgerMenuButton3{ /*positions SOME fabs too lazy to check which*/
   padding-right: .5em !important;
 }
 
-.toolbarCurrentUser{
+.toolbarCurrentUser{ /*styles the button that has your username in it*/
   font-size: 13px;
   padding-right: .5em;
 }
 
-.requiredPickerError{
+.requiredPickerError{ /*an error for required pickers*/
   color: rgb(244,67,54);
   font-size: 12px;
   line-height: 24px;
@@ -450,15 +423,11 @@ a.classroomMainPg:hover{
   margin-left: -8em;
 }
 
-.div.feature {
-    position: relative;
-}
-
-.whiteBack{
+.whiteBack{ /*for the article cards in article.list... makes the background white*/
   background-color: #FFF !important;
 }
  
-div.feature a {
+div.feature a { /*styles the article cards in article.list... makes them clickable links*/
     position: absolute;
     width: 100%;
     height: 100%;
@@ -471,144 +440,137 @@ div.feature a {
     filter: alpha(opacity=1); /* Fix to make div clickable in IE */
 }
 
-.articleContentCardDiv{
+.articleContentCardDiv{/*container for the cards in article.list*/
   height: inherit;
   padding: 10px;
   overflow: hidden;
-  border-bottom: 58px solid white;
+  border-bottom: 58px solid white; /*not sure if this works or if we even want it...*/
 }
 
-.articleContentCard{
+.articleContentCard{ /*styling for the cards themselves*/
   text-align: left;
   font-size: 6px;
-  white-space: pre-wrap;
+  white-space: pre-wrap; /*preserves the indents and line breaks from articles*/
 }
 
-.articleAnnotationCard{
-  width: 30%;
-  float: left;
+.articleAnnotationCard{ /*this feature was disabled... go back in the git repo to look at this when it was used (around 7/21/15)*/
+  width: 30%;           /*it was good for quickly showing and hiding the content of annotations in clean-looking cards*/
+  float: left;          /*anyway... this set width and positioning for the card itself in articles.show*/
   display: inline-block;
   clear: both;
   padding: 0em 1em 0em 1em;
 }
 
-.articleAnnotationCardDelete{
+.articleAnnotationCardDelete{ /*again disabled... aligned the delete button*/
   float:right;
 }
 
-.articleAnnotationCardContainer{
+.articleAnnotationCardContainer{ /*disabled... applies margin to the container holding the cards*/
     margin-top: 4.5em;
-  
     margin-left: 3%;
 }
 
-.articleAnnotationCardQuoteTitle{
-  margin: .75em;
+.articleAnnotationCardQuoteTitle{ /*disabled... styles the title of the annotation. feature not supported ATM, defaulted to*/
+  margin: .75em;                                                                                      /* annotationTitle */
   font-size: 20px;
   font-style:italic
 }
 
-.articleAnnotationCardQuote{
+.articleAnnotationCardQuote{/*disabled... styled the quoted portion of text for the annotation*/
   color: gray;
   font-style: italic;
   font-size: 11px;
 }
 
-.articleAnnotationCardAnnotationTitle{
+.articleAnnotationCardAnnotationTitle{/*disabled... dont remember what this did pretty sure we didnt use it... */
   margin: .5em;
 }
 
-.articleAnnotationCardAnnotation{
+.articleAnnotationCardAnnotation{ /*disabled... styled the annotation made by user*/
   margin: 1em;
   font-size: 14px;
 }
 
-.articleCardContainer{
+.articleCardContainer{ /*container for the article card. md-content tag is white by default so it needed to be changed to trans*/
   background-color: transparent !important;
 }
 
-.blueBar{
-  height: 12em;
-}
-
-.positioner{
+.positioner{ /*positions SOME fabs... I know they need a lot of positioning*/
   float: right;
   margin-right: 10%;
 }
 
-.positioner2{
+.positioner2{ /*positioned another fab*/
   float: right;
   margin-right: 10%;
 }
 
-.articleTitleInput{
+.articleTitleInput{ /* a class in article.new/pdf/url for articl titles input field !!not used!!*/
 
 }
 
-.articleAuthorInput{
-  float: left;
+.articleAuthorInput{ /*makes input field half a line in article.new/pdf/url for author field*/
+  float: left;  /*align left*/
   width: 50%;
 }
 
-.articleSourceInput{
-  float: right;
+.articleSourceInput{ /*makes input field half a line in article.new/pdf/url for source field*/
+  float: right; /*aligh right*/
   width: 50%;
 }
 
-.articleClassroomInput{
-  clear: both;
-  float: left;
+.articleClassroomInput{ /*makes selector half a line in article.new/pdf/url for classroom seletion*/
+  clear: both; /*new line*/
+  float: left; /*align left*/
   width: 45%;
 }
 
-.articleDateTimeInput{
+.articleDateTimeInput{ /*makes input half a line in article.new/pdf/url for dateTime field*/
   float: right;
   width: 45%;
 }
 
-.articleAssignmentDescriptionInput{
-  width: 164.5%;
+.articleAssignmentDescriptionInput{ /*positions in articles.new/pdf/url*/
   clear: both;
 }
 
-.articleContentInput{
+.articleContentInput{ /*postions in articles.new*/
   clear: both;
-  width: 1645%;
 } 
 
-.articlePDFInput{
+.articlePDFInput{ /*poitions the PDF input field in articles.pdf*/
   clear: both;
 }
 
-.articleURLInput{
+.articleURLInput{ /*positions the url input field in articles.url*/
   clear: both;
 }
 
-.articlesPage{
+.articlesPage{ /* pads the articles.list view*/
   padding-left: 2em;
   padding-right: 2em;
 }
 
-.classroomsAddPage{
+.classroomsAddPage{ /*pad the classrooms.new view*/
   padding-left: 2em;
   padding-right: 2em;
   padding-top: 2em;
 }
 
-.pageTitle{
+.pageTitle{ /*sets size for the titles on various pages... ie. articles.list and classrooms.list*/
   font-size: 30px;
   margin-bottom: 0px;
 }
 
-.articleInfoTitle{
+.articleInfoTitle{ /* styles the 'article info' titl in artices.new/pdf/url */
   clear: both;
 }
 
-.pageSubTitle{
+.pageSubTitle{/*styles various pages' subtitles*/
   color: gray; 
 }
 
-.fabSpeedDial5{
+.fabSpeedDial5{ /*verticle alignment of fabs. each needs individual alignment VERTICAL ONLY*/
   float: right;
   position:fixed;
   margin-top: .34em;
@@ -616,7 +578,7 @@ div.feature a {
   margin-left: -.68em;
 }
 
-.fabSpeedDial4{
+.fabSpeedDial4{ /*VERTICAL ALIGNMENT ONLY of fabs*/
   float: right;
   position:fixed;
   margin-top: 2.22em;
@@ -624,7 +586,7 @@ div.feature a {
   margin-left: -.68em;
 }
 
-.fabSpeedDial3{
+.fabSpeedDial3{ /*VERTICAL ALIGNMENNT ONLY of fabs*/
   float: right;
   position:fixed;
   margin-top: .35em;
@@ -632,7 +594,7 @@ div.feature a {
   margin-left: -.68em;
 }
 
-.fabSpeedDial2{
+.fabSpeedDial2{ /*VERTICAL ALIGNMENT ONLY of fabs*/
   float: right;
   position:fixed;
   margin-top: 6.22em;
@@ -640,14 +602,14 @@ div.feature a {
   margin-left: -.68em;
 }
 
-.fabSpeedDial{
+.fabSpeedDial{ /*VERTICAL ALIGNMENT ONLY of fabs*/
   float: right;
   position:fixed;
   margin-top: 11.6em;
   z-index: 11 !important;
 }
 
-.md-fab{
+.md-fab{ /*some padding for ALL fabs*/
     padding-top: .5em;
 }
 
@@ -655,11 +617,11 @@ div.feature a {
 .fabSpeedDial2 .md-fab:hover, .fabSpeedDial2 .md-fab.md-focused, 
 .fabSpeedDial3 .md-fab:hover, .fabSpeedDial3 .md-fab.md-focused, 
 .fabSpeedDial4 .md-fab:hover, .fabSpeedDial4 .md-fab.md-focused,
-.fabSpeedDial5 .md-fab:hover, .fabSpeedDial5 .md-fab.md-focused {
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26), inset 0 0 100px 100px rgba(0, 0, 0, 0.3) !important; 
+.fabSpeedDial5 .md-fab:hover, .fabSpeedDial5 .md-fab.md-focused { /*styles ALL fabs that are hovered*/
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26), inset 0 0 100px 100px rgba(0, 0, 0, 0.3) !important;
 }
 
-.fabSpeedDial .lock-size {
+.fabSpeedDial .lock-size { /* needed for correct fundtionality of fabs*/
   min-width: 50px;
   min-height: 50px;
   width: 50px;
@@ -668,37 +630,37 @@ div.feature a {
   margin-right: auto; 
 }
 
-.articleContentCardFooter{
+.articleContentCardFooter{ /*styles the footers of cards in article.show... displays the article title*/
   height: 1.2em;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; /*bugged... sometimes working, sometimes not... havnt looked into a solution*/
   white-space: nowrap;
   overflow: hidden;
   padding-right: 1em;
 }
 
-.zRaise2
+.zRaise2 /*for shadows on various elements*/
 {
   box-shadow:0 8px 17px rgba(0,0,0,.2)
 }
 
-.articleCard 
+.articleCard /*the card in the article.show view*/
 {
   padding: 2rem;
   z-index: 7;
   margin-top: 5em;
   width: 60%;
-  margin-right: auto;
-  margin-left: auto;
+  margin-right: auto; /*centers the card*/
+  margin-left: auto; /*centers the card*/
 }
 
-.articleCardClassroom{
+.articleCardClassroom{ /*!!not used!! for showing the classroom on the article.show view*/
   color: #777;
   font-weight: bold;
   text-align: right;
   float: right;
 }
 
-.articleCardTitle{
+.articleCardTitle{ /*styles the title of the article on the article.show view*/
   margin-top: .25em;
   margin-bottom: 0em;
   font-size: 3em;
@@ -706,7 +668,7 @@ div.feature a {
   color: #333;
 }
 
-.articleCardAuthor{
+.articleCardAuthor{/*styles the author of the article on the article.show view*/
   margin-top: .1em;
   margin-bottom: .5em;
   margin-left: 2em;
@@ -715,7 +677,7 @@ div.feature a {
   text-align: left;
 }
 
-.articleCardContent{
+.articleCardContent{ /*styles the content of the article on the article.show view*/
   text-decoration: none;
   line-height: 1.7;
   color: #777;
@@ -727,53 +689,53 @@ div.feature a {
   word-break: keep-all;
 }
 
-.articleCardSource{
+.articleCardSource{ /*styles the source of the article on the article.show view*/
   margin-right: .25em;
   color: #AAA;
   text-align: right;
   font-family: 'Roboto', sans-serif;;
 }
 
-.deleteBtn{
+.deleteBtn{ /*styles the delete button fab button on various views*/
   margin-bottom: 40px;
 }
 
-.sideNavIcons{
+.sideNavIcons{ /*styles fab buttons*/
   padding-right: 1.3em;
   margin-bottom: -.6em;
 }
 
-.thumbnail {
+.thumbnail { /*not sure what this does or even if we use it...*/
     float: left;
     width: 110px;
     height: 90px;
     margin: 5px;
 }
 
-.md-mini{
+.md-mini{ /*for mini fab buttons*/
   padding-top: .1em!important;
 }
 
-.text_line {
+.text_line { /*again no idea if we use this or what it is*/
     clear: both;
     margin-bottom: 2px;
 }
 
-.listdemoBasicUsage md-divider {
+.listdemoBasicUsage md-divider { /*probably useless. copied and pasted from an md demo*/
   margin-top: 10px;
   margin-bottom: 10px; 
 }
 
-textarea {
-   -webkit-box-sizing: border-box;
+textarea { /*styles all the text area tags*/
+   -webkit-box-sizing: border-box; /*for browser compatibility... we need more of this*/
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    width: 61%;
+    width: 100%;
     resize: none;
     margin-right: auto;
 }
 
-.footerBar{
+.footerBar{ /*for the footer that we commented out! !!not working!!*/
   position: relative;
 bottom: -100%;
 }
