@@ -11,24 +11,21 @@ require('angular').module('app', [
         require('angular-animate'),
         require('angular-aria'),
         require('angular-material'),
-        /*svg-icons*/
-        require('./ng-icons'),
-        /*controls user going between views*/
-        require('angular-ui-router'),
-        /*used to show fields are required*/
-        require('angular-messages'),
-        /*Add new url branches/main states here*/
-        require('./classrooms'),
+        require('./ng-icons'), /*svg-icons*/
+        require('angular-ui-router'), /*controls user going between views*/
+        require('angular-messages'), /*used to show fields are required*/
+        require('./classrooms'), /*Add new url branches/main states here*/
         require('./articles'),
         require('./users')
     ])
     .config(['$stateProvider', '$urlRouterProvider', '$mdThemingProvider', function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
         $urlRouterProvider.otherwise('/')
         $stateProvider
+        /*Also need to add the new url/states here*/
             .state('home', require('./components/home'))
             .state('about', require('./components/about'))
             .state('contact', require('./components/contact'))
-
+            /*All theming is done here. md-primary, md-hue-1 etc are very useful class tags*/
         $mdThemingProvider.theme('default')
             .primaryPalette('indigo', {
                 'default': '500', // by default use shade 500 from the palette for primary intentions
@@ -58,11 +55,11 @@ require('angular').module('app', [
                 otherModelValue: "=compareTo"
             },
             link: function(scope, element, attributes, ngModel) {
-                 
+
                 ngModel.$validators.compareTo = function(modelValue) {
                     return modelValue == scope.otherModelValue;
                 };
-     
+
                 scope.$watch("otherModelValue", function() {
                     ngModel.$validate();
                 });
@@ -70,6 +67,7 @@ require('angular').module('app', [
         };
     })
     .controller('AppController', ['$scope', 'classrooms', 'users', AppController])
+    /*Constants for database name*/
     .constant('dbName', 'https://bivit-dev.iriscouch.com/bivit')
     .constant('remoteUserDbName', 'https://bivit-dev.iriscouch.com/_users')
     .constant('annotationDbName', 'https://bivit-dev.iriscouch.com/annotator')
@@ -81,8 +79,8 @@ function AppController($scope, users) {
         $scope.showMenu = !$scope.showMenu;
     };
 
-    $scope.$on('pushChangesToAllNodes', function( event, message ){
-      $scope.$broadcast( message.name, message.data );
+    $scope.$on('pushChangesToAllNodes', function(event, message) {
+        $scope.$broadcast(message.name, message.data);
     });
 
 }
