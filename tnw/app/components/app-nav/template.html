@@ -1,93 +1,25 @@
+<!-- if no activeUser is set, ie. no one is signed in -->
 <div ng-if="!activeUser">
 
   <!--TOOLBAR!!-->
   <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1 mainToolbar mainToolbarNotActive">
     <div class="md-toolbar-tools">
-    <!--
-      <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
-        <div class="hamburgerMenuButton2" flex>
-          <ng-md-icon icon='menu' style="fill: white" size="24">
-          </ng-md-icon>
-        </div>
-      </md-button>
-      -->
+
       <div href class="toolbarCurrentPage" ng-click="goHome()"> <a href> Phrase </a> </div>
       <span flex></span>
+      <!-- no features page ATM -->
       <md-button>Features</md-button>
+      <!-- about page needs an overhaul -->
       <md-button ui-sref="about">About</md-button>
+      <!-- same as about -->
       <md-button ui-sref="contact">Contact Us</md-button>
+      <!-- login button summons loginPopup mdDialog passing $event or 'ev' -->
       <md-button class="loginButton" ng-click="LoginDialog($event)">Login</md-button>
     </div>
   </md-toolbar>
-
-  <!--SideNav!!-->
-  <!--<div layout="row" flex="" ng-click="toggleLeft()">
-    <md-sidenav style="height:500px;" md-component-id="left" class="md-sidenav-left md-whiteframe-z2">
-      <md-toolbar class="" ng-click="toggleLeft()">
-        <div class="md-toolbar-tools">
-          <div class="hamburgerMenuButton2 hamburgerMenuButton3">
-            <ng-md-icon icon="menu" style="fill: white" size="24">
-            </ng-md-icon>
-          </div>
-          <div class="navbarCurrentPage navbarHover">
-          </div>
-        </div>
-      </md-toolbar>
-      <md-content layout-padding="">
-        <md-list hide-md="" show-gt-md="">
-          <a ui-sref="home" class="navbarText">
-            <md-list-item ng-click="toggleLeft()">
-              <div class="sideNavIcons">
-                <ng-md-icon icon="home" ng-class="" style="fill: black" size="30">
-                </ng-md-icon>
-              </div>
-              <p ng-class="">Home</p>
-            </md-list-item>
-          </a>
-          <md-divider class="navDivider" ng-if="!$last"></md-divider>
-          <a ui-sref="users.login" class="navbarText">
-            <md-list-item ng-click="toggleLeft()">
-              <div class="sideNavIcons">
-                <ng-md-icon icon="people" ng-class="" style="fill: black" size="30">
-                </ng-md-icon>
-              </div>
-              <p ng-class="">Login</p>
-            </md-list-item>
-          </a>
-          <a ui-sref="users.signup" class="navbarText">
-            <md-list-item ng-click="toggleLeft()">
-              <div class="sideNavIcons">
-                <ng-md-icon icon="school" ng-class="" style="fill: black" size="30">
-                </ng-md-icon>
-              </div>
-              <p ng-class="">Sign Up</p>
-            </md-list-item>
-          </a>
-          <md-divider class="navDivider" ng-if="!$last"></md-divider>
-          <a ui-sref="about" class="navbarText">
-            <md-list-item ng-click="toggleLeft()" ui-sref="about">
-              <div class="sideNavIcons">
-                <ng-md-icon icon="info" ng-class="" style="fill: black" size="30">
-                </ng-md-icon>
-              </div>
-              <p ng-class="">About</p>
-            </md-list-item>
-          </a>
-          <a ui-sref="contact" class="navbarText">
-            <md-list-item ng-click="toggleLeft()" ui-sref="contact">
-              <div class="sideNavIcons">
-                <ng-md-icon icon="help" ng-class="" style="fill: black" size="30">
-                </ng-md-icon>
-              </div>
-              <p ng-class="">Contact</p>
-            </md-list-item>
-          </a>
-        </md-list>
-      </md-content>
-    </md-sidenav>
-  </div>-->
 </div>
 
+<!-- if an activeUser is set -->
 <div ng-if="activeUser">
 
 <!--TOOLBAR!!-->
@@ -122,7 +54,7 @@
     </div>
   </md-toolbar>
 
-  <!--SideNav!!-->
+  <!--SideNav!! (only appears with a loged in user)-->
   <div layout="row" flex="" ng-click="toggleLeft()">
     <md-sidenav style="height:500px;" md-component-id="left" class="md-sidenav-left md-whiteframe-z2">
       <md-toolbar class="" ng-click="toggleLeft()">
@@ -197,5 +129,4 @@
       </md-content>
     </md-sidenav>
   </div>
-  
 </div>
