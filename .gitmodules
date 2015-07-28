@@ -1,2 +1,5 @@
 path = annotator-store
 url = https://github.com/openannotation/annotator-store.git
+[submodule "annotator-store"]
+	path = annotator-store
+	url = https://github.com/openannotation/annotator-store.git
