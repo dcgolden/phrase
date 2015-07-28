@@ -9,7 +9,7 @@ module.exports = {
 }
 
 function controller ($scope) {
-
+	/*back or menu button*/
 	$scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
     function backButtonPlacer() {
