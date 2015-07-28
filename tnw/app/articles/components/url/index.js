@@ -1,5 +1,5 @@
 'use strict';
-
+/*See /articles/new/index.js*/
 var fs = require('fs');
 module.exports = {
     url: '/url',

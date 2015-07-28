@@ -1,7 +1,7 @@
 'use strict';
-
+/*This section requires the node module fs to read the template html*/
 var fs = require('fs');
-
+/*This part exposes this module to rest of app*/
 module.exports = {
     url: '/new',
     controller: ['$scope', 'classrooms', '$state', '$mdDialog', controller],
@@ -9,16 +9,17 @@ module.exports = {
 };
 
 function controller($scope, classrooms, $state, $mdDialog) {
+    /*Communicates between two things. We're not sure what this is sorry, but it's needed*/
     var self = this;
     self.tags = [];
-
+    /*Creates a new classroom then goes back to list*/
     $scope.create = function(classroom) {
         classrooms.create(classroom)
             .then(function(res) {
                 $state.go('classrooms.list');
             });
     };
-
+    /*back or menu button*/
     $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
     function backButtonPlacer() {
@@ -27,33 +28,39 @@ function controller($scope, classrooms, $state, $mdDialog) {
             data: true
         };
     }
-
+    /*Saves the classroom color for color coding classrooms, currently this field is not used anywhere*/
     $scope.saveColor = function() {
         $mdDialog.hide();
         $scope.classroom.color = rgbToHex($scope.color.red, $scope.color.green, $scope.color.blue);
     };
-
+    /*Turns rgb values from color picker into hex*/
     function rgbToHex(r, g, b) {
         return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     }
-
+    /*Hides the ColorPickerDialog*/
     $scope.hide = function() {
         $mdDialog.hide();
         console.log('hidden!');
     };
-
+    /*Initalizes classroom to avoid undefined references*/
     $scope.classroom = {
         name: '',
         description: '',
         color: ''
     };
 
+    /*Shows color picker dialog*/
+    /*A lot of this code comes from /*https://material.angularjs.org/latest/#/demo/material.components.slider*/
     $scope.ColorDialog = function(ev) {
         $mdDialog.show({
             controller: controller,
+            /*Clicking outside the dialog closes it*/
             clickOutsideToClose: true,
+            /*Sets scope same as main page*/
             scope: $scope,
+            /*Preserves the scope*/
             preserveScope: true,
+            /*Unfortunately template html needs to be done like this since we couldn't get templateURL to work*/
             template: '<md-dialog aria-label="popinLogin" ng-class="{loginPopup: setting, signupPopup: !setting}">' +
                 '<md-content class="md-padding">' +
                 '<div>' +
@@ -97,7 +104,8 @@ function controller($scope, classrooms, $state, $mdDialog) {
                 '</div>' +
                 '</md-content>' +
                 '</md-dialog>',
-
+                /*Where the dialog box should animate from. The ev is where you clicked*/
+                /*Manifests itself as ng-click=colorDialog(ev)*/
             targetEvent: ev
         });
     };
