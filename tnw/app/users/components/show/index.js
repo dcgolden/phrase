@@ -1,7 +1,7 @@
 'use strict'
-
+/*This section requires the node module fs to read the template html*/
 var fs = require('fs')
-
+/*This part exposes this module to rest of app*/
 module.exports = {
   url: '/show',
   controller: ['$scope', 'users', '$state', controller],
@@ -9,13 +9,13 @@ module.exports = {
 }
 
 function controller ($scope, users, $state) {
-
+  /*back or menu button*/
   $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
     function backButtonPlacer() {
         return { name: 'isArticlePageBool', data: false };
     }
-
+  /*Gets the user's information to display in profile*/
   users.getSession()
     .then(function (ctx) {
       return ctx.username

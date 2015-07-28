@@ -22,6 +22,6 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
           .state('classrooms.edit', require('./components/edit'))
 
      }])
-    /*exposes classroom services*/
+    /*exposes classroom services in a factory*/
     .factory('classrooms', ['pouchDB', 'dbName', require('./services').classrooms])
 })( window, window.angular)

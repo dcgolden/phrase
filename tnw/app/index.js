@@ -1,19 +1,23 @@
 'use strict';
-
+/*uses cssify module (like browserify but for css) to bundle CSS*/
 var cssify = require('cssify');
 cssify.byUrl('//cdn.rawgit.com/angular/bower-material/master/angular-material.css');
 cssify.byUrl('/main.css');
-
+/*pouchDB needs it's own requires outside of browserify*/
 window.PouchDB = require('pouchdb');
 window.PouchDB.plugin(require('pouchdb-authentication'));
-
+/*browserify stuff begins here, this is how you add node_modules with browserify*/
 require('angular').module('app', [
         require('angular-animate'),
         require('angular-aria'),
         require('angular-material'),
+        /*svg-icons*/
         require('./ng-icons'),
+        /*controls user going between views*/
         require('angular-ui-router'),
+        /*used to show fields are required*/
         require('angular-messages'),
+        /*Add new url branches/main states here*/
         require('./classrooms'),
         require('./articles'),
         require('./users')
