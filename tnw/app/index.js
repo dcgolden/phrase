@@ -68,9 +68,9 @@ require('angular').module('app', [
     })
     .controller('AppController', ['$scope', 'classrooms', 'users', AppController])
     /*Constants for database name*/
-    .constant('dbName', 'https://bivit-dev.iriscouch.com/bivit')
-    .constant('remoteUserDbName', 'https://bivit-dev.iriscouch.com/_users')
-    .constant('annotationDbName', 'https://bivit-dev.iriscouch.com/annotator')
+    .constant('dbName', 'https://phrasedev.cloudant.com/bivit')
+    .constant('remoteUserDbName', 'https://phrasedev.cloudant.com/_users')
+    .constant('annotationDbName', 'https://phrasedev.cloudant.com/annotator')
     //.factory('classrooms', ['pouchDb', require('./services/classrooms')])
 
 function AppController($scope, users) {
