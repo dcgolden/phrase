@@ -33,10 +33,10 @@ a:visited.addArticleFromClassroom {
 .homeImage3{ /*class for homepage image. all other homeImage# classes should be changed to this*/
   width:100%!important;
   position:relative;
-  -moz-transform: scaleX(-1); /*flips the images*/
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+     -moz-transform: scaleX(-1); /*flips the images*/
+       -o-transform: scaleX(-1);
+          transform: scaleX(-1);
     filter: FlipH;
     -ms-filter: "FlipH";
 }
@@ -220,7 +220,7 @@ a:visited.addArticleFromClassroom {
 
 .popupAnimate{ /*animates the mdDiaog for login and signup. not sure if working*/
   -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
-  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+          transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
 }
 
 .loginPopupSubheader{ /*subheader for login*/
@@ -727,12 +727,12 @@ div.feature a { /*styles the article cards in article.list... makes them clickab
 }
 
 textarea { /*styles all the text area tags*/
-   -webkit-box-sizing: border-box; /*for browser compatibility... we need more of this*/
+ -webkit-box-sizing: border-box; /*for browser compatibility... we need more of this*/
     -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    width: 100%;
-    resize: none;
-    margin-right: auto;
+         box-sizing: border-box;
+  width: 100%;
+  resize: none;
+  margin-right: auto;
 }
 
 .footerBar{ /*for the footer that we commented out! !!not working!!*/

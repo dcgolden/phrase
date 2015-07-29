@@ -1,8 +1,10 @@
+<!-- fab button.. positioner2 fabspeeddial3.. read below for ng-if-->
 <div ng-if="!loadingArticles" class="inflow">
   <div class="positioner2">
     <div class="fabSpeedDial3" layout="column">
       <div class="lock-size" layout="row" layout-align="center center">
         <md-fab-speed-dial md-direction="down" ng-class="md-scale">
+          <!-- trigger, or big button -->
           <md-fab-trigger>
             <md-button aria-label="addArticleCnP" ui-sref="articles.new" class="md-fab">
               <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
@@ -12,7 +14,7 @@
               </ng-md-icon>
             </md-button>
           </md-fab-trigger>
-
+          <!-- smalller button URL-->
           <md-fab-actions>
             <md-button aria-label="addArticleURL" ui-sref="articles.url" class="md-fab md-raised md-mini md-primary md-hue-2">
               <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
@@ -22,7 +24,7 @@
               </ng-md-icon>
             </md-button>
           </md-fab-actions>
-
+          <!-- smaller button for PDF -->
           <md-fab-actions>
             <md-button aria-label="addArticlePDF" ui-sref="articles.pdf" class="md-fab md-raised md-mini md-primary md-hue-2">
               <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
@@ -39,9 +41,12 @@
   </div>
 </div>
 
+<!-- the progress circular. this needs to be implemented on other pages.. needs a promise to work -->
 <md-progress-circular ng-if="loadingArticles" class="progressCircular md-accent" md-mode="indeterminate"></md-progress-circular>
 
+<!-- everything needs to be in a ng-if so it doesnt show while the page is loading. prevents from showing only half the loaded page at once -->
 <div ng-if="!loadingArticles" class="articlesPage">
+  <!-- search bar.. read up on angular to see how it works -->
   <md-input-container class="searchBar"> 
     <label>
       <div class="searchIcon">
@@ -54,6 +59,7 @@
 
   <p class="pageTitle">Your Articles</p>
 
+  <!-- the articles in an ng-repead. read up on angular to see how it works -->
   <div class="articlesContainer">
     <md-grid-list md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="15px">
       <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 whiteBack" ng-class="{zRaise2: hover}" md-rowspan="2"ng-mouseenter="hover = true" ng-mouseleave="hover = false">

@@ -1,9 +1,12 @@
+<!-- styling for toolbar on this page -->
+<style>
+.topToolbar {
+    position: fixed;
+}
+</style>
+
+<!-- fab button. positioner2 fabspeeddial2 -->
 <div>
-    <style>
-    .topToolbar {
-        position: fixed;
-    }
-    </style>
     <div class="inflow">
         <div class="positioner2">
             <div class="fabSpeedDial2" layout="column">
@@ -22,6 +25,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- the card container.. look at app/articles/components/edit/template for comments on a similar form -->
         <md-content class="articleCardContainer">
             <md-card class="articleCard">
                 <form name="createArticle" ng-submit="create(article)">

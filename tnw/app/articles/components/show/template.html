@@ -4,12 +4,14 @@
     position: fixed;
 }
 </style>
+<!-- the fab button. positioner fabspeeddial... the original :) -->
 <div class="inflow">
     <div class="positioner">
         <div class="fabSpeedDial" layout="column">
             <div class="lock-size" layout="row" layout-align="center center">
                 <md-fab-speed-dial md-direction="down" ng-class="md-scale">
                     <md-fab-trigger>
+                        <!-- large button. takes you to the edit page of the articles -->
                         <md-button aria-label="articleMenuEdit" ui-sref="articles.edit({id: article._id})" class="md-fab md-accent">
                             <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
                                 Edit Article
@@ -18,6 +20,7 @@
                             </ng-md-icon>
                         </md-button>
                     </md-fab-trigger>
+                    <!-- small button. is supposed to toggle student annotations. or maybe, if that gets too cluttered, toggle a sidenav with student names that can be selected to show annotations for that user. right now does nothing -->
                     <md-fab-actions>
                         <md-button aria-label="articleMenuClass" ng-click="" class="md-fab md-raised md-mini md-primary md-hue-2">
                             <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
@@ -26,6 +29,7 @@
                             <ng-md-icon class="articleMenuClass" icon="assignment_ind" style="fill: white" size="16"></ng-md-icon>
                         </md-button>
                     </md-fab-actions>
+                    <!-- this was a prototype for early annotation displaying. looks rather nice but the HTML is commented out and annotations are not stored the sae way so this does nothing right now. commented HTML is below -->
                     <md-fab-actions>
                         <md-button aria-label="articleMenuClass" ng-click="showAnnotationsFn()" class="md-fab md-raised md-mini md-primary md-hue-2">
                             <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
@@ -34,6 +38,7 @@
                             <ng-md-icon class="articleMenuClass" icon="insert_comment" style="fill: white" size="16"></ng-md-icon>
                         </md-button>
                     </md-fab-actions>
+                    <!-- delete button. summons a md-dialog that prompts deleting -->
                     <md-fab-actions>
                         <md-button aria-label="articleMenuDelete" ng-click="showConfirm(article._id)" class="md-fab md-raised md-mini md-warn">
                             <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
@@ -47,7 +52,10 @@
         </div>
     </div>
 </div>
+
+<!-- containter fo the card -->
 <md-content class="articleCardContainer">
+    <!-- the prototype for displaying annotations. look nice-ish -->
     <!--<div class="articleAnnotationCardContainer">
         <md-card 
           ng-show="showAnnotations"
@@ -61,13 +69,14 @@
               <div class="articleAnnotationCardAnnotation" ng-bind="row.doc.text"></div>
         </md-card>
     </div>-->
+
+    <!-- how the article is displayed. read up on angular to understand ng-binding and {{}} (also binding) -->
     <md-card id="articleCardForAnnotation" class="articleCard">
         <span class="articleCardClassroom" ng-bind="classroom.classroomName"></span>
         <h2 ng-bind="article.title" class="articleCardTitle"></h2>
         <p ng-bind="article.author" class="articleCardAuthor"></p>
         <md-divider class="navDivider" ng-if="!$last"></md-divider>
-        <p ng-bind="article.content" class="articleCardContent">
-        </p>
+        <p ng-bind="article.content" class="articleCardContent"></p>
         <p ng-bind="article.source" class="articleCardSource"></p>
     </md-card>
 </md-content>

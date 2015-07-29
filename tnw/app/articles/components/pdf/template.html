@@ -1,9 +1,11 @@
+<!-- comments are the same as articles.edit and articles.new with exception of pdf input. scroll for comments -->
+<style>
+.topToolbar {
+    position: fixed;
+}
+</style>
+
 <div>
-    <style>
-    .topToolbar {
-        position: fixed;
-    }
-    </style>
     <div class="inflow">
         <div class="positioner2">
             <div class="fabSpeedDial2" layout="column">
@@ -85,6 +87,7 @@
                             </div>
                         </md-input-container>
                     </div>
+                    <!-- this is the PDF input. it has an 'ng-model' but it isnt hoked to anything or passed and stored in articles. to hook it up you need to change the pdf/index.js to pass it into articels/services.js to pass it into the database thru 'artiles'-->
                     <div class="articlePDFInput">
                         <md-input-container>
                             <input required type="file" name="pdf" ng-model="artice.pdf" aria-label="pdf">

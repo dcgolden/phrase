@@ -1,3 +1,4 @@
+<!-- fab button -->
 <div class="inflow">
   <div class="positioner">
     <div class="fabSpeedDial3" layout="column">
@@ -33,6 +34,7 @@
   	</md-input-container>
 
   <div class="classroomCardContainer">
+    <!-- gets a class is hover is true. hover is true when the mouse enters the div -->
   	<md-card 
       ng-class="{zRaise2: hover}" 
       ng-mouseenter="hover = true" 
@@ -42,6 +44,7 @@
   	    <a class="classroomCardATag" ui-sref="classrooms.show({ id: classroom._id})">
           <p class="classroomCardClassroom" ng-bind="classroom.name"></p> 
         </a>
+
 <!-- ng-if for student maybe display grade in class, current/most recent assignment, #of docs-->
 
 <!-- ng-if for teacher maybe display class list, current/most recent assignment, # of docs, edit button, delete button-->

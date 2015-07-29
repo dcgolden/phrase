@@ -1,3 +1,4 @@
+<!-- style the toolbar for this page only -->
 <style>
   .topToolbar {
   position: fixed;
@@ -5,6 +6,7 @@
 </style>
 
 
+<!-- fab button.. see the classes 'positioner2' and 'fabSpeedDial2' not all fabs have the same-->
 <div class="inflow">
   <div class="positioner2">
     <div class="fabSpeedDial2" layout="column">
@@ -25,85 +27,95 @@
   </div>
 </div>
 
+<!-- the actual card container -->
 <md-content class="articleCardContainer">  
 
-  	<md-card class="articleCard">
+  <!-- and the card itself -->
+	<md-card class="articleCard">
 
+    <!-- form for the edit field for a detailed form comments look at 'app/components/app-nav/index.js' in the mdDialog -->
 		<form name="edit" ng-submit="update(article)">
 			<div class="pageTitle">General Info</div>
-            <md-checkbox ng-model="article.isAssignment" aria-label="Checkbox 1">
-              Set article as an assignment?
-            </md-checkbox>
-            <div class="articleClassroomInput">
-                <md-input-container>
-                    <label>Which Classrooom?</label>
-                    <md-select class="classroomPicker" name="classroom" md-on-open="loadClassrooms()" ng-model="article.classroom" required>
-                        <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
-                    </md-select>
-                    <div class="errors" ng-messages="edit.classroom.$error" ng-show="edit.classroom.$touched">
-                        <div ng-message="required">Required</div>
-                    </div>
-                </md-input-container>
-            </div>
-            <div class="articleDateTimeInput" ng-show="article.isAssignment">
-                <md-input-container>
-                    <label>Due Date</label>
-                    <input type="datetime-local" name="dateTime" ng-model="article.assignmentDateTime">
-                </md-input-container>
-            </div>
-            <div class="articleAssignmentDescriptionInput" ng-show="article.isAssignment">
-                <md-input-container>
-                <label>Assignment Description</label>
-                    <textarea columns="1" rows="4" type="text" name="assignmentDescription" ng-model="article.assignmentDescription" ng-maxlength="1000">
-                    </textarea>
-                    <div class="errors" ng-messages="edit.assignmentDescription.$error">
-                        <div ng-message="maxlength">Content is too long!</div>
-                    </div>
-                </md-input-container>
-            </div>
-            <div class="pageTitle articleInfoTitle">Article Info</div>
-		  	<div class="articleTitleInput">
-	            <md-input-container>
-	                <label>Title</label>
-	                <input type="text" name="title" ng-model="article.title" max-length="50" required>
-	                <div class="errors" ng-messages="edit.title.$error" ng-show="edit.title.$touched">
-	                    <div ng-message="required">Required</div>
-	                    <div ng-message="maxlength">Title is too long!</div>
-	                </div>
-	            </md-input-container>
-	        </div>
-	        <div class="articleAuthorInput">
-	            <md-input-container flex>
-	                <label>Author</label>
-	                <input type="text" name="author" ng-model="article.author" ng-maxlength="30">
-	                <div class="errors" ng-messages="edit.author.$error" ng-show="edit.author.$touched">
-	                	<div ng-message="maxlength">Author is too long!</div>
-	                </div>
-	            </md-input-container>
-	        </div>
-	        <div class="articleSourceInput">
-	            <md-input-container flex>
-	                <label>Source</label>
-	                <input type="text" name="source" ng-model="article.source" ng-maxlength="264">
-	                <div class="errors" ng-messages="edit.source.$error" ng-show="edit.source.$touched">
-	                	<div ng-message="maxlength">Source is too long!</div>
-	                </div>
-	            </md-input-container>
-	        </div>
-	        <div>
-	            <md-input-container>
-	                <label>Content</label>
-	                <textarea columns="1" rows="15" type="text" name="content" ng-model="article.content" ng-maxlength="100000">
-	                </textarea>
-	                <div class="errors" ng-messages="content.title.$error" ng-show="content.title.$touched">
-	                    <div ng-message="required">Required</div>
-	                    <div ng-message="maxlength">Content is too long!</div>
-	                </div>
-	            </md-input-container>
-	        </div>
-
-		  
-		</form>
+        <!-- checkbox -->
+      <md-checkbox ng-model="article.isAssignment" aria-label="Checkbox 1">
+        Set article as an assignment?
+      </md-checkbox>
+      <!-- classroom selection -->
+      <div class="articleClassroomInput">
+        <md-input-container>
+          <label>Which Classrooom?</label>
+          <md-select class="classroomPicker" name="classroom" md-on-open="loadClassrooms()" ng-model="article.classroom" required>
+            <md-option ng-repeat="classroom in classrooms" value="{{classroom._id}}">{{classroom.name}}</md-option>
+          </md-select>
+          <div class="errors" ng-messages="edit.classroom.$error" ng-show="edit.classroom.$touched">
+              <div ng-message="required">Required</div>
+          </div>
+        </md-input-container>
+      </div>
+      <!-- only show div if checkbox is checked -->
+      <div class="articleDateTimeInput" ng-show="article.isAssignment">
+        <!-- due date -->
+        <md-input-container>
+          <label>Due Date</label>
+          <input type="datetime-local" name="dateTime" ng-model="article.assignmentDateTime">
+        </md-input-container>
+      </div>
+      <!-- only show if checkbox is checked -->
+      <div class="articleAssignmentDescriptionInput" ng-show="article.isAssignment">
+        <!-- assignment description -->
+        <md-input-container>
+          <label>Assignment Description</label>
+          <textarea columns="1" rows="4" type="text" name="assignmentDescription" ng-model="article.assignmentDescription" ng-maxlength="1000"></textarea>
+          <div class="errors" ng-messages="edit.assignmentDescription.$error">
+            <div ng-message="maxlength">Content is too long!</div>
+          </div>
+        </md-input-container>
+      </div>
+      <div class="pageTitle articleInfoTitle">Article Info</div>
+      <!-- title !!max length may be too short!!-->
+      <div class="articleTitleInput">
+        <md-input-container>
+          <label>Title</label>
+          <input type="text" name="title" ng-model="article.title" max-length="50" required>
+          <div class="errors" ng-messages="edit.title.$error" ng-show="edit.title.$touched">
+            <div ng-message="required">Required</div>
+            <div ng-message="maxlength">Title is too long!</div>
+          </div>
+        </md-input-container>
+      </div>
+      <!-- author !!max length may be too short!!-->
+      <div class="articleAuthorInput">
+        <md-input-container flex>
+          <label>Author</label>
+          <input type="text" name="author" ng-model="article.author" ng-maxlength="30">
+          <div class="errors" ng-messages="edit.author.$error" ng-show="edit.author.$touched">
+          	<div ng-message="maxlength">Author is too long!</div>
+          </div>
+        </md-input-container>
+      </div>
+      <!-- source !!max length may be too short!!-->
+      <div class="articleSourceInput">
+        <md-input-container flex>
+          <label>Source</label>
+          <input type="text" name="source" ng-model="article.source" ng-maxlength="264">
+          <div class="errors" ng-messages="edit.source.$error" ng-show="edit.source.$touched">
+          	<div ng-message="maxlength">Source is too long!</div>
+          </div>
+        </md-input-container>
+      </div>
+      <!-- content -->
+      <div>
+        <md-input-container>
+          <label>Content</label>
+          <textarea columns="1" rows="15" type="text" name="content" ng-model="article.content" ng-maxlength="100000">
+          </textarea>
+          <div class="errors" ng-messages="content.title.$error" ng-show="content.title.$touched">
+              <div ng-message="required">Required</div>
+              <div ng-message="maxlength">Content is too long!</div>
+          </div>
+        </md-input-container>
+      </div>
+    </form>
 
 	</md-card>
 
