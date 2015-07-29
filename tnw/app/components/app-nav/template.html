@@ -25,12 +25,14 @@
 <!--TOOLBAR!!-->
   <md-toolbar layout-align="left center" class="md-primary md-whiteframe-z1 topToolbar mainToolbar">
     <div class="md-toolbar-tools">
+      <!-- hamburger menu button -->
       <md-button ng-if="!isArticlePage" class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
         <div class="hamburgerMenuButton2" flex>
           <ng-md-icon icon='menu' style="fill: white" size="24">
           </ng-md-icon>
         </div>
       </md-button>
+      <!-- back button -->
       <md-button ng-if="isArticlePage" class='md-icon-button' aria-label='Settings' ng-click="goBack()" href>
         <div class="hamburgerMenuButton2" flex>
           <ng-md-icon icon='chevron_left' style="fill: white" size="24">
@@ -39,8 +41,11 @@
       </md-button>
       <div href class="toolbarCurrentPage" ng-click="goHome()"> <a href>Phrase</a> </div>      
       <span flex></span>
+      <!-- displays the current users USERNAME on the top bar -->
       <md-button ui-sref="users.show" class="toolbarCurrentUser">{{activeUser}}</md-button>
+      <!-- set the stage for a google style notifications button that could display upcomming due dates -->
       <md-button class="md-icon-button hamburgerMenuButton2" aria-label="notifications">
+        <!-- changes the icon if there are notifications...not set up in .js use the variable 'notification' -->
         <div ng-if="notification">
           <ng-md-icon icon='notifications' style="fill: white" size="24"></ng-md-icon>
         </div>
@@ -48,7 +53,9 @@
           <ng-md-icon icon='notifications_none' style="fill: white" size="24"></ng-md-icon>
         </div>
       </md-button>
+      <!-- prof pic goes here -->
       <md-button class="avatarSmall md-icon-button" aria-label="profPic">
+        <!-- using directive found in 'app/index.js' -->
         <user-avatar></user-avatar>
       </md-button>
     </div>
@@ -57,18 +64,23 @@
   <!--SideNav!! (only appears with a loged in user)-->
   <div layout="row" flex="" ng-click="toggleLeft()">
     <md-sidenav style="height:500px;" md-component-id="left" class="md-sidenav-left md-whiteframe-z2">
+      <!-- the toolbar part of the nav bar -->
       <md-toolbar class="" ng-click="toggleLeft()">
         <div class="md-toolbar-tools">
           <div class="hamburgerMenuButton2 hamburgerMenuButton3">
             <ng-md-icon icon="menu" style="fill: white" size="24">
             </ng-md-icon>
           </div>
+          <!-- try to put the current page inside this next div -->
           <div class="navbarCurrentPage navbarHover">
+            <!-- here! -->
           </div>
         </div>
       </md-toolbar>
+      <!-- actual start of navbar -->
       <md-content layout-padding="">
         <md-list hide-md="" show-gt-md="">
+          <!-- first item, home -->
           <a ui-sref="home" class="navbarText">
             <md-list-item ng-click="toggleLeft()">
               <div class="sideNavIcons">
@@ -78,7 +90,9 @@
               <p ng-class="">Home</p>
             </md-list-item>
           </a>
+          <!-- divider -->
           <md-divider class="navDivider" ng-if="!$last"></md-divider>
+           <!-- second item... i thikn u get the idea -->
           <a ui-sref="classrooms.list" class="navbarText">
             <md-list-item ng-click="toggleLeft()">
               <div class="sideNavIcons">
@@ -88,6 +102,7 @@
               <p ng-class="">Classrooms</p>
             </md-list-item>
           </a>
+          <!-- 3rd -->
           <a ui-sref="articles.list" class="navbarText">
             <md-list-item ng-click="toggleLeft()" ui-sref="articles.list">
               <div class="sideNavIcons">
@@ -97,7 +112,9 @@
               <p ng-class="">Articles</p>
             </md-list-item>
           </a>
+          <!-- divider -->
           <md-divider class="navDivider" ng-if="!$last"></md-divider>
+          <!-- 4th -->
           <a ui-sref="about" class="navbarText">
             <md-list-item ng-click="toggleLeft()" ui-sref="about">
               <div class="sideNavIcons">
@@ -107,6 +124,7 @@
               <p ng-class="">About</p>
             </md-list-item>
           </a>
+          <!-- 5th -->
           <a ui-sref="contact" class="navbarText">
             <md-list-item ng-click="toggleLeft()" ui-sref="contact">
               <div class="sideNavIcons">
@@ -116,6 +134,7 @@
               <p ng-class="">Contact</p>
             </md-list-item>
           </a>
+          <!-- 6th -->
           <a ng-click="logout()" class="navbarText">
             <md-list-item ng-click="toggleLeft()">
               <div class="sideNavIcons">
