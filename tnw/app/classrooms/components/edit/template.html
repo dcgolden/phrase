@@ -1,3 +1,4 @@
+<!-- fab button postioner and fabspeeddial3 -->
 <div class="inflow">
     <div class="positioner">
         <div class="fabSpeedDial3" layout="column">
@@ -17,10 +18,12 @@
         </div>
     </div>
 </div>
+<!-- the edit part of the page -->
 <div class="articlesPage">
     <p class="pageTitle">Edit Classroom</p>
     <form name="edit" ng-submit="update(classroom)">
         <div>
+            <!-- edit the name -->
             <md-input-container>
                 <label>Name</label>
                 <input type="text" name="name" ng-model="classroom.name" ng-maxlength="50" required>
@@ -29,6 +32,7 @@
                     <div ng-message="maxlength">Title is too long!</div>
                 </div>
             </md-input-container>
+            <!-- edit the Desc -->
             <md-input-container>
                 <label>Description</label>
                 <textarea name="description" ng-model="classroom.description" ng-maxlength="1000" required></textarea>
