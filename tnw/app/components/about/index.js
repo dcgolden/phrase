@@ -9,11 +9,10 @@ module.exports = {
 }
 
 function controller ($scope) {
-	/*back or menu button*/
-	$scope.$emit('pushChangesToAllNodes', backButtonPlacer());
+  /*back or menu button*/
+  $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
     function backButtonPlacer() {
         return { name: 'isArticlePageBool', data: false };
     }
-
 }

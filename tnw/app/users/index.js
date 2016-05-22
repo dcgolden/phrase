@@ -20,6 +20,7 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
           .state('users.login', require('./components/login'))
           .state('users.changePassword', require('./components/change-password'))
           .state('users.show', require('./components/show'))
+          .state('users.notify', require('./components/notify'))
 
      }])
     /*intiliazes users factory*/

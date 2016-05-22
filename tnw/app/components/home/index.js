@@ -44,4 +44,8 @@ function controller ($scope, users, $state, $rootScope) {
     $state.go('classrooms.list');
   }
 
+  $scope.goToFeatures = function (){
+    $state.go('features');
+  }
+
 }

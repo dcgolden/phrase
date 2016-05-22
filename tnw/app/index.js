@@ -23,11 +23,12 @@ require('angular').module('app', [
         $stateProvider
         /*Also need to add the new url/states here*/
             .state('home', require('./components/home'))
+            .state('features', require('./components/features'))
             .state('about', require('./components/about'))
             .state('contact', require('./components/contact'))
             /*All theming is done here. md-primary, md-hue-1 etc are very useful class tags*/
         $mdThemingProvider.theme('default')
-            .primaryPalette('indigo', {
+            .primaryPalette('blue', {
                 'default': '500', // by default use shade 500 from the palette for primary intentions
                 'hue-1': '100', // use shade 100 for the <code>md-hue-1</code> class
                 'hue-2': '500', // use shade 500 for the <code>md-hue-2</code> class
@@ -35,7 +36,7 @@ require('angular').module('app', [
             })
             // If you specify less than all of the keys, it will inherit from the
             // default shades
-            .accentPalette('pink', {
+            .accentPalette('red', {
                 'default': 'A200' // use shade A200 for default, and keep all other shades the same
             });
 
