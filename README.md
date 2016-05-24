@@ -14,7 +14,7 @@ npm install
 npm run dev
 ```
 
-Runs on http://localhost:9966
+Runs on http://localhost:9967
 
 ###For Production
 ```
