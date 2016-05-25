@@ -14,6 +14,7 @@ $ npm install --save has-require
 var hasRequire = require('has-require')
 hasRequire('require("foo")', 'foo') // => true
 hasRequire.any('require') // => false
+```
 
 ## API
 

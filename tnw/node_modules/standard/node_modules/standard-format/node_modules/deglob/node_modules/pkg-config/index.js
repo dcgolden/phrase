@@ -1,10 +1,10 @@
 'use strict'
 
 var debug = require('debug-log')('pkg-config')
-var path = require('path')
-var find = require('find-root')
 var extend = require('xtend')
+var find = require('find-root')
 var fs = require('fs')
+var path = require('path')
 
 module.exports = function (namespace, options, fallback) {
   var opts = extend({
@@ -42,7 +42,7 @@ module.exports = function (namespace, options, fallback) {
     var config = namespace ? parent[namespace] : parent
 
     // return found result or default
-    return config ? config : fallback
+    return config || fallback
   } catch (e) {
     debug(e.message)
   }

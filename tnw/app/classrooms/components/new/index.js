@@ -46,6 +46,7 @@ function controller($scope, classrooms, $state, $mdDialog) {
     $scope.classroom = {
         name: '',
         description: '',
+	students: '',
         color: ''
     };
 

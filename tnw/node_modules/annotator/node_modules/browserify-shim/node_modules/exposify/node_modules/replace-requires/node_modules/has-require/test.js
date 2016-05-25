@@ -19,11 +19,13 @@ test(function (t) {
   t.ok(hasRequire.any('require("foo_bar")'), 'underscore')
   t.ok(hasRequire.any('require("foo2")'), 'number')
   t.ok(hasRequire.any('require("foo.bar")'), 'dot')
+  t.ok(hasRequire.any('require("@bendrucker/pkg")'), 'scoped')
 
   t.notOk(hasRequire.any('require'), 'no call')
   t.notOk(hasRequire.any('require()'), 'empty call')
   t.notOk(hasRequire.any('require(identifier)'), 'literal')
   t.notOk(hasRequire.any('require("")'), 'empty string')
+  t.notOk(hasRequire.any('require("bendrucker@pkg")'), 'invalid @ sign')
 
   t.end()
 })

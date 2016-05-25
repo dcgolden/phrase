@@ -1,5 +1,33 @@
+1.7.0 /
+------------------
+* Add `filter` option to `query()`
+* Add `allowItemRejection` option to `iterate()`
+* For the full changelog, please see here: https://github.com/jensarps/IDBWrapper/compare/v1.6.2...v1.7.0
+
+
+1.6.2 / 2016-03-02
+------------------
+* Switch from Makefile to Grunt for running tasks
+* Provide version-specific documentation
+* For the full changelog, please see here: https://github.com/jensarps/IDBWrapper/compare/v1.6.1...v1.6.2
+
+
+1.6.1 / 2015-11-07
+------------------
+* Make implementation preference configurable, don't prefer shim by default
+* For the full changelog, please see here: https://github.com/jensarps/IDBWrapper/compare/v1.6.0...v1.6.1
+
+
+1.6.0 / 2015-10-05
+------------------
+* Remove support for old Firefox browsers without autoIncrement
+* prefer `shimIndexedDB` to allow using the shim instead of native IDB on buggy Safaris
+* For the full changelog, please see here: https://github.com/jensarps/IDBWrapper/compare/v1.5...v1.6.0
+
+
 1.5.0 / 2015-04-22
 ------------------
+
 * Add pagination to `query()`
 * Add `upsertBatch()`
 * Add callbacks to `deleteDatabase()`

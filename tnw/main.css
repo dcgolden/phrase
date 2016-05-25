@@ -338,6 +338,10 @@ a:visited.addArticleFromClassroom {
   width: 90%;
 }
 
+.classroomStudentsShow{ /*sets a width for the classroom description in classroom.show view*/
+  width: 90%;
+}
+
 a.classroomsAddArticles, a.classroomsAddStudents{ /*sets color of <a> in classroom.show*/
   color:blue!important;
 }
@@ -380,7 +384,7 @@ a.classroomsAddArticles, a.classroomsAddStudents{ /*sets color of <a> in classro
 }
 
 .toolbarCurrentPage{ /*positions the word 'phrase' in the nav bar*/
-  margin-top: .2em !important;
+  margin-top: 0em;
   margin-left: .6em;
 }
 
@@ -402,8 +406,12 @@ a.classroomsAddArticles, a.classroomsAddStudents{ /*sets color of <a> in classro
   z-index: 100 !important;
 }
 
+.hamburgerMenuButton1{ /*positions lots of icons.. hamburer menu and SOME fabs*/
+  padding-top: 0em;
+}
+
 .hamburgerMenuButton2{ /*positions lots of icons.. hamburer menu and SOME fabs*/
-  padding-top: .6em !important;
+  padding-top: .2em !important;
 }
 
 .hamburgerMenuButton3{ /*positions SOME fabs too lazy to check which*/

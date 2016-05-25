@@ -40,7 +40,7 @@ exports.signup = utils.toPromise(function (username, password, opts, callback) {
     _id      : userId
   };
 
-  var reservedWords = ['name', 'password', 'roles', 'type'];
+  var reservedWords = ['name', 'password', 'roles', 'type', 'salt', 'metadata'];
   if (opts.metadata) {
     for (var key in opts.metadata) {
       if (opts.hasOwnProperty(key)) {
@@ -82,7 +82,8 @@ exports.login = utils.toPromise(function (username, password, opts, callback) {
   var ajaxOpts = utils.extend(true, {
     method : 'POST',
     url : utils.getSessionUrl(db),
-    body : {name : username, password : password}
+    headers : {'Content-Type': 'application/x-www-form-urlencoded'},
+    body : 'name=' + username + '&password=' + password
   }, opts.ajax || {});
   utils.ajax(ajaxOpts, wrapError(callback));
 });

@@ -2,8 +2,9 @@
 /* global Headers */
 'use strict';
 
-var createBlob = require('./blob.js');
+var createBlob = require('./binary/blob.js');
 var utils = require('../utils');
+var readAsArrayBuffer = require('./binary/readAsArrayBuffer');
 
 function wrappedFetch() {
   var wrappedPromise = {};
@@ -19,23 +20,21 @@ function wrappedFetch() {
     args[i] = arguments[i];
   }
 
-  wrappedPromise.then = promise.then.bind(promise);
-  wrappedPromise.catch = promise.catch.bind(promise);
   wrappedPromise.promise = promise;
 
-  fetch.apply(null, args).then(function(response) {
+  utils.Promise.resolve().then(function () {
+    return fetch.apply(null, args);
+  }).then(function(response) {
     wrappedPromise.resolve(response);
-  }, function(error) {
-    wrappedPromise.reject(error);
   }).catch(function(error) {
-    wrappedPromise.catch(error);
+    wrappedPromise.reject(error);
   });
 
   return wrappedPromise;
 }
 
 function fetchRequest(options, callback) {
-  var wrappedPromise, timer, fetchResponse;
+  var wrappedPromise, timer, response;
 
   var headers = new Headers();
 
@@ -52,8 +51,8 @@ function fetchRequest(options, callback) {
   }
 
   if (options.body && (options.body instanceof Blob)) {
-    utils.readAsBinaryString(options.body, function(binary) {
-      fetchOptions.body = utils.fixBinary(binary);
+    readAsArrayBuffer(options.body, function (arrayBuffer) {
+      fetchOptions.body = arrayBuffer;
     });
   } else if (options.body &&
              options.processData &&
@@ -80,28 +79,28 @@ function fetchRequest(options, callback) {
     }, options.timeout);
   }
 
-  wrappedPromise.promise.then(function(response) {
-    var result;
-
-    fetchResponse = response;
+  wrappedPromise.promise.then(function(fetchResponse) {
+    response = {
+      statusCode: fetchResponse.status
+    };
 
     if (options.timeout > 0) {
       clearTimeout(timer);
     }
 
-    if (response.status >= 200 && response.status < 300) {
-      return options.binary ? response.blob() : response.text();
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return options.binary ? fetchResponse.blob() : fetchResponse.text();
     }
 
-    return result.json();
+    return fetchResponse.json();
   }).then(function(result) {
-    if (fetchResponse.status >= 200 && fetchResponse.status < 300) {
-      callback(null, fetchResponse, result);
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      callback(null, response, result);
     } else {
-      callback(result, fetchResponse);
+      callback(result, response);
     }
   }).catch(function(error) {
-    callback(error, fetchResponse);
+    callback(error, response);
   });
 
   return {abort: wrappedPromise.reject};
@@ -203,8 +202,8 @@ function xhRequest(options, callback) {
   };
 
   if (options.body && (options.body instanceof Blob)) {
-    utils.readAsBinaryString(options.body, function (binary) {
-      xhr.send(utils.fixBinary(binary));
+    readAsArrayBuffer(options.body, function (arrayBuffer) {
+      xhr.send(arrayBuffer);
     });
   } else {
     xhr.send(options.body);
@@ -213,10 +212,21 @@ function xhRequest(options, callback) {
   return {abort: abortReq};
 }
 
+function testXhr() {
+  try {
+    new XMLHttpRequest();
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+var hasXhr = testXhr();
+
 module.exports = function(options, callback) {
-  if (typeof XMLHttpRequest === 'undefined' && !options.xhr) {
-    return fetchRequest(options, callback);
-  } else {
+  if (hasXhr || options.xhr) {
     return xhRequest(options, callback);
+  } else {
+    return fetchRequest(options, callback);
   }
 };

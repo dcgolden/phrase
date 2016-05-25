@@ -13,6 +13,7 @@ module.exports = {
     'loop' : require('./math/loop'),
     'map' : require('./math/map'),
     'norm' : require('./math/norm'),
+    'overflow' : require('./math/overflow'),
     'round' : require('./math/round')
 };
 
