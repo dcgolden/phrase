@@ -293,8 +293,9 @@ a:visited.addArticleFromClassroom {
 .searchBar{ /*positions and sizes the search bar in the articles.list(?) page*/
   float: left;
   margin-left: 14em;
+	margin-top: 0px;
+	margin-bottom: 0px;
   position: absolute;
-  margin-top: -1.2em;
 }
 
 .classroomCardContainer{ /*the container that holds each classroom card in classrooms.*/
@@ -363,8 +364,10 @@ a.classroomsAddArticles, a.classroomsAddStudents{ /*sets color of <a> in classro
 }
 
 .navDivider{ /*gives the dividers margins in the nar bar hamburger menu*/
-  margin-top: .3em;
-  margin-bottom: .3em;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 32px;
+	margin-right: 32px;
 }
 
 .navDividerHalfWidth{ /*gives nav divider width of half a page in classrooms.show*/
@@ -394,7 +397,7 @@ a.classroomsAddArticles, a.classroomsAddStudents{ /*sets color of <a> in classro
   font-weight: bold;
 }
 
-.Views{ /*gives paddind to all views*/
+.Views{ /*gives padding to all views*/
   padding-left: 60px;
   padding-right: 60px;
 }
@@ -406,16 +409,13 @@ a.classroomsAddArticles, a.classroomsAddStudents{ /*sets color of <a> in classro
   z-index: 100 !important;
 }
 
-.hamburgerMenuButton1{ /*positions lots of icons.. hamburer menu and SOME fabs*/
+.hamburgerMenuButton1{ /*positions lots of icons.. hamburger menu and SOME fabs*/
   padding-top: 0em;
 }
 
-.hamburgerMenuButton2{ /*positions lots of icons.. hamburer menu and SOME fabs*/
-  padding-top: .2em !important;
-}
-
-.hamburgerMenuButton3{ /*positions SOME fabs too lazy to check which*/
-  padding-right: .5em !important;
+.hamburgerMenuButton2{ /*positions lots of icons.. hamburger menu and SOME fabs*/
+	padding-top: .2em;
+	padding-right: .5em;
 }
 
 .toolbarCurrentUser{ /*styles the button that has your username in it*/
@@ -452,7 +452,6 @@ div.feature a { /*styles the article cards in article.list... makes them clickab
   height: inherit;
   padding: 10px;
   overflow: hidden;
-  border-bottom: 58px solid white; /*not sure if this works or if we even want it...*/
 }
 
 .articleContentCard{ /*styling for the cards themselves*/
@@ -669,32 +668,35 @@ div.feature a { /*styles the article cards in article.list... makes them clickab
 }
 
 .articleCardTitle{ /*styles the title of the article on the article.show view*/
-  margin-top: .25em;
-  margin-bottom: 0em;
-  font-size: 3em;
-  font-weight: bold;
-  color: #333;
+	margin-top: 12px;
+	margin-bottom: 0px;
+	margin-left: 32px;
+	margin-right: 32px;
+	font-size: 3em;
+	font-weight: bold;
+	color: #333;
 }
 
 .articleCardAuthor{/*styles the author of the article on the article.show view*/
-  margin-top: .1em;
-  margin-bottom: .5em;
-  margin-left: 2em;
-  color: #777;
-  font-weight: bold;
-  text-align: left;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	margin-left: 32px;
+	margin-right: 32px;
+	color: #777;
+	font-weight: bold;
+	text-align: left;
 }
 
 .articleCardContent{ /*styles the content of the article on the article.show view*/
-  text-decoration: none;
-  line-height: 1.7;
-  color: #777;
-  margin-top: 0;
-  padding-right:2em;
-  padding-left:2em;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  word-break: keep-all;
+	text-decoration: none;
+	line-height: 1.7;
+	color: #777;
+	margin-top: 0px;
+	margin-left: 32px;
+	margin-right: 32px;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	word-break: keep-all;
 }
 
 .articleCardSource{ /*styles the source of the article on the article.show view*/
