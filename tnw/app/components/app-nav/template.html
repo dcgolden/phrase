@@ -6,7 +6,7 @@
       <div href class="toolbarCurrentPage" ng-click="goHome()"> <a href>Phrase</a> </div>
       <span flex></span>
       <!-- features page needs an overhaul -->
-      <md-button ui-sref="features">Features</md-button>
+      <md-button href="/#/#features">Features</md-button>
       <!-- about page needs an overhaul -->
       <md-button ui-sref="about">About</md-button>
       <!-- contact page needs an overhaul -->
@@ -110,16 +110,6 @@
             </md-list-item>
           </a>
           <!-- 5th -->
-          <a ui-sref="features" class="navbarText">
-            <md-list-item ng-click="toggleLeft()" ui-sref="features">
-              <div class="sideNavIcons">
-                <ng-md-icon icon="stars" ng-class="" style="fill: black" size="30">
-                </ng-md-icon>
-              </div>
-              <p ng-class="">Features</p>
-            </md-list-item>
-          </a>
-          <!-- 6th -->
           <a ui-sref="about" class="navbarText">
             <md-list-item ng-click="toggleLeft()" ui-sref="about">
               <div class="sideNavIcons">
@@ -129,7 +119,7 @@
               <p ng-class="">About</p>
             </md-list-item>
           </a>
-          <!-- 7th -->
+          <!-- 6th -->
           <a ui-sref="contact" class="navbarText">
             <md-list-item ng-click="toggleLeft()" ui-sref="contact">
               <div class="sideNavIcons">
@@ -139,7 +129,7 @@
               <p ng-class="">Contact</p>
             </md-list-item>
           </a>
-          <!-- 8th -->
+          <!-- 7th -->
           <a ng-click="logout()" class="navbarText">
             <md-list-item ng-click="toggleLeft()">
               <div class="sideNavIcons">

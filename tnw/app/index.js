@@ -23,7 +23,6 @@ require('angular').module('app', [
         $stateProvider
         /*Also need to add the new url/states here*/
             .state('home', require('./components/home'))
-            .state('features', require('./components/features'))
             .state('about', require('./components/about'))
             .state('contact', require('./components/contact'))
             /*All theming is done here. md-primary, md-hue-1 etc are very useful class tags*/
