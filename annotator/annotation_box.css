@@ -1,0 +1,50 @@
+.icon {
+	float: left;
+	border-radius: 2px;
+	padding: 5px;
+	margin: 5px 1px;
+}
+.icon img {
+	height: 20px;
+	width: 20px;
+}
+.bold {
+	font-weight: bold;
+}
+.italics {
+	font-style: italic;
+}
+.underline {
+	text-decoration: underline;
+}
+.highlight {
+	background-color: #FCFC5A;
+}
+#b_button {
+	margin-left: 5px;
+}
+#u_button {
+	padding-top: 6px;
+	padding-bottom: 4px;
+}
+#c_button {
+	margin-right: 5px;
+}
+#marker {
+	position: absolute;
+	height: 40px;
+	width: 161x;
+	background-color: #EEEEEE;
+	border-radius: 5px;
+	display: none;
+}
+#commentBox {
+	position: absolute;
+	padding: 5px;
+	background-color: #EEEEEE;
+	border-radius: 5px;
+	display: none;
+}
+#commentBox textarea {
+	border-radius: 4px;
+}
