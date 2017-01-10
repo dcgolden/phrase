@@ -4,6 +4,8 @@
 
 Phrase is an annotation product for teachers, classrooms, and students.
 
+![Phrase Main](tnw/images/main.png "Main")
+![Phrase Feat](tnw/images/feat.png "Features")
 
 ## Usage
 
