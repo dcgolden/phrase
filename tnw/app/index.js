@@ -81,6 +81,7 @@ require('angular').module('app', [
     .constant('dbName', 'https://phrasedev.smileupps.com/phrase')
     .constant('remoteUserDbName', 'https://phrasedev.smileupps.com/_users')
     .constant('annotationDbName', 'https://phrasedev.smileupps.com/annotator')
+    
     //.factory('classrooms', ['pouchDb', require('./services/classrooms')])
 
 //some functions we want everywhere in our app
