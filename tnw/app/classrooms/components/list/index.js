@@ -4,11 +4,12 @@ var fs = require('fs');
 /*This part exposes this module to rest of app*/
 module.exports = {
   url: '/list',
-  controller: ['$scope', 'classrooms', controller],
+  //Jest for the role
+  controller: ['$scope', 'classrooms', 'users', '$rootScope', '$state', '$mdSidenav', '$mdUtil', '$log', '$mdDialog', '$stateParams', '$window',controller],
   template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 }
 
-function controller ($scope, classrooms) {
+function controller ($scope, classrooms, users, $rootScope, $stateParams) {
   /*Tells controller back or menu button*/
 	$scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
@@ -19,4 +20,23 @@ function controller ($scope, classrooms) {
   classrooms.list().then(function (res) {
     $scope.classrooms = res
   })
+  //List all the user
+  users.list().then(function(res){
+    $scope.users = res
+  })
+  //get current user's information useing the username
+  users.getUser($scope.activeusername).then(function (res) {
+    $scope.user = res
+  })
+  //get current user's metadata using current username
+  users.getSession()
+  .then(function (o) {
+    console.log(o.userCtx.name)
+    $scope.$apply(function() {
+      users.getUser(o.userCtx.name).then(function (res) {
+      $scope.user = res
+      })
+    })
+  })
 }
+  
