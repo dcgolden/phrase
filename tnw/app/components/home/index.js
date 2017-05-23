@@ -35,6 +35,16 @@ function controller ($scope, users, $state, $rootScope) {
         console.log(err)
       })
   }
+
+  users.getSession()
+  .then(function (o) {
+    console.log(o.userCtx.name)
+    $scope.$apply(function() {
+      users.getUser(o.userCtx.name).then(function (res) {
+      $scope.user = res
+      })
+    })
+  })
   
   $scope.goToUser = function (){
     $state.go('users.show');
