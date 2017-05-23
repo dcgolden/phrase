@@ -1,10 +1,12 @@
 <!-- fab button -->
+
 <div class="inflow">
   <div class="positioner">
     <div class="fabSpeedDial3" layout="column">
       <div class="lock-size" layout="row" layout-align="center center">
         <md-fab-speed-dial md-direction="down" ng-class="md-scale">
-          <md-fab-trigger>
+          <md-fab-trigger >
+          <span ng-if = "user.role == 'teacher'" class = "animate-if">
             <md-button aria-label="add Classroom" ui-sref="classrooms.new" class="md-fab">
               <md-tooltip md-direction="down" md-delay="200" md-autohide="true">
                 New Classroom
@@ -12,6 +14,7 @@
               <ng-md-icon class="articleEditSubmit" icon="add" style="fill: white" size="24">
               </ng-md-icon>
             </md-button>
+            </span>
           </md-fab-trigger>
         </md-fab-speed-dial>
       </div>
