@@ -41,6 +41,15 @@
                     <div ng-message="maxlength">Description is too long!</div>
                 </div>
             </md-input-container>
+            <!--Edit Students-->
+             <md-input-container>
+                <label>Add Students</label>
+                <textarea name="students" ng-model="classroom.students" ng-maxlength="1000" required></textarea>
+                <div class="errors" ng-messages="createClassroom.students.$error" ng-show="createClassroom.students.$touched">
+                    <div ng-message="required">You must add students!</div>
+                    <div ng-message="maxlength">List is too long!</div>
+                </div>
+            </md-input-container>
         </div>
     </form>
 </div>

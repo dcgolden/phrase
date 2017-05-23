@@ -23,6 +23,7 @@ module.exports = {
     function getUser(username) {
       return db.getUser(username)
     }
+
     /*change user password*/
     function changePassword (username, password) {
       return db.changePassword(username, password)

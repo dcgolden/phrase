@@ -35,13 +35,24 @@ function controller ($scope, users, $state, $rootScope) {
         console.log(err)
       })
   }
-
+  
+  $scope.goToUser = function (){
+    $state.go('users.show');
+  }
   $scope.goToArticles = function (){
     $state.go('articles.list');
   }
 
   $scope.goToClassrooms = function (){
     $state.go('classrooms.list');
+  }
+
+  $scope.goToNewArticles = function (){
+    $state.go('articles.new');
+  }
+
+  $scope.goToNewClassrooms = function (){
+    $state.go('classrooms.new');
   }
 
   $scope.goToFeatures = function (){

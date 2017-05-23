@@ -34,4 +34,7 @@ function controller($scope, classrooms, $state, $stateParams) {
             classroom: $scope.classroom._id
         });
     };
+    $scope.goToArticle = function() {
+        $state.go('articles.list');
+    };
 }
