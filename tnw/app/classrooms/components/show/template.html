@@ -13,7 +13,7 @@
                             </ng-md-icon>
                         </md-button>
                     </md-fab-trigger>
-                </md-fab-speed-dial>
+                </md-fab-speed-dial> 
             </div>
         </div>
     </div>
@@ -56,12 +56,21 @@
     </div>
     <!-- the same thing that was done with articles needs to be done with students once you can insert them into classes. the 'ng-if="students"' is not hooked up to anything right now and doesnt fucntion. use the variable 'students' in the js -->
     <!-- if students -->
+
+    <!--
     <div ng-if="students">
         <div class="pageTitle classroomsArticleTitle">Students</div>
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
         <div ng-repeat="student in students | filter:studentQuery" ng-bind="student.name"></div>
-    </div>
+    </div> -->
+        <div class="pageTitle classroomsArticleTitle">Students</div>
+             <ol id="studentList">
+                 <li ng-repeat="newStudent in classroom.students">{{newStudent.firstName}} {{newStudent.lastName}} <span style="color:blue;">{{newStudent.email}}</span></li> 
+             </ol>
+             <a class="classroomsAddStudents" ui-sref="classrooms.edit({id: classroom._id})">Add Students</a>
+        </div>
     <!-- if no students -->
+    <!--
     <div ng-if="!students">
         <div class="pageTitle classroomsArticleTitle">Students</div>
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
@@ -69,6 +78,6 @@
             this classroom has no students. 
             <a class="classroomsAddStudents" ui-sref="classrooms.edit({id: classroom._id})">Add Students</a>
         </div>
-    </div>
+    </div> -->
 <div>
     

@@ -41,6 +41,38 @@
                     <div ng-message="maxlength">Description is too long!</div>
                 </div>
             </md-input-container>
-        </div>
+            <!--edit the students  WORK IN PROGRESS, maybe set size limit(only works for admin)--> 
+            <md-input-container> 
+                <md-button aria-label="edit users" ng-click="editUsers()">Edit Students</md-button>
+            </md-input-container>  
+            
+            <md-input-container ng-show="showEdit">
+                <!--WORK IN PROGRESS: Have to sort by lastname!!!!!!-->
+                <label ng-show="showEdit">User Search</label>
+                <textarea name="addStudent" ng-model="studentQuery" ng-maxlength="40" ng-show="showEdit"></textarea>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Users</th>
+                        </tr> 
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><select ng-model="user" ng-options="student.lastName for student in users | filter:studentQuery" ng-bind="student"><option value="" disabled>--Select--</option></select></td>
+                            <td><md-button aria-label="add users" ng-click="addUser()"></md-button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </md-input-container>
+            <md-input-container>
+            <label>Student List</label>
+                <ol name="studentList">
+                    <li ng-repeat="newStudent in classroom.students">{{newStudent.firstName}} {{newStudent.lastName}} <span style="color:blue;">{{newStudent.email}}</span><md-button aria-label="delete users" ng-show="showEdit" ng-click="index.value = $index; deleteUser()"><span style="color:red;">Delete User</span></md-button></li> 
+                </ol> 
+                <div class="errors" ng-messages="edit.studentList.$error" ng-show="edit.studentList.$touched">
+                    <div ng-message="maxlength">Too many students!</div>
+                </div>
+            </md-input-container> 
+        </div> 
     </form>
 </div>

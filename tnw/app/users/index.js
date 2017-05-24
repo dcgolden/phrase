@@ -22,6 +22,9 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
           .state('users.show', require('./components/show'))
           .state('users.notify', require('./components/notify'))
 
+          //CHANGED THIS
+          .state('users.list', require('./components/list'))
+
      }])
     /*intiliazes users factory*/
     .factory('users', ['pouchDB', 'remoteUserDbName', require('./services').users])

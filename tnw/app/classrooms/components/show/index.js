@@ -4,17 +4,17 @@ var fs = require('fs');
 /*This part exposes this module to rest of app*/
 module.exports = {
     url: '/:id',
-    controller: ['$scope', 'classrooms', '$state', '$stateParams', controller],
+    controller: ['$scope', 'classrooms', 'users', '$state', '$stateParams', controller],
     template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 };
 
-function controller($scope, classrooms, $state, $stateParams) {
+function controller($scope, classrooms, users, $state, $stateParams) {
     /*back or menu button*/
     $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
-    function backButtonPlacer() {
+    function backButtonPlacer() { 
         return {
-            name: 'isArticlePageBool',
+            name: 'isArticlePageBool', 
             data: true
         };
     }
@@ -34,4 +34,9 @@ function controller($scope, classrooms, $state, $stateParams) {
             classroom: $scope.classroom._id
         });
     };
+
+    /*Lists all users*/
+      users.list().then(function (res) {
+         $scope.users = res
+      })
 }
