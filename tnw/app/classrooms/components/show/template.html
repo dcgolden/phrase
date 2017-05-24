@@ -23,37 +23,39 @@
     <p class="pageTitle" ng-bind="classroom.name"></p>
     <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
     <p class="classroomDiscriptionShow" ng-bind="classroom.description"></p>
-
+<!--The following code has been Heavily edited so the comments afterwards may not be correct-->
     <!-- show this div if the classroom has an article. keep in mind that if an article was added, then deleted, 'articles' will still be true, so we user 'articles[0] != null' to find the first object, or article, in the array and if it exists, show the div -->
-    <div ng-if='articles && articles[0] != null'>
+    <!--<div ng-if='articles && articles[0] != null'>-->
         <div class="pageTitle classroomsArticleTitle">Articles</div>
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
-
+        <button href class="addArticleFromClassroom" ng-click="goToArticle()">View Articles</button>
+            <button href class="addArticleFromClassroom" ng-click="addAnArticle()">Add an Article</button>
         <!-- displayes the articles... make an easy way to add articles to a classroom when the classroom already has articles. right now you can easily add an article to a class that *has no* articles but we need to implement a way to add articles to a class that alraedy *has* articles -->
         <div class="articlesContainer">
             <md-grid-list md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="15px">
-                <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 whiteBack" ng-class="{zRaise2: hover}" md-rowspan="2"ng-mouseenter="hover = true" ng-mouseleave="hover = false">
+                <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 whiteBack" ng-class="{zRaise2: hover}" md-rowspan="2" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
                     <div class="feature articleContentCardDiv">
                         <a ui-sref="articles.show({ id: article._id})"></a>
                         <div class="articleContentCard" ng-bind="article.content"></div>
                         <md-grid-tile-footer>
                             <h3 ng-bind="article.title" class="articleContentCardFooter"></h3>
                         </md-grid-tile-footer>
+
                     </div>
                 </md-grid-tile>
             </md-grid-list>
+            
         </div>
     </div>
-
     <!-- same as above but the opposite. shows div if 'articles' doesnt exist, and if the only article was deleted making articles true but empty leaving articles[0]==null -->
-    <div ng-if="!articles || articles[0] == null">
+    <!--<div ng-if="!articles || articles[0] == null">
         <div class="pageTitle classroomsArticleTitle">Articles</div>
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider> 
         <div class="classroomsAddArticles">
             This classroom has no articles. 
             <a href class="addArticleFromClassroom" ng-click="addAnArticle()">Add an Article</a>
         </div>
-    </div>
+    </div>-->
     <!-- the same thing that was done with articles needs to be done with students once you can insert them into classes. the 'ng-if="students"' is not hooked up to anything right now and doesnt fucntion. use the variable 'students' in the js -->
     <!-- if students -->
 
@@ -76,7 +78,7 @@
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
         <div class="classroomsAddStudents">
             this classroom has no students. 
-            <a class="classroomsAddStudents" ui-sref="classrooms.edit({id: classroom._id})">Add Students</a>
+            <button class="classroomsAddStudents" ui-sref="classrooms.edit({id: classroom._id})">Add Students</button>
         </div>
     </div> -->
 <div>

@@ -4,7 +4,6 @@ module.exports = {
     classrooms: function(pouchDB, dbName) {
         /*Initalizes pouchDB with the database dbName(defined in /app/index.js) and gives it a variable reference db*/
         var db = pouchDB(dbName + '/classrooms');
-
         /*Returns the list of all classrooms on database*/
         function list() {
             return db.allDocs({

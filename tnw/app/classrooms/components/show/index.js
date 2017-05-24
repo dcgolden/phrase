@@ -35,8 +35,14 @@ function controller($scope, classrooms, users, $state, $stateParams) {
         });
     };
 
+
     /*Lists all users*/
       users.list().then(function (res) {
          $scope.users = res
       })
+      //steven did this
+    $scope.goToArticle = function() {
+        $state.go('articles.list');
+    };
+
 }

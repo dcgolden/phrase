@@ -3,7 +3,7 @@
 module.exports = {
     articles: function(pouchDB, dbName, annotationDbName) {
         /*Initalizes pouchDB with the database dbName(defined in /app/index.js) and gives it a variable reference db*/
-        var db = pouchDB(dbName);
+        var db = pouchDB(dbName + '/articles');
         /*Returns the list of all articles on database*/
         function list() {
             return db.allDocs({
