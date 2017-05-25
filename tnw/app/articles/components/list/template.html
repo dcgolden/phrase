@@ -8,7 +8,7 @@
           <md-fab-trigger>
             <md-button aria-label="addArticleCnP" ui-sref="articles.new" class="md-fab">
               <md-tooltip md-direction="left" md-delay="200" md-autohide="true">
-                Copy & Paste
+                Copy/Paste
               </md-tooltip>
               <ng-md-icon class="articleEditSubmit" icon="add" style="fill: white" size="24">
               </ng-md-icon>
@@ -62,7 +62,7 @@
   <!-- the articles in an ng-repead. read up on angular to see how it works -->
   <div class="articlesContainer">
     <md-grid-list md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6" md-row-height-gt-md="4:3" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="15px">
-      <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 whiteBack" ng-class="{zRaise2: hover}" md-rowspan="2"ng-mouseenter="hover = true" ng-mouseleave="hover = false">
+      <md-grid-tile md-ink-ripple ng-repeat="article in articles | filter:articleQuery" class="md-whiteframe-z1 whiteBack" ng-class="{zRaise2: hover}" md-rowspan="2" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
         <div class="feature articleContentCardDiv">
           <a ui-sref="articles.show({ id: article._id})"></a>
           <div class="articleContentCard" ng-bind="article.content"></div>

@@ -3,7 +3,7 @@
 module.exports = {
     classrooms: function(pouchDB, dbName) {
         /*Initalizes pouchDB with the database dbName(defined in /app/index.js) and gives it a variable reference db*/
-        var db = pouchDB(dbName);
+        var db = pouchDB(dbName + '/classrooms');
         /*Returns the list of all classrooms on database*/
         function list() {
             return db.allDocs({
@@ -27,9 +27,10 @@ module.exports = {
             classroom._id = 'classroom-' + (new Date()).toISOString();
             return db.put(classroom);
         }
-        /*Query a custom view for artilcesby classroom id*/
+
+        /*Query a custom view for artilces by classroom id*/
         function getArticles(id) {
-            return db.query('articlesClass/articlesClass', {
+            return db.query('my_index/by_classroom', {
                     key: id,
                     include_docs: true
                 })
@@ -40,8 +41,8 @@ module.exports = {
                         return r.doc;
                     });
                 });
-
         }
+
         /*Get classrooms by id*/
         function get(id) {
             console.log(id);

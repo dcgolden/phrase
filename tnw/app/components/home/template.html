@@ -114,8 +114,13 @@ html, body{
     					<div class="pageTitle homeSignupCardTitle">Good to go!</div>
     					<div>Start collaborating now</div>
     					<div class="homeSignupCardSpace"></div>
+              <div href class="homeSignupCardLink" ng-click='goToUser()'>Your Profile</div>
     					<div href class="homeSignupCardLink" ng-click='goToArticles()'>Your Articles</div>
     					<div href class="homeSignupCardLink" ng-click='goToClassrooms()'>Your Classrooms</div>
+              <div ng-show="user.role=='teacher'">
+              <div href class="homeSignupCardLink" ng-click='goToNewArticles()'>Create Articles</div>
+              <div href class="homeSignupCardLink" ng-click='goToNewClassrooms()'>Create Classrooms</div>
+              </div>
 					</div>
 				</md-card-content>
 			</md-card>

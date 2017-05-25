@@ -5,7 +5,8 @@ var fs = require('fs');
 module.exports = {
   url: '/list',
   //Jest for the role
-  controller: ['$scope', 'classrooms', 'users', '$rootScope', '$state', '$mdSidenav', '$mdUtil', '$log', '$mdDialog', '$stateParams', '$window',controller],
+
+  controller: ['$scope', 'classrooms', 'users', '$rootScope', '$state', controller],
   template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 }
 
@@ -20,14 +21,13 @@ function controller ($scope, classrooms, users, $rootScope, $stateParams) {
   classrooms.list().then(function (res) {
     $scope.classrooms = res
   })
-  //List all the user
-  users.list().then(function(res){
-    $scope.users = res
-  })
-  //get current user's information useing the username
-  users.getUser($scope.activeusername).then(function (res) {
-    $scope.user = res
-  })
+
+	
+  // //List all the user --testing code 
+  // users.list().then(function(res){
+  //   $scope.users = res
+  // })
+
   //get current user's metadata using current username
   users.getSession()
   .then(function (o) {
@@ -39,4 +39,4 @@ function controller ($scope, classrooms, users, $rootScope, $stateParams) {
     })
   })
 }
-  
+

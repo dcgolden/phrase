@@ -4,16 +4,16 @@ var fs = require('fs');
 /*This part exposes this module to rest of app*/
 module.exports = {
     url: '/new',
-    controller: ['$scope', 'classrooms', '$state', '$mdDialog', controller],
+    controller: ['$scope', 'classrooms', 'users', '$state', '$mdDialog', controller],
     template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 };
 
-function controller($scope, classrooms, $state, $mdDialog) {
+function controller($scope, classrooms, users, $state, $mdDialog) {
     /*Communicates between two things. We're not sure what this is sorry, but it's needed*/
     var self = this;
     self.tags = [];
     /*Creates a new classroom then goes back to list*/
-    $scope.create = function(classroom) {
+    $scope.create = function(classroom) {  
         classrooms.create(classroom)
             .then(function(res) {
                 $state.go('classrooms.list');
@@ -42,13 +42,44 @@ function controller($scope, classrooms, $state, $mdDialog) {
         $mdDialog.hide();
         console.log('hidden!');
     };
+
     /*Initalizes classroom to avoid undefined references*/
     $scope.classroom = {
         name: '',
         description: '',
-	students: '',
+	    students: {},
         color: ''
-    };
+    }; 
+
+      /*Lists all users*/
+      users.list().then(function (res) {
+         $scope.users = res
+      })
+    //check for duplicate entries
+    var i = 0;
+    var enteredUsers = [];
+    $scope.addUser = function() {
+        enteredUsers[i] = $scope.user;
+        var check = 0;
+        for(var a = 0; a < enteredUsers.length; a++){
+            if(enteredUsers[a] == null){
+                check += 2;
+            }
+            if(JSON.stringify(enteredUsers[a]) == JSON.stringify($scope.user)){
+                check++;
+            }
+        }
+        if(check < 2){
+            $scope.classroom.students[i] = $scope.user;
+            i++;
+        }
+    }
+    //delete users from classroom
+    $scope.deleteUser = function() {
+        //$scope.classroom.students.splice(0,1);
+
+    }
+
 
     /*Shows color picker dialog*/
     /*A lot of this code comes from /*https://material.angularjs.org/latest/#/demo/material.components.slider*/

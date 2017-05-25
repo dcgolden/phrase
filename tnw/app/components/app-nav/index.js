@@ -53,6 +53,7 @@ function controller ($scope, users, $state, $mdSidenav, $mdUtil, $log, $mdDialog
       console.log(o.userCtx.name)
       $scope.$apply(function() {
         $scope.activeUser = o.userCtx.name /*sets activeUser to the user's username*/
+        $scope.activeEmail = o.userCtx.email /*sets activeEmail to the user's email*/
       })
     })
     .catch(function(e) {

@@ -33,19 +33,25 @@ module.exports = {
     function getUser(username) {
       return db.getUser(username)
     }
-    //change user password
+
+
+    /*change user password*/
     function changePassword (username, password) {
       return db.changePassword(username, password)
     }
     
+
+
+
+      //LIST ALL USERS IN DB     WORK IN PROGRESS
     function list() {
-      return db.allDocs({
-    //This tells server to return all docs starting with classroom
-            startkey: 'org',
+           return db.allDocs({
+                    /*This tells server to return all docs starting with _users*/
+                    startkey: 'org',
                     endkey: 'org{}',
                     inclusive_end: true,
                     //Include not just the key but all fields
-                    include_docs: true
+                    include_docs:true
                 })
                 .then(function(res) {
                     console.log(res.rows);
@@ -54,6 +60,7 @@ module.exports = {
                     });
                 });
         }
+
     //list of factory functions
     return Object.freeze({
       signup: signup,
@@ -65,6 +72,7 @@ module.exports = {
       list: list,
       getUser: getUser,
       changePassword: changePassword,
+      list: list
     })
   }
 }

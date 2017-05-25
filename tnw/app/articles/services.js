@@ -3,7 +3,7 @@
 module.exports = {
     articles: function(pouchDB, dbName, annotationDbName) {
         /*Initalizes pouchDB with the database dbName(defined in /app/index.js) and gives it a variable reference db*/
-        var db = pouchDB(dbName);
+        var db = pouchDB(dbName + '/articles');
         /*Returns the list of all articles on database*/
         function list() {
             return db.allDocs({
@@ -41,13 +41,28 @@ module.exports = {
                 return db.remove(doc);
             });
         }
+        /*Query a custom view for artilces by classroom id*/
+        function getArticles(id) {
+            return db.query('my_index/by_classroom', {
+                    key: id,
+                    include_docs: true
+                })
+                .then(function(res) {
+                    /*Gets*/
+                    console.log(res.rows);
+                    return res.rows.map(function(r) {
+                        return r.doc;
+                    });
+                });
+        }
         /*List of factory functions*/
         return Object.freeze({
             list: list,
             create: create,
             get: get,
             update: update,
-            remove: remove
+            remove: remove,
+            getArticles: getArticles
         });
 
     }
