@@ -4,19 +4,11 @@ var fs = require('fs');
 /*This part exposes this module to rest of app*/
 module.exports = {
     url: '/:id',
-<<<<<<< HEAD
-    controller: ['$scope', 'classrooms', 'articles', '$state', '$stateParams', controller],
+    controller: ['$scope', 'classrooms', 'articles', 'users', '$state', '$stateParams', controller],
     template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 };
 
-function controller($scope, classrooms, articles, $state, $stateParams) {
-=======
-    controller: ['$scope', 'classrooms', 'users', '$state', '$stateParams', controller],
-    template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
-};
-
-function controller($scope, classrooms, users, $state, $stateParams) {
->>>>>>> b229956916d1c3a5d597b2a7eced07c53d2e97b4
+function controller($scope, classrooms, articles, users, $state, $stateParams) {
     /*back or menu button*/
     $scope.$emit('pushChangesToAllNodes', backButtonPlacer());
 
