@@ -7,6 +7,10 @@ module.exports = {
     function signup (username, password, email, role, firstName, lastName) {
       return db.signup(username, password, { metadata: { email: email, role: role, firstName: firstName, lastName: lastName}})
     }
+    //update user
+    function update (user){
+      return db.put(user)
+    }
     //log into database
     function login (username, password) {
       return db.login(username, password)
@@ -53,6 +57,7 @@ module.exports = {
     //list of factory functions
     return Object.freeze({
       signup: signup,
+      update: update,
       login: login,
       get: get,
       logout: logout,
