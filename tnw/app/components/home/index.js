@@ -36,12 +36,33 @@ function controller ($scope, users, $state, $rootScope) {
       })
   }
 
+  users.getSession()
+  .then(function (o) {
+    console.log(o.userCtx.name)
+    $scope.$apply(function() {
+      users.getUser(o.userCtx.name).then(function (res) {
+      $scope.user = res
+      })
+    })
+  })
+  
+  $scope.goToUser = function (){
+    $state.go('users.show');
+  }
   $scope.goToArticles = function (){
     $state.go('articles.list');
   }
 
   $scope.goToClassrooms = function (){
     $state.go('classrooms.list');
+  }
+
+  $scope.goToNewArticles = function (){
+    $state.go('articles.new');
+  }
+
+  $scope.goToNewClassrooms = function (){
+    $state.go('classrooms.new');
   }
 
   $scope.goToFeatures = function (){

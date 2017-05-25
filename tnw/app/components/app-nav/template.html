@@ -1,3 +1,5 @@
+
+
 <!-- if no activeUser is set -->
 <div ng-if="!activeUser">
   <!-- TOOLBAR!! -->
@@ -38,7 +40,15 @@
       </md-button>
       <div href class="toolbarCurrentPage" ng-click="goHome()"> <a href>Phrase</a> </div>
       <span flex></span>
+      <!-- features page needs an overhaul -->
+      <md-button href="/#/#features">Features</md-button>
+      <!-- about page needs an overhaul -->
+      <md-button ui-sref="about">About</md-button>
+      <!-- contact page needs an overhaul -->
+      <md-button ui-sref="contact">Contact Us</md-button>
+      <div href class="toolbarCurrentPage" ng-click="logout()"> <a href>Logout</a> </div>
     </div>
+
   </md-toolbar>
   <!-- SIDENAV!! -->
   <div layout="row" flex="" ng-click="toggleLeft()">

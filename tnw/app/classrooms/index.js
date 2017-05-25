@@ -24,4 +24,5 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
      }])
     /*exposes classroom services in a factory*/
     .factory('classrooms', ['pouchDB', 'dbName', require('./services').classrooms])
+
 })( window, window.angular)

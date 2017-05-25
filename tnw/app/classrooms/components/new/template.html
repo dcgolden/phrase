@@ -40,13 +40,37 @@
                 </div>
             </md-input-container>
 	    <md-input-container>
-                <label>Add Students</label>
-                <textarea name="students" ng-model="classroom.students" ng-maxlength="1000" required></textarea>
-                <div class="errors" ng-messages="createClassroom.students.$error" ng-show="createClassroom.students.$touched">
-                    <div ng-message="required">You must add students!</div>
-                    <div ng-message="maxlength">List is too long!</div>
+            <!--edit the students  WORK IN PROGRESS(only works for admin), GETS WEIRD IF YOU ADD TOO MANY PEOPLE --> 
+            <md-input-container> 
+                <label>User Search</label>
+                <textarea name="addStudent" ng-model="studentQuery" ng-maxlength="40"></textarea>
+                <table>
+                    <thead>
+                        <tr> 
+                            <th>Users</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><select ng-model="user" ng-options="student.lastName for student in users | filter:studentQuery" ng-bind="student"><option value="" disabled>--Select--</option></select></td>
+                            <td><md-button aria-label="add users" ng-click="addUser()"></md-button></td>
+                        </tr>
+                    </tbody>
+                </table> 
+
+                <div class="errors" ng-messages="edit.addStudent.$error" ng-show="edit.addStudent.$touched">
+                    <div ng-message="maxlength">Too many students!</div>
                 </div>
-            </md-input-container>
+            </md-input-container>  
+            <md-input-container>
+                <label>Student List</label>
+                <ol>
+                    <li ng-repeat="newUser in classroom.students">{{newUser.firstName}} {{newUser.lastName}}<md-button aria-label="delete users" ng-click="deleteUser()"><span style="color:red;">Delete User</span></md-button></li> 
+                </ol>
+                <div class="errors" ng-messages="edit.studentList.$error" ng-show="edit.studentList.$touched">
+                    <div ng-message="maxlength">Too many students!</div><!--add max elements -->
+                </div>
+            </md-input-container> 
 	</div>
     </form>
     <div>
