@@ -55,30 +55,67 @@ function controller($scope, classrooms, users, $state, $mdDialog) {
       users.list().then(function (res) {
          $scope.users = res
       })
-    //check for duplicate entries
-    var i = 0;
-    var enteredUsers = [];
-    $scope.addUser = function() {
-        enteredUsers[i] = $scope.user;
-        var check = 0;
-        for(var a = 0; a < enteredUsers.length; a++){
-            if(enteredUsers[a] == null){
-                check += 2;
-            }
-            if(JSON.stringify(enteredUsers[a]) == JSON.stringify($scope.user)){
-                check++;
-            }
-        }
-        if(check < 2){
-            $scope.classroom.students[i] = $scope.user;
-            i++;
-        }
-    }
-    //delete users from classroom
-    $scope.deleteUser = function() {
-        //$scope.classroom.students.splice(0,1);
 
+
+    //check for duplicate or invalid entries
+    var size = 0;
+    $scope.addUser = function() {
+        var isAlreadyInClassroom = false;
+        if($scope.classroom.students[0] != null){
+            size = Object.keys($scope.classroom.students).length;
+            if($scope.user == null){
+                console.log("null");
+            }else{
+                for(var a = 0; a < size; a++){
+                    if(JSON.stringify($scope.classroom.students[a].name) == JSON.stringify($scope.user.name)){
+                        isAlreadyInClassroom = true;
+                    }
+                }
+                if(isAlreadyInClassroom == false){
+                    $scope.classroom.students[size] = $scope.user;
+                    size++;
+                }else{
+                    console.log("already in classroom");
+                }   
+            } 
+        }else{
+            if($scope.user == null){
+                console.log("null");
+            }else{
+                $scope.classroom.students = {};
+                $scope.classroom.students[0] = $scope.user;
+                size++;
+            }
+        }
     }
+
+    //delete users from classroom
+    $scope.index = {value:0};
+    $scope.deleteUser = function() {                 
+        //if there are more users in classroom
+        if(Object.keys($scope.classroom.students).length > 1){
+            //delete selected user
+            $scope.classroom.students[$scope.index.value] = null;
+            //if your deleted user isn't the last index
+            if($scope.index.value != Object.keys($scope.classroom.students).length - 1){
+                for(var i = $scope.index.value; i < Object.keys($scope.classroom.students).length; i++){
+                    if(i < Object.keys($scope.classroom.students).length - 1){
+                        //start at index where you deleted user and replace other user indexs with the next index and stop at the last index
+                        $scope.classroom.students[i] = $scope.classroom.students[i+1];
+                    }
+                }
+            }
+            console.log("size(del)" + Object.keys($scope.classroom.students).length);
+            //delete the last index
+            delete $scope.classroom.students[Object.keys($scope.classroom.students).length-1];
+            console.log("size(del)" + Object.keys($scope.classroom.students).length);
+        }else{
+            delete $scope.classroom.students[0];
+        }
+        console.log("index:" + $scope.index.value);
+        console.log("size(del)" + Object.keys($scope.classroom.students).length);
+    }
+
 
 
     /*Shows color picker dialog*/

@@ -15,7 +15,7 @@
                     </md-fab-trigger>
                 </md-fab-speed-dial>
             </div>
-        </div>
+        </div> 
     </div>
 </div>
 <!-- the edit part of the page -->
@@ -60,7 +60,7 @@
                     <tbody>
                         <tr>
                             <td><select ng-model="user" ng-options="student.lastName for student in users | filter:studentQuery" ng-bind="student"><option value="" disabled>--Select--</option></select></td>
-                            <td><md-button aria-label="add users" ng-click="addUser()"></md-button></td>
+                            <td><md-button aria-label="add users" ng-click="addUser()">Add</md-button></td>
                         </tr>
                     </tbody>
                 </table>

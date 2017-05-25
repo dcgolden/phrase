@@ -22,7 +22,7 @@ function controller($scope, classrooms, users, $state, $stateParams) {
     classrooms.get($stateParams.id)
         .then(function(doc) {
             $scope.classroom = doc
-        })
+        }) 
 
       /*Lists all users*/
       users.list().then(function (res) {
@@ -35,21 +35,23 @@ function controller($scope, classrooms, users, $state, $stateParams) {
       }
 
     //delete users from classroom
-    //bug if you delete anyone but the last index -> last index gets messed up
     $scope.index = {value:0};
-    $scope.deleteUser = function() {
-        delete $scope.classroom.students[$scope.index.value];
-        console.log("size(del):" + Object.keys($scope.classroom.students).length);
-        console.log("current index(del): " + $scope.index.value);
+    $scope.deleteUser = function() {                 
+        //set selected user to null
+        $scope.classroom.students[$scope.index.value] = null;
+        //if there are more users in classroom
         if(Object.keys($scope.classroom.students).length > 0){
-            if($scope.index.value != Object.keys($scope.classroom.students).length){
+            //if your deleted user isn't the last index
+            if($scope.index.value != Object.keys($scope.classroom.students).length - 1){
                 for(var i = $scope.index.value; i < Object.keys($scope.classroom.students).length; i++){
                     if(i < Object.keys($scope.classroom.students).length - 1){
+                        //start at index where you deleted user and replace other user indexs with the next index and stop at the last index
                         $scope.classroom.students[i] = $scope.classroom.students[i+1];
                     }
                 }
             }
-            delete $scope.classroom.students[Object.keys($scope.classroom.students).length - 1];
+            //delete the last index
+            delete $scope.classroom.students[Object.keys($scope.classroom.students).length-1];
         }
     }
 
@@ -83,9 +85,6 @@ function controller($scope, classrooms, users, $state, $stateParams) {
                 size++;
             }
         }
-        // for(var i = 0; i < Object.keys($scope.classroom.students).length; i++){
-        //     console.log("people in classroom(add): " + JSON.stringify($scope.classroom.students[i].firstName));
-        // }
         console.log("size(add):" + Object.keys($scope.classroom.students).length);
     }
 

@@ -53,7 +53,7 @@
                     <tbody>
                         <tr>
                             <td><select ng-model="user" ng-options="student.lastName for student in users | filter:studentQuery" ng-bind="student"><option value="" disabled>--Select--</option></select></td>
-                            <td><md-button aria-label="add users" ng-click="addUser()"></md-button></td>
+                            <td><md-button aria-label="add users" ng-click="addUser()">Add</md-button></td>
                         </tr>
                     </tbody>
                 </table> 
@@ -65,7 +65,7 @@
             <md-input-container>
                 <label>Student List</label>
                 <ol>
-                    <li ng-repeat="newUser in classroom.students">{{newUser.firstName}} {{newUser.lastName}}<md-button aria-label="delete users" ng-click="deleteUser()"><span style="color:red;">Delete User</span></md-button></li> 
+                    <li ng-repeat="newUser in classroom.students">{{newUser.firstName}} {{newUser.lastName}}<md-button aria-label="delete users" ng-click="index.value = $index; deleteUser()"><span style="color:red;">Delete User</span></md-button></li> 
                 </ol>
                 <div class="errors" ng-messages="edit.studentList.$error" ng-show="edit.studentList.$touched">
                     <div ng-message="maxlength">Too many students!</div><!--add max elements -->
