@@ -41,13 +41,28 @@ module.exports = {
                 return db.remove(doc);
             });
         }
+        /*Query a custom view for artilces by classroom id*/
+        function getArticles(id) {
+            return db.query('my_index/by_classroom', {
+                    key: id,
+                    include_docs: true
+                })
+                .then(function(res) {
+                    /*Gets*/
+                    console.log(res.rows);
+                    return res.rows.map(function(r) {
+                        return r.doc;
+                    });
+                });
+        }
         /*List of factory functions*/
         return Object.freeze({
             list: list,
             create: create,
             get: get,
             update: update,
-            remove: remove
+            remove: remove,
+            getArticles: getArticles
         });
 
     }

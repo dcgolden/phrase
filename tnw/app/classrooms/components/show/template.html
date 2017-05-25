@@ -28,6 +28,9 @@
     <div ng-if='articles && articles[0] != null'>
         <div class="pageTitle classroomsArticleTitle">Articles</div>
         <md-divider class="navDivider navDividerHalfWidth" ng-if="!$last"></md-divider>
+        <div class="classroomsAddArticles">
+            <a href class="addArticleFromClassroom" ng-click="addAnArticle()">Add an Article</a>
+        </div>
 
         <!-- displayes the articles... make an easy way to add articles to a classroom when the classroom already has articles. right now you can easily add an article to a class that *has no* articles but we need to implement a way to add articles to a class that alraedy *has* articles -->
         <div class="articlesContainer">
