@@ -26,10 +26,12 @@ function controller($scope, articles, classrooms, $state, $stateParams, controll
         author: '',
         content: '',
         source: '',
-        classroom: ''
+        classroom: '',
+        creator: ''
     };
     /*Preloads classroom selection from $stateParams if coming from a classroom page*/
     $scope.article.classroom = $stateParams.classroom;
+    $scope.article.creator = $scope.activeUser;
     /*Creates and saves article to database*/
     $scope.create = function(article) {
         articles.create(article).then(function(res) {

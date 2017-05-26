@@ -17,11 +17,22 @@ function controller($scope, articles) {
     }
     /*Boolean that is referenced in the circular loading indicator*/
 	$scope.loadingArticles = true;
-    /*Lista all articles*/
-    articles.list()
-        .then(function(docs) {
+
+    /*List all articles if admin*/
+    if ($scope.activeUser == 'admin') {
+        articles.list().then(function(docs) {
             $scope.articles = docs;
             /*Boolean is switched to end circular loading indicator*/
             $scope.loadingArticles = false;
         })
+    }
+    /*Otherwise lists articles made by user*/
+    else {
+        articles.listByUser($scope.activeUser)
+        .then(function(res) {
+            $scope.articles = res;
+            /*Boolean is switched to end circular loading indicator*/
+            $scope.loadingArticles = false;
+        })
+    }
 }

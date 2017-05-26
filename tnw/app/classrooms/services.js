@@ -21,17 +21,11 @@ module.exports = {
                     });
                 });
         }
-        /*Create a new classroom and save to database*/
-        function create(classroom) {
-            classroom.type = 'classroom';
-            classroom._id = 'classroom-' + (new Date()).toISOString();
-            return db.put(classroom);
-        }
 
-        /*Query a custom view for artilces by classroom id*/
-        function getArticles(id) {
-            return db.query('my_index/by_classroom', {
-                    key: id,
+        /*Query a custom view for classrooms by current user id*/
+        function listByUser(user) {
+            return db.query('my_index/by_user', {
+                    key: user,
                     include_docs: true
                 })
                 .then(function(res) {
@@ -42,6 +36,30 @@ module.exports = {
                     });
                 });
         }
+
+        /*Create a new classroom and save to database*/
+        function create(classroom) {
+            classroom.type = 'classroom';
+            classroom._id = 'classroom-' + (new Date()).toISOString();
+            return db.put(classroom);
+        }
+
+        /*Query a custom view for articles by classroom id*/
+        /*
+        function getArticles(id) {
+            return db.query('my_index/by_classroom', {
+                    key: id,
+                    include_docs: true
+                })
+                .then(function(res) {
+                    // Gets
+                    console.log(res.rows);
+                    return res.rows.map(function(r) {
+                        return r.doc;
+                    });
+                });
+        }
+        */
 
         /*Get classrooms by id*/
         function get(id) {
@@ -63,7 +81,8 @@ module.exports = {
             get: get,
             update: update,
             remove: remove,
-            getArticles: getArticles
+            //getArticles: getArticles,
+            listByUser: listByUser
         });
     }
 };

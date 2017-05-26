@@ -48,13 +48,15 @@ function controller($scope, classrooms, users, $state, $mdDialog) {
         name: '',
         description: '',
 	    students: {},
-        color: ''
-    }; 
+        color: '',
+        creator: ''
+    };
+    $scope.classroom.creator = $scope.activeUser;
 
-      /*Lists all users*/
-      users.list().then(function (res) {
-         $scope.users = res
-      })
+    /*Lists all users*/
+    users.list().then(function (res) {
+        $scope.users = res
+    })
     //check for duplicate entries
     var i = 0;
     var enteredUsers = [];

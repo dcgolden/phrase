@@ -41,8 +41,8 @@ module.exports = {
                 return db.remove(doc);
             });
         }
-        /*Query a custom view for artilces by classroom id*/
-        function getArticles(id) {
+        /*Query a custom view for articles by classroom id*/
+        function listByClass(id) {
             return db.query('my_index/by_classroom', {
                     key: id,
                     include_docs: true
@@ -55,6 +55,41 @@ module.exports = {
                     });
                 });
         }
+
+        /*Query a custom view for articles by current user id*/
+        function listByUser(user) {
+            return db.query('my_index2/by_user', {
+                    key: user,
+                    include_docs: true
+                })
+                .then(function(res) {
+                    /*Gets*/
+                    console.log(res.rows);
+                    return res.rows.map(function(r) {
+                        return r.doc;
+                    });
+                });
+        }
+
+        /*
+        function getByBoth(classroom, user) {
+            db = db.query('my_index/by_classroom', {
+                key: classroom,
+                include_docs: true
+            }).then(function(res) {
+                return db.query('my_index2/by_user', {
+                    key: user,
+                    include_docs: true
+                }).then(function(res) {
+                    console.log(res.rows);
+                    return res.rows.map(function(r) {
+                        return r.doc;
+                    });
+                });
+            });
+        }
+        */
+
         /*List of factory functions*/
         return Object.freeze({
             list: list,
@@ -62,7 +97,9 @@ module.exports = {
             get: get,
             update: update,
             remove: remove,
-            getArticles: getArticles
+            listByClass: listByClass,
+            listByUser: listByUser,
+            //getByBoth: getByBoth
         });
 
     }
