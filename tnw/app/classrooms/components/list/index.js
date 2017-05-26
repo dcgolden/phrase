@@ -3,10 +3,11 @@
 var fs = require('fs');
 /*This part exposes this module to rest of app*/
 module.exports = {
-    url: '/list',
-    //Jest for the role
-    controller: ['$scope', 'classrooms', 'users', '$rootScope', '$state', controller],
-    template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
+  url: '/list',
+  //Jest for the role
+
+  controller: ['$scope', 'classrooms', 'users', '$rootScope', '$state', controller],
+  template: fs.readFileSync(__dirname + '/template.html', 'utf-8')
 }
 
 function controller ($scope, classrooms, users, $rootScope, $stateParams) {
@@ -46,4 +47,4 @@ function controller ($scope, classrooms, users, $rootScope, $stateParams) {
         })
     })
 }
-  
+
