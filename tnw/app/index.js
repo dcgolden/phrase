@@ -78,9 +78,9 @@ require('angular').module('app', [
     //our apps controller. we use one controller but it only 'loads' for whatever page we are on (also navbar and footer if they are in the view)
     .controller('AppController', ['$scope', 'classrooms', 'users', AppController])
     /*Constants for database name*/
-    .constant('dbName', 'https://couchdb-34f38d.smileupps.com')
-    .constant('remoteUserDbName', 'https://couchdb-34f38d.smileupps.com/_users/')
-    .constant('annotationDbName', 'https://couchdb-34f38d.smileupps.com/annotator/')
+    .constant('dbName', 'http://localhost:5984/')
+    .constant('remoteUserDbName', 'http://localhost:5984/_users/')
+    .constant('annotationDbName', 'http://localhost:5984/annotator/')
     //.factory('classrooms', ['pouchDb', require('./services/classrooms/')])
 
 //some functions we want everywhere in our app
